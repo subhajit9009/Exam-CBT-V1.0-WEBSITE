@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ExamVerse | Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <h2>ExamVerse</h2>
+
+        <p>CBT Portal</p>
+
+    </div>
+
+    <ul>
+
+        <li class="active">
+
+            <i class="fa-solid fa-house"></i>
+
+            Dashboard
+
+        </li>
+
+        <li id="newTestBtn">
+
+            <i class="fa-solid fa-file-circle-plus"></i>
+
+            New Test
+
+        </li>
+
+        <li>
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            Previous Tests
+
+        </li>
+
+        <li>
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            Performance
+
+        </li>
+
+        <li>
+
+            <i class="fa-solid fa-bookmark"></i>
+
+            Bookmarks
+
+        </li>
+
+        <li onclick="window.location='settings.html'">
+
+            <i class="fa-solid fa-gear"></i>
+
+            Settings
+
+        </li>
+
+        <li id="logoutBtn">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            Logout
+
+        </li>
+
+    </ul>
+
+</aside>
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+<!-- Top -->
+
+<header class="topbar">
+
+    <div>
+
+        <h1>
+
+            Welcome Back,
+
+            <span id="userName">Student</span>
+
+            👋
+
+        </h1>
+
+        <p>
+
+            Created by
+
+            <b>Subhajit Paul</b>
+
+        </p>
+
+    </div>
+
+</header>
+
+<!-- ================= Stats ================= -->
+
+<section class="stats">
+
+<div class="card">
+
+<h3>Total Tests</h3>
+
+<h1 id="tests">0</h1>
+
+</div>
+
+<div class="card">
+
+<h3>Highest Score</h3>
+
+<h1 id="highest">0%</h1>
+
+</div>
+
+<div class="card">
+
+<h3>Average Score</h3>
+
+<h1 id="average">0%</h1>
+
+</div>
+
+<div class="card">
+
+<h3>Accuracy</h3>
+
+<h1 id="accuracy">0%</h1>
+
+</div>
+
+</section>
+
+<!-- ================= User ================= -->
+
+<section class="userInfo">
+
+<div class="profile">
+
+<h2 id="level">
+
+Beginner
+
+</h2>
+
+<p>
+
+Current User Level
+
+</p>
+
+</div>
+
+<div class="profile">
+
+<h2 id="rank">
+
+N/A
+
+</h2>
+
+<p>
+
+Current Rank
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ================= Preferred Exams ================= -->
+
+<section class="examSection">
+
+<h2>
+
+Preferred Exams
+
+</h2>
+
+<div class="examCards">
+
+<div class="exam">
+
+<h3 id="exam1">
+
+Exam 1
+
+</h3>
+
+</div>
+
+<div class="exam">
+
+<h3 id="exam2">
+
+Exam 2
+
+</h3>
+
+</div>
+
+<div class="exam">
+
+<h3 id="exam3">
+
+Exam 3
+
+</h3>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= Quick Action ================= -->
+
+<section class="quick">
+
+<button id="takeTest">
+
+🚀 Take New Test
+
+</button>
+
+</section>
+
+<!-- ================= Previous ================= -->
+
+<section class="previous">
+
+<h2>
+
+Recent Tests
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Exam</th>
+
+<th>Score</th>
+
+<th>Accuracy</th>
+
+</tr>
+
+</thead>
+
+<tbody id="history">
+
+<tr>
+
+<td colspan="4">
+
+No tests attempted yet.
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</section>
+
+</main>
+
+</div>
+
+<script src="assets/js/storage.js"></script>
+
+<script src="assets/js/dashboard.js"></script>
+
+</body>
+
+</html>

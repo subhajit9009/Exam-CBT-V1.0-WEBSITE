@@ -1,0 +1,262 @@
+/* ==========================
+   REGISTER PAGE
+   ExamVerse
+   Created by Subhajit Paul
+==========================*/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+/* ========================= */
+
+.register-container{
+    width:1200px;
+    max-width:100%;
+    display:grid;
+    grid-template-columns:40% 60%;
+    background:#ffffff;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 25px 60px rgba(0,0,0,.25);
+}
+
+/* ========================= */
+
+.left-panel{
+    background:linear-gradient(180deg,#2563eb,#1d4ed8);
+    color:white;
+    padding:60px 45px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.left-panel h1{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.left-panel h2{
+    font-size:24px;
+    font-weight:500;
+    margin-bottom:25px;
+}
+
+.left-panel p{
+    line-height:1.8;
+    opacity:.95;
+    margin-bottom:35px;
+}
+
+.creator{
+    margin-top:auto;
+    background:rgba(255,255,255,.15);
+    padding:15px;
+    border-radius:10px;
+    font-size:17px;
+}
+
+/* ========================= */
+
+.right-panel{
+    padding:45px;
+    background:#f8fafc;
+}
+
+.form-card h2{
+    color:#1e293b;
+    margin-bottom:8px;
+}
+
+.form-card p{
+    color:#64748b;
+    margin-bottom:30px;
+}
+
+/* ========================= */
+
+.row{
+    display:flex;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.input-box{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+.input-box label{
+    margin-bottom:7px;
+    font-weight:600;
+    color:#334155;
+}
+
+/* ========================= */
+/* Inputs & Selects */
+/* ========================= */
+
+.input-box input,
+.input-box select,
+.row select{
+
+    width:100%;
+    height:50px;
+    padding:0 15px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    outline:none;
+    transition:.3s;
+    background:#ffffff;
+    font-size:15px;
+    margin-bottom:12px;
+
+}
+
+/* Remove bottom margin of last select */
+
+.input-box select:last-child{
+    margin-bottom:0;
+}
+
+.row select:last-child{
+    margin-bottom:0;
+}
+
+/* ========================= */
+/* Focus Effect */
+/* ========================= */
+
+.input-box input:focus,
+.input-box select:focus,
+.row select:focus{
+
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+/* ========================= */
+/* Button */
+/* ========================= */
+
+.register-btn{
+
+    width:100%;
+    height:55px;
+    margin-top:25px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:600;
+
+}
+
+.register-btn:hover{
+
+    transform:translateY(-3px);
+    background:#1d4ed8;
+    box-shadow:0 15px 25px rgba(37,99,235,.30);
+
+}
+
+/* ========================= */
+
+select{
+    cursor:pointer;
+}
+
+/* ========================= */
+/* Mobile */
+/* ========================= */
+
+@media(max-width:1000px){
+
+    .register-container{
+        grid-template-columns:1fr;
+    }
+
+    .left-panel{
+        display:none;
+    }
+
+}
+
+@media(max-width:650px){
+
+    body{
+        padding:15px;
+    }
+
+    .right-panel{
+        padding:25px;
+    }
+
+    .row{
+        flex-direction:column;
+        gap:0;
+    }
+
+    .form-card h2{
+        font-size:28px;
+    }
+
+}
+
+/* ========================= */
+/* Login Link */
+/* ========================= */
+
+.login-link{
+
+    margin-top:20px;
+
+    text-align:center;
+
+}
+
+.login-link p{
+
+    color:#64748b;
+
+    font-size:15px;
+
+}
+
+.login-link a{
+
+    color:#2563eb;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.login-link a:hover{
+
+    color:#1d4ed8;
+
+    text-decoration:underline;
+
+}
