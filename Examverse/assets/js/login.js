@@ -193,10 +193,6 @@ console.log("Profile Error:", profileError);
 
     alert("Welcome Back, " + user.firstName + "!");
 
-    
-
-}
-
 // ==========================
 // Check Admin
 // ==========================
@@ -221,11 +217,6 @@ if (admin) {
     window.location.href = "dashboard.html";
 
 }
-
-
-else {
-
-    window.location.href = "dashboard.html";
 
 }
 
