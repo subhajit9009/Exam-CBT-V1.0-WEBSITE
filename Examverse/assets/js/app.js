@@ -1,39 +1,54 @@
-const startBtn=document.getElementById("startBtn");
+/* ==========================================
+   ExamVerse Landing Page
+   Created by Subhajit Paul
+========================================== */
 
-const popup=document.getElementById("privacyPopup");
+const startBtn = document.getElementById("startBtn");
 
-const accept=document.getElementById("acceptBtn");
+const popup = document.getElementById("privacyPopup");
 
-const reject=document.getElementById("rejectBtn");
+const accept = document.getElementById("acceptBtn");
 
-startBtn.onclick=()=>{
+const reject = document.getElementById("rejectBtn");
 
-if(localStorage.getItem("privacyAccepted")){
+// ==========================================
+// Get Started
+// ==========================================
 
-window.location="register.html";
+startBtn.onclick = () => {
 
-}
+    if (localStorage.getItem("privacyAccepted") === "yes") {
 
-else{
+        window.location.href = "login.html";
 
-popup.style.display="flex";
+    }
 
-}
+    else {
+
+        popup.style.display = "flex";
+
+    }
 
 };
 
-accept.onclick=()=>{
+// ==========================================
+// Accept Privacy
+// ==========================================
 
-localStorage.setItem("privacyAccepted","yes");
+accept.onclick = () => {
 
-window.location="register.html";
+    localStorage.setItem("privacyAccepted", "yes");
+
+    window.location.href = "login.html";
 
 };
 
-reject.onclick=()=>{
+// ==========================================
+// Reject Privacy
+// ==========================================
 
-alert("You must accept the Privacy Policy to continue.");
+reject.onclick = () => {
 
-popup.style.display="none";
+    alert("You must accept the Privacy Policy to continue using ExamVerse.");
 
 };

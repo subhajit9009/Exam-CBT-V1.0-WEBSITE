@@ -629,3 +629,41 @@ transform:translateY(0);
 }
 
 }
+
+.sidebar-logo{
+
+    width:80px;
+
+    height:80px;
+
+    object-fit:contain;
+
+    display:block;
+
+    margin:0 auto 12px;
+
+}
+
+.logo{
+
+    text-align:center;
+
+    padding:25px 15px;
+
+}
+
+.logo h1{
+
+    margin:0;
+
+    color:white;
+
+}
+
+.logo p{
+
+    margin-top:8px;
+
+    color:#e6e6e6;
+
+}

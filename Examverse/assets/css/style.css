@@ -268,3 +268,15 @@ font-size:40px;
 }
 
 }
+
+.logo{
+
+    width:120px;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:20px;
+
+}

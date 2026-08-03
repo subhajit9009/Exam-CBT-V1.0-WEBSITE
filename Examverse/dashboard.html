@@ -6,8 +6,12 @@
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <title>ExamVerse | Dashboard</title>
+
+    <link rel="icon"
+      type="image/png"
+      href="assets/images/favicon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -20,10 +24,31 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/loader.css">
+
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
 
 </head>
 
 <body>
+
+    <div id="loader">
+
+    <img
+        src="assets/images/logo.png"
+        class="loader-logo"
+        alt="ExamVerse Logo">
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+
+        Loading...
+
+    </div>
+
+</div>
+
 
 <div class="container">
 
@@ -32,6 +57,10 @@
 <aside class="sidebar">
 
     <div class="logo">
+<img
+        src="assets/images/logo.png"
+        alt="ExamVerse Logo"
+        class="sidebar-logo">
 
         <h2>ExamVerse</h2>
 
@@ -320,6 +349,8 @@ No tests attempted yet.
 <script src="assets/js/storage.js"></script>
 
 <script src="assets/js/dashboard.js"></script>
+
+<script src="assets/js/loader.js"></script>
 
 </body>
 

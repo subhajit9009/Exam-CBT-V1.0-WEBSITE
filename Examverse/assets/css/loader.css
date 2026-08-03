@@ -1,0 +1,75 @@
+#loader{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:white;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    flex-direction:column;
+
+    z-index:999999;
+
+    transition:opacity .5s ease;
+
+}
+
+.loader-logo{
+
+    width:100px;
+
+    margin-bottom:20px;
+
+}
+
+.spinner{
+
+    width:55px;
+    height:55px;
+
+    border:6px solid #ddd;
+
+    border-top:6px solid #2d6cff;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+}
+
+.loading-text{
+
+    margin-top:20px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#2d6cff;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
