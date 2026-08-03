@@ -181,7 +181,7 @@ async function registerUser(e) {
         options: {
 
             emailRedirectTo:
-            "https://streams-regularly-pursue-schemes.trycloudflare.com/Examverse/login.html"
+            "https://subhajit9009.github.io/Exam-CBT-V1.0-WEBSITE/Examverse/login.html"
 
         }
 
