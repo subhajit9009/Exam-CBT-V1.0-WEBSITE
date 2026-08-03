@@ -203,13 +203,9 @@ console.log("Profile Error:", profileError);
 
 const { data: admin, error: adminError } =
 await supabaseClient
-
 .from("admins")
-
 .select("*")
-
 .eq("id", data.user.id)
-
 .maybeSingle();
 
 console.log("Logged User ID:", data.user.id);
@@ -218,19 +214,14 @@ console.log("Admin Error:", adminError);
 
 if (admin) {
 
-    alert("Admin Login Successful");
-
     window.location.href = "admin-dashboard.html";
 
-}
-
-else {
-
-    alert("Normal User");
+} else {
 
     window.location.href = "dashboard.html";
 
 }
+
 
 else {
 
