@@ -1,0 +1,322 @@
+/* ==========================================
+   ExamVerse Admin Panel
+   Created by Subhajit Paul
+========================================== */
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+    font-family:'Poppins',sans-serif;
+
+}
+
+body{
+
+    background:#f4f7fb;
+
+}
+
+/* ===========================
+   Sidebar
+=========================== */
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    width:270px;
+
+    height:100vh;
+
+    background:#1e3c72;
+
+    color:white;
+
+    box-shadow:3px 0 15px rgba(0,0,0,.15);
+
+}
+
+.logo-section{
+
+    text-align:center;
+
+    padding:30px 20px;
+
+    border-bottom:1px solid rgba(255,255,255,.15);
+
+}
+
+.sidebar-logo{
+
+    width:90px;
+
+    margin-bottom:15px;
+
+}
+
+.logo-section h2{
+
+    font-size:26px;
+
+    margin-bottom:5px;
+
+}
+
+.logo-section p{
+
+    color:#d8e5ff;
+
+}
+
+/* ===========================
+   Menu
+=========================== */
+
+.sidebar ul{
+
+    list-style:none;
+
+    padding:20px 0;
+
+}
+
+.sidebar ul li{
+
+    padding:18px 30px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    font-size:17px;
+
+}
+
+.sidebar ul li:hover{
+
+    background:#29539b;
+
+}
+
+.sidebar ul li.active{
+
+    background:#2d6cdf;
+
+    font-weight:600;
+
+}
+
+/* ===========================
+   Main
+=========================== */
+
+.main{
+
+    margin-left:270px;
+
+    padding:35px;
+
+}
+
+header{
+
+    margin-bottom:30px;
+
+}
+
+header h1{
+
+    font-size:32px;
+
+    color:#1e3c72;
+
+}
+
+header p{
+
+    color:#666;
+
+    margin-top:6px;
+
+}
+
+/* ===========================
+   Cards
+=========================== */
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:25px;
+
+    margin-bottom:35px;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.card h3{
+
+    color:#777;
+
+    margin-bottom:15px;
+
+}
+
+.card h1{
+
+    color:#1e3c72;
+
+    font-size:36px;
+
+}
+
+/* ===========================
+   Activity
+=========================== */
+
+.activity{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.activity h2{
+
+    margin-bottom:20px;
+
+    color:#1e3c72;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+table th{
+
+    background:#1e3c72;
+
+    color:white;
+
+    padding:14px;
+
+    text-align:left;
+
+}
+
+table td{
+
+    padding:14px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+/* ===========================
+   Scrollbar
+=========================== */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#2d6cdf;
+
+    border-radius:10px;
+
+}
+
+/* ===========================
+   Mobile
+=========================== */
+
+@media(max-width:900px){
+
+.sidebar{
+
+    width:75px;
+
+}
+
+.logo-section h2,
+
+.logo-section p{
+
+    display:none;
+
+}
+
+.sidebar-logo{
+
+    width:45px;
+
+}
+
+.sidebar ul li{
+
+    font-size:13px;
+
+    text-align:center;
+
+    padding:18px 8px;
+
+}
+
+.main{
+
+    margin-left:75px;
+
+}
+
+.cards{
+
+    grid-template-columns:1fr;
+
+}
+
+}

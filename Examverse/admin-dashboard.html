@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>ExamVerse | Admin Dashboard</title>
+
+<link rel="icon"
+type="image/png"
+href="assets/images/favicon.png">
+
+<link rel="stylesheet"
+href="assets/css/admin.css">
+
+<link rel="stylesheet"
+href="assets/css/loader.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Loader -->
+
+<div id="loader">
+
+<img
+src="assets/images/logo.png"
+class="loader-logo">
+
+<div class="spinner"></div>
+
+<div class="loading-text">
+
+Loading...
+
+</div>
+
+</div>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="logo-section">
+
+<img
+src="assets/images/logo.png"
+class="sidebar-logo">
+
+<h2>ExamVerse</h2>
+
+<p>Admin Panel</p>
+
+</div>
+
+<ul>
+
+<li class="active">
+
+🏠 Dashboard
+
+</li>
+
+<li>
+
+👥 Users
+
+</li>
+
+<li>
+
+📝 Exams
+
+</li>
+
+<li>
+
+📚 Questions
+
+</li>
+
+<li>
+
+📊 Results
+
+</li>
+
+<li>
+
+📈 Analytics
+
+</li>
+
+<li>
+
+⚙ Settings
+
+</li>
+
+<li id="logoutBtn">
+
+🚪 Logout
+
+</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<header>
+
+<h1>
+
+Welcome Admin 👑
+
+</h1>
+
+<p>
+
+Manage ExamVerse
+
+</p>
+
+</header>
+
+<!-- Cards -->
+
+<div class="cards">
+
+<div class="card">
+
+<h3>
+
+Total Users
+
+</h3>
+
+<h1 id="totalUsers">
+
+0
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Total Exams
+
+</h3>
+
+<h1 id="totalExams">
+
+0
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Questions
+
+</h3>
+
+<h1 id="totalQuestions">
+
+0
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Results
+
+</h3>
+
+<h1 id="totalResults">
+
+0
+
+</h1>
+
+</div>
+
+</div>
+
+<!-- Activity -->
+
+<div class="activity">
+
+<h2>
+
+Recent Activity
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>User</th>
+
+<th>Activity</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody id="activityTable">
+
+<tr>
+
+<td colspan="3">
+
+No Activity Yet
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/admin-auth.js"></script>
+
+<script src="assets/js/admin-dashboard.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+</body>
+
+</html>

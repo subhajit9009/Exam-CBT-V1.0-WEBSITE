@@ -193,6 +193,33 @@ console.log("Profile Error:", profileError);
 
     alert("Welcome Back, " + user.firstName + "!");
 
+    
+
+}
+
+// ==========================
+// Check Admin
+// ==========================
+
+const { data: admin } =
+await supabaseClient
+
+.from("admins")
+
+.select("role")
+
+.eq("id", data.user.id)
+
+.maybeSingle();
+
+if (admin) {
+
+    window.location.href = "admin-dashboard.html";
+
+}
+
+else {
+
     window.location.href = "dashboard.html";
 
 }
