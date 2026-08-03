@@ -47,6 +47,9 @@ async function loginUser(e) {
 
     .maybeSingle();
 
+    console.log("Profile:", profile);
+console.log("Profile Error:", profileError);
+
     if (profileError || !profile) {
 
         alert("Phone Number is not registered.");

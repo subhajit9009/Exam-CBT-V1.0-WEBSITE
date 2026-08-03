@@ -1,16 +1,21 @@
 const form = document.getElementById("forgotForm");
 
-form.addEventListener("submit", function(e){
+form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
     const phone = document.getElementById("phone").value.trim();
 
-    const users = Storage.getUsers();
+    // Find profile by phone
 
-    const user = users.find(u => u.phone === phone);
+    const { data: profile, error } =
+        await supabaseClient
+            .from("profiles")
+            .select("email")
+            .eq("phone", phone)
+            .maybeSingle();
 
-    if(!user){
+    if (error || !profile) {
 
         alert("Phone number not found.");
 
@@ -18,10 +23,30 @@ form.addEventListener("submit", function(e){
 
     }
 
-    alert(
-`Your password is:
+    // Send reset email
 
-${user.password}`
-    );
+    const { error: resetError } =
+        await supabaseClient.auth.resetPasswordForEmail(
+
+            profile.email,
+
+            {
+
+                redirectTo:
+                "https://subhajit9009.github.io/Exam-CBT-V1.0-WEBSITE/Examverse/reset-password.html"
+
+            }
+
+        );
+
+    if (resetError) {
+
+        alert(resetError.message);
+
+        return;
+
+    }
+
+    alert("Password reset link has been sent to your email.");
 
 });
