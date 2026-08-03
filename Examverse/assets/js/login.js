@@ -212,8 +212,8 @@ await supabaseClient
 
 .maybeSingle();
 
-console.log("User ID:", data.user.id);
-console.log("Admin:", admin);
+console.log("Logged User ID:", data.user.id);
+console.log("Admin Data:", admin);
 console.log("Admin Error:", adminError);
 
 if (admin) {
