@@ -156,22 +156,9 @@ async function startExam() {
     // ==========================
 
     const { data, error: authError } =
-    await supabaseClient.auth.getUser();
+        await supabaseClient.auth.getUser();
 
-    console.log("Auth Data:", data);
-    console.log("Auth Error:", authError);
-
-    if (authError) {
-
-        console.error(authError);
-
-        alert(authError.message);
-
-        return;
-
-    }
-
-    if (!data || !data.user) {
+    if (authError || !data.user) {
 
         alert("Please login again.");
 
@@ -183,41 +170,29 @@ async function startExam() {
 
     const user = data.user;
 
-    console.log("Auth UID:", user.id);
-
     // ==========================
     // Create Exam Attempt
     // ==========================
 
-    const { error } =
+    const { data: attempt, error } =
 
-await supabaseClient
+        await supabaseClient
 
-.from("exam_attempts")
+        .from("exam_attempts")
 
-.insert({
+        .insert({
 
-    user_id:user.id,
+            user_id: user.id,
 
-    exam_id:selectedExam.id,
+            exam_id: selectedExam.id,
 
-    total_questions:selectedExam.total_questions,
+            total_questions: selectedExam.total_questions
 
-    status:"In Progress"
+        })
 
-});
+        .select()
 
-if(error){
-
-    console.error(error);
-
-    alert(error.message);
-
-    return;
-
-}
-
-window.location.href="exam.html";
+        .single();
 
     if (error) {
 
@@ -234,34 +209,38 @@ window.location.href="exam.html";
     // ==========================
 
     sessionStorage.setItem(
+
         "attemptId",
+
         attempt.id
+
     );
 
     sessionStorage.setItem(
+
         "examStartTime",
+
         new Date().toISOString()
+
+    );
+
+    // ==========================
+    // Save Selected Exam
+    // ==========================
+
+    localStorage.setItem(
+
+        "selectedExam",
+
+        JSON.stringify(selectedExam)
+
     );
 
     // ==========================
     // Open Exam
     // ==========================
 
-    // Save selected exam
-
-    console.log(selectedExam);
-
-localStorage.setItem(
-
-    "selectedExam",
-
-    JSON.stringify(selectedExam)
-
-);
-
-// Open Exam
-
-window.location.href = "exam.html";
+    window.location.href = "exam.html";
 
 }
 
