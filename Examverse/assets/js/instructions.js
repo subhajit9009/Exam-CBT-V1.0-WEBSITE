@@ -149,73 +149,100 @@ startExamBtn.disabled = !agree.checked;
 
 startExamBtn.addEventListener("click",startExam);
 
-async function startExam(){
+async function startExam() {
 
-const {
-    data: { user }
-} = await supabaseClient.auth.getUser();
+    // ==========================
+    // Get Logged-in User
+    // ==========================
 
-if (!user) {
+    const { data, error: authError } =
+    await supabaseClient.auth.getUser();
 
-    alert("Please login again.");
+    console.log("Auth Data:", data);
+    console.log("Auth Error:", authError);
 
-    window.location.href = "login.html";
+    if (authError) {
 
-    return;
+        console.error(authError);
+
+        alert(authError.message);
+
+        return;
+
+    }
+
+    if (!data || !data.user) {
+
+        alert("Please login again.");
+
+        window.location.href = "login.html";
+
+        return;
+
+    }
+
+    const user = data.user;
+
+    console.log("Auth UID:", user.id);
+
+    // ==========================
+    // Create Exam Attempt
+    // ==========================
+
+    const { data: attempt, error } =
+
+    await supabaseClient
+
+    .from("exam_attempts")
+
+    .insert({
+
+        user_id: user.id,
+
+        exam_id: selectedExam.id,
+
+        total_questions: selectedExam.total_questions,
+
+        status: "In Progress"
+
+    })
+
+    .select()
+
+    .single();
+
+    if (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    // ==========================
+    // Save Attempt
+    // ==========================
+
+    sessionStorage.setItem(
+        "attemptId",
+        attempt.id
+    );
+
+    sessionStorage.setItem(
+        "examStartTime",
+        new Date().toISOString()
+    );
+
+    // ==========================
+    // Open Exam
+    // ==========================
+
+    window.location.href = "exam.html";
 
 }
 
-const { data,error } =
-
-await supabaseClient
-
-.from("exam_attempts")
-
-.insert({
-
-user_id:user.id,
-
-exam_id:selectedExam.id,
-
-total_questions:selectedExam.total_questions,
-
-status:"In Progress"
-
-})
-
-.select()
-
-.single();
-
-if(error){
-
-console.error(error);
-
-alert(error.message);
-
-return;
-
-}
-
-sessionStorage.setItem(
-
-"attemptId",
-
-data.id
-
-);
-
-sessionStorage.setItem(
-
-"examStartTime",
-
-new Date().toISOString()
-
-);
-
-window.location.href="exam.html";
-
-}
 
 //==========================================
 // Initial Load
