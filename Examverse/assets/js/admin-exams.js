@@ -348,8 +348,40 @@ data.description;
 document.getElementById("examStatus").value =
 data.status;
 
-questionModal.style.display="flex";
+examModal.style.display="flex";
 
 window.currentExamId=id;
+
+}
+
+//=========================
+// Delete Exam
+//=========================
+
+async function deleteExam(id){
+
+const ok = confirm("Delete this exam?");
+
+if(!ok) return;
+
+const { error } = await supabaseClient
+
+.from("exams")
+
+.delete()
+
+.eq("id", id);
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+alert("Exam Deleted Successfully ✅");
+
+loadExams();
 
 }
