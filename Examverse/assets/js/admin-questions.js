@@ -682,19 +682,3 @@ alert("Question Deleted Successfully ✅");
 loadQuestions();
 
 }
-
-//=========================
-// Logout
-//=========================
-
-document.getElementById("logoutBtn").onclick = async () => {
-
-    await supabaseClient.auth.signOut();
-
-    localStorage.clear();
-
-    sessionStorage.clear();
-
-    window.location.href = "login.html";
-
-};
