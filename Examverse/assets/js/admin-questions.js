@@ -156,24 +156,6 @@ const { data,error } =
 await query.order("question_no");
 
 
-await supabaseClient
-
-.from("questions")
-
-.select(`
-
-*,
-
-exams(
-
-exam_name
-
-)
-
-`)
-
-.order("question_no");
-
 if(error){
 
 console.log(error);
@@ -242,19 +224,19 @@ ${q.difficulty}
 
 <td>
 
-<button>
+<button onclick="previewQuestion('${q.id}')">
 
 👁
 
 </button>
 
-<button>
+<button onclick="editQuestion('${q.id}')">
 
 ✏
 
 </button>
 
-<button>
+<button onclick="deleteQuestion('${q.id}')">
 
 🗑
 
@@ -357,9 +339,53 @@ return;
 // Save into Supabase
 //=========================
 
-const { error } =
+let response;
 
-await supabaseClient
+if(window.currentQuestionId){
+
+response = await supabaseClient
+
+.from("questions")
+
+.update({
+
+exam_id:examId,
+
+question_no:questionNo,
+
+subject:subject,
+
+question:question,
+
+option_a:optionA,
+
+option_b:optionB,
+
+option_c:optionC,
+
+option_d:optionD,
+
+correct_answer:correctAnswer,
+
+explanation:explanation,
+
+marks:marks,
+
+negative_marks:negativeMarks,
+
+difficulty:difficulty,
+
+question_type:questionType
+
+})
+
+.eq("id",window.currentQuestionId);
+
+}
+
+else{
+
+response = await supabaseClient
 
 .from("questions")
 
@@ -395,6 +421,10 @@ question_type:questionType
 
 });
 
+}
+
+const { error } = response;
+
 if(error){
 
 console.error(error);
@@ -406,6 +436,8 @@ return;
 }
 
 alert("Question Saved Successfully ✅");
+
+window.currentQuestionId = null;
 
 //=========================
 // Reset Form
@@ -491,3 +523,162 @@ loadQuestions
 
 );
 
+//=========================
+// Edit Question
+//=========================
+
+async function editQuestion(id){
+
+const { data,error } =
+
+await supabaseClient
+
+.from("questions")
+
+.select("*")
+
+.eq("id",id)
+
+.single();
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+document.getElementById("examSelect").value =
+data.exam_id;
+
+document.getElementById("questionNo").value =
+data.question_no;
+
+document.getElementById("subject").value =
+data.subject;
+
+document.getElementById("question").value =
+data.question;
+
+document.getElementById("optionA").value =
+data.option_a;
+
+document.getElementById("optionB").value =
+data.option_b;
+
+document.getElementById("optionC").value =
+data.option_c;
+
+document.getElementById("optionD").value =
+data.option_d;
+
+document.getElementById("correctAnswer").value =
+data.correct_answer;
+
+document.getElementById("explanation").value =
+data.explanation;
+
+document.getElementById("marks").value =
+data.marks;
+
+document.getElementById("negativeMarks").value =
+data.negative_marks;
+
+document.getElementById("difficulty").value =
+data.difficulty;
+
+document.getElementById("questionType").value =
+data.question_type;
+
+window.currentQuestionId = id;
+
+questionModal.style.display = "flex";
+
+}
+
+//=========================
+// Preview Question
+//=========================
+
+async function previewQuestion(id){
+
+const { data,error } =
+
+await supabaseClient
+
+.from("questions")
+
+.select("*")
+
+.eq("id",id)
+
+.single();
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+alert(
+
+`Question
+
+${data.question}
+
+----------------
+
+A. ${data.option_a}
+
+B. ${data.option_b}
+
+C. ${data.option_c}
+
+D. ${data.option_d}
+
+Correct Answer : ${data.correct_answer}`
+
+);
+
+}
+
+//=========================
+// Delete Question
+//=========================
+
+async function deleteQuestion(id){
+
+const ok = confirm(
+
+"Delete this Question?"
+
+);
+
+if(!ok) return;
+
+const { error } =
+
+await supabaseClient
+
+.from("questions")
+
+.delete()
+
+.eq("id",id);
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+alert("Question Deleted Successfully ✅");
+
+loadQuestions();
+
+}
