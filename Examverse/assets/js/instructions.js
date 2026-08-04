@@ -151,9 +151,19 @@ startExamBtn.addEventListener("click",startExam);
 
 async function startExam(){
 
-const currentUser =
+const {
+    data: { user }
+} = await supabaseClient.auth.getUser();
 
-Storage.getCurrentUser();
+if (!user) {
+
+    alert("Please login again.");
+
+    window.location.href = "login.html";
+
+    return;
+
+}
 
 const { data,error } =
 
@@ -163,7 +173,7 @@ await supabaseClient
 
 .insert({
 
-user_id:currentUser.id,
+user_id:user.id,
 
 exam_id:selectedExam.id,
 

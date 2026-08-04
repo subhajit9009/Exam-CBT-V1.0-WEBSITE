@@ -99,7 +99,8 @@ console.log("Profile Error:", profileError);
 
     const user = {
 
-        id: profile.id,
+        id: data.user.id,
+profileId: profile.id,
 
         firstName: profile.first_name,
 
