@@ -189,27 +189,35 @@ async function startExam() {
     // Create Exam Attempt
     // ==========================
 
-    const { data: attempt, error } =
+    const { error } =
 
-    await supabaseClient
+await supabaseClient
 
-    .from("exam_attempts")
+.from("exam_attempts")
 
-    .insert({
+.insert({
 
-        user_id: user.id,
+    user_id:user.id,
 
-        exam_id: selectedExam.id,
+    exam_id:selectedExam.id,
 
-        total_questions: selectedExam.total_questions,
+    total_questions:selectedExam.total_questions,
 
-        status: "In Progress"
+    status:"In Progress"
 
-    })
+});
 
-    .select()
+if(error){
 
-    .single();
+    console.error(error);
+
+    alert(error.message);
+
+    return;
+
+}
+
+window.location.href="exam.html";
 
     if (error) {
 
