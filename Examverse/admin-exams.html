@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ExamVerse | Exam Management</title>
+
+<link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+<link rel="stylesheet" href="assets/css/admin.css">
+<link rel="stylesheet" href="assets/css/loader.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Loader -->
+
+<div id="loader">
+
+    <img src="assets/images/logo.png" class="loader-logo">
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+
+        Loading...
+
+    </div>
+
+</div>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+    <div class="logo-section">
+
+        <img src="assets/images/logo.png" class="sidebar-logo">
+
+        <h2>ExamVerse</h2>
+
+        <p>Admin Panel</p>
+
+    </div>
+
+    <ul>
+
+<a href="admin-dashboard.html">
+<li class="active">
+🏠 Dashboard
+</li>
+</a>
+
+<a href="admin-users.html">
+<li>
+👥 Users
+</li>
+</a>
+
+<a href="admin-exams.html">
+<li>
+📝 Exams
+</li>
+</a>
+
+<a href="admin-questions.html">
+<li>
+📚 Questions
+</li>
+</a>
+
+<a href="admin-results.html">
+<li>
+📊 Results
+</li>
+</a>
+
+<a href="admin-analytics.html">
+<li>
+📈 Analytics
+</li>
+</a>
+
+<a href="admin-settings.html">
+<li>
+⚙ Settings
+</li>
+</a>
+
+<a href="admin-profile.html">
+<li>
+👤 Profile
+</li>
+</a>
+
+<a href="admin-notifications.html">
+<li>
+🔔 Notifications
+</li>
+</a>
+
+<a href="admin-backup.html">
+<li>
+💾 Backup
+</li>
+</a>
+
+<a href="admin-logs.html">
+<li>
+📜 Logs
+</li>
+</a>
+
+<a href="admin-help.html">
+<li>
+❓ Help
+</li>
+</a>
+
+<li id="logoutBtn">
+🚪 Logout
+</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+    <header>
+
+        <h1>
+
+            📝 Exam Management
+
+        </h1>
+
+        <p>
+
+            Create, edit and manage CBT examinations.
+
+        </p>
+
+    </header>
+
+    <!-- Top Bar -->
+
+    <div class="quick-actions">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+
+            <button id="createExamBtn">
+
+                ➕ Create New Exam
+
+            </button>
+
+            <input
+
+            type="text"
+
+            id="searchExam"
+
+            placeholder="🔍 Search Exam..."
+
+            style="padding:12px;width:280px;border-radius:8px;border:1px solid #ccc;">
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <!-- Exam Table -->
+
+    <div class="activity">
+
+        <h2>
+
+            All Exams
+
+        </h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Exam Name</th>
+
+                    <th>Category</th>
+
+                    <th>Status</th>
+
+                    <th>Questions</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="examBody">
+
+                <tr>
+
+                    <td colspan="5" style="text-align:center;">
+
+                        No Exams Created Yet
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Create Exam Modal -->
+
+<div id="examModal" class="modal">
+
+<div class="modal-content">
+
+<h2>
+
+📝 Create New Exam
+
+</h2>
+
+<input
+type="text"
+id="examName"
+placeholder="Exam Name">
+
+<input
+type="text"
+id="examCode"
+placeholder="Exam Code">
+
+<select id="examCategory">
+
+<option>SSC</option>
+
+<option>RRB</option>
+
+<option>UPSC</option>
+
+<option>WBPSC</option>
+
+<option>BANK</option>
+
+<option>NEET</option>
+
+<option>JEE</option>
+
+<option>NET</option>
+
+<option>GATE</option>
+
+<option>OTHER</option>
+
+</select>
+
+<input
+type="number"
+id="examDuration"
+placeholder="Duration (Minutes)">
+
+<input
+type="number"
+id="totalQuestions"
+placeholder="Total Questions">
+
+<input
+type="number"
+id="totalMarks"
+placeholder="Total Marks">
+
+<input
+type="number"
+id="negativeMarks"
+placeholder="Negative Marks">
+
+<input
+type="number"
+id="passingMarks"
+placeholder="Passing Marks">
+
+<textarea
+id="examDescription"
+placeholder="Exam Description"></textarea>
+
+<select id="examStatus">
+
+<option>Draft</option>
+
+<option>Scheduled</option>
+
+<option>Live</option>
+
+<option>Closed</option>
+
+</select>
+
+<div class="modal-buttons">
+
+<button id="saveExam">
+
+💾 Save Exam
+
+</button>
+
+<button onclick="closeExamModal()">
+
+❌ Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/admin-auth.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+<script src="assets/js/admin-exams.js"></script>
+
+</body>
+
+</html>
