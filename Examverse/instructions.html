@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>ExamVerse | Exam Instructions</title>
+
+<link rel="icon"
+type="image/png"
+href="assets/images/favicon.png">
+
+<link rel="stylesheet"
+href="assets/css/instructions.css">
+
+<link rel="stylesheet"
+href="assets/css/loader.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Loader -->
+
+<div id="loader">
+
+<img
+src="assets/images/logo.png"
+class="loader-logo">
+
+<div class="spinner"></div>
+
+<div class="loading-text">
+
+Loading...
+
+</div>
+
+</div>
+
+<div class="instructionContainer">
+
+<div class="instructionCard">
+
+<h1>
+
+📋 Exam Instructions
+
+</h1>
+
+<p>
+
+Read all instructions carefully before starting the examination.
+
+</p>
+
+<hr>
+
+<div id="examDetails">
+
+<div class="loading">
+
+Loading Exam Details...
+
+</div>
+
+</div>
+
+<hr>
+
+<h2>
+
+General Instructions
+
+</h2>
+
+<ul class="instructionList">
+
+<li>✔ Read every question carefully before answering.</li>
+
+<li>✔ Each question has only one correct answer.</li>
+
+<li>✔ Negative marking will be applied if applicable.</li>
+
+<li>✔ Do not refresh or close the browser during the exam.</li>
+
+<li>✔ The timer starts immediately after clicking Start Exam.</li>
+
+<li>✔ The exam will automatically submit when time expires.</li>
+
+<li>✔ Ensure a stable internet connection whenever possible.</li>
+
+</ul>
+
+<div class="agreeBox">
+
+<input
+type="checkbox"
+id="agree">
+
+<label for="agree">
+
+I have read and understood all the instructions.
+
+</label>
+
+</div>
+
+<button
+id="startExamBtn"
+disabled>
+
+🚀 Start Exam
+
+</button>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/auth.js"></script>
+
+<script src="assets/js/instructions.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+</body>
+
+</html>

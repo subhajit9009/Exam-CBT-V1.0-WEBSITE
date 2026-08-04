@@ -137,3 +137,21 @@ document.getElementById("newTestBtn")
     window.location.href="exam-selection.html";
 
 });
+
+//=========================
+// New Test
+//=========================
+
+const newTestBtn =
+document.getElementById("newTestBtn");
+
+if(newTestBtn){
+
+newTestBtn.addEventListener("click",()=>{
+
+window.location.href =
+"exam-list.html";
+
+});
+
+}
