@@ -76,11 +76,11 @@ Number(document.getElementById("totalQuestions").value);
 const totalMarks =
 Number(document.getElementById("totalMarks").value);
 
-const negativeMarks =
-Number(document.getElementById("negativeMarks").value);
-
 const positiveMarks =
 Number(document.getElementById("positiveMarks").value);
+
+const negativeMarks =
+Number(document.getElementById("negativeMarks").value);
 
 const passingMarks =
 Number(document.getElementById("passingMarks").value);
@@ -91,23 +91,63 @@ document.getElementById("examDescription").value.trim();
 const status =
 document.getElementById("examStatus").value;
 
-if(
+if(!examName || !examCode){
 
-!examName ||
+    alert("Please fill Exam Name and Exam Code.");
 
-!examCode
-
-){
-
-alert("Please fill Exam Name and Exam Code.");
-
-return;
+    return;
 
 }
 
-const { error } =
+let response;
 
-await supabaseClient
+// ==========================
+// EDIT EXAM
+// ==========================
+
+if(window.currentExamId){
+
+response = await supabaseClient
+
+.from("exams")
+
+.update({
+
+exam_name:examName,
+
+exam_code:examCode,
+
+category:category,
+
+duration:duration,
+
+total_questions:totalQuestions,
+
+total_marks:totalMarks,
+
+positive_marks:positiveMarks,
+
+negative_marks:negativeMarks,
+
+passing_marks:passingMarks,
+
+description:description,
+
+status:status
+
+})
+
+.eq("id",window.currentExamId);
+
+}
+
+// ==========================
+// CREATE EXAM
+// ==========================
+
+else{
+
+response = await supabaseClient
 
 .from("exams")
 
@@ -125,9 +165,9 @@ total_questions:totalQuestions,
 
 total_marks:totalMarks,
 
-negative_marks:negativeMarks,
-
 positive_marks:positiveMarks,
+
+negative_marks:negativeMarks,
 
 passing_marks:passingMarks,
 
@@ -137,9 +177,11 @@ status:status
 
 });
 
-if(error){
+}
 
-console.log(error);
+const { error } = response;
+
+if(error){
 
 alert(error.message);
 
@@ -147,13 +189,16 @@ return;
 
 }
 
-alert("Exam Created Successfully ✅");
+alert("Exam Saved Successfully ✅");
+
+window.currentExamId = null;
 
 closeExamModal();
 
 loadExams();
 
 }
+
 
 //=========================
 // Load Exams
@@ -220,9 +265,17 @@ examBody.innerHTML +=
 
 <td>
 
-<button>✏</button>
+<button onclick="editExam('${exam.id}')">
 
-<button>🗑</button>
+✏
+
+</button>
+
+<button onclick="deleteExam('${exam.id}')">
+
+🗑
+
+</button>
 
 </td>
 
@@ -235,3 +288,68 @@ examBody.innerHTML +=
 }
 
 loadExams();
+
+//=========================
+// Edit Exam
+//=========================
+
+async function editExam(id){
+
+const { data,error } =
+
+await supabaseClient
+
+.from("exams")
+
+.select("*")
+
+.eq("id",id)
+
+.single();
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+document.getElementById("examName").value =
+data.exam_name;
+
+document.getElementById("examCode").value =
+data.exam_code;
+
+document.getElementById("examCategory").value =
+data.category;
+
+document.getElementById("examDuration").value =
+data.duration;
+
+document.getElementById("totalQuestions").value =
+data.total_questions;
+
+document.getElementById("totalMarks").value =
+data.total_marks;
+
+document.getElementById("positiveMarks").value =
+data.positive_marks;
+
+document.getElementById("negativeMarks").value =
+data.negative_marks;
+
+document.getElementById("passingMarks").value =
+data.passing_marks;
+
+document.getElementById("examDescription").value =
+data.description;
+
+document.getElementById("examStatus").value =
+data.status;
+
+questionModal.style.display="flex";
+
+window.currentExamId=id;
+
+}
