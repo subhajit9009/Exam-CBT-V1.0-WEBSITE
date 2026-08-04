@@ -247,7 +247,21 @@ window.location.href="exam.html";
     // Open Exam
     // ==========================
 
-    window.location.href = "exam.html";
+    // Save selected exam
+
+    console.log(selectedExam);
+
+localStorage.setItem(
+
+    "selectedExam",
+
+    JSON.stringify(selectedExam)
+
+);
+
+// Open Exam
+
+window.location.href = "exam.html";
 
 }
 
