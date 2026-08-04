@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ExamVerse | CBT Examination</title>
+
+<link rel="stylesheet" href="assets/css/exam.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="exam-container">
+
+<!-- ================= HEADER ================= -->
+
+<header class="exam-header">
+
+<div>
+
+<h2 id="examTitle">Loading Exam...</h2>
+
+<p id="candidateName">Candidate</p>
+
+</div>
+
+<div class="timer-box">
+
+<i class="fa-solid fa-clock"></i>
+
+<span id="timer">00:00:00</span>
+
+</div>
+
+</header>
+
+<!-- ================= MAIN ================= -->
+
+<div class="exam-body">
+
+<!-- LEFT -->
+
+<div class="question-area">
+
+<div class="question-number">
+
+Question
+
+<span id="currentQuestion">
+
+1
+
+</span>
+
+of
+
+<span id="totalQuestion">
+
+0
+
+</span>
+
+</div>
+
+<div class="question-box">
+
+<p id="questionText">
+
+Loading Question...
+
+</p>
+
+</div>
+
+<div class="options">
+
+<label>
+
+<input type="radio"
+name="option"
+value="A">
+
+<span id="optionA"></span>
+
+</label>
+
+<label>
+
+<input type="radio"
+name="option"
+value="B">
+
+<span id="optionB"></span>
+
+</label>
+
+<label>
+
+<input type="radio"
+name="option"
+value="C">
+
+<span id="optionC"></span>
+
+</label>
+
+<label>
+
+<input type="radio"
+name="option"
+value="D">
+
+<span id="optionD"></span>
+
+</label>
+
+</div>
+
+<div class="navigation">
+
+<button id="previousBtn">
+
+Previous
+
+</button>
+
+<button id="clearBtn">
+
+Clear Response
+
+</button>
+
+<button id="reviewBtn">
+
+Mark Review
+
+</button>
+
+<button id="nextBtn">
+
+Save & Next
+
+</button>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="palette">
+
+<h3>
+
+Question Palette
+
+</h3>
+
+<div id="questionPalette">
+
+</div>
+
+<button id="submitBtn">
+
+Submit Exam
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/exam.js"></script>
+
+</body>
+
+</html>
