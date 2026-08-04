@@ -113,7 +113,48 @@ ${exam.exam_name}
 
 async function loadQuestions(){
 
-const { data, error } =
+const examFilter =
+document.getElementById("filterExam").value;
+
+const difficultyFilter =
+document.getElementById("filterDifficulty").value;
+
+const search =
+document.getElementById("searchQuestion")
+.value
+.toLowerCase();
+
+let query =
+supabaseClient
+
+.from("questions")
+
+.select(`
+
+*,
+
+exams(exam_name)
+
+`);
+
+if(examFilter){
+
+query =
+query.eq("exam_id",examFilter);
+
+}
+
+if(difficultyFilter){
+
+query =
+query.eq("difficulty",difficultyFilter);
+
+}
+
+const { data,error } =
+
+await query.order("question_no");
+
 
 await supabaseClient
 
@@ -163,7 +204,19 @@ return;
 
 data.forEach((q,index)=>{
 
-questionTable.innerHTML +=
+if(
+
+search &&
+
+!q.question.toLowerCase().includes(search)
+
+){
+
+return;
+
+}
+
+    questionTable.innerHTML +=
 
 `
 
@@ -389,4 +442,52 @@ questionModal.style.display="none";
 loadQuestions();
 
 }
+
+//=========================
+// Search
+//=========================
+
+document
+
+.getElementById("searchQuestion")
+
+.addEventListener(
+
+"keyup",
+
+loadQuestions
+
+);
+
+//=========================
+// Exam Filter
+//=========================
+
+document
+
+.getElementById("filterExam")
+
+.addEventListener(
+
+"change",
+
+loadQuestions
+
+);
+
+//=========================
+// Difficulty Filter
+//=========================
+
+document
+
+.getElementById("filterDifficulty")
+
+.addEventListener(
+
+"change",
+
+loadQuestions
+
+);
 
