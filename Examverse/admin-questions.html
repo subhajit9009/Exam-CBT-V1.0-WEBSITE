@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>ExamVerse | Question Bank</title>
+
+<link rel="icon"
+type="image/png"
+href="assets/images/favicon.png">
+
+<link rel="stylesheet"
+href="assets/css/admin.css">
+
+<link rel="stylesheet"
+href="assets/css/admin-questions.css">
+
+<link rel="stylesheet"
+href="assets/css/loader.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Loader -->
+
+<div id="loader">
+
+<img
+src="assets/images/logo.png"
+class="loader-logo">
+
+<div class="spinner"></div>
+
+<div class="loading-text">
+
+Loading...
+
+</div>
+
+</div>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="logo-section">
+
+<img
+src="assets/images/logo.png"
+class="sidebar-logo">
+
+<h2>ExamVerse</h2>
+
+<p>Admin Panel</p>
+
+</div>
+
+<ul>
+
+<a href="admin-dashboard.html">
+<li>
+🏠 Dashboard
+</li>
+</a>
+
+<a href="admin-users.html">
+<li>
+👥 Users
+</li>
+</a>
+
+<a href="admin-exams.html">
+<li>
+📝 Exams
+</li>
+</a>
+
+<a href="admin-questions.html">
+<li class="active">
+📚 Questions
+</li>
+</a>
+
+<a href="admin-results.html">
+<li>
+📊 Results
+</li>
+</a>
+
+<a href="admin-analytics.html">
+<li>
+📈 Analytics
+</li>
+</a>
+
+<a href="admin-settings.html">
+<li>
+⚙ Settings
+</li>
+</a>
+
+<li id="logoutBtn">
+🚪 Logout
+</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<header>
+
+<h1>
+
+📚 Question Bank
+
+</h1>
+
+<p>
+
+Manage all questions for every examination.
+
+</p>
+
+</header>
+
+<!-- Top Bar -->
+
+<div class="top-bar">
+
+<button
+id="addQuestionBtn">
+
+➕ Add Question
+
+</button>
+
+<input
+type="text"
+id="searchQuestion"
+placeholder="🔍 Search Question...">
+
+</div>
+
+<!-- Filters -->
+
+<div class="filters">
+
+<select id="filterExam">
+
+<option value="">
+
+All Exams
+
+</option>
+
+</select>
+
+<select id="filterDifficulty">
+
+<option value="">
+
+All Difficulty
+
+</option>
+
+<option>
+
+Easy
+
+</option>
+
+<option>
+
+Medium
+
+</option>
+
+<option>
+
+Hard
+
+</option>
+
+</select>
+
+</div>
+
+<!-- Question Table -->
+
+<div class="activity">
+
+<h2>
+
+Question List
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>No</th>
+
+<th>Exam</th>
+
+<th>Subject</th>
+
+<th>Difficulty</th>
+
+<th>Marks</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="questionTable">
+
+<tr>
+
+<td colspan="6">
+
+No Questions Available
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- ===========================
+Question Modal
+============================ -->
+
+<div
+id="questionModal"
+class="modal">
+
+<div class="modal-content">
+
+<h2>
+
+➕ Add Question
+
+</h2>
+
+<select id="examSelect">
+
+<option value="">
+
+Select Exam
+
+</option>
+
+</select>
+
+<input
+type="number"
+id="questionNo"
+placeholder="Question Number">
+
+<input
+type="text"
+id="subject"
+placeholder="Subject">
+
+<textarea
+id="question"
+placeholder="Question"></textarea>
+
+<input
+type="text"
+id="optionA"
+placeholder="Option A">
+
+<input
+type="text"
+id="optionB"
+placeholder="Option B">
+
+<input
+type="text"
+id="optionC"
+placeholder="Option C">
+
+<input
+type="text"
+id="optionD"
+placeholder="Option D">
+
+<select id="correctAnswer">
+
+<option value="">
+
+Correct Answer
+
+</option>
+
+<option value="A">
+
+Option A
+
+</option>
+
+<option value="B">
+
+Option B
+
+</option>
+
+<option value="C">
+
+Option C
+
+</option>
+
+<option value="D">
+
+Option D
+
+</option>
+
+</select>
+
+<textarea
+id="explanation"
+placeholder="Explanation"></textarea>
+
+<input
+type="number"
+id="marks"
+value="1"
+placeholder="Marks">
+
+<input
+type="number"
+id="negativeMarks"
+value="0"
+placeholder="Negative Marks">
+
+<select id="difficulty">
+
+<option>
+
+Easy
+
+</option>
+
+<option>
+
+Medium
+
+</option>
+
+<option>
+
+Hard
+
+</option>
+
+</select>
+
+<select id="questionType">
+
+<option>
+
+MCQ
+
+</option>
+
+</select>
+
+<div class="modal-buttons">
+
+<button
+id="saveQuestionBtn">
+
+💾 Save Question
+
+</button>
+
+<button
+id="closeQuestionBtn">
+
+❌ Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/admin-auth.js"></script>
+
+<script src="assets/js/admin-common.js"></script>
+
+<script src="assets/js/admin-questions.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+<script src="assets/js/admin-common.js"></script>
+
+</body>
+
+</html>
