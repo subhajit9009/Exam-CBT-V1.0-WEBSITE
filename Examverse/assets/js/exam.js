@@ -196,7 +196,7 @@ async function loadQuestions() {
 
     }
 
-    //==========================================
+  //==========================================
 // Create Question Palette
 //==========================================
 
@@ -232,9 +232,7 @@ function createQuestionPalette() {
 
 function updatePalette() {
 
-    document
-
-    .querySelectorAll(".paletteBtn")
+    document.querySelectorAll(".paletteBtn")
 
     .forEach((button, index) => {
 
@@ -258,9 +256,7 @@ function updatePalette() {
 
     });
 
-    const current =
-
-    document.getElementById(
+    const current = document.getElementById(
 
         `palette${currentQuestionIndex}`
 
