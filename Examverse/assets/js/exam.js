@@ -140,6 +140,31 @@ if(!visitedQuestions.includes(index)){
     document.getElementById("optionD").textContent =
         q.option_d;
 
+        // ==========================
+// Restore Selected Answer
+// ==========================
+
+document.querySelectorAll('input[name="answer"]')
+.forEach(radio => {
+
+    radio.checked = false;
+
+});
+
+if (answers[q.id]) {
+
+    const selected = document.querySelector(
+        `input[name="answer"][value="${answers[q.id]}"]`
+    );
+
+    if (selected) {
+
+        selected.checked = true;
+
+    }
+
+}
+
     updatePalette();
 
     document.getElementById("previousBtn").disabled =
@@ -198,13 +223,21 @@ function updatePalette(){
 
         }
 
+        const q = questions[index];
+
+        if(q && answers[q.id]){
+
+            btn.className="paletteBtn answered";
+
+        }
+
     });
 
     document
 
     .getElementById(`palette${currentQuestion}`)
 
-    .classList.remove("notAnswered");
+    .classList.remove("answered","notAnswered");
 
     document
 
@@ -241,5 +274,33 @@ function previousQuestion(){
         showQuestion(currentQuestion-1);
 
     }
+
+}
+
+// ==========================
+// Save Answer (Local)
+// ==========================
+
+document.querySelectorAll('input[name="answer"]')
+
+.forEach(radio => {
+
+    radio.addEventListener("change", saveAnswer);
+
+});
+
+function saveAnswer() {
+
+    const selected = document.querySelector(
+        'input[name="answer"]:checked'
+    );
+
+    if (!selected) return;
+
+    const question = questions[currentQuestion];
+
+    answers[question.id] = selected.value;
+
+    console.log("Answers:", answers);
 
 }
