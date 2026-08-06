@@ -306,7 +306,7 @@ function saveAnswer() {
 
     updatePalette();
 
-    saveAnswerToSupabase(question.id, selected.value);
+    //saveAnswerToSupabase(question.id, selected.value);
 
 }
 
