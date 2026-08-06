@@ -289,7 +289,7 @@ displayQuestion(0);
 }
 
 //==========================================
-// Display - Question
+// Display Question
 //==========================================
 
 function displayQuestion(index) {
