@@ -23,7 +23,6 @@ let timerInterval = null;
 // Page Load
 // ==========================
 
-window.addEventListener("DOMContentLoaded", initExam);
 
 // ==========================
 // Initialize Exam
@@ -127,8 +126,6 @@ if(!visitedQuestions.includes(index)){
 }
 
     const q = questions[index];
-
-    if (!q) return;
 
     document.getElementById("currentQuestion").textContent =
         index + 1;
@@ -308,6 +305,5 @@ function saveAnswer() {
     console.log("Saved:", answers);
 
     updatePalette();
-
 
 }
