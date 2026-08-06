@@ -144,7 +144,7 @@ if(!visitedQuestions.includes(index)){
 // Restore Selected Answer
 // ==========================
 
-document.querySelectorAll('input[name="answer"]')
+document.querySelectorAll('input[name="option"]')
 .forEach(radio => {
 
     radio.checked = false;
@@ -154,7 +154,7 @@ document.querySelectorAll('input[name="answer"]')
 if (answers[q.id]) {
 
     const selected = document.querySelector(
-        `input[name="answer"][value="${answers[q.id]}"]`
+        `input[name="option"][value="${answers[q.id]}"]`
     );
 
     if (selected) {
@@ -227,7 +227,9 @@ function updatePalette(){
 
         if(q && answers[q.id]){
 
-            btn.className="paletteBtn answered";
+            btn.classList.remove("notAnswered");
+
+            btn.classList.add("answered");
 
         }
 
@@ -292,7 +294,7 @@ document.querySelectorAll('input[name="answer"]')
 function saveAnswer() {
 
     const selected = document.querySelector(
-        'input[name="answer"]:checked'
+        'input[name="option"]:checked'
     );
 
     if (!selected) return;
@@ -300,6 +302,8 @@ function saveAnswer() {
     const question = questions[currentQuestion];
 
     answers[question.id] = selected.value;
+
+    updatePalette();
 
     console.log("Answers:", answers);
 
