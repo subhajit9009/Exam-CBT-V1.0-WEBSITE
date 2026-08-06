@@ -23,6 +23,7 @@ let timerInterval = null;
 // Page Load
 // ==========================
 
+window.addEventListener("DOMContentLoaded", initExam);
 
 // ==========================
 // Initialize Exam
