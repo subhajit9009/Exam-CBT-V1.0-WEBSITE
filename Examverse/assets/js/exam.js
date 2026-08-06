@@ -23,15 +23,6 @@ let timerInterval = null;
 // Page Load
 // ==========================
 
-window.addEventListener("DOMContentLoaded", initExam);
-
-window.addEventListener("DOMContentLoaded", () => {
-
-    const options = document.querySelector(".options");
-
-    options.addEventListener("change", saveAnswer);
-
-});
 
 // ==========================
 // Initialize Exam
@@ -68,6 +59,12 @@ async function initExam() {
 
     // Load Questions
     await loadQuestions();
+
+    document.getElementById("nextBtn")
+.addEventListener("click", nextQuestion);
+
+document.getElementById("previousBtn")
+.addEventListener("click", previousQuestion);
 
 }
 
@@ -147,6 +144,13 @@ if(!visitedQuestions.includes(index)){
 
     document.getElementById("optionD").textContent =
         q.option_d;
+
+        document.querySelectorAll('input[name="option"]')
+.forEach(radio=>{
+
+    radio.onchange = saveAnswer;
+
+});
 
         // ==========================
 // Restore Selected Answer
@@ -261,12 +265,6 @@ function updatePalette(){
 // Navigation Buttons
 // ==========================
 
-document.getElementById("nextBtn")
-.addEventListener("click", nextQuestion);
-
-document.getElementById("previousBtn")
-.addEventListener("click", previousQuestion);
-
 function nextQuestion(){
 
     if(currentQuestion < questions.length-1){
@@ -292,22 +290,20 @@ function previousQuestion(){
 // ==========================
 
 
-function saveAnswer(event) {
+function saveAnswer() {
 
-    // Make sure a radio button was clicked
-    if (!event.target.matches('input[name="option"]')) {
-        return;
-    }
+    const selected = document.querySelector(
+        'input[name="option"]:checked'
+    );
 
-    // Current question
+    if (!selected) return;
+
     const question = questions[currentQuestion];
 
-    // Save selected option locally
-    answers[question.id] = event.target.value;
+    answers[question.id] = selected.value;
 
     console.log("Saved:", answers);
 
-    // Update palette
     updatePalette();
 
 }
