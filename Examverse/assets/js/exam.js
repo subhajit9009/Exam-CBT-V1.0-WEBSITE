@@ -25,6 +25,14 @@ let timerInterval = null;
 
 window.addEventListener("DOMContentLoaded", initExam);
 
+window.addEventListener("DOMContentLoaded", () => {
+
+    const options = document.querySelector(".options");
+
+    options.addEventListener("change", saveAnswer);
+
+});
+
 // ==========================
 // Initialize Exam
 // ==========================
@@ -283,28 +291,23 @@ function previousQuestion(){
 // Save Answer (Local)
 // ==========================
 
-document.querySelectorAll('input[name="answer"]')
 
-.forEach(radio => {
+function saveAnswer(event) {
 
-    radio.addEventListener("change", saveAnswer);
+    // Make sure a radio button was clicked
+    if (!event.target.matches('input[name="option"]')) {
+        return;
+    }
 
-});
-
-function saveAnswer() {
-
-    const selected = document.querySelector(
-        'input[name="option"]:checked'
-    );
-
-    if (!selected) return;
-
+    // Current question
     const question = questions[currentQuestion];
 
-    answers[question.id] = selected.value;
+    // Save selected option locally
+    answers[question.id] = event.target.value;
 
+    console.log("Saved:", answers);
+
+    // Update palette
     updatePalette();
-
-    console.log("Answers:", answers);
 
 }
