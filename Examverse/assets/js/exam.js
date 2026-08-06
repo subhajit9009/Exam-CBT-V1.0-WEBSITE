@@ -1,42 +1,124 @@
 /* ==========================================
    ExamVerse CBT Engine
+   Version : 2.0
    Created by Subhajit Paul
-========================================== */
+==========================================*/
+
+//==========================================
+// Global Variables
+//==========================================
 
 let selectedExam = null;
-let questions = [];
-let currentQuestion = 0;
 
-// ==========================
-// Exam State
-// ==========================
+let questions = [];
+
+let currentQuestionIndex = 0;
 
 let answers = {};
 
-let reviewQuestions = [];
-
 let visitedQuestions = [];
+
+let reviewQuestions = [];
 
 let timerInterval = null;
 
-// ==========================
-// Page Load
-// ==========================
+let examStartTime = null;
 
-window.addEventListener("DOMContentLoaded", initExam);
+let attemptId = null;
 
-// ==========================
+//==========================================
+// DOM Elements
+//==========================================
+
+const examTitle =
+document.getElementById("examTitle");
+
+const candidateName =
+document.getElementById("candidateName");
+
+const currentQuestion =
+document.getElementById("currentQuestion");
+
+const totalQuestion =
+document.getElementById("totalQuestion");
+
+const questionText =
+document.getElementById("questionText");
+
+const optionA =
+document.getElementById("optionA");
+
+const optionB =
+document.getElementById("optionB");
+
+const optionC =
+document.getElementById("optionC");
+
+const optionD =
+document.getElementById("optionD");
+
+const questionPalette =
+document.getElementById("questionPalette");
+
+const timer =
+document.getElementById("timer");
+
+const previousBtn =
+document.getElementById("previousBtn");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+const reviewBtn =
+document.getElementById("reviewBtn");
+
+const clearBtn =
+document.getElementById("clearBtn");
+
+const submitBtn =
+document.getElementById("submitBtn");
+
+//==========================================
+// Start Application
+//==========================================
+
+window.addEventListener(
+
+    "DOMContentLoaded",
+
+    initializeExam
+
+);
+
+//==========================================
 // Initialize Exam
-// ==========================
+//==========================================
 
-async function initExam() {
+async function initializeExam() {
 
-    // Get selected exam from localStorage
-    selectedExam = JSON.parse(localStorage.getItem("selectedExam"));
+    // Logged In User
 
-    if (!selectedExam) {
+    const user = Storage.getCurrentUser();
 
-        alert("No exam selected.");
+    if (!user) {
+
+        alert("Please login first.");
+
+        window.location.href = "login.html";
+
+        return;
+
+    }
+
+    candidateName.textContent = user.fullName;
+
+    // Selected Exam
+
+    const storedExam = localStorage.getItem("selectedExam");
+
+    if (!storedExam) {
+
+        alert("No Exam Selected.");
 
         window.location.href = "exam-list.html";
 
@@ -44,39 +126,41 @@ async function initExam() {
 
     }
 
-    // Candidate Name
-    const user = Storage.getCurrentUser();
+    selectedExam = JSON.parse(storedExam);
 
-    if (user) {
+    examTitle.textContent = selectedExam.exam_name;
 
-        document.getElementById("candidateName").textContent =
-            user.fullName;
+    // Attempt ID
+
+    attemptId = sessionStorage.getItem("attemptId");
+
+    if (!attemptId) {
+
+        alert("Exam session not found.");
+
+        window.location.href = "instructions.html";
+
+        return;
 
     }
 
-    // Exam Title
-    document.getElementById("examTitle").textContent =
-        selectedExam.exam_name;
+    // Start Time
+
+    examStartTime = sessionStorage.getItem("examStartTime");
 
     // Load Questions
+
     await loadQuestions();
 
-    document.getElementById("nextBtn")
-.addEventListener("click", nextQuestion);
-
-document.getElementById("previousBtn")
-.addEventListener("click", previousQuestion);
 }
 
-// ==========================
+//==========================================
 // Load Questions
-// ==========================
+//==========================================
 
 async function loadQuestions() {
 
-    const { data, error } =
-
-        await supabaseClient
+    const { data, error } = await supabaseClient
 
         .from("questions")
 
@@ -84,15 +168,13 @@ async function loadQuestions() {
 
         .eq("exam_id", selectedExam.id)
 
-        .order("question_no", {
-            ascending: true
-        });
+        .order("question_no", { ascending: true });
 
     if (error) {
 
         console.error(error);
 
-        alert(error.message);
+        alert("Failed to load questions.");
 
         return;
 
@@ -100,212 +182,11 @@ async function loadQuestions() {
 
     questions = data;
 
-    document.getElementById("totalQuestion").textContent =
-        questions.length;
+    totalQuestion.textContent = questions.length;
 
     createPalette();
 
-    showQuestion(0);
+    displayQuestion(0);
 
 }
 
-// ==========================
-// Display Question
-// ==========================
-
-function showQuestion(index) {
-
-    currentQuestion = index;
-
-    // Mark visited
-
-if(!visitedQuestions.includes(index)){
-
-    visitedQuestions.push(index);
-
-}
-
-    const q = questions[index];
-
-    if (!q) return;
-
-    document.getElementById("currentQuestion").textContent =
-        index + 1;
-
-    document.getElementById("questionText").textContent =
-        q.question;
-
-    document.getElementById("optionA").textContent =
-        q.option_a;
-
-    document.getElementById("optionB").textContent =
-        q.option_b;
-
-    document.getElementById("optionC").textContent =
-        q.option_c;
-
-    document.getElementById("optionD").textContent =
-        q.option_d;
-
-        document.querySelectorAll('input[name="option"]')
-.forEach(radio=>{
-
-    radio.onchange = saveAnswer;
-
-});
-
-        // ==========================
-// Restore Selected Answer
-// ==========================
-
-document.querySelectorAll('input[name="option"]')
-.forEach(radio => {
-
-    radio.checked = false;
-
-});
-
-if (answers[q.id]) {
-
-    const selected = document.querySelector(
-        `input[name="option"][value="${answers[q.id]}"]`
-    );
-
-    if (selected) {
-
-        selected.checked = true;
-
-    }
-
-}
-
-    updatePalette();
-
-    document.getElementById("previousBtn").disabled =
-currentQuestion===0;
-
-document.getElementById("nextBtn").disabled =
-currentQuestion===questions.length-1;
-
-}
-
-// ==========================
-// Create Palette
-// ==========================
-
-function createPalette() {
-
-    const palette =
-        document.getElementById("questionPalette");
-
-    palette.innerHTML = "";
-
-    questions.forEach((q, index) => {
-
-        palette.innerHTML +=
-
-            `
-<button
-class="paletteBtn"
-id="palette${index}"
-onclick="showQuestion(${index})">
-
-${index + 1}
-
-</button>
-`;
-
-    });
-
-}
-
-// ==========================
-// Update Palette
-// ==========================
-
-function updatePalette(){
-
-    document.querySelectorAll(".paletteBtn")
-
-    .forEach((btn,index)=>{
-
-        btn.className="paletteBtn";
-
-        if(visitedQuestions.includes(index)){
-
-            btn.classList.add("notAnswered");
-
-        }
-
-        const q = questions[index];
-
-        if(q && answers[q.id]){
-
-            btn.classList.remove("notAnswered");
-
-            btn.classList.add("answered");
-
-        }
-
-    });
-
-    document
-
-    .getElementById(`palette${currentQuestion}`)
-
-    .classList.remove("answered","notAnswered");
-
-    document
-
-    .getElementById(`palette${currentQuestion}`)
-
-    .classList.add("current");
-
-}
-
-// ==========================
-// Navigation Buttons
-// ==========================
-
-function nextQuestion(){
-
-    if(currentQuestion < questions.length-1){
-
-        showQuestion(currentQuestion+1);
-
-    }
-
-}
-
-function previousQuestion(){
-
-    if(currentQuestion>0){
-
-        showQuestion(currentQuestion-1);
-
-    }
-
-}
-
-// ==========================
-// Save Answer (Local)
-// ==========================
-
-
-function saveAnswer() {
-
-    const selected = document.querySelector(
-        'input[name="option"]:checked'
-    );
-
-    if (!selected) return;
-
-    const question = questions[currentQuestion];
-
-    answers[question.id] = selected.value;
-
-    console.log("Saved:", answers);
-
-    updatePalette();
-
-}
