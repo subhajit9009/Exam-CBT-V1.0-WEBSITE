@@ -8,6 +8,18 @@ let questions = [];
 let currentQuestion = 0;
 
 // ==========================
+// Exam State
+// ==========================
+
+let answers = {};
+
+let reviewQuestions = [];
+
+let visitedQuestions = [];
+
+let timerInterval = null;
+
+// ==========================
 // Page Load
 // ==========================
 
@@ -100,6 +112,14 @@ function showQuestion(index) {
 
     currentQuestion = index;
 
+    // Mark visited
+
+if(!visitedQuestions.includes(index)){
+
+    visitedQuestions.push(index);
+
+}
+
     const q = questions[index];
 
     document.getElementById("currentQuestion").textContent =
@@ -121,6 +141,12 @@ function showQuestion(index) {
         q.option_d;
 
     updatePalette();
+
+    document.getElementById("previousBtn").disabled =
+currentQuestion===0;
+
+document.getElementById("nextBtn").disabled =
+currentQuestion===questions.length-1;
 
 }
 
@@ -158,22 +184,62 @@ ${index + 1}
 // Update Palette
 // ==========================
 
-function updatePalette() {
+function updatePalette(){
+
+    document.querySelectorAll(".paletteBtn")
+
+    .forEach((btn,index)=>{
+
+        btn.className="paletteBtn";
+
+        if(visitedQuestions.includes(index)){
+
+            btn.classList.add("notAnswered");
+
+        }
+
+    });
 
     document
 
-        .querySelectorAll(".paletteBtn")
+    .getElementById(`palette${currentQuestion}`)
 
-        .forEach(btn => {
-
-            btn.classList.remove("current");
-
-        });
+    .classList.remove("notAnswered");
 
     document
 
-        .getElementById(`palette${currentQuestion}`)
+    .getElementById(`palette${currentQuestion}`)
 
-        .classList.add("current");
+    .classList.add("current");
+
+}
+
+// ==========================
+// Navigation Buttons
+// ==========================
+
+document.getElementById("nextBtn")
+.addEventListener("click", nextQuestion);
+
+document.getElementById("previousBtn")
+.addEventListener("click", previousQuestion);
+
+function nextQuestion(){
+
+    if(currentQuestion < questions.length-1){
+
+        showQuestion(currentQuestion+1);
+
+    }
+
+}
+
+function previousQuestion(){
+
+    if(currentQuestion>0){
+
+        showQuestion(currentQuestion-1);
+
+    }
 
 }
