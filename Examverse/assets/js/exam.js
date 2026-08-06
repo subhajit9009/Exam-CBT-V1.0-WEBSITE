@@ -313,9 +313,6 @@ function saveAnswer() {
 
 }
 
-// ==========================
-// Save Answer To Supabase
-// ==========================
 
 async function saveAnswerToSupabase(questionId, selectedOption) {
 
