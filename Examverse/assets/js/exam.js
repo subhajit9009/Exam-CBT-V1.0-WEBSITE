@@ -309,51 +309,5 @@ function saveAnswer() {
 
     updatePalette();
 
-    saveAnswerToSupabase(question.id, selected.value);
-
-}
-
-
-async function saveAnswerToSupabase(questionId, selectedOption) {
-
-    const attemptId = sessionStorage.getItem("attemptId");
-
-    if (!attemptId) {
-
-        console.error("No attempt ID found.");
-
-        return;
-
-    }
-
-    const { data: auth } = await supabaseClient.auth.getUser();
-
-    const user = auth.user;
-
-    const { error } = await supabaseClient
-
-        .from("user_answers")
-
-        .upsert({
-
-            attempt_id: attemptId,
-
-            question_id: questionId,
-
-            selected_option: selectedOption,
-
-            user_id: user.id
-
-        });
-
-    if (error) {
-
-        console.error("Supabase Error:", error);
-
-    } else {
-
-        console.log("Answer saved to Supabase");
-
-    }
 
 }
