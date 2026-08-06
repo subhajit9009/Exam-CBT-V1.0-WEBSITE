@@ -1,124 +1,42 @@
 /* ==========================================
    ExamVerse CBT Engine
-   Version : 2.0
    Created by Subhajit Paul
-==========================================*/
-
-//==========================================
-// Global Variables
-//==========================================
+========================================== */
 
 let selectedExam = null;
-
 let questions = [];
+let currentQuestion = 0;
 
-let currentQuestionIndex = 0;
+// ==========================
+// Exam State
+// ==========================
 
 let answers = {};
 
-let visitedQuestions = [];
-
 let reviewQuestions = [];
+
+let visitedQuestions = [];
 
 let timerInterval = null;
 
-let examStartTime = null;
+// ==========================
+// Page Load
+// ==========================
 
-let attemptId = null;
+window.addEventListener("DOMContentLoaded", initExam);
 
-//==========================================
-// DOM Elements
-//==========================================
-
-const examTitle =
-document.getElementById("examTitle");
-
-const candidateName =
-document.getElementById("candidateName");
-
-const currentQuestion =
-document.getElementById("currentQuestion");
-
-const totalQuestion =
-document.getElementById("totalQuestion");
-
-const questionText =
-document.getElementById("questionText");
-
-const optionA =
-document.getElementById("optionA");
-
-const optionB =
-document.getElementById("optionB");
-
-const optionC =
-document.getElementById("optionC");
-
-const optionD =
-document.getElementById("optionD");
-
-const questionPalette =
-document.getElementById("questionPalette");
-
-const timer =
-document.getElementById("timer");
-
-const previousBtn =
-document.getElementById("previousBtn");
-
-const nextBtn =
-document.getElementById("nextBtn");
-
-const reviewBtn =
-document.getElementById("reviewBtn");
-
-const clearBtn =
-document.getElementById("clearBtn");
-
-const submitBtn =
-document.getElementById("submitBtn");
-
-//==========================================
-// Start Application
-//==========================================
-
-window.addEventListener(
-
-    "DOMContentLoaded",
-
-    initializeExam
-
-);
-
-//==========================================
+// ==========================
 // Initialize Exam
-//==========================================
+// ==========================
 
-async function initializeExam() {
+async function initExam() {
 
-    // Logged In User
+    // Get selected exam from localStorage
+    selectedExam = JSON.parse(localStorage.getItem("selectedExam"));
 
-    const user = Storage.getCurrentUser();
+    if (!selectedExam) {
 
-    if (!user) {
-
-        alert("Please login first.");
-
-        window.location.href = "login.html";
-
-        return;
-
-    }
-
-    candidateName.textContent = user.fullName;
-
-    // Selected Exam
-
-    const storedExam = localStorage.getItem("selectedExam");
-
-    if (!storedExam) {
-
-        alert("No Exam Selected.");
+        alert("No exam selected.");
 
         window.location.href = "exam-list.html";
 
@@ -126,57 +44,39 @@ async function initializeExam() {
 
     }
 
-    selectedExam = JSON.parse(storedExam);
+    // Candidate Name
+    const user = Storage.getCurrentUser();
 
-    examTitle.textContent = selectedExam.exam_name;
+    if (user) {
 
-    // Attempt ID
-
-    attemptId = sessionStorage.getItem("attemptId");
-
-    if (!attemptId) {
-
-        alert("Exam session not found.");
-
-        window.location.href = "instructions.html";
-
-        return;
+        document.getElementById("candidateName").textContent =
+            user.fullName;
 
     }
 
-    // Start Time
-
-    examStartTime = sessionStorage.getItem("examStartTime");
+    // Exam Title
+    document.getElementById("examTitle").textContent =
+        selectedExam.exam_name;
 
     // Load Questions
-
     await loadQuestions();
 
-    previousBtn.addEventListener(
+    document.getElementById("nextBtn")
+.addEventListener("click", nextQuestion);
 
-    "click",
-
-    previousQuestion
-
-);
-
-nextBtn.addEventListener(
-
-    "click",
-
-    nextQuestion
-
-);
-
+document.getElementById("previousBtn")
+.addEventListener("click", previousQuestion);
 }
 
-//==========================================
+// ==========================
 // Load Questions
-//==========================================
+// ==========================
 
 async function loadQuestions() {
 
-    const { data, error } = await supabaseClient
+    const { data, error } =
+
+        await supabaseClient
 
         .from("questions")
 
@@ -184,227 +84,228 @@ async function loadQuestions() {
 
         .eq("exam_id", selectedExam.id)
 
-        .order("question_no", { ascending: true });
+        .order("question_no", {
+            ascending: true
+        });
 
     if (error) {
 
         console.error(error);
 
-        alert("Failed to load questions.");
+        alert(error.message);
 
         return;
 
     }
 
-    //==========================================
-// Create Question Palette
-//==========================================
+    questions = data;
 
-function createQuestionPalette() {
+    document.getElementById("totalQuestion").textContent =
+        questions.length;
 
-    questionPalette.innerHTML = "";
+    createPalette();
 
-    questions.forEach((question, index) => {
+    showQuestion(0);
 
-        const button = document.createElement("button");
+}
 
-        button.className = "paletteBtn";
+// ==========================
+// Display Question
+// ==========================
 
-        button.id = `palette${index}`;
+function showQuestion(index) {
 
-        button.textContent = index + 1;
+    currentQuestion = index;
 
-        button.addEventListener("click", () => {
+    // Mark visited
 
-            displayQuestion(index);
+if(!visitedQuestions.includes(index)){
 
-        });
+    visitedQuestions.push(index);
 
-        questionPalette.appendChild(button);
+}
+
+    const q = questions[index];
+
+    if (!q) return;
+
+    document.getElementById("currentQuestion").textContent =
+        index + 1;
+
+    document.getElementById("questionText").textContent =
+        q.question;
+
+    document.getElementById("optionA").textContent =
+        q.option_a;
+
+    document.getElementById("optionB").textContent =
+        q.option_b;
+
+    document.getElementById("optionC").textContent =
+        q.option_c;
+
+    document.getElementById("optionD").textContent =
+        q.option_d;
+
+        document.querySelectorAll('input[name="option"]')
+.forEach(radio=>{
+
+    radio.onchange = saveAnswer;
+
+});
+
+        // ==========================
+// Restore Selected Answer
+// ==========================
+
+document.querySelectorAll('input[name="option"]')
+.forEach(radio => {
+
+    radio.checked = false;
+
+});
+
+if (answers[q.id]) {
+
+    const selected = document.querySelector(
+        `input[name="option"][value="${answers[q.id]}"]`
+    );
+
+    if (selected) {
+
+        selected.checked = true;
+
+    }
+
+}
+
+    updatePalette();
+
+    document.getElementById("previousBtn").disabled =
+currentQuestion===0;
+
+document.getElementById("nextBtn").disabled =
+currentQuestion===questions.length-1;
+
+}
+
+// ==========================
+// Create Palette
+// ==========================
+
+function createPalette() {
+
+    const palette =
+        document.getElementById("questionPalette");
+
+    palette.innerHTML = "";
+
+    questions.forEach((q, index) => {
+
+        palette.innerHTML +=
+
+            `
+<button
+class="paletteBtn"
+id="palette${index}"
+onclick="showQuestion(${index})">
+
+${index + 1}
+
+</button>
+`;
 
     });
 
 }
 
-//==========================================
+// ==========================
 // Update Palette
-//==========================================
+// ==========================
 
-function updatePalette() {
+function updatePalette(){
+
+    document.querySelectorAll(".paletteBtn")
+
+    .forEach((btn,index)=>{
+
+        btn.className="paletteBtn";
+
+        if(visitedQuestions.includes(index)){
+
+            btn.classList.add("notAnswered");
+
+        }
+
+        const q = questions[index];
+
+        if(q && answers[q.id]){
+
+            btn.classList.remove("notAnswered");
+
+            btn.classList.add("answered");
+
+        }
+
+    });
 
     document
 
-    .querySelectorAll(".paletteBtn")
+    .getElementById(`palette${currentQuestion}`)
 
-    .forEach((button, index) => {
+    .classList.remove("answered","notAnswered");
 
-        button.className = "paletteBtn";
+    document
 
-        if (visitedQuestions.includes(index)) {
+    .getElementById(`palette${currentQuestion}`)
 
-            button.classList.add("notAnswered");
+    .classList.add("current");
 
-        }
+}
 
-        const question = questions[index];
+// ==========================
+// Navigation Buttons
+// ==========================
 
-        if (question && answers[question.id]) {
+function nextQuestion(){
 
-            button.classList.remove("notAnswered");
+    if(currentQuestion < questions.length-1){
 
-            button.classList.add("answered");
+        showQuestion(currentQuestion+1);
 
-        }
+    }
 
-    });
+}
 
-    const current =
+function previousQuestion(){
 
-    document.getElementById(
+    if(currentQuestion>0){
 
-        `palette${currentQuestionIndex}`
+        showQuestion(currentQuestion-1);
 
+    }
+
+}
+
+// ==========================
+// Save Answer (Local)
+// ==========================
+
+
+function saveAnswer() {
+
+    const selected = document.querySelector(
+        'input[name="option"]:checked'
     );
 
-    if (current) {
+    if (!selected) return;
 
-        current.classList.remove(
+    const question = questions[currentQuestion];
 
-            "answered",
+    answers[question.id] = selected.value;
 
-            "notAnswered"
-
-        );
-
-        current.classList.add("current");
-
-    }
-
-}
-
-    questions = data;
-
-    totalQuestion.textContent = questions.length;
-
-    createQuestionPalette();
-
-displayQuestion(0);
-
-}
-
-//==========================================
-// Display - Question
-//==========================================
-
-function displayQuestion(index) {
-
-    currentQuestionIndex = index;
-
-    const question = questions[index];
-
-    if (!question) return;
-
-    // Current Question Number
-
-    currentQuestion.textContent = index + 1;
-
-    // Question
-
-    questionText.textContent = question.question;
-
-    // Options
-
-    optionA.textContent = question.option_a;
-
-    optionB.textContent = question.option_b;
-
-    optionC.textContent = question.option_c;
-
-    optionD.textContent = question.option_d;
-
-    // Clear Previous Selection
-
-    document.querySelectorAll('input[name="option"]')
-
-    .forEach(radio => {
-
-        radio.checked = false;
-
-    });
-
-    // Restore Answer
-
-    if (answers[question.id]) {
-
-        const radio = document.querySelector(
-
-            `input[name="option"][value="${answers[question.id]}"]`
-
-        );
-
-        if (radio) {
-
-            radio.checked = true;
-
-        }
-
-    }
-
-    updateNavigation();
+    console.log("Saved:", answers);
 
     updatePalette();
 
 }
-
-//==========================================
-// Navigation Buttons
-//==========================================
-
-function updateNavigation(){
-
-    previousBtn.disabled =
-
-    currentQuestionIndex === 0;
-
-    nextBtn.disabled =
-
-    currentQuestionIndex === questions.length - 1;
-
-}
-
-//==========================================
-// Previous
-//==========================================
-
-function previousQuestion(){
-
-    if(currentQuestionIndex>0){
-
-        displayQuestion(
-
-            currentQuestionIndex-1
-
-        );
-
-    }
-
-}
-
-//==========================================
-// Next
-//==========================================
-
-function nextQuestion(){
-
-    if(currentQuestionIndex<questions.length-1){
-
-        displayQuestion(
-
-            currentQuestionIndex+1
-
-        );
-
-    }
-
-}
-
