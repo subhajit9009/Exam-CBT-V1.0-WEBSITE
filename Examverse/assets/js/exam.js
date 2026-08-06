@@ -152,6 +152,22 @@ async function initializeExam() {
 
     await loadQuestions();
 
+    previousBtn.addEventListener(
+
+    "click",
+
+    previousQuestion
+
+);
+
+nextBtn.addEventListener(
+
+    "click",
+
+    nextQuestion
+
+);
+
 }
 
 //==========================================
@@ -187,6 +203,122 @@ async function loadQuestions() {
     createPalette();
 
     displayQuestion(0);
+
+}
+
+//==========================================
+// Display Question
+//==========================================
+
+function displayQuestion(index) {
+
+    currentQuestionIndex = index;
+
+    const question = questions[index];
+
+    if (!question) return;
+
+    // Current Question Number
+
+    currentQuestion.textContent = index + 1;
+
+    // Question
+
+    questionText.textContent = question.question;
+
+    // Options
+
+    optionA.textContent = question.option_a;
+
+    optionB.textContent = question.option_b;
+
+    optionC.textContent = question.option_c;
+
+    optionD.textContent = question.option_d;
+
+    // Clear Previous Selection
+
+    document.querySelectorAll('input[name="option"]')
+
+    .forEach(radio => {
+
+        radio.checked = false;
+
+    });
+
+    // Restore Answer
+
+    if (answers[question.id]) {
+
+        const radio = document.querySelector(
+
+            `input[name="option"][value="${answers[question.id]}"]`
+
+        );
+
+        if (radio) {
+
+            radio.checked = true;
+
+        }
+
+    }
+
+    updateNavigation();
+
+    updatePalette();
+
+}
+
+//==========================================
+// Navigation Buttons
+//==========================================
+
+function updateNavigation(){
+
+    previousBtn.disabled =
+
+    currentQuestionIndex === 0;
+
+    nextBtn.disabled =
+
+    currentQuestionIndex === questions.length - 1;
+
+}
+
+//==========================================
+// Previous
+//==========================================
+
+function previousQuestion(){
+
+    if(currentQuestionIndex>0){
+
+        displayQuestion(
+
+            currentQuestionIndex-1
+
+        );
+
+    }
+
+}
+
+//==========================================
+// Next
+//==========================================
+
+function nextQuestion(){
+
+    if(currentQuestionIndex<questions.length-1){
+
+        displayQuestion(
+
+            currentQuestionIndex+1
+
+        );
+
+    }
 
 }
 
