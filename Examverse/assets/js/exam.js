@@ -23,7 +23,6 @@ let timerInterval = null;
 // Page Load
 // ==========================
 
-window.addEventListener("DOMContentLoaded", initExam);
 
 // ==========================
 // Initialize Exam
@@ -66,7 +65,6 @@ async function initExam() {
 
 document.getElementById("previousBtn")
 .addEventListener("click", previousQuestion);
-
 }
 
 // ==========================
