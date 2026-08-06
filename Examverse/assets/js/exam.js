@@ -196,13 +196,99 @@ async function loadQuestions() {
 
     }
 
+    //==========================================
+// Create Question Palette
+//==========================================
+
+function createQuestionPalette() {
+
+    questionPalette.innerHTML = "";
+
+    questions.forEach((question, index) => {
+
+        const button = document.createElement("button");
+
+        button.className = "paletteBtn";
+
+        button.id = `palette${index}`;
+
+        button.textContent = index + 1;
+
+        button.addEventListener("click", () => {
+
+            displayQuestion(index);
+
+        });
+
+        questionPalette.appendChild(button);
+
+    });
+
+}
+
+//==========================================
+// Update Palette
+//==========================================
+
+function updatePalette() {
+
+    document
+
+    .querySelectorAll(".paletteBtn")
+
+    .forEach((button, index) => {
+
+        button.className = "paletteBtn";
+
+        if (visitedQuestions.includes(index)) {
+
+            button.classList.add("notAnswered");
+
+        }
+
+        const question = questions[index];
+
+        if (question && answers[question.id]) {
+
+            button.classList.remove("notAnswered");
+
+            button.classList.add("answered");
+
+        }
+
+    });
+
+    const current =
+
+    document.getElementById(
+
+        `palette${currentQuestionIndex}`
+
+    );
+
+    if (current) {
+
+        current.classList.remove(
+
+            "answered",
+
+            "notAnswered"
+
+        );
+
+        current.classList.add("current");
+
+    }
+
+}
+
     questions = data;
 
     totalQuestion.textContent = questions.length;
 
-    createPalette();
+    createQuestionPalette();
 
-    displayQuestion(0);
+displayQuestion(0);
 
 }
 
