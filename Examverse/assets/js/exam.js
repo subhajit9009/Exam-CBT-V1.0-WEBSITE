@@ -314,7 +314,7 @@ function saveAnswer() {
 // Save Answer To Supabase
 // ==========================
 
-async function saveAnswerToSupabase(questionId, selectedOption) {
+/*async function saveAnswerToSupabase(questionId, selectedOption) {
 
     const attemptId = sessionStorage.getItem("attemptId");
 
@@ -356,4 +356,4 @@ async function saveAnswerToSupabase(questionId, selectedOption) {
 
     }
 
-}
+}*
