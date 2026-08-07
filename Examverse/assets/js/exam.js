@@ -311,15 +311,7 @@ function updatePalette(){
 
         const q = questions[index];
 
-        if(q && answers[q.id]){
-
-            btn.classList.remove("notAnswered");
-
-            btn.classList.add("answered");
-
-        }
-
-        if (reviewQuestions.includes(q.id)) {
+        if(reviewQuestions.includes(q.id)){
 
     btn.classList.remove(
         "answered",
@@ -327,6 +319,14 @@ function updatePalette(){
     );
 
     btn.classList.add("review");
+
+}
+
+else if(q && answers[q.id]){
+
+    btn.classList.remove("notAnswered");
+
+    btn.classList.add("answered");
 
 }
 
