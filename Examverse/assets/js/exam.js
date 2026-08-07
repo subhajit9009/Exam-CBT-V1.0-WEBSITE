@@ -446,15 +446,25 @@ async function clearResponse() {
     // Remove from Supabase
     const attemptId = sessionStorage.getItem("attemptId");
 
-    await supabaseClient
+    const { error } = await supabaseClient
 
-        .from("user_answers")
+    .from("user_answers")
 
-        .delete()
+    .delete()
 
-        .eq("attempt_id", attemptId)
+    .eq("attempt_id", attemptId)
 
-        .eq("question_id", question.id);
+    .eq("question_id", question.id);
+
+if (error) {
+
+    console.error("Delete Error:", error);
+
+} else {
+
+    console.log("Answer deleted successfully");
+
+}
 
     updatePalette();
 
