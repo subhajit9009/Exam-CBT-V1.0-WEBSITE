@@ -143,7 +143,7 @@ async function loadSavedAnswers() {
 
         .from("user_answers")
 
-        .select("question_id, selected_option")
+        .select("question_id, selected_option, is_review")
 
         .eq("attempt_id", attemptId);
 
@@ -159,6 +159,16 @@ async function loadSavedAnswers() {
 
         answers[answer.question_id] =
             answer.selected_option;
+
+            if (answer.is_review) {
+
+    reviewQuestions.push(
+
+        answer.question_id
+
+    );
+
+}
 
     });
 
@@ -435,6 +445,42 @@ console.log("Current User ID:", user?.id);
 
 }
 
+// ==========================
+// Save Review To Database
+// ==========================
+
+async function saveReviewToDatabase(
+
+    questionId,
+
+    isReview
+
+) {
+
+    const attemptId = sessionStorage.getItem("attemptId");
+
+    const { error } = await supabaseClient
+
+        .from("user_answers")
+
+        .update({
+
+            is_review: isReview
+
+        })
+
+        .eq("attempt_id", attemptId)
+
+        .eq("question_id", questionId);
+
+    if (error) {
+
+        console.error(error);
+
+    }
+
+}
+
 //==========================================
 // Clear Response
 //==========================================
@@ -488,14 +534,20 @@ if (error) {
 // Mark For Review
 // ==========================
 
-function markForReview() {
+async function markForReview() {
 
     const question = questions[currentQuestion];
 
     if (!question) return;
 
-    // Toggle review
-    if (reviewQuestions.includes(question.id)) {
+    // Toggle Review
+    const isReview = !reviewQuestions.includes(question.id);
+
+    if (isReview) {
+
+        reviewQuestions.push(question.id);
+
+    } else {
 
         reviewQuestions = reviewQuestions.filter(
 
@@ -503,12 +555,16 @@ function markForReview() {
 
         );
 
-    } else {
-
-        reviewQuestions.push(question.id);
-
     }
 
     updatePalette();
+
+    await saveReviewToDatabase(
+
+        question.id,
+
+        isReview
+
+    );
 
 }
