@@ -311,22 +311,28 @@ function updatePalette(){
 
         const q = questions[index];
 
-        if(reviewQuestions.includes(q.id)){
+       // Review (Highest Priority)
+if (reviewQuestions.includes(q.id)) {
 
-    btn.classList.remove(
-        "answered",
-        "notAnswered"
-    );
+    btn.classList.remove("answered", "notAnswered");
 
     btn.classList.add("review");
 
 }
 
-else if(q && answers[q.id]){
+// Answered
+else if (answers[q.id]) {
 
     btn.classList.remove("notAnswered");
 
     btn.classList.add("answered");
+
+}
+
+// Visited but Not Answered
+else if (visitedQuestions.includes(index)) {
+
+    btn.classList.add("notAnswered");
 
 }
 
@@ -540,6 +546,13 @@ async function clearResponse() {
 
     // Remove local answer
     delete answers[question.id];
+
+    // Remove Review
+reviewQuestions = reviewQuestions.filter(
+
+    id => id !== question.id
+
+);
 
     // Uncheck radio buttons
     document
