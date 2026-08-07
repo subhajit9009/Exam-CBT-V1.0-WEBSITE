@@ -602,6 +602,13 @@ reviewQuestions = reviewQuestions.filter(
 
     .eq("question_id", question.id);
 
+    // Ensure review is removed locally
+reviewQuestions = reviewQuestions.filter(
+    id => id !== question.id
+);
+
+updatePalette();
+
 if (error) {
 
     console.error("Delete Error:", error);
