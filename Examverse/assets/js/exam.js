@@ -345,6 +345,9 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
 
     const user = userData.user;
 
+    console.log("Current User:", user);
+console.log("Current User ID:", user?.id);
+
     if (!user) return;
 
     const { error } = await supabaseClient
