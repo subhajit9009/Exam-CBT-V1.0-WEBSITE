@@ -33,6 +33,17 @@ async function initExam() {
 
     // Get selected exam from localStorage
     selectedExam = JSON.parse(localStorage.getItem("selectedExam"));
+    const attemptId = sessionStorage.getItem("attemptId");
+
+if (!attemptId) {
+
+    alert("No exam attempt found.");
+
+    window.location.href = "instructions.html";
+
+    return;
+
+}
 
     if (!selectedExam) {
 
@@ -307,5 +318,55 @@ function saveAnswer() {
     console.log("Saved:", answers);
 
     updatePalette();
+
+    saveAnswerToDatabase(
+
+    question.id,
+
+    selected.value
+
+);
+
+}
+
+// ==========================
+// Save Answer To Database
+// ==========================
+
+async function saveAnswerToDatabase(questionId, selectedOption) {
+
+    const attemptId = sessionStorage.getItem("attemptId");
+
+    if (!attemptId) return;
+
+    const { data: userData } =
+
+    await supabaseClient.auth.getUser();
+
+    const user = userData.user;
+
+    if (!user) return;
+
+    const { error } = await supabaseClient
+
+    .from("user_answers")
+
+    .upsert({
+
+        attempt_id: attemptId,
+
+        question_id: questionId,
+
+        selected_option: selectedOption,
+
+        user_id: user.id
+
+    });
+
+    if(error){
+
+        console.error(error);
+
+    }
 
 }
