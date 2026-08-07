@@ -157,8 +157,13 @@ async function loadSavedAnswers() {
 
     data.forEach(answer => {
 
-        answers[answer.question_id] =
-            answer.selected_option;
+        if (answer.selected_option) {
+
+    answers[answer.question_id] =
+    answer.selected_option;
+
+}
+
 
             if (answer.is_review) {
 
@@ -449,33 +454,66 @@ console.log("Current User ID:", user?.id);
 // Save Review To Database
 // ==========================
 
-async function saveReviewToDatabase(
-
-    questionId,
-
-    isReview
-
-) {
+async function saveReviewToDatabase(questionId, isReview) {
 
     const attemptId = sessionStorage.getItem("attemptId");
 
-    const { error } = await supabaseClient
+    const { data: userData } =
+    await supabaseClient.auth.getUser();
+
+    const user = userData.user;
+
+    // Check if row exists
+
+    const { data: existing } = await supabaseClient
 
         .from("user_answers")
 
-        .update({
-
-            is_review: isReview
-
-        })
+        .select("id")
 
         .eq("attempt_id", attemptId)
 
-        .eq("question_id", questionId);
+        .eq("question_id", questionId)
 
-    if (error) {
+        .maybeSingle();
 
-        console.error(error);
+    if (existing) {
+
+        // Update existing row
+
+        await supabaseClient
+
+            .from("user_answers")
+
+            .update({
+
+                is_review: isReview
+
+            })
+
+            .eq("id", existing.id);
+
+    } else {
+
+        // Create new row
+
+        await supabaseClient
+
+            .from("user_answers")
+
+            .insert({
+
+                attempt_id: attemptId,
+
+                question_id: questionId,
+
+                user_id: user.id,
+
+                selected_option: null,
+
+                is_review: isReview
+
+            });
 
     }
 
