@@ -318,11 +318,15 @@ function updatePalette(){
 // Navigation Buttons
 // ==========================
 
-function nextQuestion(){
+function nextQuestion() {
 
-    if(currentQuestion < questions.length-1){
+    // Save current answer
+    saveAnswer();
 
-        showQuestion(currentQuestion+1);
+    // Go to next question
+    if (currentQuestion < questions.length - 1) {
+
+        showQuestion(currentQuestion + 1);
 
     }
 
