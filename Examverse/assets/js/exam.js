@@ -391,6 +391,12 @@ function saveAnswer() {
 
     answers[question.id] = selected.value;
 
+    // Remove Review Status
+reviewQuestions = reviewQuestions.filter(
+
+    id => id !== question.id
+
+);
 
     console.log("Saved:", answers);
 
