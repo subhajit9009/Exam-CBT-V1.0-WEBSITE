@@ -391,6 +391,13 @@ function saveAnswer() {
 
     answers[question.id] = selected.value;
 
+    // Remove Review Status
+reviewQuestions = reviewQuestions.filter(
+
+    id => id !== question.id
+
+);
+
     console.log("Saved:", answers);
 
     updatePalette();
@@ -428,19 +435,21 @@ console.log("Current User ID:", user?.id);
 
     const { error } = await supabaseClient
 
-    .from("user_answers")
+.from("user_answers")
 
-    .upsert({
+.upsert({
 
-        attempt_id: attemptId,
+    attempt_id: attemptId,
 
-        question_id: questionId,
+    question_id: questionId,
 
-        selected_option: selectedOption,
+    user_id: user.id,
 
-        user_id: user.id
+    selected_option: selectedOption,
 
-    });
+    is_review: false
+
+});
 
     if(error){
 
