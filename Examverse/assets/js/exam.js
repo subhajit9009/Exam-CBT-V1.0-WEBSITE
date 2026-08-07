@@ -614,4 +614,11 @@ async function markForReview() {
 
     );
 
+    // Move to next question
+if (currentQuestion < questions.length - 1) {
+
+    showQuestion(currentQuestion + 1);
+
+}
+
 }
