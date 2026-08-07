@@ -111,12 +111,52 @@ async function loadQuestions() {
 
     questions = data;
 
-    document.getElementById("totalQuestion").textContent =
-        questions.length;
+document.getElementById("totalQuestion").textContent =
+questions.length;
 
-    createPalette();
+// Load previously saved answers
+await loadSavedAnswers();
 
-    showQuestion(0);
+createPalette();
+
+showQuestion(0);
+
+}
+
+//==========================================
+// Load Saved Answers
+//==========================================
+
+async function loadSavedAnswers() {
+
+    const attemptId = sessionStorage.getItem("attemptId");
+
+    if (!attemptId) return;
+
+    const { data, error } = await supabaseClient
+
+        .from("user_answers")
+
+        .select("question_id, selected_option")
+
+        .eq("attempt_id", attemptId);
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+
+    }
+
+    data.forEach(answer => {
+
+        answers[answer.question_id] =
+            answer.selected_option;
+
+    });
+
+    console.log("Loaded Answers:", answers);
 
 }
 
