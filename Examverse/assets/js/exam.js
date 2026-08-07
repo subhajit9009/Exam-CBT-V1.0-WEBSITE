@@ -78,6 +78,9 @@ if (!attemptId) {
 document.getElementById("previousBtn")
 .addEventListener("click", previousQuestion);
 
+document.getElementById("reviewBtn")
+.addEventListener("click", markForReview);
+
 document.getElementById("clearBtn")
 .addEventListener("click", clearResponse);
 }
@@ -301,6 +304,17 @@ function updatePalette(){
 
         }
 
+        if (reviewQuestions.includes(q.id)) {
+
+    btn.classList.remove(
+        "answered",
+        "notAnswered"
+    );
+
+    btn.classList.add("review");
+
+}
+
     });
 
     document
@@ -465,6 +479,35 @@ if (error) {
     console.log("Answer deleted successfully");
 
 }
+
+    updatePalette();
+
+}
+
+// ==========================
+// Mark For Review
+// ==========================
+
+function markForReview() {
+
+    const question = questions[currentQuestion];
+
+    if (!question) return;
+
+    // Toggle review
+    if (reviewQuestions.includes(question.id)) {
+
+        reviewQuestions = reviewQuestions.filter(
+
+            id => id !== question.id
+
+        );
+
+    } else {
+
+        reviewQuestions.push(question.id);
+
+    }
 
     updatePalette();
 
