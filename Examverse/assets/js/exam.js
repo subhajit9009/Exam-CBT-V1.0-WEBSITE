@@ -77,6 +77,9 @@ if (!attemptId) {
 
 document.getElementById("previousBtn")
 .addEventListener("click", previousQuestion);
+
+document.getElementById("clearBtn")
+.addEventListener("click", clearResponse);
 }
 
 // ==========================
@@ -415,5 +418,44 @@ console.log("Current User ID:", user?.id);
         console.error(error);
 
     }
+
+}
+
+//==========================================
+// Clear Response
+//==========================================
+
+async function clearResponse() {
+
+    const question = questions[currentQuestion];
+
+    if (!question) return;
+
+    // Remove local answer
+    delete answers[question.id];
+
+    // Uncheck radio buttons
+    document
+    .querySelectorAll('input[name="option"]')
+    .forEach(radio => {
+
+        radio.checked = false;
+
+    });
+
+    // Remove from Supabase
+    const attemptId = sessionStorage.getItem("attemptId");
+
+    await supabaseClient
+
+        .from("user_answers")
+
+        .delete()
+
+        .eq("attempt_id", attemptId)
+
+        .eq("question_id", question.id);
+
+    updatePalette();
 
 }
