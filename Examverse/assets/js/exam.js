@@ -175,6 +175,24 @@ async function loadSavedAnswers() {
 
 }
 
+const index = questions.findIndex(
+
+    q => q.id === answer.question_id
+
+);
+
+if (
+
+    index !== -1 &&
+
+    !visitedQuestions.includes(index)
+
+) {
+
+    visitedQuestions.push(index);
+
+}
+
     });
 
     console.log("Loaded Answers:", answers);
@@ -340,9 +358,17 @@ else if (visitedQuestions.includes(index)) {
 
     document
 
-    .getElementById(`palette${currentQuestion}`)
+.getElementById(`palette${currentQuestion}`)
 
-    .classList.remove("answered","notAnswered");
+.classList.remove(
+
+    "answered",
+
+    "notAnswered",
+
+    "review"
+
+);
 
     document
 
