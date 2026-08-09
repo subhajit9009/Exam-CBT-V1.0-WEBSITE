@@ -1254,53 +1254,78 @@ async function finalizeExamAttempt(autoSubmit = false) {
         // ==========================================
 
         const {
-            error: updateError
-        } =
-            await supabaseClient
+    data: updatedAttempt,
+    error: updateError
+} =
+    await supabaseClient
 
-                .from("exam_attempts")
+        .from("exam_attempts")
 
-                .update({
+        .update({
 
-                    end_time:
-                        new Date().toISOString(),
+            end_time:
+                new Date().toISOString(),
 
-                    attempted:
-                        attempted,
+            attempted:
+                attempted,
 
-                    correct:
-                        correct,
+            correct:
+                correct,
 
-                    wrong:
-                        wrong,
+            wrong:
+                wrong,
 
-                    skipped:
-                        skipped,
+            skipped:
+                skipped,
 
-                    score:
-                        score,
+            score:
+                score,
 
-                    percentage:
-                        percentage,
+            percentage:
+                percentage,
 
-                    result:
-                        result,
+            result:
+                result,
 
-                    status:
-                        "Completed",
+            status:
+                "Completed",
 
-                    submitted_at:
-                        new Date().toISOString(),
+            submitted_at:
+                new Date().toISOString(),
 
-                    time_taken:
-                        timeTaken
+            time_taken:
+                timeTaken
 
-                })
+        })
 
-                .eq(
-                    "id",
-                    attemptId
-                );
+        .eq(
+            "id",
+            attemptId
+        )
+
+        .select()
+        .single();
+
+
+console.log(
+    "UPDATED ATTEMPT:",
+    updatedAttempt
+);
+
+if (updateError) {
+
+    console.error(
+        "Database update error:",
+        updateError
+    );
+
+    alert(
+        "Unable to save exam result."
+    );
+
+    return false;
+
+}
 
 
         if (updateError) {
