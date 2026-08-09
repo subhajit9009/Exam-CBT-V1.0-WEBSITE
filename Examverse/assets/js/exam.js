@@ -89,7 +89,8 @@ document.getElementById("clearBtn")
 .addEventListener("click", clearResponse);
 
 document.getElementById("submitBtn")
-    .addEventListener("click", submitExam);
+    .addEventListener("click", () => submitExam(false));
+    
 }
 
 // ==========================================
