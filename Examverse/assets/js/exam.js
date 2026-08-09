@@ -640,47 +640,38 @@ async function markForReview() {
 
     if (!question) return;
 
-    // Toggle Review
-    const isReview = !reviewQuestions.includes(question.id);
-
-    if (isReview) {
+    // Always mark as review
+    if (!reviewQuestions.includes(question.id)) {
 
         reviewQuestions.push(question.id);
-
-    } else {
-
-        reviewQuestions = reviewQuestions.filter(
-
-            id => id !== question.id
-
-        );
 
     }
 
     updatePalette();
 
-// Wait for answer save to finish first
-if (answerSavePromise) {
+    // Wait for answer save to finish first
+    if (answerSavePromise) {
 
-    await answerSavePromise;
+        await answerSavePromise;
 
-    answerSavePromise = null;
+        answerSavePromise = null;
 
-}
+    }
 
-await saveReviewToDatabase(
+    // Save review status as TRUE
+    await saveReviewToDatabase(
 
         question.id,
 
-        isReview
+        true
 
     );
 
     // Move to next question
-if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
 
-    showQuestion(currentQuestion + 1);
+        showQuestion(currentQuestion + 1);
 
-}
+    }
 
 }
