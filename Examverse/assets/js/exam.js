@@ -166,13 +166,13 @@ async function loadSavedAnswers() {
 }
 
 
-            if (answer.is_review) {
+           if (answer.is_review === true) {
 
-    reviewQuestions.push(
+    if (!reviewQuestions.includes(answer.question_id)) {
 
-        answer.question_id
+        reviewQuestions.push(answer.question_id);
 
-    );
+    }
 
 }
 
@@ -466,17 +466,17 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
 
         .from("user_answers")
 
-        .upsert({
-
-            attempt_id: attemptId,
-
-            question_id: questionId,
-
-            user_id: user.id,
-
-            selected_option: selectedOption
-
-        });
+        .upsert(
+            {
+                attempt_id: attemptId,
+                question_id: questionId,
+                user_id: user.id,
+                selected_option: selectedOption
+            },
+            {
+                onConflict: "attempt_id,question_id"
+            }
+        );
 
     if (error) {
 
