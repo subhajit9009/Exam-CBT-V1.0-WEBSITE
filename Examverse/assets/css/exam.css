@@ -521,3 +521,29 @@ body{
 height:100%;
 
 }
+
+/* ==========================================
+   Timer Warning
+========================================== */
+
+.timer-box #timer.timer-warning {
+
+    color: #dc2626;
+
+    animation: timerPulse 1s infinite;
+
+}
+
+
+@keyframes timerPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .55;
+    }
+
+}

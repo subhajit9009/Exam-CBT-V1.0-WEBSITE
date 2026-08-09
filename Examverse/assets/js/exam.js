@@ -73,8 +73,11 @@ if (!attemptId) {
     // Load Questions
     await loadQuestions();
 
-    document.getElementById("nextBtn")
-.addEventListener("click", nextQuestion);
+// Start exam timer
+startExamTimer();
+
+document.getElementById("nextBtn")
+    .addEventListener("click", nextQuestion);
 
 document.getElementById("previousBtn")
 .addEventListener("click", previousQuestion);
@@ -84,6 +87,191 @@ document.getElementById("reviewBtn")
 
 document.getElementById("clearBtn")
 .addEventListener("click", clearResponse);
+}
+
+// ==========================================
+// Exam Timer
+// ==========================================
+
+function startExamTimer() {
+
+    // Stop any previous timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
+    const timerElement =
+        document.getElementById("timer");
+
+    if (!timerElement) return;
+
+
+    // Get exam duration
+    const durationMinutes =
+        Number(
+            selectedExam.duration_minutes ||
+            selectedExam.duration ||
+            0
+        );
+
+
+    if (!durationMinutes) {
+
+        console.error(
+            "Exam duration not found."
+        );
+
+        timerElement.textContent = "00:00:00";
+
+        return;
+    }
+
+
+    // Get original exam start time
+    const examStartTime =
+        sessionStorage.getItem(
+            "examStartTime"
+        );
+
+
+    if (!examStartTime) {
+
+        console.error(
+            "Exam start time not found."
+        );
+
+        return;
+    }
+
+
+    const startTime =
+        new Date(examStartTime).getTime();
+
+
+    const totalDuration =
+        durationMinutes * 60 * 1000;
+
+
+    const endTime =
+        startTime + totalDuration;
+
+
+    function updateTimer() {
+
+        const now =
+            Date.now();
+
+        let remaining =
+            endTime - now;
+
+
+        // ==================================
+        // Time Finished
+        // ==================================
+
+        if (remaining <= 0) {
+
+            remaining = 0;
+
+            clearInterval(timerInterval);
+
+            timerInterval = null;
+
+            timerElement.textContent =
+                "00:00:00";
+
+
+            // Disable examination controls
+            document
+                .querySelectorAll(
+                    ".navigation button, .paletteBtn"
+                )
+                .forEach(button => {
+
+                    button.disabled = true;
+
+                });
+
+
+            alert(
+                "Time is over. The examination has ended."
+            );
+
+            return;
+        }
+
+
+        // ==================================
+        // Convert milliseconds
+        // ==================================
+
+        const totalSeconds =
+            Math.floor(
+                remaining / 1000
+            );
+
+
+        const hours =
+            Math.floor(
+                totalSeconds / 3600
+            );
+
+
+        const minutes =
+            Math.floor(
+                (totalSeconds % 3600) / 60
+            );
+
+
+        const seconds =
+            totalSeconds % 60;
+
+
+        // ==================================
+        // Format HH:MM:SS
+        // ==================================
+
+        timerElement.textContent =
+
+            String(hours).padStart(2, "0")
+            + ":" +
+            String(minutes).padStart(2, "0")
+            + ":" +
+            String(seconds).padStart(2, "0");
+
+
+        // ==================================
+        // Low Time Warning
+        // ==================================
+
+        if (remaining <= 5 * 60 * 1000) {
+
+            timerElement.classList.add(
+                "timer-warning"
+            );
+
+        } else {
+
+            timerElement.classList.remove(
+                "timer-warning"
+            );
+
+        }
+
+    }
+
+
+    // Update immediately
+    updateTimer();
+
+
+    // Update every second
+    timerInterval =
+        setInterval(
+            updateTimer,
+            1000
+        );
+
 }
 
 // ==========================
