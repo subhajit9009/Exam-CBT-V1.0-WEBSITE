@@ -449,7 +449,7 @@ function saveAnswer() {
 // Save Answer To Database
 // ==========================
 
-async function saveAnswerToDatabase(questionId, selectedOption) {
+async function saveReviewToDatabase(questionId, isReview) {
 
     const attemptId = sessionStorage.getItem("attemptId");
 
@@ -462,6 +462,8 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
 
     if (!user) return;
 
+    const selectedOption = answers[questionId] || null;
+
     const { error } = await supabaseClient
 
         .from("user_answers")
@@ -471,7 +473,8 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
                 attempt_id: attemptId,
                 question_id: questionId,
                 user_id: user.id,
-                selected_option: selectedOption
+                selected_option: selectedOption,
+                is_review: isReview
             },
             {
                 onConflict: "attempt_id,question_id"
@@ -480,7 +483,18 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
 
     if (error) {
 
-        console.error("Answer Save Error:", error);
+        console.error(
+            "Review Save Error:",
+            error
+        );
+
+    } else {
+
+        console.log(
+            "Review saved:",
+            questionId,
+            isReview
+        );
 
     }
 
