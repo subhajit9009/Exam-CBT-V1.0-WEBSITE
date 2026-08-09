@@ -20,11 +20,13 @@ let visitedQuestions = [];
 
 let timerInterval = null;
 
+
 // ==========================
 // Page Load
 // ==========================
 
 window.addEventListener("DOMContentLoaded", initExam);
+
 
 // ==========================
 // Initialize Exam
@@ -33,122 +35,183 @@ window.addEventListener("DOMContentLoaded", initExam);
 async function initExam() {
 
     // Get selected exam from localStorage
-    selectedExam = JSON.parse(localStorage.getItem("selectedExam"));
-    const attemptId = sessionStorage.getItem("attemptId");
+    selectedExam =
+        JSON.parse(
+            localStorage.getItem("selectedExam")
+        );
 
-if (!attemptId) {
-
-    alert("No exam attempt found.");
-
-    window.location.href = "instructions.html";
-
-    return;
-
-}
-
-// ==========================================
-// Check Attempt Status
-// ==========================================
-
-const {
-    data: currentAttempt,
-    error: attemptError
-} = await supabaseClient
-
-    .from("exam_attempts")
-
-    .select("status")
-
-    .eq("id", attemptId)
-
-    .maybeSingle();
+    const attemptId =
+        sessionStorage.getItem("attemptId");
 
 
-if (attemptError) {
+    if (!attemptId) {
 
-    console.error(
-        "Attempt status error:",
-        attemptError
-    );
+        alert("No exam attempt found.");
 
-    return;
-
-}
-
-
-if (!currentAttempt) {
-
-    alert("Exam attempt not found.");
-
-    sessionStorage.removeItem("attemptId");
-
-    window.location.href = "instructions.html";
-
-    return;
-
-}
-
-
-// ==========================================
-// Prevent Reopening Completed Exam
-// ==========================================
-
-if (currentAttempt.status === "Completed") {
-
-    alert(
-        "This examination has already been submitted."
-    );
-
-    return;
-
-}
-
-    if (!selectedExam) {
-
-        alert("No exam selected.");
-
-        window.location.href = "exam-list.html";
+        window.location.href =
+            "instructions.html";
 
         return;
 
     }
 
+
+    // ==========================================
+    // Check Attempt Status
+    // ==========================================
+
+    const {
+        data: currentAttempt,
+        error: attemptError
+    } = await supabaseClient
+
+        .from("exam_attempts")
+
+        .select("status")
+
+        .eq("id", attemptId)
+
+        .maybeSingle();
+
+
+    if (attemptError) {
+
+        console.error(
+            "Attempt status error:",
+            attemptError
+        );
+
+        return;
+
+    }
+
+
+    if (!currentAttempt) {
+
+        alert("Exam attempt not found.");
+
+        sessionStorage.removeItem(
+            "attemptId"
+        );
+
+        window.location.href =
+            "instructions.html";
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // Prevent Reopening Completed Exam
+    // ==========================================
+
+    if (
+        currentAttempt.status ===
+        "Completed"
+    ) {
+
+        alert(
+            "This examination has already been submitted."
+        );
+
+        return;
+
+    }
+
+
+    if (!selectedExam) {
+
+        alert("No exam selected.");
+
+        window.location.href =
+            "exam-list.html";
+
+        return;
+
+    }
+
+
     // Candidate Name
-    const user = Storage.getCurrentUser();
+
+    const user =
+        Storage.getCurrentUser();
+
 
     if (user) {
 
-        document.getElementById("candidateName").textContent =
+        document.getElementById(
+            "candidateName"
+        ).textContent =
             user.fullName;
 
     }
 
+
     // Exam Title
-    document.getElementById("examTitle").textContent =
+
+    document.getElementById(
+        "examTitle"
+    ).textContent =
         selectedExam.exam_name;
 
+
     // Load Questions
+
     await loadQuestions();
 
-// Start exam timer
-startExamTimer();
 
-document.getElementById("nextBtn")
-    .addEventListener("click", nextQuestion);
+    // Start exam timer
 
-document.getElementById("previousBtn")
-.addEventListener("click", previousQuestion);
+    startExamTimer();
 
-document.getElementById("reviewBtn")
-.addEventListener("click", markForReview);
 
-document.getElementById("clearBtn")
-.addEventListener("click", clearResponse);
+    document.getElementById(
+        "nextBtn"
+    )
+        .addEventListener(
+            "click",
+            nextQuestion
+        );
 
-document.getElementById("submitBtn")
-    .addEventListener("click", () => submitExam(false));
+
+    document.getElementById(
+        "previousBtn"
+    )
+        .addEventListener(
+            "click",
+            previousQuestion
+        );
+
+
+    document.getElementById(
+        "reviewBtn"
+    )
+        .addEventListener(
+            "click",
+            markForReview
+        );
+
+
+    document.getElementById(
+        "clearBtn"
+    )
+        .addEventListener(
+            "click",
+            clearResponse
+        );
+
+
+    document.getElementById(
+        "submitBtn"
+    )
+        .addEventListener(
+            "click",
+            () => submitExam(false)
+        );
 
 }
+
 
 // ==========================================
 // Exam Timer
@@ -157,17 +220,27 @@ document.getElementById("submitBtn")
 function startExamTimer() {
 
     // Stop any previous timer
+
     if (timerInterval) {
-        clearInterval(timerInterval);
+
+        clearInterval(
+            timerInterval
+        );
+
     }
 
+
     const timerElement =
-        document.getElementById("timer");
+        document.getElementById(
+            "timer"
+        );
+
 
     if (!timerElement) return;
 
 
     // Get exam duration
+
     const durationMinutes =
         Number(
             selectedExam.duration_minutes ||
@@ -182,13 +255,16 @@ function startExamTimer() {
             "Exam duration not found."
         );
 
-        timerElement.textContent = "00:00:00";
+        timerElement.textContent =
+            "00:00:00";
 
         return;
+
     }
 
 
     // Get original exam start time
+
     const examStartTime =
         sessionStorage.getItem(
             "examStartTime"
@@ -202,19 +278,25 @@ function startExamTimer() {
         );
 
         return;
+
     }
 
 
     const startTime =
-        new Date(examStartTime).getTime();
+        new Date(
+            examStartTime
+        ).getTime();
 
 
     const totalDuration =
-        durationMinutes * 60 * 1000;
+        durationMinutes *
+        60 *
+        1000;
 
 
     const endTime =
-        startTime + totalDuration;
+        startTime +
+        totalDuration;
 
 
     function updateTimer() {
@@ -222,8 +304,10 @@ function startExamTimer() {
         const now =
             Date.now();
 
+
         let remaining =
-            endTime - now;
+            endTime -
+            now;
 
 
         // ==================================
@@ -232,18 +316,22 @@ function startExamTimer() {
 
         if (remaining <= 0) {
 
-    remaining = 0;
-
-    timerElement.textContent =
-        "00:00:00";
+            remaining = 0;
 
 
-    // Automatically submit the examination
-    submitExam(true);
+            timerElement.textContent =
+                "00:00:00";
 
 
-    return;
-}
+            // Automatically submit
+            // the examination
+
+            submitExam(true);
+
+
+            return;
+
+        }
 
 
         // ==================================
@@ -252,24 +340,30 @@ function startExamTimer() {
 
         const totalSeconds =
             Math.floor(
-                remaining / 1000
+                remaining /
+                1000
             );
 
 
         const hours =
             Math.floor(
-                totalSeconds / 3600
+                totalSeconds /
+                3600
             );
 
 
         const minutes =
             Math.floor(
-                (totalSeconds % 3600) / 60
+                (
+                    totalSeconds %
+                    3600
+                ) / 60
             );
 
 
         const seconds =
-            totalSeconds % 60;
+            totalSeconds %
+            60;
 
 
         // ==================================
@@ -278,18 +372,28 @@ function startExamTimer() {
 
         timerElement.textContent =
 
-            String(hours).padStart(2, "0")
+            String(hours)
+                .padStart(2, "0")
+
             + ":" +
-            String(minutes).padStart(2, "0")
+
+            String(minutes)
+                .padStart(2, "0")
+
             + ":" +
-            String(seconds).padStart(2, "0");
+
+            String(seconds)
+                .padStart(2, "0");
 
 
         // ==================================
         // Low Time Warning
         // ==================================
 
-        if (remaining <= 5 * 60 * 1000) {
+        if (
+            remaining <=
+            5 * 60 * 1000
+        ) {
 
             timerElement.classList.add(
                 "timer-warning"
@@ -307,10 +411,12 @@ function startExamTimer() {
 
 
     // Update immediately
+
     updateTimer();
 
 
     // Update every second
+
     timerInterval =
         setInterval(
             updateTimer,
@@ -319,25 +425,34 @@ function startExamTimer() {
 
 }
 
+
 // ==========================
 // Load Questions
 // ==========================
 
 async function loadQuestions() {
 
-    const { data, error } =
-
-        await supabaseClient
+    const {
+        data,
+        error
+    } = await supabaseClient
 
         .from("questions")
 
         .select("*")
 
-        .eq("exam_id", selectedExam.id)
+        .eq(
+            "exam_id",
+            selectedExam.id
+        )
 
-        .order("question_no", {
-            ascending: true
-        });
+        .order(
+            "question_no",
+            {
+                ascending: true
+            }
+        );
+
 
     if (error) {
 
@@ -349,37 +464,60 @@ async function loadQuestions() {
 
     }
 
+
     questions = data;
 
-document.getElementById("totalQuestion").textContent =
-questions.length;
 
-// Load previously saved answers
-await loadSavedAnswers();
+    document.getElementById(
+        "totalQuestion"
+    ).textContent =
+        questions.length;
 
-createPalette();
 
-showQuestion(0);
+    // Load previously saved answers
+
+    await loadSavedAnswers();
+
+
+    createPalette();
+
+
+    showQuestion(0);
 
 }
 
-//==========================================
+
+// ==========================================
 // Load Saved Answers
-//==========================================
+// ==========================================
 
 async function loadSavedAnswers() {
 
-    const attemptId = sessionStorage.getItem("attemptId");
+    const attemptId =
+        sessionStorage.getItem(
+            "attemptId"
+        );
+
 
     if (!attemptId) return;
 
-    const { data, error } = await supabaseClient
+
+    const {
+        data,
+        error
+    } = await supabaseClient
 
         .from("user_answers")
 
-        .select("question_id, selected_option, is_review")
+        .select(
+            "question_id, selected_option, is_review"
+        )
 
-        .eq("attempt_id", attemptId);
+        .eq(
+            "attempt_id",
+            attemptId
+        );
+
 
     if (error) {
 
@@ -389,49 +527,74 @@ async function loadSavedAnswers() {
 
     }
 
-    data.forEach(answer => {
 
-        if (answer.selected_option) {
+    data.forEach(
+        answer => {
 
-    answers[answer.question_id] =
-    answer.selected_option;
+
+            if (
+                answer.selected_option
+            ) {
+
+                answers[
+                    answer.question_id
+                ] =
+                    answer.selected_option;
+
+            }
+
+
+            if (
+                answer.is_review === true
+            ) {
+
+                if (
+                    !reviewQuestions.includes(
+                        answer.question_id
+                    )
+                ) {
+
+                    reviewQuestions.push(
+                        answer.question_id
+                    );
+
+                }
+
+            }
+
+
+            const index =
+                questions.findIndex(
+                    q =>
+                        q.id ===
+                        answer.question_id
+                );
+
+
+            if (
+                index !== -1 &&
+                !visitedQuestions.includes(
+                    index
+                )
+            ) {
+
+                visitedQuestions.push(
+                    index
+                );
+
+            }
+
+        }
+    );
+
+
+    console.log(
+        "Loaded Answers:",
+        answers
+    );
 
 }
 
-
-           if (answer.is_review === true) {
-
-    if (!reviewQuestions.includes(answer.question_id)) {
-
-        reviewQuestions.push(answer.question_id);
-
-    }
-
-}
-
-const index = questions.findIndex(
-
-    q => q.id === answer.question_id
-
-);
-
-if (
-
-    index !== -1 &&
-
-    !visitedQuestions.includes(index)
-
-) {
-
-    visitedQuestions.push(index);
-
-}
-
-    });
-
-    console.log("Loaded Answers:", answers);
-
-}
 
 // ==========================
 // Display Question
@@ -439,79 +602,135 @@ if (
 
 function showQuestion(index) {
 
-    currentQuestion = index;
+    currentQuestion =
+        index;
+
 
     // Mark visited
 
-if(!visitedQuestions.includes(index)){
+    if (
+        !visitedQuestions.includes(
+            index
+        )
+    ) {
 
-    visitedQuestions.push(index);
-
-}
-
-    const q = questions[index];
-
-    if (!q) return;
-
-    document.getElementById("currentQuestion").textContent =
-        index + 1;
-
-    document.getElementById("questionText").textContent =
-        q.question;
-
-    document.getElementById("optionA").textContent =
-        q.option_a;
-
-    document.getElementById("optionB").textContent =
-        q.option_b;
-
-    document.getElementById("optionC").textContent =
-        q.option_c;
-
-    document.getElementById("optionD").textContent =
-        q.option_d;
-
-        document.querySelectorAll('input[name="option"]')
-.forEach(radio=>{
-
-    radio.onchange = saveAnswer;
-
-});
-
-        // ==========================
-// Restore Selected Answer
-// ==========================
-
-document.querySelectorAll('input[name="option"]')
-.forEach(radio => {
-
-    radio.checked = false;
-
-});
-
-if (answers[q.id]) {
-
-    const selected = document.querySelector(
-        `input[name="option"][value="${answers[q.id]}"]`
-    );
-
-    if (selected) {
-
-        selected.checked = true;
+        visitedQuestions.push(
+            index
+        );
 
     }
 
-}
+
+    const q =
+        questions[index];
+
+
+    if (!q) return;
+
+
+    document.getElementById(
+        "currentQuestion"
+    ).textContent =
+        index + 1;
+
+
+    document.getElementById(
+        "questionText"
+    ).textContent =
+        q.question;
+
+
+    document.getElementById(
+        "optionA"
+    ).textContent =
+        q.option_a;
+
+
+    document.getElementById(
+        "optionB"
+    ).textContent =
+        q.option_b;
+
+
+    document.getElementById(
+        "optionC"
+    ).textContent =
+        q.option_c;
+
+
+    document.getElementById(
+        "optionD"
+    ).textContent =
+        q.option_d;
+
+
+    document.querySelectorAll(
+        'input[name="option"]'
+    )
+        .forEach(
+            radio => {
+
+                radio.onchange =
+                    saveAnswer;
+
+            }
+        );
+
+
+    // ==========================
+    // Restore Selected Answer
+    // ==========================
+
+    document.querySelectorAll(
+        'input[name="option"]'
+    )
+        .forEach(
+            radio => {
+
+                radio.checked =
+                    false;
+
+            }
+        );
+
+
+    if (
+        answers[q.id]
+    ) {
+
+        const selected =
+            document.querySelector(
+                `input[name="option"][value="${answers[q.id]}"]`
+            );
+
+
+        if (selected) {
+
+            selected.checked =
+                true;
+
+        }
+
+    }
+
 
     updatePalette();
 
-    document.getElementById("previousBtn").disabled =
-currentQuestion===0;
 
-document.getElementById("nextBtn").disabled =
-currentQuestion===questions.length-1;
+    document.getElementById(
+        "previousBtn"
+    ).disabled =
+        currentQuestion === 0;
+
+
+    document.getElementById(
+        "nextBtn"
+    ).disabled =
+        currentQuestion ===
+        questions.length - 1;
 
 }
+
 
 // ==========================
 // Create Palette
@@ -520,107 +739,182 @@ currentQuestion===questions.length-1;
 function createPalette() {
 
     const palette =
-        document.getElementById("questionPalette");
+        document.getElementById(
+            "questionPalette"
+        );
 
-    palette.innerHTML = "";
 
-    questions.forEach((q, index) => {
+    palette.innerHTML =
+        "";
 
-        palette.innerHTML +=
 
-            `
-<button
-class="paletteBtn"
-id="palette${index}"
-onclick="showQuestion(${index})">
+    questions.forEach(
+        (
+            q,
+            index
+        ) => {
 
-${index + 1}
+            palette.innerHTML +=
 
-</button>
-`;
+                `
+                <button
+                    class="paletteBtn"
+                    id="palette${index}"
+                    onclick="showQuestion(${index})">
 
-    });
+                    ${index + 1}
+
+                </button>
+                `;
+
+        }
+    );
 
 }
+
 
 // ==========================
 // Update Palette
 // ==========================
 
-function updatePalette(){
+function updatePalette() {
 
-    document.querySelectorAll(".paletteBtn")
+    document.querySelectorAll(
+        ".paletteBtn"
+    )
+        .forEach(
+            (
+                btn,
+                index
+            ) => {
 
-    .forEach((btn,index)=>{
+                btn.className =
+                    "paletteBtn";
 
-        btn.className="paletteBtn";
 
-        if(visitedQuestions.includes(index)){
+                if (
+                    visitedQuestions.includes(
+                        index
+                    )
+                ) {
 
-            btn.classList.add("notAnswered");
+                    btn.classList.add(
+                        "notAnswered"
+                    );
 
-        }
+                }
 
-        const q = questions[index];
 
-       // Review (Highest Priority)
-if (reviewQuestions.includes(q.id)) {
+                const q =
+                    questions[index];
 
-    btn.classList.remove("answered", "notAnswered");
 
-    btn.classList.add("review");
+                // Review
+                // Highest Priority
 
-}
+                if (
+                    reviewQuestions.includes(
+                        q.id
+                    )
+                ) {
 
-// Answered
-else if (answers[q.id]) {
+                    btn.classList.remove(
+                        "answered",
+                        "notAnswered"
+                    );
 
-    btn.classList.remove("notAnswered");
 
-    btn.classList.add("answered");
+                    btn.classList.add(
+                        "review"
+                    );
 
-}
+                }
 
-// Visited but Not Answered
-else if (visitedQuestions.includes(index)) {
 
-    btn.classList.add("notAnswered");
+                // Answered
 
-}
+                else if (
+                    answers[q.id]
+                ) {
 
-    });
+                    btn.classList.remove(
+                        "notAnswered"
+                    );
+
+
+                    btn.classList.add(
+                        "answered"
+                    );
+
+                }
+
+
+                // Visited but
+                // Not Answered
+
+                else if (
+                    visitedQuestions.includes(
+                        index
+                    )
+                ) {
+
+                    btn.classList.add(
+                        "notAnswered"
+                    );
+
+                }
+
+            }
+        );
+
 
     const currentButton =
-    document.getElementById(`palette${currentQuestion}`);
-
-if (currentButton) {
-
-    // If current question is under review,
-    // keep the review color.
-    if (reviewQuestions.includes(
-        questions[currentQuestion].id
-    )) {
-
-        currentButton.classList.remove(
-            "answered",
-            "notAnswered"
+        document.getElementById(
+            `palette${currentQuestion}`
         );
 
-        currentButton.classList.add("review");
 
-    } else {
+    if (currentButton) {
 
-        currentButton.classList.remove(
-            "review"
-        );
+        // If current question
+        // is under review,
+        // keep review color.
 
-        currentButton.classList.add("current");
+        if (
+            reviewQuestions.includes(
+                questions[
+                    currentQuestion
+                ].id
+            )
+        ) {
+
+            currentButton.classList.remove(
+                "answered",
+                "notAnswered"
+            );
+
+
+            currentButton.classList.add(
+                "review"
+            );
+
+        } else {
+
+            currentButton.classList.remove(
+                "review"
+            );
+
+
+            currentButton.classList.add(
+                "current"
+            );
+
+        }
 
     }
 
 }
 
-}
 
 // ==========================
 // Navigation Buttons
@@ -628,93 +922,149 @@ if (currentButton) {
 
 function nextQuestion() {
 
-    if (currentQuestion < questions.length - 1) {
+    if (
+        currentQuestion <
+        questions.length - 1
+    ) {
 
-        showQuestion(currentQuestion + 1);
+        showQuestion(
+            currentQuestion + 1
+        );
+
+    }
+
+}
+
+
+function previousQuestion() {
+
+    if (
+        currentQuestion > 0
+    ) {
+
+        showQuestion(
+            currentQuestion - 1
+        );
 
     }
 
 }
 
-function previousQuestion(){
-
-    if(currentQuestion>0){
-
-        showQuestion(currentQuestion-1);
-
-    }
-
-}
 
 // ==========================
 // Save Answer (Local)
 // ==========================
 
-
 function saveAnswer() {
 
-    const selected = document.querySelector(
-        'input[name="option"]:checked'
-    );
+    const selected =
+        document.querySelector(
+            'input[name="option"]:checked'
+        );
+
 
     if (!selected) return;
 
-    const question = questions[currentQuestion];
 
-    answers[question.id] = selected.value;
+    const question =
+        questions[currentQuestion];
 
 
-    console.log("Saved:", answers);
+    answers[
+        question.id
+    ] =
+        selected.value;
+
+
+    console.log(
+        "Saved:",
+        answers
+    );
+
 
     updatePalette();
 
-    answerSavePromise = saveAnswerToDatabase(
 
-    question.id,
-
-    selected.value
-
-);
+    answerSavePromise =
+        saveAnswerToDatabase(
+            question.id,
+            selected.value
+        );
 
 }
+
 
 // ==========================
 // Save Answer To Database
 // ==========================
 
-async function saveAnswerToDatabase(questionId, selectedOption) {
+async function saveAnswerToDatabase(
+    questionId,
+    selectedOption
+) {
 
     const attemptId =
-        sessionStorage.getItem("attemptId");
+        sessionStorage.getItem(
+            "attemptId"
+        );
+
 
     if (!attemptId) return;
 
-    const { data: userData } =
+
+    const {
+        data: userData
+    } =
         await supabaseClient.auth.getUser();
 
-    const user = userData.user;
+
+    const user =
+        userData.user;
+
 
     if (!user) return;
 
-    const { error } = await supabaseClient
 
-        .from("user_answers")
+    const {
+        error
+    } =
+        await supabaseClient
 
-        .upsert(
-    {
-        attempt_id: attemptId,
-        question_id: questionId,
-        user_id: user.id,
-        selected_option: selectedOption,
+            .from("user_answers")
 
-        // Preserve current review status
-        is_review:
-            reviewQuestions.includes(questionId)
-    },
-    {
-        onConflict: "attempt_id,question_id"
-    }
-);
+            .upsert(
+                {
+
+                    attempt_id:
+                        attemptId,
+
+                    question_id:
+                        questionId,
+
+                    user_id:
+                        user.id,
+
+                    selected_option:
+                        selectedOption,
+
+                    // Preserve current
+                    // review status
+
+                    is_review:
+                        reviewQuestions.includes(
+                            questionId
+                        )
+
+                },
+
+                {
+
+                    onConflict:
+                        "attempt_id,question_id"
+
+                }
+            );
+
 
     if (error) {
 
@@ -735,32 +1085,55 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
 
 }
 
+
 // ==========================
 // Save Review To Database
 // ==========================
 
-async function saveReviewToDatabase(questionId, isReview) {
+async function saveReviewToDatabase(
+    questionId,
+    isReview
+) {
 
-    const attemptId = sessionStorage.getItem("attemptId");
+    const attemptId =
+        sessionStorage.getItem(
+            "attemptId"
+        );
 
-    const { data: userData } =
-    await supabaseClient.auth.getUser();
 
-    const user = userData.user;
+    const {
+        data: userData
+    } =
+        await supabaseClient.auth.getUser();
+
+
+    const user =
+        userData.user;
+
 
     // Check if row exists
 
-    const { data: existing } = await supabaseClient
+    const {
+        data: existing
+    } =
+        await supabaseClient
 
-        .from("user_answers")
+            .from("user_answers")
 
-        .select("id")
+            .select("id")
 
-        .eq("attempt_id", attemptId)
+            .eq(
+                "attempt_id",
+                attemptId
+            )
 
-        .eq("question_id", questionId)
+            .eq(
+                "question_id",
+                questionId
+            )
 
-        .maybeSingle();
+            .maybeSingle();
+
 
     if (existing) {
 
@@ -772,11 +1145,15 @@ async function saveReviewToDatabase(questionId, isReview) {
 
             .update({
 
-                is_review: isReview
+                is_review:
+                    isReview
 
             })
 
-            .eq("id", existing.id);
+            .eq(
+                "id",
+                existing.id
+            );
 
     } else {
 
@@ -788,15 +1165,20 @@ async function saveReviewToDatabase(questionId, isReview) {
 
             .insert({
 
-                attempt_id: attemptId,
+                attempt_id:
+                    attemptId,
 
-                question_id: questionId,
+                question_id:
+                    questionId,
 
-                user_id: user.id,
+                user_id:
+                    user.id,
 
-                selected_option: null,
+                selected_option:
+                    null,
 
-                is_review: isReview
+                is_review:
+                    isReview
 
             });
 
@@ -804,68 +1186,114 @@ async function saveReviewToDatabase(questionId, isReview) {
 
 }
 
-//==========================================
+
+// ==========================================
 // Clear Response
-//==========================================
+// ==========================================
 
 async function clearResponse() {
 
-    const question = questions[currentQuestion];
+    const question =
+        questions[currentQuestion];
+
 
     if (!question) return;
 
+
     // Remove local answer
-    delete answers[question.id];
+
+    delete answers[
+        question.id
+    ];
+
 
     // Remove Review
-reviewQuestions = reviewQuestions.filter(
 
-    id => id !== question.id
+    reviewQuestions =
+        reviewQuestions.filter(
+            id =>
+                id !==
+                question.id
+        );
 
-);
 
     // Uncheck radio buttons
+
     document
-    .querySelectorAll('input[name="option"]')
-    .forEach(radio => {
+        .querySelectorAll(
+            'input[name="option"]'
+        )
+        .forEach(
+            radio => {
 
-        radio.checked = false;
+                radio.checked =
+                    false;
 
-    });
+            }
+        );
+
 
     // Remove from Supabase
-    const attemptId = sessionStorage.getItem("attemptId");
 
-    const { error } = await supabaseClient
+    const attemptId =
+        sessionStorage.getItem(
+            "attemptId"
+        );
 
-    .from("user_answers")
 
-    .delete()
+    const {
+        error
+    } =
+        await supabaseClient
 
-    .eq("attempt_id", attemptId)
+            .from("user_answers")
 
-    .eq("question_id", question.id);
+            .delete()
+
+            .eq(
+                "attempt_id",
+                attemptId
+            )
+
+            .eq(
+                "question_id",
+                question.id
+            );
+
 
     // Ensure review is removed locally
-reviewQuestions = reviewQuestions.filter(
-    id => id !== question.id
-);
 
-updatePalette();
+    reviewQuestions =
+        reviewQuestions.filter(
+            id =>
+                id !==
+                question.id
+        );
 
-if (error) {
 
-    console.error("Delete Error:", error);
+    updatePalette();
 
-} else {
 
-    console.log("Answer deleted successfully");
+    if (error) {
 
-}
+        console.error(
+            "Delete Error:",
+            error
+        );
+
+    } else {
+
+        console.log(
+            "Answer deleted successfully"
+        );
+
+    }
+
 
     updatePalette();
 
 }
+
 
 // ==========================
 // Mark For Review
@@ -873,67 +1301,94 @@ if (error) {
 
 async function markForReview() {
 
-    const question = questions[currentQuestion];
+    const question =
+        questions[currentQuestion];
+
 
     if (!question) return;
 
-    // Always mark as review
-    if (!reviewQuestions.includes(question.id)) {
 
-        reviewQuestions.push(question.id);
+    // Always mark as review
+
+    if (
+        !reviewQuestions.includes(
+            question.id
+        )
+    ) {
+
+        reviewQuestions.push(
+            question.id
+        );
 
     }
 
+
     updatePalette();
 
-    // Wait for answer save to finish first
+
+    // Wait for answer save
+    // to finish first
+
     if (answerSavePromise) {
 
         await answerSavePromise;
 
-        answerSavePromise = null;
+        answerSavePromise =
+            null;
 
     }
 
-    // Save review status as TRUE
+
+    // Save review status TRUE
+
     await saveReviewToDatabase(
-
         question.id,
-
         true
-
     );
 
-    // Move to next question
-    if (currentQuestion < questions.length - 1) {
 
-        showQuestion(currentQuestion + 1);
+    // Move to next question
+
+    if (
+        currentQuestion <
+        questions.length - 1
+    ) {
+
+        showQuestion(
+            currentQuestion + 1
+        );
 
     }
 
 }
 
-// ==========================================
-// Submit Exam
-// ==========================================
 
 // ==========================================
 // Submit Exam
 // ==========================================
 
-async function submitExam(autoSubmit = false) {
+async function submitExam(
+    autoSubmit = false
+) {
 
     // ------------------------------------------
     // Calculate current exam status
     // ------------------------------------------
 
-    const totalQuestions = questions.length;
+    const totalQuestions =
+        questions.length;
+
 
     const answeredQuestions =
-        Object.keys(answers).length;
+        Object.keys(
+            answers
+        ).length;
+
 
     const unansweredQuestions =
-        totalQuestions - answeredQuestions;
+        totalQuestions -
+        answeredQuestions;
+
 
     const reviewCount =
         reviewQuestions.length;
@@ -965,7 +1420,9 @@ async function submitExam(autoSubmit = false) {
 
 
         const confirmed =
-            window.confirm(message);
+            window.confirm(
+                message
+            );
 
 
         if (!confirmed) {
@@ -983,9 +1440,12 @@ async function submitExam(autoSubmit = false) {
 
     if (timerInterval) {
 
-        clearInterval(timerInterval);
+        clearInterval(
+            timerInterval
+        );
 
-        timerInterval = null;
+        timerInterval =
+            null;
 
     }
 
@@ -998,41 +1458,53 @@ async function submitExam(autoSubmit = false) {
         .querySelectorAll(
             ".navigation button, .paletteBtn, #submitBtn"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.disabled = true;
+                button.disabled =
+                    true;
 
-        });
+            }
+        );
 
-
-   
 
     // ==========================================
-// Finalize Exam in Database
-// ==========================================
+    // Finalize Exam in Database
+    // ==========================================
 
-const finalized =
-    await finalizeExamAttempt(autoSubmit);
+    const finalized =
+        await finalizeExamAttempt(
+            autoSubmit
+        );
 
-if (!finalized) {
 
-    return;
+    if (!finalized) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "result.html";
 
 }
 
-window.location.href = "result.html";
-
-}
 
 // ==========================================
 // FINALIZE EXAM ATTEMPT
 // ==========================================
 
-async function finalizeExamAttempt(autoSubmit = false) {
+async function finalizeExamAttempt(
+    autoSubmit = false
+) {
 
     try {
 
-        console.log("Finalizing exam attempt...");
+
+        console.log(
+            "Finalizing exam attempt..."
+        );
 
 
         // ==========================================
@@ -1040,7 +1512,9 @@ async function finalizeExamAttempt(autoSubmit = false) {
         // ==========================================
 
         const attemptId =
-            sessionStorage.getItem("attemptId");
+            sessionStorage.getItem(
+                "attemptId"
+            );
 
 
         if (!attemptId) {
@@ -1065,9 +1539,14 @@ async function finalizeExamAttempt(autoSubmit = false) {
             await supabaseClient.auth.getUser();
 
 
-        if (userError || !userData.user) {
+        if (
+            userError ||
+            !userData.user
+        ) {
 
-            console.error(userError);
+            console.error(
+                userError
+            );
 
             alert(
                 "User session expired. Please login again."
@@ -1102,7 +1581,9 @@ async function finalizeExamAttempt(autoSubmit = false) {
 
         if (questionError) {
 
-            console.error(questionError);
+            console.error(
+                questionError
+            );
 
             alert(
                 "Unable to load question answers."
@@ -1137,7 +1618,9 @@ async function finalizeExamAttempt(autoSubmit = false) {
 
         if (answerError) {
 
-            console.error(answerError);
+            console.error(
+                answerError
+            );
 
             alert(
                 "Unable to load your answers."
@@ -1162,73 +1645,140 @@ async function finalizeExamAttempt(autoSubmit = false) {
 
         let score = 0;
 
+        let positiveMarks = 0;
+
+        let negativeMarks = 0;
+
 
         // ==========================================
         // Calculate Result
         // ==========================================
 
-        questionData.forEach(question => {
-
-            const userAnswer =
-                userAnswers.find(
-                    answer =>
-                        answer.question_id === question.id
-                );
+        questionData.forEach(
+            question => {
 
 
-            // No answer
-            if (
-                !userAnswer ||
-                !userAnswer.selected_option
-            ) {
-
-                skipped++;
-
-                return;
-
-            }
-
-
-            attempted++;
-
-
-            // Correct answer
-            if (
-                userAnswer.selected_option ===
-                question.correct_answer
-            ) {
-
-                correct++;
-
-
-                score +=
-                    Number(question.marks || 0);
-
-            }
-
-
-            // Wrong answer
-            else {
-
-                wrong++;
-
-
-                score -=
-                    Number(
-                        question.negative_marks || 0
+                const userAnswer =
+                    userAnswers.find(
+                        answer =>
+                            answer.question_id ===
+                            question.id
                     );
 
-            }
 
-        });
+                // ----------------------------------
+                // No answer
+                // ----------------------------------
+
+                if (
+                    !userAnswer ||
+                    !userAnswer.selected_option
+                ) {
+
+                    skipped++;
+
+                    return;
+
+                }
+
+
+                attempted++;
+
+
+                // ----------------------------------
+                // Correct answer
+                // ----------------------------------
+
+                if (
+                    userAnswer.selected_option ===
+                    question.correct_answer
+                ) {
+
+                    correct++;
+
+
+                    const marks =
+                        Number(
+                            question.marks || 0
+                        );
+
+
+                    positiveMarks +=
+                        marks;
+
+
+                    score +=
+                        marks;
+
+                }
+
+
+                // ----------------------------------
+                // Wrong answer
+                // ----------------------------------
+
+                else {
+
+                    wrong++;
+
+
+                    /*
+                     * IMPORTANT:
+                     *
+                     * negative_marks may be stored
+                     * in Supabase as either:
+                     *
+                     * 0.25
+                     *
+                     * OR
+                     *
+                     * -0.25
+                     *
+                     * Math.abs() makes both work.
+                     */
+
+                    const negative =
+                        Math.abs(
+                            Number(
+                                question.negative_marks ||
+                                0
+                            )
+                        );
+
+
+                    negativeMarks +=
+                        negative;
+
+
+                    score -=
+                        negative;
+
+                }
+
+            }
+        );
 
 
         // ==========================================
-        // Prevent Negative Score Display
+        // Round Score
         // ==========================================
 
         score =
-            Number(score.toFixed(2));
+            Number(
+                score.toFixed(2)
+            );
+
+
+        positiveMarks =
+            Number(
+                positiveMarks.toFixed(2)
+            );
+
+
+        negativeMarks =
+            Number(
+                negativeMarks.toFixed(2)
+            );
 
 
         // ==========================================
@@ -1242,21 +1792,36 @@ async function finalizeExamAttempt(autoSubmit = false) {
             questionData.length > 0
         ) {
 
-            percentage =
-                Number(
+            const totalMarks =
+                questionData.reduce(
                     (
-                        (score /
-                        questionData.reduce(
-                            (total, question) =>
-                                total +
-                                Number(
-                                    question.marks || 0
-                                ),
+                        total,
+                        question
+                    ) =>
+                        total +
+                        Number(
+                            question.marks ||
                             0
-                        )
-                        ) * 100
-                    ).toFixed(2)
+                        ),
+                    0
                 );
+
+
+            if (
+                totalMarks > 0
+            ) {
+
+                percentage =
+                    Number(
+                        (
+                            (
+                                score /
+                                totalMarks
+                            ) * 100
+                        ).toFixed(2)
+                    );
+
+            }
 
         }
 
@@ -1293,20 +1858,27 @@ async function finalizeExamAttempt(autoSubmit = false) {
         // Result Status
         // ==========================================
 
-        let result = "Completed";
+        let result =
+            "Completed";
 
 
         if (
-            selectedExam.passing_marks !== null &&
-            selectedExam.passing_marks !== undefined
+            selectedExam.passing_marks !==
+                null &&
+
+            selectedExam.passing_marks !==
+                undefined
         ) {
 
             result =
+
                 score >=
                 Number(
                     selectedExam.passing_marks
                 )
+
                     ? "Pass"
+
                     : "Fail";
 
         }
@@ -1317,63 +1889,65 @@ async function finalizeExamAttempt(autoSubmit = false) {
         // ==========================================
 
         const {
-    data: updatedAttempt,
-    error: updateError
-} =
-    await supabaseClient
+            data: updatedAttempt,
+            error: updateError
+        } =
+            await supabaseClient
 
-        .from("exam_attempts")
+                .from("exam_attempts")
 
-        .update({
+                .update({
 
-            end_time:
-                new Date().toISOString(),
+                    end_time:
+                        new Date()
+                            .toISOString(),
 
-            attempted:
-                attempted,
+                    attempted:
+                        attempted,
 
-            correct:
-                correct,
+                    correct:
+                        correct,
 
-            wrong:
-                wrong,
+                    wrong:
+                        wrong,
 
-            skipped:
-                skipped,
+                    skipped:
+                        skipped,
 
-            score:
-                score,
+                    score:
+                        score,
 
-            percentage:
-                percentage,
+                    percentage:
+                        percentage,
 
-            result:
-                result,
+                    result:
+                        result,
 
-            status:
-                "Completed",
+                    status:
+                        "Completed",
 
-            submitted_at:
-                new Date().toISOString(),
+                    submitted_at:
+                        new Date()
+                            .toISOString(),
 
-            time_taken:
-                timeTaken
+                    time_taken:
+                        timeTaken
 
-        })
+                })
 
-        .eq(
-            "id",
-            attemptId
-        )
+                .eq(
+                    "id",
+                    attemptId
+                )
 
-        .select()
-        .single();
+                .select()
+                .single();
 
 
-console.log(
-    "UPDATED ATTEMPT:",
-    updatedAttempt
-);
+        console.log(
+            "UPDATED ATTEMPT:",
+            updatedAttempt
+        );
 
 
         if (updateError) {
@@ -1403,6 +1977,8 @@ console.log(
                 correct,
                 wrong,
                 skipped,
+                positiveMarks,
+                negativeMarks,
                 score,
                 percentage,
                 result,
@@ -1415,6 +1991,7 @@ console.log(
 
     }
 
+
     catch (error) {
 
         console.error(
@@ -1422,9 +1999,11 @@ console.log(
             error
         );
 
+
         alert(
             "Something went wrong while submitting the exam."
         );
+
 
         return false;
 
