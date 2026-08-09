@@ -90,7 +90,7 @@ document.getElementById("clearBtn")
 
 document.getElementById("submitBtn")
     .addEventListener("click", () => submitExam(false));
-    
+
 }
 
 // ==========================================
@@ -944,39 +944,417 @@ async function submitExam(autoSubmit = false) {
         });
 
 
-    // ------------------------------------------
-    // Automatic submission message
-    // ------------------------------------------
+   
 
-    if (autoSubmit) {
+    // ==========================================
+// Finalize Exam in Database
+// ==========================================
 
-        alert(
-            "Time is over.\n\n" +
-            "Your examination has been submitted automatically."
+const finalized =
+    await finalizeExamAttempt(autoSubmit);
+
+if (!finalized) {
+
+    return;
+
+}
+
+}
+
+// ==========================================
+// FINALIZE EXAM ATTEMPT
+// ==========================================
+
+async function finalizeExamAttempt(autoSubmit = false) {
+
+    try {
+
+        console.log("Finalizing exam attempt...");
+
+
+        // ==========================================
+        // Get Attempt ID
+        // ==========================================
+
+        const attemptId =
+            sessionStorage.getItem("attemptId");
+
+
+        if (!attemptId) {
+
+            alert(
+                "Exam attempt not found."
+            );
+
+            return false;
+
+        }
+
+
+        // ==========================================
+        // Get Current User
+        // ==========================================
+
+        const {
+            data: userData,
+            error: userError
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        if (userError || !userData.user) {
+
+            console.error(userError);
+
+            alert(
+                "User session expired. Please login again."
+            );
+
+            return false;
+
+        }
+
+
+        // ==========================================
+        // Get Questions
+        // ==========================================
+
+        const {
+            data: questionData,
+            error: questionError
+        } =
+            await supabaseClient
+
+                .from("questions")
+
+                .select(
+                    "id, correct_answer, marks, negative_marks"
+                )
+
+                .eq(
+                    "exam_id",
+                    selectedExam.id
+                );
+
+
+        if (questionError) {
+
+            console.error(questionError);
+
+            alert(
+                "Unable to load question answers."
+            );
+
+            return false;
+
+        }
+
+
+        // ==========================================
+        // Get User Answers
+        // ==========================================
+
+        const {
+            data: userAnswers,
+            error: answerError
+        } =
+            await supabaseClient
+
+                .from("user_answers")
+
+                .select(
+                    "id, question_id, selected_option"
+                )
+
+                .eq(
+                    "attempt_id",
+                    attemptId
+                );
+
+
+        if (answerError) {
+
+            console.error(answerError);
+
+            alert(
+                "Unable to load your answers."
+            );
+
+            return false;
+
+        }
+
+
+        // ==========================================
+        // Result Counters
+        // ==========================================
+
+        let attempted = 0;
+
+        let correct = 0;
+
+        let wrong = 0;
+
+        let skipped = 0;
+
+        let score = 0;
+
+
+        // ==========================================
+        // Calculate Result
+        // ==========================================
+
+        questionData.forEach(question => {
+
+            const userAnswer =
+                userAnswers.find(
+                    answer =>
+                        answer.question_id === question.id
+                );
+
+
+            // No answer
+            if (
+                !userAnswer ||
+                !userAnswer.selected_option
+            ) {
+
+                skipped++;
+
+                return;
+
+            }
+
+
+            attempted++;
+
+
+            // Correct answer
+            if (
+                userAnswer.selected_option ===
+                question.correct_answer
+            ) {
+
+                correct++;
+
+
+                score +=
+                    Number(question.marks || 0);
+
+            }
+
+
+            // Wrong answer
+            else {
+
+                wrong++;
+
+
+                score -=
+                    Number(
+                        question.negative_marks || 0
+                    );
+
+            }
+
+        });
+
+
+        // ==========================================
+        // Prevent Negative Score Display
+        // ==========================================
+
+        score =
+            Number(score.toFixed(2));
+
+
+        // ==========================================
+        // Percentage
+        // ==========================================
+
+        let percentage = 0;
+
+
+        if (
+            questionData.length > 0
+        ) {
+
+            percentage =
+                Number(
+                    (
+                        (score /
+                        questionData.reduce(
+                            (total, question) =>
+                                total +
+                                Number(
+                                    question.marks || 0
+                                ),
+                            0
+                        )
+                        ) * 100
+                    ).toFixed(2)
+                );
+
+        }
+
+
+        // ==========================================
+        // Time Taken
+        // ==========================================
+
+        const startTime =
+            sessionStorage.getItem(
+                "examStartTime"
+            );
+
+
+        let timeTaken = 0;
+
+
+        if (startTime) {
+
+            timeTaken =
+                Math.floor(
+                    (
+                        Date.now() -
+                        new Date(
+                            startTime
+                        ).getTime()
+                    ) / 1000
+                );
+
+        }
+
+
+        // ==========================================
+        // Result Status
+        // ==========================================
+
+        let result = "Completed";
+
+
+        if (
+            selectedExam.passing_marks !== null &&
+            selectedExam.passing_marks !== undefined
+        ) {
+
+            result =
+                score >=
+                Number(
+                    selectedExam.passing_marks
+                )
+                    ? "Pass"
+                    : "Fail";
+
+        }
+
+
+        // ==========================================
+        // Update Exam Attempt
+        // ==========================================
+
+        const {
+            error: updateError
+        } =
+            await supabaseClient
+
+                .from("exam_attempts")
+
+                .update({
+
+                    end_time:
+                        new Date().toISOString(),
+
+                    attempted:
+                        attempted,
+
+                    correct:
+                        correct,
+
+                    wrong:
+                        wrong,
+
+                    skipped:
+                        skipped,
+
+                    score:
+                        score,
+
+                    percentage:
+                        percentage,
+
+                    result:
+                        result,
+
+                    status:
+                        "Completed",
+
+                    submitted_at:
+                        new Date().toISOString(),
+
+                    time_taken:
+                        timeTaken
+
+                })
+
+                .eq(
+                    "id",
+                    attemptId
+                );
+
+
+        if (updateError) {
+
+            console.error(
+                "Attempt update error:",
+                updateError
+            );
+
+            alert(
+                "Unable to save exam result."
+            );
+
+            return false;
+
+        }
+
+
+        // ==========================================
+        // Success
+        // ==========================================
+
+        console.log(
+            "Exam attempt finalized successfully:",
+            {
+                attempted,
+                correct,
+                wrong,
+                skipped,
+                score,
+                percentage,
+                result,
+                timeTaken
+            }
         );
 
-    } else {
 
-        alert(
-            "Exam submission confirmed."
-        );
+        return true;
 
     }
 
+    catch (error) {
 
-    // ------------------------------------------
-    // TEMPORARY
-    // Result system will be connected next
-    // ------------------------------------------
+        console.error(
+            "Finalization error:",
+            error
+        );
 
-    console.log(
-        "Exam submitted:",
-        {
-            totalQuestions,
-            answeredQuestions,
-            unansweredQuestions,
-            reviewCount
-        }
-    );
+        alert(
+            "Something went wrong while submitting the exam."
+        );
+
+        return false;
+
+    }
 
 }
