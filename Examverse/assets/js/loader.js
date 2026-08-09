@@ -1,13 +1,18 @@
-window.addEventListener("load",()=>{
+window.addEventListener("load", () => {
 
-    const loader=document.getElementById("loader");
+    const loader = document.getElementById("loader");
 
-    loader.style.opacity="0";
+    // If this page does not have a loader, do nothing
+    if (!loader) {
+        return;
+    }
 
-    setTimeout(()=>{
+    loader.style.opacity = "0";
 
-        loader.style.display="none";
+    setTimeout(() => {
 
-    },500);
+        loader.style.display = "none";
+
+    }, 500);
 
 });
