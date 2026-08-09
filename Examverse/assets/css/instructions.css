@@ -1781,3 +1781,224 @@ footer strong {
     }
 
 }
+
+/* ==========================================
+   EXAMVERSE PAGE LOADER
+========================================== */
+
+#loader {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(59,130,246,.35),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(139,92,246,.35),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 50% 90%,
+            rgba(6,182,212,.25),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #e0efff,
+            #f1edff,
+            #e3fbff
+        );
+
+    transition:
+        opacity .5s ease;
+
+}
+
+
+.loader-content {
+
+    width: 280px;
+
+    padding: 35px 25px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.72),
+            rgba(255,255,255,.42)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.85);
+
+    backdrop-filter: blur(25px);
+
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 25px 70px
+        rgba(30,41,59,.15),
+
+        inset 0 1px 0
+        rgba(255,255,255,.9);
+
+}
+
+
+/* Logo */
+
+.loader-logo {
+
+    width: 65px;
+
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 19px;
+
+    color: white;
+
+    font-size: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 12px 30px
+        rgba(37,99,235,.28);
+
+    margin-bottom: 20px;
+
+}
+
+
+/* Spinner */
+
+.loader-spinner {
+
+    width: 34px;
+
+    height: 34px;
+
+    margin-bottom: 18px;
+
+    border-radius: 50%;
+
+    border:
+        4px solid
+        rgba(37,99,235,.15);
+
+    border-top-color:
+        #2563eb;
+
+    border-right-color:
+        #7c3aed;
+
+    animation:
+        examVerseSpin .8s linear infinite;
+
+}
+
+
+@keyframes examVerseSpin {
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* Title */
+
+.loader-content h2 {
+
+    margin-bottom: 5px;
+
+    font-size: 23px;
+
+    font-weight: 700;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    -webkit-background-clip: text;
+
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+}
+
+
+/* Loading text */
+
+.loader-content p {
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    letter-spacing: .2px;
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+    .loader-content {
+
+        width: 250px;
+
+        padding: 30px 20px;
+
+    }
+
+}
