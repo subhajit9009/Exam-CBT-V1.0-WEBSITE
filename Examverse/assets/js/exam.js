@@ -174,34 +174,18 @@ function startExamTimer() {
 
         if (remaining <= 0) {
 
-            remaining = 0;
+    remaining = 0;
 
-            clearInterval(timerInterval);
-
-            timerInterval = null;
-
-            timerElement.textContent =
-                "00:00:00";
+    timerElement.textContent =
+        "00:00:00";
 
 
-            // Disable examination controls
-            document
-                .querySelectorAll(
-                    ".navigation button, .paletteBtn"
-                )
-                .forEach(button => {
-
-                    button.disabled = true;
-
-                });
+    // Automatically submit the examination
+    submitExam(true);
 
 
-            alert(
-                "Time is over. The examination has ended."
-            );
-
-            return;
-        }
+    return;
+}
 
 
         // ==================================
@@ -871,7 +855,11 @@ async function markForReview() {
 // Submit Exam
 // ==========================================
 
-async function submitExam() {
+// ==========================================
+// Submit Exam
+// ==========================================
+
+async function submitExam(autoSubmit = false) {
 
     // ------------------------------------------
     // Calculate current exam status
@@ -890,49 +878,45 @@ async function submitExam() {
 
 
     // ------------------------------------------
-    // Confirmation message
+    // Manual submission confirmation
     // ------------------------------------------
 
-    const message =
+    if (!autoSubmit) {
 
-        "SUBMIT EXAMINATION?\n\n" +
+        const message =
 
-        "Total Questions: " +
-        totalQuestions +
+            "SUBMIT EXAMINATION?\n\n" +
 
-        "\nAnswered: " +
-        answeredQuestions +
+            "Total Questions: " +
+            totalQuestions +
 
-        "\nUnanswered: " +
-        unansweredQuestions +
+            "\nAnswered: " +
+            answeredQuestions +
 
-        "\nMarked for Review: " +
-        reviewCount +
+            "\nUnanswered: " +
+            unansweredQuestions +
 
-        "\n\nAre you sure you want to submit your examination?";
+            "\nMarked for Review: " +
+            reviewCount +
 
-
-    // ------------------------------------------
-    // Ask confirmation
-    // ------------------------------------------
-
-    const confirmed =
-        window.confirm(message);
+            "\n\nAre you sure you want to submit your examination?";
 
 
-    // ------------------------------------------
-    // Cancel
-    // ------------------------------------------
+        const confirmed =
+            window.confirm(message);
 
-    if (!confirmed) {
 
-        return;
+        if (!confirmed) {
+
+            return;
+
+        }
 
     }
 
 
     // ------------------------------------------
-    // Stop timer
+    // Stop Timer
     // ------------------------------------------
 
     if (timerInterval) {
@@ -945,12 +929,53 @@ async function submitExam() {
 
 
     // ------------------------------------------
-    // Temporary submission message
+    // Disable Examination Controls
     // ------------------------------------------
 
-    alert(
-        "Exam submission confirmed.\n\n" +
-        "Next we will finalize your attempt and generate the result."
+    document
+        .querySelectorAll(
+            ".navigation button, .paletteBtn, #submitBtn"
+        )
+        .forEach(button => {
+
+            button.disabled = true;
+
+        });
+
+
+    // ------------------------------------------
+    // Automatic submission message
+    // ------------------------------------------
+
+    if (autoSubmit) {
+
+        alert(
+            "Time is over.\n\n" +
+            "Your examination has been submitted automatically."
+        );
+
+    } else {
+
+        alert(
+            "Exam submission confirmed."
+        );
+
+    }
+
+
+    // ------------------------------------------
+    // TEMPORARY
+    // Result system will be connected next
+    // ------------------------------------------
+
+    console.log(
+        "Exam submitted:",
+        {
+            totalQuestions,
+            answeredQuestions,
+            unansweredQuestions,
+            reviewCount
+        }
     );
 
 }
