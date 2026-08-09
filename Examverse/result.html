@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>ExamVerse | Result</title>
+
+<link rel="icon"
+type="image/png"
+href="assets/images/favicon.png">
+
+<link rel="stylesheet"
+href="assets/css/result.css">
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet"
+      href="assets/css/loader.css">
+
+</head>
+
+
+<body>
+
+    <!-- Loader -->
+
+<div id="loader">
+
+    <img
+        src="assets/images/logo.png"
+        class="loader-logo">
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+
+        Loading...
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     RESULT PAGE
+========================================== -->
+
+<div class="result-wrapper">
+
+
+    <!-- ======================================
+         Result Header
+    ======================================= -->
+
+    <div class="result-header">
+
+        <div class="success-icon">
+
+            <i class="fa-solid fa-check"></i>
+
+        </div>
+
+
+        <h1>
+            Examination Completed
+        </h1>
+
+
+        <p id="examName">
+            Loading Exam...
+        </p>
+
+    </div>
+
+
+
+    <!-- ======================================
+         Score Card
+    ======================================= -->
+
+    <div class="score-card">
+
+        <div class="score-label">
+            Final Score
+        </div>
+
+
+        <div
+            class="score-value"
+            id="score">
+            0
+        </div>
+
+
+        <div class="score-out-of">
+
+            out of
+            <span id="totalMarks">
+                0
+            </span>
+
+        </div>
+
+
+        <div
+            class="result-badge"
+            id="resultBadge">
+
+            Completed
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ======================================
+         Statistics
+    ======================================= -->
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon attempted-icon">
+
+                <i class="fa-solid fa-list-check"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Attempted
+                </span>
+
+                <strong id="attempted">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon correct-icon">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Correct
+                </span>
+
+                <strong id="correct">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon wrong-icon">
+
+                <i class="fa-solid fa-circle-xmark"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Wrong
+                </span>
+
+                <strong id="wrong">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon skipped-icon">
+
+                <i class="fa-solid fa-forward"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Skipped
+                </span>
+
+                <strong id="skipped">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ======================================
+         Detailed Result
+    ======================================= -->
+
+    <div class="details-card">
+
+        <h2>
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            Result Summary
+
+        </h2>
+
+
+        <div class="details-grid">
+
+
+            <div class="detail-item">
+
+                <span>
+                    Total Questions
+                </span>
+
+                <strong id="totalQuestions">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Attempted
+                </span>
+
+                <strong id="detailAttempted">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Positive Marks
+                </span>
+
+                <strong id="positiveMarks">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Negative Marks
+                </span>
+
+                <strong id="negativeMarks">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Percentage
+                </span>
+
+                <strong id="percentage">
+                    0%
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Passing Marks
+                </span>
+
+                <strong id="passingMarks">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Time Taken
+                </span>
+
+                <strong id="timeTaken">
+                    00:00
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Status
+                </span>
+
+                <strong id="status">
+                    Completed
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ======================================
+         Action Buttons
+    ======================================= -->
+
+    <div class="result-actions">
+
+        <button
+            id="dashboardBtn"
+            class="dashboard-btn">
+
+            <i class="fa-solid fa-house"></i>
+
+            Back to Dashboard
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ==========================================
+     Supabase
+========================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+<script src="assets/js/supabase.js">
+</script>
+
+<script src="assets/js/result.js">
+</script>
+
+<script src="assets/js/loader.js"></script>
+
+</body>
+
+</html>

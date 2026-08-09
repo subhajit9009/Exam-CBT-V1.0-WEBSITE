@@ -1017,6 +1017,8 @@ if (!finalized) {
 
 }
 
+window.location.href = "result.html";
+
 }
 
 // ==========================================
