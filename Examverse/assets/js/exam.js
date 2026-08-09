@@ -87,6 +87,9 @@ document.getElementById("reviewBtn")
 
 document.getElementById("clearBtn")
 .addEventListener("click", clearResponse);
+
+document.getElementById("submitBtn")
+    .addEventListener("click", submitExam);
 }
 
 // ==========================================
@@ -861,5 +864,93 @@ async function markForReview() {
         showQuestion(currentQuestion + 1);
 
     }
+
+}
+
+// ==========================================
+// Submit Exam
+// ==========================================
+
+async function submitExam() {
+
+    // ------------------------------------------
+    // Calculate current exam status
+    // ------------------------------------------
+
+    const totalQuestions = questions.length;
+
+    const answeredQuestions =
+        Object.keys(answers).length;
+
+    const unansweredQuestions =
+        totalQuestions - answeredQuestions;
+
+    const reviewCount =
+        reviewQuestions.length;
+
+
+    // ------------------------------------------
+    // Confirmation message
+    // ------------------------------------------
+
+    const message =
+
+        "SUBMIT EXAMINATION?\n\n" +
+
+        "Total Questions: " +
+        totalQuestions +
+
+        "\nAnswered: " +
+        answeredQuestions +
+
+        "\nUnanswered: " +
+        unansweredQuestions +
+
+        "\nMarked for Review: " +
+        reviewCount +
+
+        "\n\nAre you sure you want to submit your examination?";
+
+
+    // ------------------------------------------
+    // Ask confirmation
+    // ------------------------------------------
+
+    const confirmed =
+        window.confirm(message);
+
+
+    // ------------------------------------------
+    // Cancel
+    // ------------------------------------------
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    // ------------------------------------------
+    // Stop timer
+    // ------------------------------------------
+
+    if (timerInterval) {
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+
+    }
+
+
+    // ------------------------------------------
+    // Temporary submission message
+    // ------------------------------------------
+
+    alert(
+        "Exam submission confirmed.\n\n" +
+        "Next we will finalize your attempt and generate the result."
+    );
 
 }
