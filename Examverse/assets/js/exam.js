@@ -357,25 +357,35 @@ else if (visitedQuestions.includes(index)) {
 
     });
 
-    document
+    const currentButton =
+    document.getElementById(`palette${currentQuestion}`);
 
-.getElementById(`palette${currentQuestion}`)
+if (currentButton) {
 
-.classList.remove(
+    // If current question is under review,
+    // keep the review color.
+    if (reviewQuestions.includes(
+        questions[currentQuestion].id
+    )) {
 
-    "answered",
+        currentButton.classList.remove(
+            "answered",
+            "notAnswered"
+        );
 
-    "notAnswered",
+        currentButton.classList.add("review");
 
-    "review"
+    } else {
 
-);
+        currentButton.classList.remove(
+            "review"
+        );
 
-    document
+        currentButton.classList.add("current");
 
-    .getElementById(`palette${currentQuestion}`)
+    }
 
-    .classList.add("current");
+}
 
 }
 
