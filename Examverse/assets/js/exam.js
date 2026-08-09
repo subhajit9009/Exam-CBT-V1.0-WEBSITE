@@ -4,6 +4,7 @@
 ========================================== */
 
 let selectedExam = null;
+let answerSavePromise = null;
 let questions = [];
 let currentQuestion = 0;
 
@@ -424,7 +425,7 @@ function saveAnswer() {
 
     updatePalette();
 
-    saveAnswerToDatabase(
+    answerSavePromise = saveAnswerToDatabase(
 
     question.id,
 
@@ -636,7 +637,16 @@ async function markForReview() {
 
     updatePalette();
 
-    await saveReviewToDatabase(
+// Wait for answer save to finish first
+if (answerSavePromise) {
+
+    await answerSavePromise;
+
+    answerSavePromise = null;
+
+}
+
+await saveReviewToDatabase(
 
         question.id,
 
