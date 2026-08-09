@@ -384,10 +384,6 @@ else if (visitedQuestions.includes(index)) {
 
 function nextQuestion() {
 
-    // Save current answer
-    saveAnswer();
-
-    // Go to next question
     if (currentQuestion < questions.length - 1) {
 
         showQuestion(currentQuestion + 1);
@@ -423,12 +419,6 @@ function saveAnswer() {
 
     answers[question.id] = selected.value;
 
-    // Remove Review Status
-reviewQuestions = reviewQuestions.filter(
-
-    id => id !== question.id
-
-);
 
     console.log("Saved:", answers);
 
@@ -455,37 +445,31 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
     if (!attemptId) return;
 
     const { data: userData } =
-
-    await supabaseClient.auth.getUser();
+        await supabaseClient.auth.getUser();
 
     const user = userData.user;
-
-    console.log("Current User:", user);
-console.log("Current User ID:", user?.id);
 
     if (!user) return;
 
     const { error } = await supabaseClient
 
-.from("user_answers")
+        .from("user_answers")
 
-.upsert({
+        .upsert({
 
-    attempt_id: attemptId,
+            attempt_id: attemptId,
 
-    question_id: questionId,
+            question_id: questionId,
 
-    user_id: user.id,
+            user_id: user.id,
 
-    selected_option: selectedOption,
+            selected_option: selectedOption
 
-    is_review: false
+        });
 
-});
+    if (error) {
 
-    if(error){
-
-        console.error(error);
+        console.error("Answer Save Error:", error);
 
     }
 
