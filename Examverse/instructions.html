@@ -3,139 +3,869 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>ExamVerse | Exam Instructions</title>
+    <title>ExamVerse | Instructions</title>
 
-<link rel="icon"
-type="image/png"
-href="assets/images/favicon.png">
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
 
-<link rel="stylesheet"
-href="assets/css/instructions.css">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
 
-<link rel="stylesheet"
-href="assets/css/loader.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="assets/css/instructions.css">
 
 </head>
 
+
 <body>
 
-<!-- Loader -->
+    <div class="background">
 
-<div id="loader">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
 
-<img
-src="assets/images/logo.png"
-class="loader-logo">
+    </div>
 
-<div class="spinner"></div>
 
-<div class="loading-text">
+    <main class="instructionContainer">
 
-Loading...
 
-</div>
+        <!-- HEADER -->
 
-</div>
+        <header class="glassHeader">
 
-<div class="instructionContainer">
+            <div class="brand">
 
-<div class="instructionCard">
+                <div class="brandIcon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
 
-<h1>
+                <div>
 
-📋 Exam Instructions
+                    <h1>
+                        Exam<span>Verse</span>
+                    </h1>
 
-</h1>
+                    <p>
+                        Computer Based Examination
+                    </p>
 
-<p>
+                </div>
 
-Read all instructions carefully before starting the examination.
+            </div>
 
-</p>
 
-<hr>
+            <div class="instructionBadge">
 
-<div id="examDetails">
+                <i class="fa-solid fa-circle-info"></i>
 
-<div class="loading">
+                Examination Instructions
 
-Loading Exam Details...
+            </div>
 
-</div>
+        </header>
 
-</div>
 
-<hr>
 
-<h2>
+        <!-- TITLE -->
 
-General Instructions
+        <section class="heroCard glassCard">
 
-</h2>
+            <div class="heroIcon">
 
-<ul class="instructionList">
+                <i class="fa-solid fa-clipboard-list"></i>
 
-<li>✔ Read every question carefully before answering.</li>
+            </div>
 
-<li>✔ Each question has only one correct answer.</li>
+            <div>
 
-<li>✔ Negative marking will be applied if applicable.</li>
+                <h2>
+                    Examination Instructions
+                </h2>
 
-<li>✔ Do not refresh or close the browser during the exam.</li>
+                <p>
+                    Please read all instructions carefully
+                    before starting the examination.
+                </p>
 
-<li>✔ The timer starts immediately after clicking Start Exam.</li>
+            </div>
 
-<li>✔ The exam will automatically submit when time expires.</li>
+        </section>
 
-<li>✔ Ensure a stable internet connection whenever possible.</li>
 
-</ul>
 
-<div class="agreeBox">
+        <!-- ==========================================
+             EXISTING DYNAMIC EXAM DETAILS
+             instructions.js fills #examDetails
+        =========================================== -->
 
-<input
-type="checkbox"
-id="agree">
+        <section class="glassCard">
 
-<label for="agree">
+            <div class="sectionTitle">
 
-I have read and understood all the instructions.
+                <div class="titleIcon blue">
+                    <i class="fa-solid fa-chart-column"></i>
+                </div>
 
-</label>
+                <div>
 
-</div>
+                    <h2>
+                        Examination Details
+                    </h2>
 
-<button
-id="startExamBtn"
-disabled>
+                    <p>
+                        Details of your selected examination
+                    </p>
 
-🚀 Start Exam
+                </div>
 
-</button>
+            </div>
 
-</div>
 
-</div>
+            <div id="examDetails">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                <div class="loadingExam">
 
-<script src="assets/js/supabase.js"></script>
+                    <div class="loadingSpinner"></div>
 
-<script src="assets/js/storage.js"></script>
+                    <span>
+                        Loading examination details...
+                    </span>
 
-<script src="assets/js/auth.js"></script>
+                </div>
 
-<script src="assets/js/instructions.js"></script>
+            </div>
 
-<script src="assets/js/loader.js"></script>
+        </section>
+
+
+
+        <!-- GENERAL INSTRUCTIONS -->
+
+        <section class="glassCard">
+
+            <div class="sectionTitle">
+
+                <div class="titleIcon purple">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        General Instructions
+                    </h2>
+
+                    <p>
+                        Please follow these instructions during the examination
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="instructionList">
+
+
+                <div class="instructionItem">
+
+                    <div class="number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Read Each Question Carefully
+                        </h3>
+
+                        <p>
+                            Read the question and all available
+                            options carefully before selecting your answer.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="instructionItem">
+
+                    <div class="number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Navigation
+                        </h3>
+
+                        <p>
+                            Use the Previous and Save &amp; Next buttons
+                            to navigate through the examination. You may
+                            also use the question palette to directly
+                            visit any question.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="instructionItem">
+
+                    <div class="number">
+                        03
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Changing an Answer
+                        </h3>
+
+                        <p>
+                            You may change your selected answer whenever
+                            you revisit a question, subject to the
+                            examination rules.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="instructionItem">
+
+                    <div class="number">
+                        04
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Clear Response
+                        </h3>
+
+                        <p>
+                            Use Clear Response to remove the currently
+                            selected answer and its review status.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="instructionItem">
+
+                    <div class="number">
+                        05
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Examination Session
+                        </h3>
+
+                        <p>
+                            Avoid unnecessarily refreshing, closing,
+                            or navigating away from the examination window.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             CBT QUESTION PALETTE
+        =========================================== -->
+
+        <section class="glassCard">
+
+            <div class="sectionTitle">
+
+                <div class="titleIcon green">
+                    <i class="fa-solid fa-table-cells"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Question Palette
+                    </h2>
+
+                    <p>
+                        The palette indicates the current status
+                        of each question.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="paletteLegend">
+
+
+                <!-- ANSWERED -->
+
+                <div class="paletteStatus">
+
+                    <div class="cbtBox answered">
+                        01
+                    </div>
+
+                    <div class="paletteText">
+
+                        <h3>
+                            Answered
+                        </h3>
+
+                        <p>
+                            You have selected an answer.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOT ANSWERED -->
+
+                <div class="paletteStatus">
+
+                    <div class="cbtBox notAnswered">
+                        02
+                    </div>
+
+                    <div class="paletteText">
+
+                        <h3>
+                            Not Answered
+                        </h3>
+
+                        <p>
+                            You have visited the question
+                            but have not selected an answer.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MARKED FOR REVIEW -->
+
+                <div class="paletteStatus">
+
+                    <div class="cbtBox review">
+
+                        <span class="reviewCorner"></span>
+
+                        03
+
+                    </div>
+
+                    <div class="paletteText">
+
+                        <h3>
+                            Marked for Review
+                        </h3>
+
+                        <p>
+                            You have marked the question to
+                            revisit later.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOT VISITED -->
+
+                <div class="paletteStatus">
+
+                    <div class="cbtBox notVisited">
+                        04
+                    </div>
+
+                    <div class="paletteText">
+
+                        <h3>
+                            Not Visited
+                        </h3>
+
+                        <p>
+                            You have not yet visited the question.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- PALETTE EXAMPLE -->
+
+            <div class="paletteExample">
+
+                <div class="exampleTitle">
+
+                    <i class="fa-solid fa-eye"></i>
+
+                    Question Palette Example
+
+                </div>
+
+
+                <div class="examplePalette">
+
+
+                    <div class="cbtBox answered">
+                        01
+                    </div>
+
+                    <div class="cbtBox answered">
+                        02
+                    </div>
+
+                    <div class="cbtBox notAnswered">
+                        03
+                    </div>
+
+                    <div class="cbtBox review">
+                        <span class="reviewCorner"></span>
+                        04
+                    </div>
+
+                    <div class="cbtBox notVisited">
+                        05
+                    </div>
+
+                    <div class="cbtBox notVisited">
+                        06
+                    </div>
+
+                    <div class="cbtBox answered">
+                        07
+                    </div>
+
+                    <div class="cbtBox review">
+                        <span class="reviewCorner"></span>
+                        08
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             MARK FOR REVIEW RULE
+        =========================================== -->
+
+        <section class="importantCard">
+
+            <div class="importantIcon">
+
+                <i class="fa-solid fa-bookmark"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Important: Mark for Review
+                </h2>
+
+                <p>
+                    If you select an answer and click
+                    <strong>Mark for Review</strong>, the question
+                    will remain marked for review when you return
+                    to it later.
+                </p>
+
+                <p>
+                    You may select the same answer or choose a
+                    different answer. The question will
+                    <strong>remain marked for review</strong>.
+                </p>
+
+                <p>
+                    To remove both the selected answer and the
+                    review status, use <strong>Clear Response</strong>.
+                </p>
+
+                <p>
+                    After clearing the response, selecting a new
+                    answer will make the question
+                    <strong>Answered</strong>.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             EXAMPLE
+        =========================================== -->
+
+        <section class="glassCard">
+
+            <div class="sectionTitle">
+
+                <div class="titleIcon orange">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Mark for Review Example
+                    </h2>
+
+                    <p>
+                        How the review status behaves
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="exampleFlow">
+
+
+                <div class="flowItem">
+
+                    <div class="flowNumber">
+                        1
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Select an answer
+                        </strong>
+
+                        <p>
+                            The question becomes Answered.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flowArrow">
+                    ↓
+                </div>
+
+
+                <div class="flowItem">
+
+                    <div class="flowNumber">
+                        2
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Click Mark for Review
+                        </strong>
+
+                        <p>
+                            The question becomes Marked for Review.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flowArrow">
+                    ↓
+                </div>
+
+
+                <div class="flowItem">
+
+                    <div class="flowNumber">
+                        3
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Return later
+                        </strong>
+
+                        <p>
+                            You may change or reselect the answer.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flowArrow">
+                    ↓
+                </div>
+
+
+                <div class="flowItem">
+
+                    <div class="flowNumber">
+                        4
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Review remains active
+                        </strong>
+
+                        <p>
+                            The question stays Marked for Review.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flowArrow">
+                    ↓
+                </div>
+
+
+                <div class="flowItem">
+
+                    <div class="flowNumber clear">
+                        5
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Clear Response
+                        </strong>
+
+                        <p>
+                            Both the answer and review status are removed.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flowArrow">
+                    ↓
+                </div>
+
+
+                <div class="flowItem">
+
+                    <div class="flowNumber final">
+                        6
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Select a new answer
+                        </strong>
+
+                        <p>
+                            The question becomes Answered.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             BEFORE YOU START
+        =========================================== -->
+
+        <section class="glassCard">
+
+            <div class="sectionTitle">
+
+                <div class="titleIcon cyan">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Before You Start
+                    </h2>
+
+                    <p>
+                        Make sure you are ready before beginning
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="checkList">
+
+                <div>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Ensure that your internet connection is stable.
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Make sure your device has sufficient battery power.
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Keep your examination environment quiet
+                    and distraction-free.
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-check"></i>
+
+                    Do not unnecessarily refresh or close
+                    the examination window.
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             AGREEMENT
+        =========================================== -->
+
+        <section class="startCard">
+
+            <label class="agreeBox">
+
+                <input
+                    type="checkbox"
+                    id="agree">
+
+                <span class="customCheck"></span>
+
+                <span class="agreeText">
+
+                    I have read and understood all the
+                    instructions and I am ready to begin
+                    the examination.
+
+                </span>
+
+            </label>
+
+
+            <button
+                id="startExamBtn"
+                disabled>
+
+                <span>
+                    Start Examination
+                </span>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </section>
+
+
+
+        <footer>
+
+            © 2026 ExamVerse · Created by
+            <strong>Subhajit Paul</strong>
+
+        </footer>
+
+
+    </main>
+
+
+
+    <!-- ==========================================
+         Existing ExamVerse Scripts
+    =========================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="assets/js/supabase.js"></script>
+
+    <script src="assets/js/storage.js"></script>
+
+    <script src="assets/js/auth.js"></script>
+
+    <script src="assets/js/instructions.js"></script>
+
+    <script src="assets/js/loader.js"></script>
 
 </body>
 

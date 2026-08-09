@@ -1,251 +1,1783 @@
 /* ==========================================
    ExamVerse Instructions
+   Premium Glassmorphic CBT Design
    Created by Subhajit Paul
 ========================================== */
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
 
-background:#f4f7fb;
+:root {
 
-min-height:100vh;
+    --blue: #2563eb;
+    --blue-dark: #1e40af;
+    --blue-light: #eff6ff;
 
-display:flex;
+    --purple: #7c3aed;
+    --green: #16a34a;
+    --red: #dc2626;
+    --orange: #f97316;
+    --cyan: #0891b2;
 
-justify-content:center;
+    --text: #172033;
+    --muted: #64748b;
 
-align-items:center;
-
-padding:40px;
-
-}
-
-.instructionContainer{
-
-width:100%;
-
-max-width:900px;
+    --glass: rgba(255,255,255,.58);
+    --glass-border: rgba(255,255,255,.82);
 
 }
 
-.instructionCard{
 
-background:white;
+/* ==========================================
+   BODY
+========================================== */
 
-border-radius:18px;
+body {
 
-padding:40px;
+    font-family: 'Poppins', sans-serif;
 
-box-shadow:0 10px 30px rgba(0,0,0,.08);
+    min-height: 100vh;
 
-}
+    padding: 35px 20px;
 
-.instructionCard h1{
+    color: var(--text);
 
-font-size:34px;
+    background:
 
-color:#1e3a8a;
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(59,130,246,.42),
+            transparent 28%
+        ),
 
-margin-bottom:10px;
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(139,92,246,.38),
+            transparent 30%
+        ),
 
-}
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(6,182,212,.32),
+            transparent 30%
+        ),
 
-.instructionCard p{
+        linear-gradient(
+            135deg,
+            #e0efff 0%,
+            #f1edff 48%,
+            #e3fbff 100%
+        );
 
-color:#666;
-
-margin-bottom:20px;
-
-}
-
-hr{
-
-margin:25px 0;
-
-border:none;
-
-height:1px;
-
-background:#ddd;
-
-}
-
-.loading{
-
-text-align:center;
-
-padding:30px;
-
-font-size:18px;
-
-color:#666;
+    overflow-x: hidden;
 
 }
 
-.examInfo{
 
-display:grid;
+/* ==========================================
+   BACKGROUND ORBS
+========================================== */
 
-grid-template-columns:repeat(2,1fr);
+.background {
 
-gap:15px;
+    position: fixed;
 
-margin-top:20px;
+    inset: 0;
 
-}
+    overflow: hidden;
 
-.infoCard{
+    pointer-events: none;
 
-background:#f8fafc;
-
-padding:18px;
-
-border-radius:12px;
-
-border-left:5px solid #2563eb;
+    z-index: -1;
 
 }
 
-.infoCard h3{
 
-font-size:15px;
+.orb {
 
-color:#666;
+    position: absolute;
 
-margin-bottom:5px;
+    border-radius: 50%;
 
-}
+    filter: blur(12px);
 
-.infoCard p{
-
-font-size:20px;
-
-font-weight:600;
-
-color:#1e3a8a;
-
-margin:0;
+    opacity: .45;
 
 }
 
-.instructionList{
 
-margin:20px 0;
+.orb1 {
 
-padding-left:20px;
+    width: 330px;
 
-}
+    height: 330px;
 
-.instructionList li{
+    background:
+        radial-gradient(
+            circle,
+            #60a5fa,
+            transparent 70%
+        );
 
-margin:12px 0;
+    top: -130px;
 
-font-size:16px;
-
-line-height:1.6;
-
-}
-
-.agreeBox{
-
-margin-top:30px;
-
-display:flex;
-
-align-items:flex-start;
-
-gap:12px;
+    left: -100px;
 
 }
 
-.agreeBox input{
 
-margin-top:4px;
+.orb2 {
 
-transform:scale(1.3);
+    width: 400px;
 
-cursor:pointer;
+    height: 400px;
 
-}
+    background:
+        radial-gradient(
+            circle,
+            #a78bfa,
+            transparent 70%
+        );
 
-.agreeBox label{
+    top: 25%;
 
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-#startExamBtn{
-
-width:100%;
-
-margin-top:30px;
-
-padding:16px;
-
-border:none;
-
-border-radius:10px;
-
-background:#2563eb;
-
-color:white;
-
-font-size:18px;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:.3s;
+    right: -160px;
 
 }
 
-#startExamBtn:hover:not(:disabled){
 
-background:#1d4ed8;
+.orb3 {
 
-}
+    width: 300px;
 
-#startExamBtn:disabled{
+    height: 300px;
 
-background:#bfc7d5;
+    background:
+        radial-gradient(
+            circle,
+            #22d3ee,
+            transparent 70%
+        );
 
-cursor:not-allowed;
+    bottom: -120px;
 
-}
-
-@media(max-width:768px){
-
-body{
-
-padding:20px;
+    left: 20%;
 
 }
 
-.instructionCard{
 
-padding:25px;
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.instructionContainer {
+
+    width: 100%;
+
+    max-width: 1080px;
+
+    margin: auto;
+
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.glassHeader {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px 24px;
+
+    margin-bottom: 22px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.78),
+            rgba(239,246,255,.58),
+            rgba(245,243,255,.62)
+        );
+
+    border: 1px solid var(--glass-border);
+
+    backdrop-filter: blur(25px);
+
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+
+        0 20px 50px
+        rgba(30,41,59,.09),
+
+        inset 0 1px 0
+        rgba(255,255,255,.8);
 
 }
 
-.examInfo{
 
-grid-template-columns:1fr;
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
 
 }
 
-.instructionCard h1{
 
-font-size:28px;
+.brandIcon {
+
+    width: 53px;
+
+    height: 53px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 16px;
+
+    color: white;
+
+    font-size: 21px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    box-shadow:
+
+        0 9px 25px
+        rgba(37,99,235,.28);
 
 }
+
+
+.brand h1 {
+
+    font-size: 24px;
+
+    line-height: 1.1;
+
+    font-weight: 700;
+
+    letter-spacing: -.5px;
+
+}
+
+
+.brand h1 span {
+
+    color: var(--blue);
+
+}
+
+
+.brand p {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 3px;
+
+}
+
+
+.instructionBadge {
+
+    padding: 10px 16px;
+
+    border-radius: 30px;
+
+    background:
+        rgba(37,99,235,.09);
+
+    border:
+        1px solid rgba(37,99,235,.13);
+
+    color: var(--blue);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+/* ==========================================
+   GLASS CARD
+========================================== */
+
+.glassCard {
+
+    position: relative;
+
+    margin-bottom: 22px;
+
+    padding: 32px;
+
+    border-radius: 24px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.72),
+            rgba(239,246,255,.50) 48%,
+            rgba(245,243,255,.55)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.78);
+
+    backdrop-filter: blur(24px);
+
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+
+        0 20px 55px
+        rgba(30,41,59,.09),
+
+        inset 0 1px 0
+        rgba(255,255,255,.85);
+
+    overflow: hidden;
+
+}
+
+
+.glassCard::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 35px;
+
+    right: 35px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.95),
+            transparent
+        );
+
+}
+
+
+/* ==========================================
+   HERO
+========================================== */
+
+.heroCard {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.heroIcon {
+
+    width: 68px;
+
+    height: 68px;
+
+    min-width: 68px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 20px;
+
+    color: white;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    font-size: 27px;
+
+    box-shadow:
+
+        0 12px 28px
+        rgba(37,99,235,.25);
+
+}
+
+
+.heroCard h2 {
+
+    font-size: 29px;
+
+    font-weight: 700;
+
+    letter-spacing: -.5px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.heroCard p {
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+/* ==========================================
+   SECTION TITLE
+========================================== */
+
+.sectionTitle {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 26px;
+
+}
+
+
+.titleIcon {
+
+    width: 49px;
+
+    height: 49px;
+
+    min-width: 49px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+
+}
+
+
+.titleIcon.blue {
+
+    color: var(--blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37,99,235,.15),
+            rgba(59,130,246,.06)
+        );
+
+}
+
+
+.titleIcon.purple {
+
+    color: var(--purple);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(124,58,237,.15),
+            rgba(139,92,246,.06)
+        );
+
+}
+
+
+.titleIcon.green {
+
+    color: var(--green);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(22,163,74,.15),
+            rgba(34,197,94,.06)
+        );
+
+}
+
+
+.titleIcon.orange {
+
+    color: var(--orange);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(249,115,22,.15),
+            rgba(251,146,60,.06)
+        );
+
+}
+
+
+.titleIcon.cyan {
+
+    color: var(--cyan);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(8,145,178,.15),
+            rgba(34,211,238,.06)
+        );
+
+}
+
+
+.sectionTitle h2 {
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    letter-spacing: -.2px;
+
+}
+
+
+.sectionTitle p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 2px;
+
+}
+
+
+/* ==========================================
+   EXAM DETAILS
+   PREMIUM INFORMATION GRID
+========================================== */
+
+#examDetails {
+
+    width: 100%;
+
+}
+
+
+.exam-info {
+
+    width: 100%;
+
+}
+
+
+.exam-info h2 {
+
+    font-size: 25px;
+
+    color: var(--blue-dark);
+
+    font-weight: 700;
+
+    margin-bottom: 6px;
+
+    letter-spacing: -.3px;
+
+}
+
+
+.exam-info > p {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    margin-bottom: 22px;
+
+}
+
+
+/*
+   Four-column CBT information layout
+*/
+
+.exam-info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 14px;
+
+}
+
+
+/*
+   Individual exam information card
+*/
+
+.info-box {
+
+    position: relative;
+
+    min-height: 88px;
+
+    padding: 17px 18px;
+
+    border-radius: 16px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.72),
+            rgba(255,255,255,.38)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.85);
+
+    box-shadow:
+
+        0 8px 22px
+        rgba(30,41,59,.055);
+
+    transition:
+
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+
+    overflow: hidden;
+
+}
+
+
+/*
+   Small accent line
+*/
+
+.info-box::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 14px;
+
+    bottom: 14px;
+
+    width: 3px;
+
+    border-radius: 0 4px 4px 0;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #2563eb,
+            #7c3aed
+        );
+
+}
+
+
+.info-box:hover {
+
+    transform: translateY(-4px);
+
+    background:
+        rgba(255,255,255,.80);
+
+    box-shadow:
+
+        0 14px 28px
+        rgba(30,41,59,.10);
+
+}
+
+
+.info-box span {
+
+    display: block;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+    margin-bottom: 7px;
+
+}
+
+
+/*
+   IMPORTANT:
+   Exam values are deliberately bold
+*/
+
+.info-box strong {
+
+    display: block;
+
+    color: #172554;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    word-break: break-word;
+
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.loadingExam {
+
+    min-height: 120px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+}
+
+
+.loadingSpinner {
+
+    width: 22px;
+
+    height: 22px;
+
+    border-radius: 50%;
+
+    border: 3px solid
+        rgba(37,99,235,.15);
+
+    border-top-color:
+        var(--blue);
+
+    animation:
+        spin .8s linear infinite;
+
+}
+
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================
+   GENERAL INSTRUCTIONS
+========================================== */
+
+.instructionList {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+
+.instructionItem {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 16px;
+
+    padding: 18px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255,255,255,.40);
+
+    border:
+        1px solid
+        rgba(255,255,255,.65);
+
+    transition: .25s;
+
+}
+
+
+.instructionItem:hover {
+
+    background:
+        rgba(255,255,255,.62);
+
+    transform: translateX(3px);
+
+}
+
+
+.number {
+
+    width: 43px;
+
+    height: 43px;
+
+    min-width: 43px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: var(--blue);
+
+    background:
+        rgba(37,99,235,.10);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.instructionItem h3 {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 4px;
+
+}
+
+
+.instructionItem p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.75;
+
+}
+
+
+/* ==========================================
+   CBT PALETTE
+========================================== */
+
+.paletteLegend {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.paletteStatus {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 18px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255,255,255,.40);
+
+    border:
+        1px solid
+        rgba(255,255,255,.65);
+
+    transition: .25s;
+
+}
+
+
+.paletteStatus:hover {
+
+    transform: translateY(-3px);
+
+    background:
+        rgba(255,255,255,.62);
+
+    box-shadow:
+        0 10px 25px
+        rgba(30,41,59,.07);
+
+}
+
+
+/* ==========================================
+   CBT QUESTION BOX
+========================================== */
+
+.cbtBox {
+
+    position: relative;
+
+    width: 55px;
+
+    height: 45px;
+
+    min-width: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 5px 12px
+        rgba(30,41,59,.10);
+
+}
+
+
+/* Answered */
+
+.cbtBox.answered {
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #16a34a,
+            #22c55e
+        );
+
+}
+
+
+/* Not Answered */
+
+.cbtBox.notAnswered {
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ef4444
+        );
+
+}
+
+
+/* Not Visited */
+
+.cbtBox.notVisited {
+
+    color: #475569;
+
+    background:
+        rgba(255,255,255,.80);
+
+    border:
+        2px solid #cbd5e1;
+
+}
+
+
+/* Review */
+
+.cbtBox.review {
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f97316,
+            #fb923c
+        );
+
+    border-radius: 6px;
+
+}
+
+
+.reviewCorner {
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: rgba(194,65,12,.75);
+    border-radius: 0 5px 0 9px;
+
+}
+
+
+/* ==========================================
+   PALETTE TEXT
+========================================== */
+
+.paletteText h3 {
+
+    font-size: 14px;
+
+    font-weight: 650;
+
+    margin-bottom: 4px;
+
+}
+
+
+.paletteText p {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.65;
+
+}
+
+
+/* ==========================================
+   PALETTE EXAMPLE
+========================================== */
+
+.paletteExample {
+
+    margin-top: 22px;
+
+    padding: 21px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(15,23,42,.035);
+
+    border:
+        1px solid
+        rgba(148,163,184,.18);
+
+}
+
+
+.exampleTitle {
+
+    margin-bottom: 16px;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+.exampleTitle i {
+
+    color: var(--blue);
+
+    margin-right: 6px;
+
+}
+
+
+.examplePalette {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 13px;
+
+}
+
+
+/* ==========================================
+   IMPORTANT REVIEW CARD
+========================================== */
+
+.importantCard {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+
+    padding: 27px;
+
+    border-radius: 23px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,247,237,.78),
+            rgba(255,255,255,.46)
+        );
+
+    border:
+        1px solid
+        rgba(249,115,22,.28);
+
+    backdrop-filter: blur(22px);
+
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+
+        0 18px 40px
+        rgba(249,115,22,.08);
+
+}
+
+
+.importantIcon {
+
+    width: 52px;
+
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 16px;
+
+    color: #ea580c;
+
+    background:
+        rgba(249,115,22,.12);
+
+    font-size: 20px;
+
+}
+
+
+.importantCard h2 {
+
+    color: #9a3412;
+
+    font-size: 19px;
+
+    margin-bottom: 11px;
+
+}
+
+
+.importantCard p {
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+
+    margin-bottom: 7px;
+
+}
+
+
+/* ==========================================
+   EXAMPLE FLOW
+========================================== */
+
+.exampleFlow {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.flowItem {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+}
+
+
+.flowNumber {
+
+    width: 39px;
+
+    height: 39px;
+
+    min-width: 39px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: var(--blue);
+
+    background:
+        rgba(37,99,235,.11);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+
+.flowNumber.clear {
+
+    color: var(--red);
+
+    background:
+        rgba(220,38,38,.10);
+
+}
+
+
+.flowNumber.final {
+
+    color: var(--green);
+
+    background:
+        rgba(22,163,74,.10);
+
+}
+
+
+.flowItem strong {
+
+    display: block;
+
+    font-size: 13px;
+
+    margin-bottom: 3px;
+
+}
+
+
+.flowItem p {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+}
+
+
+.flowArrow {
+
+    margin:
+
+        6px
+
+        0
+
+        6px
+
+        18px;
+
+    color: #94a3b8;
+
+    font-size: 16px;
+
+}
+
+
+/* ==========================================
+   BEFORE STARTING
+========================================== */
+
+.checkList {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 13px;
+
+}
+
+
+.checkList div {
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(255,255,255,.40);
+
+    border:
+        1px solid
+        rgba(255,255,255,.60);
+
+    color: #475569;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+}
+
+
+.checkList i {
+
+    color: var(--green);
+
+    margin-right: 7px;
+
+}
+
+
+/* ==========================================
+   START CARD
+========================================== */
+
+.startCard {
+
+    padding: 27px;
+
+    border-radius: 23px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.78),
+            rgba(239,246,255,.56),
+            rgba(245,243,255,.58)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.82);
+
+    backdrop-filter: blur(24px);
+
+    -webkit-backdrop-filter: blur(24px);
+
+    box-shadow:
+
+        0 20px 50px
+        rgba(30,41,59,.10);
+
+}
+
+
+.agreeBox {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    cursor: pointer;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+}
+
+
+.agreeBox input {
+
+    position: absolute;
+
+    opacity: 0;
+
+}
+
+
+.customCheck {
+
+    width: 21px;
+
+    height: 21px;
+
+    min-width: 21px;
+
+    border-radius: 6px;
+
+    border:
+        2px solid
+        #94a3b8;
+
+    background:
+        rgba(255,255,255,.65);
+
+    transition: .2s;
+
+}
+
+
+.agreeBox input:checked + .customCheck {
+
+    background:
+        var(--blue);
+
+    border-color:
+        var(--blue);
+
+    box-shadow:
+        inset 0 0 0 4px white;
+
+}
+
+
+/* ==========================================
+   START BUTTON
+========================================== */
+
+#startExamBtn {
+
+    width: 100%;
+
+    margin-top: 23px;
+
+    padding: 16px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+
+        transform .25s ease,
+        box-shadow .25s ease;
+
+    box-shadow:
+
+        0 10px 28px
+        rgba(37,99,235,.25);
+
+}
+
+
+#startExamBtn:hover:not(:disabled) {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+
+        0 15px 32px
+        rgba(37,99,235,.32);
+
+}
+
+
+#startExamBtn:active:not(:disabled) {
+
+    transform:
+        translateY(0);
+
+}
+
+
+#startExamBtn:disabled {
+
+    background:
+        #cbd5e1;
+
+    box-shadow:
+        none;
+
+    cursor:
+        not-allowed;
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+footer {
+
+    padding:
+        25px
+        10px
+        5px;
+
+    text-align:
+        center;
+
+    color:
+        #64748b;
+
+    font-size:
+        11px;
+
+}
+
+
+footer strong {
+
+    color:
+        #334155;
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 850px) {
+
+    body {
+
+        padding:
+            20px
+            12px;
+
+    }
+
+
+    .glassHeader {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .exam-info-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .paletteLegend {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .checkList {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .glassCard {
+
+        padding:
+            22px
+            18px;
+
+    }
+
+
+    .heroCard {
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .heroCard h2 {
+
+        font-size:
+            23px;
+
+    }
+
+
+    .heroIcon {
+
+        width:
+            55px;
+
+        height:
+            55px;
+
+        min-width:
+            55px;
+
+    }
+
+
+    .exam-info-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .examplePalette {
+
+        justify-content:
+            center;
+
+    }
+
+
+    .importantCard {
+
+        padding:
+            20px;
+
+    }
 
 }
