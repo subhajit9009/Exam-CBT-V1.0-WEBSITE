@@ -46,6 +46,63 @@ if (!attemptId) {
 
 }
 
+// ==========================================
+// Check Attempt Status
+// ==========================================
+
+const {
+    data: currentAttempt,
+    error: attemptError
+} = await supabaseClient
+
+    .from("exam_attempts")
+
+    .select("status")
+
+    .eq("id", attemptId)
+
+    .maybeSingle();
+
+
+if (attemptError) {
+
+    console.error(
+        "Attempt status error:",
+        attemptError
+    );
+
+    return;
+
+}
+
+
+if (!currentAttempt) {
+
+    alert("Exam attempt not found.");
+
+    sessionStorage.removeItem("attemptId");
+
+    window.location.href = "instructions.html";
+
+    return;
+
+}
+
+
+// ==========================================
+// Prevent Reopening Completed Exam
+// ==========================================
+
+if (currentAttempt.status === "Completed") {
+
+    alert(
+        "This examination has already been submitted."
+    );
+
+    return;
+
+}
+
     if (!selectedExam) {
 
         alert("No exam selected.");
@@ -644,16 +701,17 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
         .from("user_answers")
 
         .upsert(
-            {
-                attempt_id: attemptId,
-                question_id: questionId,
-                user_id: user.id,
-                selected_option: selectedOption
-            },
-            {
-                onConflict: "attempt_id,question_id"
-            }
-        );
+    {
+        attempt_id: attemptId,
+        question_id: questionId,
+        user_id: user.id,
+        selected_option: selectedOption,
+        is_review: reviewQuestions.includes(questionId)
+    },
+    {
+        onConflict: "attempt_id,question_id"
+    }
+);
 
     if (error) {
 
@@ -1311,21 +1369,6 @@ console.log(
     "UPDATED ATTEMPT:",
     updatedAttempt
 );
-
-if (updateError) {
-
-    console.error(
-        "Database update error:",
-        updateError
-    );
-
-    alert(
-        "Unable to save exam result."
-    );
-
-    return false;
-
-}
 
 
         if (updateError) {
