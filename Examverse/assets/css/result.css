@@ -262,7 +262,7 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(5, 1fr);
 
     gap: 16px;
 
@@ -350,6 +350,14 @@ body {
     background: #fef3c7;
 
     color: #d97706;
+
+}
+
+.review-icon {
+
+    background: #ede9fe;
+
+    color: #7c3aed;
 
 }
 
@@ -585,6 +593,16 @@ body {
 
     }
 
+@media(max-width: 900px) {
+
+    .stats-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
 
     .details-grid {
 

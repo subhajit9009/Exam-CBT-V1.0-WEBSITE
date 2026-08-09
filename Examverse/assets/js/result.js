@@ -18,6 +18,7 @@ async function loadResult() {
 
     try {
 
+
         // ==========================================
         // Get Attempt ID
         // ==========================================
@@ -124,6 +125,167 @@ async function loadResult() {
 
 
         // ==========================================
+        // Get User Answers
+        // ==========================================
+
+        const {
+            data: userAnswers,
+            error: userAnswersError
+        } =
+            await supabaseClient
+
+                .from("user_answers")
+
+                .select(
+                    "question_id, selected_option, is_review"
+                )
+
+                .eq(
+                    "attempt_id",
+                    attemptId
+                );
+
+
+        if (userAnswersError) {
+
+            console.error(
+                "User Answers Error:",
+                userAnswersError
+            );
+
+        }
+
+
+        // ==========================================
+        // Get Questions
+        // ==========================================
+
+        const {
+            data: resultQuestions,
+            error: resultQuestionsError
+        } =
+            await supabaseClient
+
+                .from("questions")
+
+                .select(
+                    "id, correct_answer, marks, negative_marks"
+                )
+
+                .eq(
+                    "exam_id",
+                    attempt.exam_id
+                );
+
+
+        if (resultQuestionsError) {
+
+            console.error(
+                "Question Result Error:",
+                resultQuestionsError
+            );
+
+        }
+
+
+        // ==========================================
+        // Calculate Review / Marks
+        // ==========================================
+
+        let markedReviewCount = 0;
+
+        let positiveMarks = 0;
+
+        let negativeMarks = 0;
+
+
+        if (
+            userAnswers &&
+            resultQuestions
+        ) {
+
+
+            // ======================================
+            // Marked for Review
+            // ======================================
+
+            markedReviewCount =
+                userAnswers.filter(
+                    answer =>
+                        answer.is_review === true
+                ).length;
+
+
+            // ======================================
+            // Calculate Positive / Negative Marks
+            // ======================================
+
+            userAnswers.forEach(
+                answer => {
+
+
+                    // No answer
+                    if (
+                        !answer.selected_option
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const question =
+                        resultQuestions.find(
+                            q =>
+                                q.id ===
+                                answer.question_id
+                        );
+
+
+                    if (!question) {
+
+                        return;
+
+                    }
+
+
+                    // ==================================
+                    // Correct Answer
+                    // ==================================
+
+                    if (
+                        answer.selected_option ===
+                        question.correct_answer
+                    ) {
+
+                        positiveMarks +=
+                            Number(
+                                question.marks || 0
+                            );
+
+                    }
+
+
+                    // ==================================
+                    // Wrong Answer
+                    // ==================================
+
+                    else {
+
+                        negativeMarks +=
+                            Number(
+                                question.negative_marks || 0
+                            );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        // ==========================================
         // Display Exam Name
         // ==========================================
 
@@ -168,6 +330,24 @@ async function loadResult() {
 
 
         // ==========================================
+        // Marked for Review
+        // ==========================================
+
+        const reviewElement =
+            document.getElementById(
+                "markedReview"
+            );
+
+
+        if (reviewElement) {
+
+            reviewElement.textContent =
+                markedReviewCount;
+
+        }
+
+
+        // ==========================================
         // Detailed Result
         // ==========================================
 
@@ -185,12 +365,54 @@ async function loadResult() {
             attempt.attempted ?? 0;
 
 
+        // ==========================================
+        // Positive Marks
+        // ==========================================
+
+        document.getElementById(
+            "positiveMarks"
+        ).textContent =
+
+            "+" +
+            Number(
+                positiveMarks
+            ).toFixed(2);
+
+
+        // ==========================================
+        // Negative Marks
+        // ==========================================
+
+        document.getElementById(
+            "negativeMarks"
+        ).textContent =
+
+            negativeMarks > 0
+
+                ? "-" +
+                  Number(
+                      negativeMarks
+                  ).toFixed(2)
+
+                : "0.00";
+
+
+        // ==========================================
+        // Percentage
+        // ==========================================
+
         document.getElementById(
             "percentage"
         ).textContent =
 
-            (attempt.percentage ?? 0) + "%";
+            (
+                attempt.percentage ?? 0
+            ) + "%";
 
+
+        // ==========================================
+        // Passing Marks
+        // ==========================================
 
         document.getElementById(
             "passingMarks"
@@ -198,6 +420,10 @@ async function loadResult() {
 
             exam?.passing_marks ?? 0;
 
+
+        // ==========================================
+        // Status
+        // ==========================================
 
         document.getElementById(
             "status"
@@ -292,7 +518,7 @@ async function loadResult() {
 
 
         // ==========================================
-        // Dashboard
+        // Dashboard Button
         // ==========================================
 
         document.getElementById(
@@ -301,13 +527,16 @@ async function loadResult() {
             "click",
             () => {
 
+
                 sessionStorage.removeItem(
                     "attemptId"
                 );
 
+
                 sessionStorage.removeItem(
                     "examStartTime"
                 );
+
 
                 window.location.href =
                     "dashboard.html";
@@ -316,10 +545,33 @@ async function loadResult() {
         );
 
 
+        // ==========================================
+        // Console
+        // ==========================================
+
         console.log(
             "Result loaded:",
             attempt
         );
+
+
+        console.log(
+            "Review count:",
+            markedReviewCount
+        );
+
+
+        console.log(
+            "Positive marks:",
+            positiveMarks
+        );
+
+
+        console.log(
+            "Negative marks:",
+            negativeMarks
+        );
+
 
     }
 

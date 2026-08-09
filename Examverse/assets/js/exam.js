@@ -706,7 +706,10 @@ async function saveAnswerToDatabase(questionId, selectedOption) {
         question_id: questionId,
         user_id: user.id,
         selected_option: selectedOption,
-        is_review: reviewQuestions.includes(questionId)
+
+        // Preserve current review status
+        is_review:
+            reviewQuestions.includes(questionId)
     },
     {
         onConflict: "attempt_id,question_id"
