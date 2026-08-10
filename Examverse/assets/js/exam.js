@@ -781,92 +781,106 @@ function updatePalette() {
 
     document.querySelectorAll(
         ".paletteBtn"
-    )
-        .forEach(
-            (
-                btn,
-                index
-            ) => {
+    ).forEach(
+        (
+            btn,
+            index
+        ) => {
 
-                btn.className =
-                    "paletteBtn";
+            const q =
+                questions[index];
 
+            const isAnswered =
+                !!answers[q.id];
 
-                if (
-                    visitedQuestions.includes(
-                        index
-                    )
-                ) {
+            const isReview =
+                reviewQuestions.includes(
+                    q.id
+                );
 
-                    btn.classList.add(
-                        "notAnswered"
-                    );
-
-                }
-
-
-                const q =
-                    questions[index];
+            const isVisited =
+                visitedQuestions.includes(
+                    index
+                );
 
 
-                // Review
-                // Highest Priority
+            // Reset
 
-                if (
-                    reviewQuestions.includes(
-                        q.id
-                    )
-                ) {
+            btn.className =
+                "paletteBtn";
 
-                    btn.classList.remove(
-                        "answered",
-                        "notAnswered"
-                    );
+            btn.innerHTML =
+                `${index + 1}`;
 
 
-                    btn.classList.add(
-                        "review"
-                    );
+            // ==================================
+            // Review
+            // ==================================
 
-                }
+            if (isReview) {
 
-
-                // Answered
-
-                else if (
-                    answers[q.id]
-                ) {
-
-                    btn.classList.remove(
-                        "notAnswered"
-                    );
+                btn.classList.add(
+                    "review"
+                );
 
 
-                    btn.classList.add(
-                        "answered"
-                    );
+                // Answered + Review
+                // Add small indicator
 
-                }
+                if (isAnswered) {
 
+                    const indicator =
+                        document.createElement(
+                            "span"
+                        );
 
-                // Visited but
-                // Not Answered
+                    indicator.className =
+                        "reviewAnsweredDot";
 
-                else if (
-                    visitedQuestions.includes(
-                        index
-                    )
-                ) {
+                    indicator.innerHTML =
+                        "✓";
 
-                    btn.classList.add(
-                        "notAnswered"
+                    btn.appendChild(
+                        indicator
                     );
 
                 }
 
             }
-        );
 
+
+            // ==================================
+            // Answered
+            // ==================================
+
+            else if (isAnswered) {
+
+                btn.classList.add(
+                    "answered"
+                );
+
+            }
+
+
+            // ==================================
+            // Visited but unanswered
+            // ==================================
+
+            else if (isVisited) {
+
+                btn.classList.add(
+                    "notAnswered"
+                );
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
+    // Current Question
+    // ==========================================
 
     const currentButton =
         document.getElementById(
@@ -876,34 +890,26 @@ function updatePalette() {
 
     if (currentButton) {
 
-        // If current question
-        // is under review,
-        // keep review color.
+        const q =
+            questions[currentQuestion];
 
-        if (
+        const isAnswered =
+            !!answers[q.id];
+
+        const isReview =
             reviewQuestions.includes(
-                questions[
-                    currentQuestion
-                ].id
-            )
-        ) {
-
-            currentButton.classList.remove(
-                "answered",
-                "notAnswered"
+                q.id
             );
 
 
-            currentButton.classList.add(
-                "review"
-            );
+        /*
+         * Don't replace the orange
+         * Review color with blue.
+         *
+         * Review always stays orange.
+         */
 
-        } else {
-
-            currentButton.classList.remove(
-                "review"
-            );
-
+        if (!isReview) {
 
             currentButton.classList.add(
                 "current"
@@ -1485,8 +1491,9 @@ async function submitExam(
     }
 
 
-    window.location.href =
-        "result.html";
+    window.location.replace(
+    "result.html"
+);
 
 }
 
