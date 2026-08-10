@@ -1562,128 +1562,300 @@ function setupPdfButton() {
 async function downloadResultPDF() {
 
     const pdfButton =
-        document.getElementById(
-            "downloadPdfBtn"
-        );
-
+        document.getElementById("downloadPdfBtn");
 
     const resultWrapper =
-        document.querySelector(
-            ".result-wrapper"
-        );
-
+        document.querySelector(".result-wrapper");
 
     const analysisSection =
-        document.getElementById(
-            "analysisSection"
-        );
+        document.getElementById("analysisSection");
 
-
-    if (
-        !resultWrapper ||
-        !pdfButton
-    ) {
-
+    if (!resultWrapper || !pdfButton) {
         return;
-
     }
 
-
-    // ==========================================
-    // Check PDF Library
-    // ==========================================
-
-    if (
-        typeof html2pdf ===
-        "undefined"
-    ) {
+    if (typeof html2pdf === "undefined") {
 
         alert(
             "PDF generator is not loaded. Please check your internet connection."
         );
 
         return;
-
     }
 
-
-    // ==========================================
-    // Save Button State
-    // ==========================================
 
     const oldText =
         pdfButton.innerHTML;
 
-
-    pdfButton.disabled =
-        true;
-
+    pdfButton.disabled = true;
 
     pdfButton.innerHTML = `
-
         <i class="fa-solid fa-spinner fa-spin"></i>
-
         Generating PDF...
-
     `;
 
 
-    let wasHidden =
-        false;
+    let wasHidden = false;
+
+    let pdfHeader = null;
+    let performanceChart = null;
 
 
     try {
 
-
-        // ==========================================
-        // Show Analysis Temporarily
-        // ==========================================
+        /* ==========================================
+           SHOW ANALYSIS TEMPORARILY
+        ========================================== */
 
         if (analysisSection) {
 
             wasHidden =
-                analysisSection.classList.contains(
-                    "hidden"
-                );
+                analysisSection.classList.contains("hidden");
+
+            analysisSection.classList.remove("hidden");
+
+        }
 
 
-            analysisSection.classList.remove(
-                "hidden"
+        /* ==========================================
+           GET CURRENT RESULT VALUES
+        ========================================== */
+
+        const examName =
+            document.getElementById("examName")?.textContent?.trim()
+            || "Examination";
+
+        const score =
+            document.getElementById("score")?.textContent?.trim()
+            || "0.00";
+
+        const totalMarks =
+            document.getElementById("totalMarks")?.textContent?.trim()
+            || "0";
+
+        const resultText =
+            document.getElementById("resultBadge")?.textContent?.trim()
+            || "Completed";
+
+        const attempted =
+            document.getElementById("attempted")?.textContent?.trim()
+            || "0";
+
+        const correct =
+            document.getElementById("correct")?.textContent?.trim()
+            || "0";
+
+        const wrong =
+            document.getElementById("wrong")?.textContent?.trim()
+            || "0";
+
+        const skipped =
+            document.getElementById("skipped")?.textContent?.trim()
+            || "0";
+
+
+        /* ==========================================
+           CREATE PDF HEADER
+        ========================================== */
+
+        pdfHeader =
+            document.createElement("div");
+
+        pdfHeader.className =
+            "pdf-report-header";
+
+        pdfHeader.innerHTML = `
+
+            <div class="pdf-brand">
+
+                <div class="pdf-brand-name">
+                    ExamVerse
+                </div>
+
+                <div class="pdf-brand-subtitle">
+                    Examination Result Report
+                </div>
+
+            </div>
+
+
+            <div class="pdf-exam-name">
+
+                ${escapeHTML(examName)}
+
+            </div>
+
+        `;
+
+
+        resultWrapper.prepend(pdfHeader);
+
+
+        /* ==========================================
+           CREATE PERFORMANCE CHART
+        ========================================== */
+
+        performanceChart =
+            document.createElement("div");
+
+        performanceChart.className =
+            "pdf-performance-card";
+
+
+        const attemptedNumber =
+            Number(attempted) || 0;
+
+        const correctNumber =
+            Number(correct) || 0;
+
+        const wrongNumber =
+            Number(wrong) || 0;
+
+        const skippedNumber =
+            Number(skipped) || 0;
+
+
+        const chartMaximum =
+            Math.max(
+                attemptedNumber,
+                correctNumber,
+                wrongNumber,
+                skippedNumber,
+                1
+            );
+
+
+        const correctWidth =
+            (correctNumber / chartMaximum) * 100;
+
+        const wrongWidth =
+            (wrongNumber / chartMaximum) * 100;
+
+        const skippedWidth =
+            (skippedNumber / chartMaximum) * 100;
+
+
+        performanceChart.innerHTML = `
+
+            <div class="pdf-performance-title">
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                Performance Overview
+
+            </div>
+
+
+            <div class="pdf-chart-row">
+
+                <div class="pdf-chart-label">
+                    <span>Correct</span>
+                    <strong>${correctNumber}</strong>
+                </div>
+
+                <div class="pdf-chart-track">
+
+                    <div
+                        class="pdf-chart-bar correct-bar"
+                        style="width:${correctWidth}%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="pdf-chart-row">
+
+                <div class="pdf-chart-label">
+                    <span>Wrong</span>
+                    <strong>${wrongNumber}</strong>
+                </div>
+
+                <div class="pdf-chart-track">
+
+                    <div
+                        class="pdf-chart-bar wrong-bar"
+                        style="width:${wrongWidth}%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="pdf-chart-row">
+
+                <div class="pdf-chart-label">
+                    <span>Skipped</span>
+                    <strong>${skippedNumber}</strong>
+                </div>
+
+                <div class="pdf-chart-track">
+
+                    <div
+                        class="pdf-chart-bar skipped-bar"
+                        style="width:${skippedWidth}%">
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        /*
+           Put chart immediately after statistics.
+        */
+
+        const statsGrid =
+            resultWrapper.querySelector(".stats-grid");
+
+        if (statsGrid) {
+
+            statsGrid.insertAdjacentElement(
+                "afterend",
+                performanceChart
+            );
+
+        }
+        else {
+
+            resultWrapper.appendChild(
+                performanceChart
             );
 
         }
 
 
-        // ==========================================
-        // PDF Mode
-        // ==========================================
+        /* ==========================================
+           PDF MODE
+        ========================================== */
 
-        resultWrapper.classList.add(
-            "pdf-mode"
-        );
+        resultWrapper.classList.add("pdf-mode");
 
 
-        // ==========================================
-        // Wait for browser rendering
-        // ==========================================
+        /*
+           Give browser time to render
+           dynamically-created PDF elements.
+        */
 
         await new Promise(
             resolve =>
                 setTimeout(
                     resolve,
-                    800
+                    700
                 )
         );
 
 
-        // ==========================================
-        // File Name
-        // ==========================================
+        /* ==========================================
+           FILE NAME
+        ========================================== */
 
         const attemptId =
-            sessionStorage.getItem(
-                "attemptId"
-            );
+            sessionStorage.getItem("attemptId");
 
 
         const fileName =
@@ -1691,22 +1863,16 @@ async function downloadResultPDF() {
 
             (
                 attemptId
-
-                    ? attemptId.substring(
-                        0,
-                        8
-                    )
-
+                    ? attemptId.substring(0, 8)
                     : "Report"
-
             ) +
 
             ".pdf";
 
 
-        // ==========================================
-        // PDF Settings
-        // ==========================================
+        /* ==========================================
+           PDF SETTINGS
+        ========================================== */
 
         const options = {
 
@@ -1716,7 +1882,6 @@ async function downloadResultPDF() {
                 10,
                 8
             ],
-
 
             filename:
                 fileName,
@@ -1757,7 +1922,7 @@ async function downloadResultPDF() {
                     0,
 
                 windowWidth:
-    resultWrapper.scrollWidth
+                    resultWrapper.scrollWidth
 
             },
 
@@ -1787,9 +1952,7 @@ async function downloadResultPDF() {
                 ],
 
                 before: [
-
                     ".pdf-page-break"
-
                 ],
 
                 after: [],
@@ -1804,6 +1967,8 @@ async function downloadResultPDF() {
 
                     ".stat-card",
 
+                    ".pdf-performance-card",
+
                     ".analysis-header",
 
                     ".analysis-legend"
@@ -1815,9 +1980,9 @@ async function downloadResultPDF() {
         };
 
 
-        // ==========================================
-        // Generate PDF
-        // ==========================================
+        /* ==========================================
+           GENERATE PDF
+        ========================================== */
 
         await html2pdf()
 
@@ -1831,10 +1996,6 @@ async function downloadResultPDF() {
 
             .then(
                 pdf => {
-
-                    /*
-                       Force PDF metadata.
-                    */
 
                     pdf.setProperties({
 
@@ -1858,9 +2019,9 @@ async function downloadResultPDF() {
             .save();
 
 
-        // ==========================================
-        // Restore Page
-        // ==========================================
+        /* ==========================================
+           RESTORE PAGE
+        ========================================== */
 
         resultWrapper.classList.remove(
             "pdf-mode"
@@ -1878,6 +2039,19 @@ async function downloadResultPDF() {
 
         }
 
+
+        if (pdfHeader) {
+
+            pdfHeader.remove();
+
+        }
+
+
+        if (performanceChart) {
+
+            performanceChart.remove();
+
+        }
 
     }
 
@@ -1911,6 +2085,20 @@ async function downloadResultPDF() {
 
         }
 
+
+        if (pdfHeader) {
+
+            pdfHeader.remove();
+
+        }
+
+
+        if (performanceChart) {
+
+            performanceChart.remove();
+
+        }
+
     }
 
 
@@ -1918,7 +2106,6 @@ async function downloadResultPDF() {
 
         pdfButton.disabled =
             false;
-
 
         pdfButton.innerHTML =
             oldText;

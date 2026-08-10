@@ -1745,3 +1745,617 @@ body {
     page-break-inside: avoid !important;
 
 }
+
+/* =========================================================
+   EXAMVERSE PROFESSIONAL PDF REPORT
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   PDF BRAND HEADER
+--------------------------------------------------------- */
+
+.pdf-report-header {
+
+    display: none;
+
+}
+
+
+.pdf-mode .pdf-report-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 14px 18px;
+
+    margin-bottom: 14px;
+
+    border-bottom: 2px solid #e2e8f0;
+
+}
+
+
+.pdf-brand-name {
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    color: #1e3a8a;
+
+    letter-spacing: .3px;
+
+}
+
+
+.pdf-brand-subtitle {
+
+    margin-top: 2px;
+
+    font-size: 10px;
+
+    color: #64748b;
+
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+}
+
+
+.pdf-exam-name {
+
+    max-width: 52%;
+
+    text-align: right;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #172554;
+
+    overflow-wrap: break-word;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF PERFORMANCE CARD
+--------------------------------------------------------- */
+
+.pdf-performance-card {
+
+    display: none;
+
+}
+
+
+.pdf-mode .pdf-performance-card {
+
+    display: block;
+
+    margin-top: 14px;
+
+    margin-bottom: 16px;
+
+    padding: 15px 18px;
+
+    border-radius: 14px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-performance-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 13px;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    color: #1e3a8a;
+
+}
+
+
+.pdf-performance-title i {
+
+    color: #2563eb;
+
+}
+
+
+/* ---------------------------------------------------------
+   CHART ROW
+--------------------------------------------------------- */
+
+.pdf-chart-row {
+
+    display: grid;
+
+    grid-template-columns:
+        75px
+        1fr
+        35px;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 9px;
+
+}
+
+
+.pdf-chart-label {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 6px;
+
+    font-size: 10px;
+
+    color: #475569;
+
+    font-weight: 600;
+
+}
+
+
+.pdf-chart-label strong {
+
+    color: #172554;
+
+    font-size: 10px;
+
+}
+
+
+.pdf-chart-track {
+
+    height: 10px;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #e2e8f0;
+
+}
+
+
+.pdf-chart-bar {
+
+    height: 100%;
+
+    min-width: 2px;
+
+    border-radius: 20px;
+
+}
+
+
+.correct-bar {
+
+    background: #22c55e;
+
+}
+
+
+.wrong-bar {
+
+    background: #ef4444;
+
+}
+
+
+.skipped-bar {
+
+    background: #f59e0b;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF SCORE CARD
+--------------------------------------------------------- */
+
+.pdf-mode .score-card {
+
+    padding: 22px 20px !important;
+
+    margin-bottom: 12px;
+
+    border-radius: 16px !important;
+
+    background: #f8fafc !important;
+
+    border: 1px solid #e2e8f0 !important;
+
+}
+
+
+.pdf-mode .score-label {
+
+    font-size: 10px !important;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+}
+
+
+.pdf-mode .score-value {
+
+    margin-top: 2px;
+
+    font-size: 42px !important;
+
+}
+
+
+.pdf-mode .score-out-of {
+
+    font-size: 11px !important;
+
+}
+
+
+.pdf-mode .result-badge {
+
+    margin-top: 9px;
+
+    padding: 5px 18px;
+
+    font-size: 10px;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF STATISTICS
+--------------------------------------------------------- */
+
+.pdf-mode .stats-grid {
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+
+    gap: 9px !important;
+
+    margin-top: 12px !important;
+
+}
+
+
+.pdf-mode .stat-card {
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    gap: 8px !important;
+
+    padding: 10px !important;
+
+    min-width: 0 !important;
+
+    border-radius: 10px !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid #e2e8f0 !important;
+
+    box-shadow: none !important;
+
+}
+
+
+.pdf-mode .stat-icon {
+
+    width: 30px !important;
+
+    height: 30px !important;
+
+    min-width: 30px !important;
+
+    border-radius: 8px !important;
+
+    font-size: 12px !important;
+
+}
+
+
+.pdf-mode .stat-card span {
+
+    font-size: 8px !important;
+
+    white-space: nowrap;
+
+}
+
+
+.pdf-mode .stat-card strong {
+
+    margin-top: 1px !important;
+
+    font-size: 15px !important;
+
+}
+
+
+/*
+   Review card gets its own second row.
+   This prevents the "Marked for Review"
+   text from being cut off.
+*/
+
+.pdf-mode .stats-grid .stat-card:nth-child(5) {
+
+    grid-column:
+        1 / -1;
+
+    justify-content: center;
+
+    max-width: 220px;
+
+    margin: 0 auto;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF RESULT SUMMARY
+--------------------------------------------------------- */
+
+.pdf-mode .details-card {
+
+    margin-top: 14px !important;
+
+    padding: 16px !important;
+
+    border-radius: 14px !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid #e2e8f0 !important;
+
+}
+
+
+.pdf-mode .details-card h2 {
+
+    margin-bottom: 12px !important;
+
+    font-size: 14px !important;
+
+}
+
+
+.pdf-mode .details-grid {
+
+    gap: 7px !important;
+
+}
+
+
+.pdf-mode .detail-item {
+
+    padding: 9px 11px !important;
+
+    border-radius: 8px !important;
+
+}
+
+
+.pdf-mode .detail-item span {
+
+    font-size: 9px !important;
+
+}
+
+
+.pdf-mode .detail-item strong {
+
+    font-size: 10px !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   PAGE 2 QUESTION ANALYSIS
+--------------------------------------------------------- */
+
+.pdf-mode .question-analysis-card {
+
+    margin-top: 14px;
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+}
+
+
+.pdf-mode .analysis-header h2 {
+
+    font-size: 14px;
+
+}
+
+
+.pdf-mode .analysis-header p {
+
+    font-size: 9px;
+
+}
+
+
+.pdf-mode .analysis-count {
+
+    padding: 6px 10px;
+
+    font-size: 9px;
+
+}
+
+
+.pdf-mode .analysis-count span {
+
+    font-size: 13px;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF PAGE CONTROL
+--------------------------------------------------------- */
+
+/*
+   Question analysis begins cleanly after
+   the first-page result summary.
+*/
+
+.pdf-mode .question-analysis-card {
+
+    break-before: page;
+
+    page-break-before: always;
+
+}
+
+
+/*
+   Don't split individual question cards.
+*/
+
+.pdf-mode .question-result-card {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+/*
+   Don't split summary blocks.
+*/
+
+.pdf-mode .details-card,
+.pdf-mode .score-card,
+.pdf-mode .pdf-performance-card {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF BODY WIDTH
+--------------------------------------------------------- */
+
+.pdf-mode {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    padding: 12px !important;
+
+    background: #ffffff !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   REMOVE WEBPAGE-ONLY ELEMENTS
+--------------------------------------------------------- */
+
+.pdf-mode .result-header {
+
+    display: none !important;
+
+}
+
+
+.pdf-mode .result-options,
+
+.pdf-mode .result-actions {
+
+    display: none !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   REMOVE HEAVY WEB SHADOWS
+--------------------------------------------------------- */
+
+.pdf-mode .score-card,
+.pdf-mode .details-card,
+.pdf-mode .question-analysis-card,
+.pdf-mode .question-result-card,
+.pdf-mode .stat-card {
+
+    box-shadow: none !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   PDF MOBILE/SMALL SCREEN SAFETY
+--------------------------------------------------------- */
+
+@media(max-width: 600px) {
+
+    .pdf-mode .stats-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr))
+            !important;
+
+    }
+
+
+    .pdf-mode .stats-grid
+    .stat-card:nth-child(5) {
+
+        grid-column:
+            1 / -1;
+
+    }
+
+}
