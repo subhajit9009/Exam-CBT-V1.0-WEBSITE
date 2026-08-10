@@ -2462,9 +2462,9 @@ body {
 .pdf-mode {
     position: relative !important;
 
-    left: 14px !important;
+    left: 20px !important;
 
-    width: calc(100% - 28px) !important;
+    width: calc(100% - 40px) !important;
 
     max-width: none !important;
 
