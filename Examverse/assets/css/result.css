@@ -2470,3 +2470,32 @@ body {
 
     box-sizing: border-box !important;
 }
+
+/* ==========================================
+   PDF PAGE BREAK SPACING
+========================================== */
+
+.pdf-mode .question-analysis-card {
+    break-before: page !important;
+    page-break-before: always !important;
+
+    padding-top: 20px !important;
+}
+
+.pdf-mode .question-analysis-card h2,
+.pdf-mode .question-analysis-card .section-title {
+    margin-top: 10px !important;
+}
+
+
+/* Prevent question cards from being split */
+.pdf-mode .question-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+}
+
+
+/* Keep the analysis heading with its legend */
+.pdf-mode .question-analysis-card > * {
+    break-inside: avoid !important;
+}
