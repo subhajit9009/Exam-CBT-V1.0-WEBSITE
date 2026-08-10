@@ -353,108 +353,59 @@ href="assets/css/loader.css">
 
             <div class="paletteLegend">
 
-
                 <!-- ANSWERED -->
-
                 <div class="paletteStatus">
-
-                    <div class="cbtBox answered">
-                        01
-                    </div>
-
+                    <div class="cbtBox answered">01</div>
                     <div class="paletteText">
-
-                        <h3>
-                            Answered
-                        </h3>
-
-                        <p>
-                            You have selected an answer.
-                        </p>
-
+                        <h3>Answered</h3>
+                        <p>You have selected an answer.</p>
                     </div>
-
                 </div>
-
 
                 <!-- NOT ANSWERED -->
-
                 <div class="paletteStatus">
-
-                    <div class="cbtBox notAnswered">
-                        02
-                    </div>
-
+                    <div class="cbtBox notAnswered">02</div>
                     <div class="paletteText">
-
-                        <h3>
-                            Not Answered
-                        </h3>
-
-                        <p>
-                            You have visited the question
-                            but have not selected an answer.
-                        </p>
-
+                        <h3>Not Answered</h3>
+                        <p>You visited the question but have not selected an answer.</p>
                     </div>
-
                 </div>
-
 
                 <!-- MARKED FOR REVIEW -->
-
                 <div class="paletteStatus">
-
                     <div class="cbtBox review">
-
                         <span class="reviewCorner"></span>
-
                         03
-
                     </div>
-
                     <div class="paletteText">
-
-                        <h3>
-                            Marked for Review
-                        </h3>
-
-                        <p>
-                            You have marked the question to
-                            revisit later.
-                        </p>
-
+                        <h3>Marked for Review</h3>
+                        <p>The question is marked for review and has no selected answer.</p>
                     </div>
-
                 </div>
 
-
-                <!-- NOT VISITED -->
-
+                <!-- ANSWERED + MARKED FOR REVIEW -->
                 <div class="paletteStatus">
-
-                    <div class="cbtBox notVisited">
+                    <div class="cbtBox review reviewAnswered">
+                        <span class="reviewCorner"></span>
+                        <span class="reviewAnsweredDot">✓</span>
                         04
                     </div>
-
                     <div class="paletteText">
-
-                        <h3>
-                            Not Visited
-                        </h3>
-
-                        <p>
-                            You have not yet visited the question.
-                        </p>
-
+                        <h3>Answered &amp; Marked for Review</h3>
+                        <p>The question is marked for review and has a selected answer.</p>
                     </div>
-
                 </div>
 
+                <!-- NOT VISITED -->
+                <div class="paletteStatus">
+                    <div class="cbtBox notVisited">05</div>
+                    <div class="paletteText">
+                        <h3>Not Visited</h3>
+                        <p>You have not yet visited the question.</p>
+                    </div>
+                </div>
 
             </div>
-
-
 
             <!-- PALETTE EXAMPLE -->
 
@@ -471,45 +422,33 @@ href="assets/css/loader.css">
 
                 <div class="examplePalette">
 
-
-                    <div class="cbtBox answered">
-                        01
-                    </div>
-
-                    <div class="cbtBox answered">
-                        02
-                    </div>
-
-                    <div class="cbtBox notAnswered">
-                        03
-                    </div>
+                    <div class="cbtBox answered">01</div>
+                    <div class="cbtBox answered">02</div>
+                    <div class="cbtBox notAnswered">03</div>
 
                     <div class="cbtBox review">
                         <span class="reviewCorner"></span>
                         04
                     </div>
 
-                    <div class="cbtBox notVisited">
+                    <div class="cbtBox review reviewAnswered">
+                        <span class="reviewCorner"></span>
+                        <span class="reviewAnsweredDot">✓</span>
                         05
                     </div>
 
-                    <div class="cbtBox notVisited">
-                        06
-                    </div>
+                    <div class="cbtBox notVisited">06</div>
+                    <div class="cbtBox answered">07</div>
 
-                    <div class="cbtBox answered">
-                        07
-                    </div>
-
-                    <div class="cbtBox review">
+                    <div class="cbtBox review reviewAnswered">
                         <span class="reviewCorner"></span>
+                        <span class="reviewAnsweredDot">✓</span>
                         08
                     </div>
 
                 </div>
 
             </div>
-
         </section>
 
 
@@ -537,23 +476,27 @@ href="assets/css/loader.css">
                     If you select an answer and click
                     <strong>Mark for Review</strong>, the question
                     will remain marked for review when you return
-                    to it later.
+                    to it later. A small green check indicates that
+                    an answer has been selected.
                 </p>
 
                 <p>
-                    You may select the same answer or choose a
-                    different answer. The question will
-                    <strong>remain marked for review</strong>.
+                    An <strong>Answered + Marked for Review</strong>
+                    question is still evaluated normally. A correct
+                    answer receives its positive marks, while a wrong
+                    answer receives the applicable negative marking.
                 </p>
 
                 <p>
-                    To remove both the selected answer and the
-                    review status, use <strong>Clear Response</strong>.
+                    If a question is marked for review without an
+                    answer, it remains <strong>unattempted</strong>
+                    and receives zero marks.
                 </p>
 
                 <p>
-                    After clearing the response, selecting a new
-                    answer will make the question
+                    Use <strong>Clear Response</strong> to remove the
+                    selected answer and review status. Selecting a
+                    new answer afterward makes the question
                     <strong>Answered</strong>.
                 </p>
 

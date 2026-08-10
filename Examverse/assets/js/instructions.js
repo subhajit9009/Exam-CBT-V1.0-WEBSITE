@@ -1,252 +1,604 @@
 /* ==========================================
    ExamVerse Instructions
    Created by Subhajit Paul
+   Updated CBT Review/Scoring Behavior
 ========================================== */
 
+
 const examDetails =
-document.getElementById("examDetails");
+    document.getElementById("examDetails");
+
 
 const agree =
-document.getElementById("agree");
+    document.getElementById("agree");
+
 
 const startExamBtn =
-document.getElementById("startExamBtn");
+    document.getElementById("startExamBtn");
+
 
 let selectedExam = null;
 
-//==========================================
+
+// ==========================================
 // Load Exam Details
-//==========================================
+// ==========================================
 
-async function loadExam(){
+async function loadExam() {
 
-const examId =
-sessionStorage.getItem("selectedExam");
+    const examId =
+        sessionStorage.getItem(
+            "selectedExam"
+        );
 
-if(!examId){
 
-alert("No Exam Selected.");
+    if (!examId) {
 
-window.location.href="exam-list.html";
+        alert(
+            "No Exam Selected."
+        );
 
-return;
+
+        window.location.replace(
+            "exam-list.html"
+        );
+
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+
+                .from("exams")
+
+                .select("*")
+
+                .eq(
+                    "id",
+                    examId
+                )
+
+                .single();
+
+
+        if (error) {
+
+            console.error(
+                "Exam Load Error:",
+                error
+            );
+
+
+            alert(
+                "Exam not found."
+            );
+
+
+            window.location.replace(
+                "exam-list.html"
+            );
+
+
+            return;
+
+        }
+
+
+        selectedExam =
+            data;
+
+
+        // ==========================================
+        // Display Exam Information
+        // ==========================================
+
+        examDetails.innerHTML = `
+
+            <div class="exam-info">
+
+                <h2>
+                    ${escapeHTML(
+                        data.exam_name ||
+                        "Examination"
+                    )}
+                </h2>
+
+
+                <p>
+                    Review the examination details
+                    before starting.
+                </p>
+
+
+                <div class="exam-info-grid">
+
+
+                    <!-- Category -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Category
+                        </span>
+
+                        <strong>
+                            ${escapeHTML(
+                                data.category ||
+                                "—"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Total Questions -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Total Questions
+                        </span>
+
+                        <strong>
+                            ${data.total_questions ?? 0}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Duration -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Duration
+                        </span>
+
+                        <strong>
+                            ${data.duration ?? 0}
+                            Minutes
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Total Marks -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Total Marks
+                        </span>
+
+                        <strong>
+                            ${data.total_marks ?? 0}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Positive Marks -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Positive Marks
+                        </span>
+
+                        <strong>
+                            +${data.positive_marks ?? 0}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Negative Marks -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Negative Marks
+                        </span>
+
+                        <strong>
+                            ${formatNegativeMarks(
+                                data.negative_marks
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Passing Marks -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Passing Marks
+                        </span>
+
+                        <strong>
+                            ${data.passing_marks ?? 0}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Exam Name -->
+
+                    <div class="info-box">
+
+                        <span>
+                            Exam Name
+                        </span>
+
+                        <strong>
+                            ${escapeHTML(
+                                data.exam_name ||
+                                "—"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Instruction Page Error:",
+            error
+        );
+
+
+        alert(
+            "Unable to load examination details."
+        );
+
+    }
 
 }
 
-const { data,error } =
 
-await supabaseClient
+// ==========================================
+// Escape HTML
+// ==========================================
 
-.from("exams")
+function escapeHTML(
+    value
+) {
 
-.select("*")
+    return String(
+        value ?? ""
+    )
 
-.eq("id",examId)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
 
-.single();
+        .replace(
+            /</g,
+            "&lt;"
+        )
 
-if(error){
+        .replace(
+            />/g,
+            "&gt;"
+        )
 
-console.error(error);
+        .replace(
+            /"/g,
+            "&quot;"
+        )
 
-alert("Exam not found.");
-
-window.location.href="exam-list.html";
-
-return;
-
-}
-
-selectedExam = data;
-
-examDetails.innerHTML = `
-
-<div class="examInfo">
-
-<div class="infoCard">
-
-<h3>Exam Name</h3>
-
-<p>${data.exam_name}</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Category</h3>
-
-<p>${data.category}</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Total Questions</h3>
-
-<p>${data.total_questions}</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Duration</h3>
-
-<p>${data.duration} Minutes</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Total Marks</h3>
-
-<p>${data.total_marks}</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Positive Marks</h3>
-
-<p>+${data.positive_marks}</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Negative Marks</h3>
-
-<p>${data.negative_marks}</p>
-
-</div>
-
-<div class="infoCard">
-
-<h3>Passing Marks</h3>
-
-<p>${data.passing_marks}</p>
-
-</div>
-
-</div>
-
-`;
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
-//==========================================
-// Enable Button
-//==========================================
 
-agree.addEventListener("change",()=>{
+// ==========================================
+// Format Negative Marks
+// ==========================================
 
-startExamBtn.disabled = !agree.checked;
+function formatNegativeMarks(
+    value
+) {
 
-});
+    const number =
+        Number(
+            value ?? 0
+        );
 
-//==========================================
+
+    if (!number) {
+
+        return "0";
+
+    }
+
+
+    /*
+       Your Supabase negative_marks
+       should now normally be stored
+       as a positive number.
+
+       Example:
+
+       0.25
+
+       This function displays:
+
+       -0.25
+    */
+
+    return number > 0
+
+        ? `-${number}`
+
+        : String(number);
+
+}
+
+
+// ==========================================
+// Enable Start Button
+// ==========================================
+
+agree.addEventListener(
+    "change",
+    () => {
+
+        startExamBtn.disabled =
+            !agree.checked;
+
+    }
+);
+
+
+// ==========================================
 // Start Exam
-//==========================================
+// ==========================================
 
-startExamBtn.addEventListener("click",startExam);
+startExamBtn.addEventListener(
+    "click",
+    startExam
+);
+
+
+// ==========================================
+// Create Exam Attempt
+// ==========================================
 
 async function startExam() {
 
-    // ==========================
-    // Get Logged-in User
-    // ==========================
+    if (!selectedExam) {
 
-    const { data, error: authError } =
-        await supabaseClient.auth.getUser();
-
-    if (authError || !data.user) {
-
-        alert("Please login again.");
-
-        window.location.href = "login.html";
+        alert(
+            "Examination details are still loading."
+        );
 
         return;
 
     }
 
-    const user = data.user;
 
-    // ==========================
-    // Create Exam Attempt
-    // ==========================
+    // Prevent double-click
 
-    const { data: attempt, error } =
+    startExamBtn.disabled =
+        true;
 
-        await supabaseClient
 
-        .from("exam_attempts")
+    try {
 
-        .insert({
 
-            user_id: user.id,
+        // ==========================================
+        // Get Logged-in User
+        // ==========================================
 
-            exam_id: selectedExam.id,
+        const {
+            data,
+            error: authError
+        } =
+            await supabaseClient
+                .auth
+                .getUser();
 
-            total_questions: selectedExam.total_questions
 
-        })
+        if (
+            authError ||
+            !data.user
+        ) {
 
-        .select()
+            alert(
+                "Please login again."
+            );
 
-        .single();
 
-    if (error) {
+            window.location.replace(
+                "login.html"
+            );
 
-        console.error(error);
 
-        alert(error.message);
+            return;
 
-        return;
+        }
+
+
+        const user =
+            data.user;
+
+
+        // ==========================================
+        // Create Exam Attempt
+        // ==========================================
+
+        const {
+            data: attempt,
+            error
+        } =
+            await supabaseClient
+
+                .from(
+                    "exam_attempts"
+                )
+
+                .insert({
+
+                    user_id:
+                        user.id,
+
+                    exam_id:
+                        selectedExam.id,
+
+                    total_questions:
+                        selectedExam.total_questions
+
+                })
+
+                .select()
+
+                .single();
+
+
+        if (error) {
+
+            console.error(
+                "Attempt Creation Error:",
+                error
+            );
+
+
+            alert(
+                error.message
+            );
+
+
+            startExamBtn.disabled =
+                false;
+
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // Clear Previous Exam Session
+        // ==========================================
+
+        sessionStorage.removeItem(
+            "examSubmitted"
+        );
+
+
+        sessionStorage.removeItem(
+            "examResult"
+        );
+
+
+        sessionStorage.removeItem(
+            "attemptId"
+        );
+
+
+        sessionStorage.removeItem(
+            "examStartTime"
+        );
+
+
+        // ==========================================
+        // Save New Attempt ID
+        // ==========================================
+
+        sessionStorage.setItem(
+            "attemptId",
+            attempt.id
+        );
+
+
+        // ==========================================
+        // Save Exam Start Time
+        // ==========================================
+
+        sessionStorage.setItem(
+            "examStartTime",
+            new Date().toISOString()
+        );
+
+
+        // ==========================================
+        // Save Selected Exam
+        // ==========================================
+
+        localStorage.setItem(
+            "selectedExam",
+            JSON.stringify(
+                selectedExam
+            )
+        );
+
+
+        // ==========================================
+        // Open Examination
+        // ==========================================
+
+        /*
+           replace() is used instead of href
+           so the instruction page is not
+           unnecessarily kept in the history
+           for this exam start.
+        */
+
+        window.location.replace(
+            "exam.html"
+        );
 
     }
 
-    // ==========================
-    // Save Attempt
-    // ==========================
 
-    sessionStorage.setItem(
+    catch (error) {
 
-        "attemptId",
+        console.error(
+            "Start Exam Error:",
+            error
+        );
 
-        attempt.id
 
-    );
+        alert(
+            "Unable to start the examination."
+        );
 
-    sessionStorage.setItem(
 
-        "examStartTime",
+        startExamBtn.disabled =
+            false;
 
-        new Date().toISOString()
-
-    );
-
-    // ==========================
-    // Save Selected Exam
-    // ==========================
-
-    localStorage.setItem(
-
-        "selectedExam",
-
-        JSON.stringify(selectedExam)
-
-    );
-
-    // ==========================
-    // Open Exam
-    // ==========================
-
-    window.location.href = "exam.html";
+    }
 
 }
 
 
-//==========================================
+// ==========================================
 // Initial Load
-//==========================================
+// ==========================================
 
 loadExam();
