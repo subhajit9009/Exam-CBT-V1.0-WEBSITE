@@ -35,8 +35,11 @@ async function loadResult() {
                 "Result attempt not found."
             );
 
-            window.location.href =
-                "exam-list.html";
+
+            window.location.replace(
+                "exam-list.html"
+            );
+
 
             return;
 
@@ -72,9 +75,11 @@ async function loadResult() {
                 error
             );
 
+
             alert(
                 "Unable to load examination result."
             );
+
 
             return;
 
@@ -86,6 +91,7 @@ async function loadResult() {
             alert(
                 "Examination result not found."
             );
+
 
             return;
 
@@ -160,6 +166,12 @@ async function loadResult() {
         // Get Questions
         // ==========================================
 
+        /*
+           We use * here because the question-wise
+           result needs the actual question text and
+           answer options as well as the scoring data.
+        */
+
         const {
             data: resultQuestions,
             error: resultQuestionsError
@@ -168,9 +180,7 @@ async function loadResult() {
 
                 .from("questions")
 
-                .select(
-                    "id, correct_answer, marks, negative_marks"
-                )
+                .select("*")
 
                 .eq(
                     "exam_id",
@@ -185,6 +195,11 @@ async function loadResult() {
                 resultQuestionsError
             );
 
+
+            showAnalysisError(
+                "Unable to load question analysis."
+            );
+
         }
 
 
@@ -192,11 +207,16 @@ async function loadResult() {
         // Calculate Review / Marks
         // ==========================================
 
-        let markedReviewCount = 0;
+        let markedReviewCount =
+            0;
 
-        let positiveMarks = 0;
 
-        let negativeMarks = 0;
+        let positiveMarks =
+            0;
+
+
+        let negativeMarks =
+            0;
 
 
         if (
@@ -217,14 +237,15 @@ async function loadResult() {
 
 
             // ======================================
-            // Calculate Positive / Negative Marks
+            // Positive / Negative Marks
             // ======================================
 
             userAnswers.forEach(
                 answer => {
 
 
-                    // No answer
+                    // No selected answer
+
                     if (
                         !answer.selected_option
                     ) {
@@ -237,8 +258,10 @@ async function loadResult() {
                     const question =
                         resultQuestions.find(
                             q =>
-                                q.id ===
-                                answer.question_id
+                                String(q.id) ===
+                                String(
+                                    answer.question_id
+                                )
                         );
 
 
@@ -250,12 +273,17 @@ async function loadResult() {
 
 
                     // ==================================
-                    // Correct Answer
+                    // Correct
                     // ==================================
 
                     if (
-                        answer.selected_option ===
-                        question.correct_answer
+                        String(
+                            answer.selected_option
+                        ).trim().toUpperCase() ===
+
+                        String(
+                            question.correct_answer
+                        ).trim().toUpperCase()
                     ) {
 
                         positiveMarks +=
@@ -267,7 +295,7 @@ async function loadResult() {
 
 
                     // ==================================
-                    // Wrong Answer
+                    // Wrong
                     // ==================================
 
                     else {
@@ -286,106 +314,73 @@ async function loadResult() {
 
 
         // ==========================================
-        // Display Exam Name
+        // Display Basic Result
         // ==========================================
 
-        document.getElementById(
-            "examName"
-        ).textContent =
-
+        setText(
+            "examName",
             exam?.exam_name ||
-            "Examination";
+            "Examination"
+        );
 
 
-        // ==========================================
-        // Basic Statistics
-        // ==========================================
-
-        document.getElementById(
-            "attempted"
-        ).textContent =
-
-            attempt.attempted ?? 0;
+        setText(
+            "attempted",
+            attempt.attempted ?? 0
+        );
 
 
-        document.getElementById(
-            "correct"
-        ).textContent =
-
-            attempt.correct ?? 0;
-
-
-        document.getElementById(
-            "wrong"
-        ).textContent =
-
-            attempt.wrong ?? 0;
+        setText(
+            "correct",
+            attempt.correct ?? 0
+        );
 
 
-        document.getElementById(
-            "skipped"
-        ).textContent =
-
-            attempt.skipped ?? 0;
-
-
-        // ==========================================
-        // Marked for Review
-        // ==========================================
-
-        const reviewElement =
-            document.getElementById(
-                "markedReview"
-            );
+        setText(
+            "wrong",
+            attempt.wrong ?? 0
+        );
 
 
-        if (reviewElement) {
+        setText(
+            "skipped",
+            attempt.skipped ?? 0
+        );
 
-            reviewElement.textContent =
-                markedReviewCount;
 
-        }
+        setText(
+            "markedReview",
+            markedReviewCount
+        );
 
 
         // ==========================================
         // Detailed Result
         // ==========================================
 
-        document.getElementById(
-            "totalQuestions"
-        ).textContent =
-
-            attempt.total_questions ?? 0;
-
-
-        document.getElementById(
-            "detailAttempted"
-        ).textContent =
-
-            attempt.attempted ?? 0;
+        setText(
+            "totalQuestions",
+            attempt.total_questions ?? 0
+        );
 
 
-        // ==========================================
-        // Positive Marks
-        // ==========================================
+        setText(
+            "detailAttempted",
+            attempt.attempted ?? 0
+        );
 
-        document.getElementById(
-            "positiveMarks"
-        ).textContent =
 
+        setText(
+            "positiveMarks",
             "+" +
             Number(
                 positiveMarks
-            ).toFixed(2);
+            ).toFixed(2)
+        );
 
 
-        // ==========================================
-        // Negative Marks
-        // ==========================================
-
-        document.getElementById(
-            "negativeMarks"
-        ).textContent =
+        setText(
+            "negativeMarks",
 
             negativeMarks > 0
 
@@ -394,68 +389,52 @@ async function loadResult() {
                       negativeMarks
                   ).toFixed(2)
 
-                : "0.00";
+                : "0.00"
+        );
 
 
-        // ==========================================
-        // Percentage
-        // ==========================================
-
-        document.getElementById(
-            "percentage"
-        ).textContent =
-
+        setText(
+            "percentage",
             (
                 attempt.percentage ?? 0
-            ) + "%";
+            ) + "%"
+        );
 
 
-        // ==========================================
-        // Passing Marks
-        // ==========================================
-
-        document.getElementById(
-            "passingMarks"
-        ).textContent =
-
-            exam?.passing_marks ?? 0;
+        setText(
+            "passingMarks",
+            exam?.passing_marks ?? 0
+        );
 
 
-        // ==========================================
-        // Status
-        // ==========================================
-
-        document.getElementById(
-            "status"
-        ).textContent =
-
+        setText(
+            "status",
             attempt.status ||
-            "Completed";
+            "Completed"
+        );
 
 
         // ==========================================
         // Score
         // ==========================================
 
-        document.getElementById(
-            "score"
-        ).textContent =
+        setText(
+            "score",
 
             Number(
                 attempt.score ?? 0
-            ).toFixed(2);
+            ).toFixed(2)
+        );
 
 
         // ==========================================
         // Total Marks
         // ==========================================
 
-        document.getElementById(
-            "totalMarks"
-        ).textContent =
-
-            exam?.total_marks ??
-            0;
+        setText(
+            "totalMarks",
+            exam?.total_marks ?? 0
+        );
 
 
         // ==========================================
@@ -468,9 +447,31 @@ async function loadResult() {
             );
 
 
-        badge.textContent =
-            attempt.result ||
-            "Completed";
+        if (badge) {
+
+            const resultText =
+                attempt.result ||
+                "Completed";
+
+
+            badge.textContent =
+                resultText;
+
+
+            if (
+                String(
+                    resultText
+                ).toLowerCase()
+                .includes("fail")
+            ) {
+
+                badge.classList.add(
+                    "fail"
+                );
+
+            }
+
+        }
 
 
         // ==========================================
@@ -499,9 +500,8 @@ async function loadResult() {
             timeTaken % 60;
 
 
-        document.getElementById(
-            "timeTaken"
-        ).textContent =
+        setText(
+            "timeTaken",
 
             String(hours)
                 .padStart(2, "0")
@@ -514,35 +514,65 @@ async function loadResult() {
             + ":" +
 
             String(seconds)
-                .padStart(2, "0");
+                .padStart(2, "0")
+        );
+
+
+        // ==========================================
+        // Question-wise Analysis
+        // ==========================================
+
+        renderQuestionAnalysis(
+            resultQuestions || [],
+            userAnswers || []
+        );
 
 
         // ==========================================
         // Dashboard Button
         // ==========================================
 
-        document.getElementById(
-            "dashboardBtn"
-        ).addEventListener(
-            "click",
-            () => {
+        const dashboardBtn =
+            document.getElementById(
+                "dashboardBtn"
+            );
 
 
-                sessionStorage.removeItem(
-                    "attemptId"
-                );
+        if (dashboardBtn) {
+
+            dashboardBtn.addEventListener(
+                "click",
+                () => {
 
 
-                sessionStorage.removeItem(
-                    "examStartTime"
-                );
+                    sessionStorage.removeItem(
+                        "attemptId"
+                    );
 
 
-                window.location.href =
-                    "dashboard.html";
+                    sessionStorage.removeItem(
+                        "examStartTime"
+                    );
 
-            }
-        );
+
+                    sessionStorage.removeItem(
+                        "examSubmitted"
+                    );
+
+
+                    sessionStorage.removeItem(
+                        "examResult"
+                    );
+
+
+                    window.location.replace(
+                        "dashboard.html"
+                    );
+
+                }
+            );
+
+        }
 
 
         // ==========================================
@@ -575,6 +605,7 @@ async function loadResult() {
 
     }
 
+
     catch (error) {
 
         console.error(
@@ -582,10 +613,804 @@ async function loadResult() {
             error
         );
 
+
         alert(
             "Something went wrong while loading the result."
         );
 
     }
+
+}
+
+
+// ==========================================
+// Set Text Safely
+// ==========================================
+
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (element) {
+
+        element.textContent =
+            value;
+
+    }
+
+}
+
+
+// ==========================================
+// Question-wise Analysis
+// ==========================================
+
+function renderQuestionAnalysis(
+    questions,
+    userAnswers
+) {
+
+    const container =
+        document.getElementById(
+            "questionAnalysis"
+        );
+
+
+    const countElement =
+        document.getElementById(
+            "analysisCount"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // No Questions
+    // ==========================================
+
+    if (
+        !questions ||
+        questions.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="no-analysis">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <div>
+                    No question analysis is available.
+                </div>
+
+            </div>
+
+        `;
+
+
+        setText(
+            "analysisCount",
+            0
+        );
+
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // Count
+    // ==========================================
+
+    if (countElement) {
+
+        countElement.textContent =
+            questions.length;
+
+    }
+
+
+    // ==========================================
+    // Create Answer Map
+    // ==========================================
+
+    const answerMap =
+        new Map();
+
+
+    userAnswers.forEach(
+        answer => {
+
+            answerMap.set(
+                String(
+                    answer.question_id
+                ),
+                answer
+            );
+
+        }
+    );
+
+
+    // ==========================================
+    // Render Questions
+    // ==========================================
+
+    container.innerHTML =
+        questions
+            .map(
+                (
+                    question,
+                    index
+                ) => {
+
+                    const answer =
+                        answerMap.get(
+                            String(
+                                question.id
+                            )
+                        );
+
+
+                    return createQuestionCard(
+                        question,
+                        answer,
+                        index
+                    );
+
+                }
+            )
+            .join("");
+
+
+}
+
+
+// ==========================================
+// Create Question Card
+// ==========================================
+
+function createQuestionCard(
+    question,
+    answer,
+    index
+) {
+
+
+    // ==========================================
+    // Answer Information
+    // ==========================================
+
+    const selectedAnswer =
+        answer?.selected_option ||
+        "";
+
+
+    const correctAnswer =
+        question.correct_answer ||
+        "";
+
+
+    const isReview =
+        answer?.is_review === true;
+
+
+    const hasAnswer =
+        selectedAnswer !== null &&
+        selectedAnswer !== undefined &&
+        String(
+            selectedAnswer
+        ).trim() !== "";
+
+
+    // ==========================================
+    // Determine Status
+    // ==========================================
+
+    let status =
+        "skipped";
+
+
+    let statusText =
+        "Skipped";
+
+
+    let statusIcon =
+        "fa-forward";
+
+
+    let marks =
+        0;
+
+
+    if (hasAnswer) {
+
+        if (
+            String(
+                selectedAnswer
+            ).trim().toUpperCase() ===
+
+            String(
+                correctAnswer
+            ).trim().toUpperCase()
+        ) {
+
+            status =
+                "correct";
+
+            statusText =
+                "Correct";
+
+            statusIcon =
+                "fa-circle-check";
+
+
+            marks =
+                Number(
+                    question.marks || 0
+                );
+
+        }
+
+        else {
+
+            status =
+                "wrong";
+
+            statusText =
+                "Wrong";
+
+            statusIcon =
+                "fa-circle-xmark";
+
+
+            marks =
+                -Number(
+                    question.negative_marks || 0
+                );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // Question Text
+    // ==========================================
+
+    const questionText =
+        getQuestionText(
+            question,
+            index
+        );
+
+
+    // ==========================================
+    // Answer Display
+    // ==========================================
+
+    const yourAnswerText =
+        hasAnswer
+
+            ? getOptionDisplay(
+                question,
+                selectedAnswer
+            )
+
+            : "Not Answered";
+
+
+    const correctAnswerText =
+        getOptionDisplay(
+            question,
+            correctAnswer
+        );
+
+
+    // ==========================================
+    // Review Badge
+    // ==========================================
+
+    const reviewBadge =
+        isReview
+
+            ? `
+
+                <span class="status-pill review-pill">
+
+                    <i class="fa-solid fa-flag"></i>
+
+                    ${
+                        hasAnswer
+                            ? "Answered + Review"
+                            : "Marked for Review"
+                    }
+
+                </span>
+
+              `
+
+            : "";
+
+
+    // ==========================================
+    // Marks Badge
+    // ==========================================
+
+    let marksClass =
+        "marks-zero";
+
+
+    let marksText =
+        "0.00";
+
+
+    if (marks > 0) {
+
+        marksClass =
+            "marks-positive";
+
+
+        marksText =
+            "+" +
+            marks.toFixed(2);
+
+    }
+
+    else if (marks < 0) {
+
+        marksClass =
+            "marks-negative";
+
+
+        marksText =
+            marks.toFixed(2);
+
+    }
+
+
+    // ==========================================
+    // Answer Classes
+    // ==========================================
+
+    let yourAnswerClass =
+        "answer-box";
+
+
+    if (
+        status === "correct"
+    ) {
+
+        yourAnswerClass +=
+            " your-answer correct-answer";
+
+    }
+
+    else if (
+        status === "wrong"
+    ) {
+
+        yourAnswerClass +=
+            " your-answer wrong-answer";
+
+    }
+
+    else {
+
+        yourAnswerClass +=
+            " skipped-answer";
+
+    }
+
+
+    // ==========================================
+    // Return Card
+    // ==========================================
+
+    return `
+
+        <div class="question-result-card ${status}">
+
+
+            <!-- Question Header -->
+
+            <div class="question-result-header">
+
+
+                <div class="question-number">
+
+                    Question ${index + 1}
+
+                </div>
+
+
+                <div class="question-status-area">
+
+
+                    <span
+                        class="status-pill ${status}">
+
+                        <i
+                            class="fa-solid ${statusIcon}">
+                        </i>
+
+                        ${statusText}
+
+                    </span>
+
+
+                    ${reviewBadge}
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Question Body -->
+
+            <div class="question-result-body">
+
+
+                <div class="question-text">
+
+                    ${escapeHTML(
+                        questionText
+                    )}
+
+                </div>
+
+
+
+                <!-- Answers -->
+
+                <div class="answer-result-grid">
+
+
+                    <!-- Your Answer -->
+
+                    <div
+                        class="${yourAnswerClass}">
+
+                        <span class="answer-box-label">
+
+                            Your Answer
+
+                        </span>
+
+
+                        <span class="answer-box-value">
+
+                            ${escapeHTML(
+                                yourAnswerText
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- Correct Answer -->
+
+                    <div
+                        class="answer-box correct-answer-box">
+
+                        <span class="answer-box-label">
+
+                            Correct Answer
+
+                        </span>
+
+
+                        <span class="answer-box-value">
+
+                            ${escapeHTML(
+                                correctAnswerText
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- Marks -->
+
+                <div class="question-marks">
+
+
+                    <span
+                        class="marks-badge ${marksClass}">
+
+                        Marks:
+                        ${marksText}
+
+                    </span>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    `;
+
+}
+
+
+// ==========================================
+// Get Question Text
+// ==========================================
+
+function getQuestionText(
+    question,
+    index
+) {
+
+    /*
+       Supports common question column names.
+
+       If your Supabase table uses one of these,
+       the question text will be displayed.
+    */
+
+    const possibleFields = [
+
+        "question",
+
+        "question_text",
+
+        "questionText",
+
+        "text",
+
+        "question_statement",
+
+        "question_content",
+
+        "title"
+
+    ];
+
+
+    for (
+        const field of possibleFields
+    ) {
+
+        if (
+            question[field] !== undefined &&
+            question[field] !== null &&
+            String(
+                question[field]
+            ).trim() !== ""
+        ) {
+
+            return String(
+                question[field]
+            );
+
+        }
+
+    }
+
+
+    return "Question " +
+        (index + 1);
+
+}
+
+
+// ==========================================
+// Get Option Display
+// ==========================================
+
+function getOptionDisplay(
+    question,
+    option
+) {
+
+    if (
+        !option
+    ) {
+
+        return "Not Answered";
+
+    }
+
+
+    const value =
+        String(
+            option
+        ).trim();
+
+
+    /*
+       If the selected value is something
+       like A, B, C or D, try to display
+       the corresponding option text.
+    */
+
+    const optionMap = {
+
+        A: [
+            "option_a",
+            "optionA",
+            "a"
+        ],
+
+        B: [
+            "option_b",
+            "optionB",
+            "b"
+        ],
+
+        C: [
+            "option_c",
+            "optionC",
+            "c"
+        ],
+
+        D: [
+            "option_d",
+            "optionD",
+            "d"
+        ],
+
+        E: [
+            "option_e",
+            "optionE",
+            "e"
+        ]
+
+    };
+
+
+    const upper =
+        value.toUpperCase();
+
+
+    const fields =
+        optionMap[
+            upper
+        ];
+
+
+    if (fields) {
+
+        for (
+            const field
+            of fields
+        ) {
+
+            if (
+                question[field] !== undefined &&
+                question[field] !== null &&
+                String(
+                    question[field]
+                ).trim() !== ""
+            ) {
+
+                return (
+                    upper +
+                    ". " +
+                    String(
+                        question[field]
+                    )
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       If the database stores the complete
+       answer text instead of A/B/C/D,
+       display it directly.
+    */
+
+    return value;
+
+}
+
+
+// ==========================================
+// Escape HTML
+// ==========================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ==========================================
+// Analysis Error
+// ==========================================
+
+function showAnalysisError(
+    message
+) {
+
+    const container =
+        document.getElementById(
+            "questionAnalysis"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+        <div class="no-analysis">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <div>
+                ${escapeHTML(message)}
+            </div>
+
+        </div>
+
+    `;
 
 }

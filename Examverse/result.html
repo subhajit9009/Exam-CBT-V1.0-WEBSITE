@@ -3,37 +3,46 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>ExamVerse | Result</title>
+    <title>
+        ExamVerse | Result
+    </title>
 
-<link rel="icon"
-type="image/png"
-href="assets/images/favicon.png">
+    <link rel="icon"
+        type="image/png"
+        href="assets/images/favicon.png">
 
-<link rel="stylesheet"
-href="assets/css/result.css">
 
-<link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
+    <link rel="stylesheet"
+        href="assets/css/result.css">
 
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-<link rel="stylesheet"
-      href="assets/css/loader.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+
+    <link rel="stylesheet"
+        href="assets/css/loader.css">
 
 </head>
 
 
 <body>
 
-    <!-- Loader -->
+
+<!-- ==========================================
+     Loader
+========================================== -->
 
 <div id="loader">
 
@@ -52,6 +61,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 </div>
 
 
+
 <!-- ==========================================
      RESULT PAGE
 ========================================== -->
@@ -64,6 +74,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     ======================================= -->
 
     <div class="result-header">
+
 
         <div class="success-icon">
 
@@ -81,6 +92,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
             Loading Exam...
         </p>
 
+
     </div>
 
 
@@ -91,21 +103,27 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
     <div class="score-card">
 
+
         <div class="score-label">
+
             Final Score
+
         </div>
 
 
         <div
             class="score-value"
             id="score">
+
             0
+
         </div>
 
 
         <div class="score-out-of">
 
             out of
+
             <span id="totalMarks">
                 0
             </span>
@@ -121,6 +139,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
         </div>
 
+
     </div>
 
 
@@ -131,6 +150,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
     <div class="stats-grid">
 
+
+        <!-- Attempted -->
 
         <div class="stat-card">
 
@@ -156,6 +177,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 
 
+        <!-- Correct -->
+
         <div class="stat-card">
 
             <div class="stat-icon correct-icon">
@@ -179,6 +202,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         </div>
 
 
+
+        <!-- Wrong -->
 
         <div class="stat-card">
 
@@ -204,6 +229,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 
 
+        <!-- Skipped -->
+
         <div class="stat-card">
 
             <div class="stat-icon skipped-icon">
@@ -226,27 +253,31 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
         </div>
 
+
+
+        <!-- Review -->
+
         <div class="stat-card">
 
-    <div class="stat-icon review-icon">
+            <div class="stat-icon review-icon">
 
-        <i class="fa-solid fa-flag"></i>
+                <i class="fa-solid fa-flag"></i>
 
-    </div>
+            </div>
 
-    <div>
+            <div>
 
-        <span>
-            Marked for Review
-        </span>
+                <span>
+                    Marked for Review
+                </span>
 
-        <strong id="markedReview">
-            0
-        </strong>
+                <strong id="markedReview">
+                    0
+                </strong>
 
-    </div>
+            </div>
 
-</div>
+        </div>
 
 
     </div>
@@ -258,6 +289,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     ======================================= -->
 
     <div class="details-card">
+
 
         <h2>
 
@@ -303,8 +335,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
                     Positive Marks
                 </span>
 
-                <strong id="positiveMarks">
+                <strong
+                    id="positiveMarks"
+                    class="positive-value">
+
                     0
+
                 </strong>
 
             </div>
@@ -316,8 +352,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
                     Negative Marks
                 </span>
 
-                <strong id="negativeMarks">
+                <strong
+                    id="negativeMarks"
+                    class="negative-value">
+
                     0
+
                 </strong>
 
             </div>
@@ -356,7 +396,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
                 </span>
 
                 <strong id="timeTaken">
-                    00:00
+                    00:00:00
                 </strong>
 
             </div>
@@ -382,10 +422,126 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 
 
     <!-- ======================================
+         QUESTION-WISE ANALYSIS
+    ======================================= -->
+
+    <div class="question-analysis-card">
+
+
+        <div class="analysis-header">
+
+
+            <div>
+
+                <h2>
+
+                    <i class="fa-solid fa-list-check"></i>
+
+                    Question-wise Analysis
+
+                </h2>
+
+                <p>
+
+                    Review your answers, correct answers,
+                    marks and review status.
+
+                </p>
+
+            </div>
+
+
+            <div class="analysis-count">
+
+                <span id="analysisCount">
+                    0
+                </span>
+
+                Questions
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Legend
+        =================================== -->
+
+        <div class="analysis-legend">
+
+
+            <div class="legend-item">
+
+                <span class="legend-dot correct-dot"></span>
+
+                Correct
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span class="legend-dot wrong-dot"></span>
+
+                Wrong
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span class="legend-dot skipped-dot"></span>
+
+                Skipped
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span class="legend-dot review-dot"></span>
+
+                Marked for Review
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==================================
+             Question List
+        =================================== -->
+
+        <div
+            id="questionAnalysis"
+            class="question-analysis-list">
+
+            <div class="analysis-loading">
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                Loading question analysis...
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ======================================
          Action Buttons
     ======================================= -->
 
     <div class="result-actions">
+
 
         <button
             id="dashboardBtn"
@@ -396,6 +552,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
             Back to Dashboard
 
         </button>
+
 
     </div>
 
@@ -411,13 +568,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 
+
 <script src="assets/js/supabase.js">
 </script>
+
 
 <script src="assets/js/result.js">
 </script>
 
-<script src="assets/js/loader.js"></script>
+
+<script src="assets/js/loader.js">
+</script>
+
 
 </body>
 
