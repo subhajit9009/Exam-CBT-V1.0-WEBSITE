@@ -1680,7 +1680,7 @@ body {
 }
 
 /* ==========================================
-   PDF - FIX 5 STAT CARDS
+   PDF - SAFE STATISTICS LAYOUT
 ========================================== */
 
 .pdf-mode .stats-grid {
@@ -1688,13 +1688,13 @@ body {
     display: grid !important;
 
     grid-template-columns:
-        repeat(5, minmax(0, 1fr)) !important;
+        repeat(3, minmax(0, 1fr)) !important;
+
+    gap: 12px !important;
 
     width: 100% !important;
 
     max-width: 100% !important;
-
-    gap: 8px !important;
 
     box-sizing: border-box !important;
 
@@ -1711,33 +1711,37 @@ body {
 
     box-sizing: border-box !important;
 
-    padding-left: 8px !important;
-
-    padding-right: 8px !important;
-
 }
 
 
+/* Keep every statistic card inside the PDF */
+
 .pdf-mode .stat-card * {
+
+    min-width: 0 !important;
 
     max-width: 100% !important;
 
 }
 
 
+/* Don't allow text to escape */
+
 .pdf-mode .stat-card h3,
 .pdf-mode .stat-card p,
 .pdf-mode .stat-card span {
 
-    overflow-wrap: anywhere !important;
+    overflow-wrap: break-word !important;
 
 }
 
 
-/* Prevent the fifth card from being pushed outside */
+/* Prevent individual cards from splitting */
 
-.pdf-mode .stats-grid {
+.pdf-mode .stat-card {
 
-    overflow: visible !important;
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
 
 }
