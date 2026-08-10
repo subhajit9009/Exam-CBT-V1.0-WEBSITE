@@ -1922,7 +1922,7 @@ async function downloadResultPDF() {
                     0,
 
                 windowWidth:
-                    resultWrapper.scrollWidth
+    resultWrapper.clientWidth
 
             },
 

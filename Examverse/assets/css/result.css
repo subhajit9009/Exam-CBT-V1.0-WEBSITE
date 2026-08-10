@@ -2359,3 +2359,98 @@ body {
     }
 
 }
+
+/* =========================================================
+   PDF PERFECT CENTERING
+========================================================= */
+
+.pdf-mode {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    margin-left: auto !important;
+
+    margin-right: auto !important;
+
+    padding-left: 18px !important;
+
+    padding-right: 18px !important;
+
+}
+
+
+/*
+   Keep every major PDF section aligned
+   to the same central content area.
+*/
+
+.pdf-mode .pdf-report-header,
+.pdf-mode .score-card,
+.pdf-mode .stats-grid,
+.pdf-mode .pdf-performance-card,
+.pdf-mode .details-card,
+.pdf-mode .question-analysis-card {
+
+    width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    margin-left: auto !important;
+
+    margin-right: auto !important;
+
+}
+
+
+/*
+   Prevent internal elements from creating
+   horizontal overflow.
+*/
+
+.pdf-mode * {
+
+    box-sizing: border-box !important;
+
+    max-width: 100%;
+
+}
+
+
+/*
+   Keep the performance bars properly centered.
+*/
+
+.pdf-mode .pdf-performance-card {
+
+    width: 100% !important;
+
+}
+
+
+/*
+   Result summary stays perfectly aligned.
+*/
+
+.pdf-mode .details-grid {
+
+    width: 100% !important;
+
+}
+
+
+/*
+   Question analysis stays inside the
+   same page boundaries.
+*/
+
+.pdf-mode .question-analysis-list {
+
+    width: 100% !important;
+
+    overflow: visible !important;
+
+}
