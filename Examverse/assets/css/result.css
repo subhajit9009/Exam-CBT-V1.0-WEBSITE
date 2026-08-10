@@ -1561,3 +1561,120 @@ body {
     }
 
 }
+
+/* ==========================================
+   PDF PAGE BREAK FIX
+========================================== */
+
+.pdf-mode .question-result-card {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .details-card {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .score-card {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .stats-grid {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .stat-card {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .analysis-header {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .analysis-legend {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+/*
+   Important:
+   Don't allow the analysis container itself
+   to become one huge unbreakable element.
+*/
+
+.pdf-mode .analysis-section {
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+}
+
+
+/*
+   Keep the question list printable.
+*/
+
+.pdf-mode .question-analysis-list {
+
+    overflow: visible !important;
+
+}
+
+
+/*
+   PDF should use normal white page background.
+*/
+
+.pdf-mode {
+
+    background: white !important;
+
+}
+
+
+/*
+   Remove visual shadows in PDF.
+*/
+
+.pdf-mode .score-card,
+.pdf-mode .details-card,
+.pdf-mode .question-analysis-card,
+.pdf-mode .question-result-card {
+
+    box-shadow: none !important;
+
+}

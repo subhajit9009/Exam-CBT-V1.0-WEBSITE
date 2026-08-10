@@ -1599,7 +1599,7 @@ async function downloadResultPDF() {
     ) {
 
         alert(
-            "PDF generator is not loaded. Please check your internet connection and try again."
+            "PDF generator is not loaded. Please check your internet connection."
         );
 
         return;
@@ -1608,7 +1608,7 @@ async function downloadResultPDF() {
 
 
     // ==========================================
-    // Button State
+    // Save Button State
     // ==========================================
 
     const oldText =
@@ -1628,21 +1628,24 @@ async function downloadResultPDF() {
     `;
 
 
+    let wasHidden =
+        false;
+
+
     try {
 
 
         // ==========================================
-        // Temporarily Show Analysis
+        // Show Analysis Temporarily
         // ==========================================
 
-        const wasHidden =
-            analysisSection &&
-            analysisSection.classList.contains(
-                "hidden"
-            );
-
-
         if (analysisSection) {
+
+            wasHidden =
+                analysisSection.classList.contains(
+                    "hidden"
+                );
+
 
             analysisSection.classList.remove(
                 "hidden"
@@ -1660,18 +1663,21 @@ async function downloadResultPDF() {
         );
 
 
-        // Give browser time to render
+        // ==========================================
+        // Wait for browser rendering
+        // ==========================================
+
         await new Promise(
             resolve =>
                 setTimeout(
                     resolve,
-                    400
+                    800
                 )
         );
 
 
         // ==========================================
-        // PDF Settings
+        // File Name
         // ==========================================
 
         const attemptId =
@@ -1682,28 +1688,39 @@ async function downloadResultPDF() {
 
         const fileName =
             "ExamVerse_Result_" +
+
             (
                 attemptId
+
                     ? attemptId.substring(
                         0,
                         8
                     )
+
                     : "Report"
+
             ) +
+
             ".pdf";
 
+
+        // ==========================================
+        // PDF Settings
+        // ==========================================
 
         const options = {
 
             margin: [
                 8,
                 8,
-                8,
+                10,
                 8
             ],
 
+
             filename:
                 fileName,
+
 
             image: {
 
@@ -1715,24 +1732,35 @@ async function downloadResultPDF() {
 
             },
 
+
             html2canvas: {
 
                 scale:
-                    2,
+                    1.5,
 
                 useCORS:
                     true,
 
+                allowTaint:
+                    false,
+
                 backgroundColor:
                     "#ffffff",
+
+                logging:
+                    false,
 
                 scrollX:
                     0,
 
                 scrollY:
-                    0
+                    0,
+
+                windowWidth:
+                    resultWrapper.scrollWidth
 
             },
+
 
             jsPDF: {
 
@@ -1743,16 +1771,43 @@ async function downloadResultPDF() {
                     "a4",
 
                 orientation:
-                    "portrait"
+                    "portrait",
+
+                compress:
+                    true
 
             },
+
 
             pagebreak: {
 
                 mode: [
-                    "avoid-all",
                     "css",
                     "legacy"
+                ],
+
+                before: [
+
+                    ".pdf-page-break"
+
+                ],
+
+                after: [],
+
+                avoid: [
+
+                    ".question-result-card",
+
+                    ".details-card",
+
+                    ".score-card",
+
+                    ".stat-card",
+
+                    ".analysis-header",
+
+                    ".analysis-legend"
+
                 ]
 
             }
@@ -1761,7 +1816,7 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // Generate
+        // Generate PDF
         // ==========================================
 
         await html2pdf()
@@ -1769,6 +1824,36 @@ async function downloadResultPDF() {
             .set(options)
 
             .from(resultWrapper)
+
+            .toPdf()
+
+            .get("pdf")
+
+            .then(
+                pdf => {
+
+                    /*
+                       Force PDF metadata.
+                    */
+
+                    pdf.setProperties({
+
+                        title:
+                            "ExamVerse Examination Result",
+
+                        subject:
+                            "Examination Result",
+
+                        author:
+                            "ExamVerse",
+
+                        creator:
+                            "ExamVerse"
+
+                    });
+
+                }
+            )
 
             .save();
 
@@ -1813,6 +1898,18 @@ async function downloadResultPDF() {
         resultWrapper.classList.remove(
             "pdf-mode"
         );
+
+
+        if (
+            analysisSection &&
+            wasHidden
+        ) {
+
+            analysisSection.classList.add(
+                "hidden"
+            );
+
+        }
 
     }
 
