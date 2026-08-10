@@ -1678,3 +1678,66 @@ body {
     box-shadow: none !important;
 
 }
+
+/* ==========================================
+   PDF - FIX 5 STAT CARDS
+========================================== */
+
+.pdf-mode .stats-grid {
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr)) !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    gap: 8px !important;
+
+    box-sizing: border-box !important;
+
+}
+
+
+.pdf-mode .stat-card {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    padding-left: 8px !important;
+
+    padding-right: 8px !important;
+
+}
+
+
+.pdf-mode .stat-card * {
+
+    max-width: 100% !important;
+
+}
+
+
+.pdf-mode .stat-card h3,
+.pdf-mode .stat-card p,
+.pdf-mode .stat-card span {
+
+    overflow-wrap: anywhere !important;
+
+}
+
+
+/* Prevent the fifth card from being pushed outside */
+
+.pdf-mode .stats-grid {
+
+    overflow: visible !important;
+
+}

@@ -1757,7 +1757,7 @@ async function downloadResultPDF() {
                     0,
 
                 windowWidth:
-                    resultWrapper.scrollWidth
+    1200
 
             },
 
