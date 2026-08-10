@@ -2454,3 +2454,19 @@ body {
     overflow: visible !important;
 
 }
+
+/* ==========================================
+   FINAL PDF HORIZONTAL ALIGNMENT
+========================================== */
+
+.pdf-mode {
+    position: relative !important;
+
+    left: 14px !important;
+
+    width: calc(100% - 28px) !important;
+
+    max-width: none !important;
+
+    box-sizing: border-box !important;
+}
