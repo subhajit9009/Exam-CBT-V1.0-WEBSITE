@@ -421,9 +421,52 @@
 
 
 
-    <!-- ======================================
-         QUESTION-WISE ANALYSIS
-    ======================================= -->
+
+    <!-- ==========================================
+     DETAILED ANALYSIS BUTTON
+========================================== -->
+
+<div class="result-options">
+
+    <button
+        id="analysisBtn"
+        class="analysis-btn">
+
+        <i class="fa-solid fa-chart-column"></i>
+
+        Detailed Analysis
+
+        <i
+            id="analysisArrow"
+            class="fa-solid fa-chevron-down">
+        </i>
+
+    </button>
+
+
+    <button
+        id="downloadPdfBtn"
+        class="pdf-btn">
+
+        <i class="fa-solid fa-file-pdf"></i>
+
+        Download Result PDF
+
+    </button>
+
+</div>
+
+
+
+<!-- ==========================================
+     QUESTION-WISE ANALYSIS
+     Hidden Initially
+========================================== -->
+
+<div
+    id="analysisSection"
+    class="analysis-section hidden">
+
 
     <div class="question-analysis-card">
 
@@ -440,6 +483,7 @@
                     Question-wise Analysis
 
                 </h2>
+
 
                 <p>
 
@@ -475,7 +519,9 @@
 
             <div class="legend-item">
 
-                <span class="legend-dot correct-dot"></span>
+                <span
+                    class="legend-dot correct-dot">
+                </span>
 
                 Correct
 
@@ -484,7 +530,9 @@
 
             <div class="legend-item">
 
-                <span class="legend-dot wrong-dot"></span>
+                <span
+                    class="legend-dot wrong-dot">
+                </span>
 
                 Wrong
 
@@ -493,7 +541,9 @@
 
             <div class="legend-item">
 
-                <span class="legend-dot skipped-dot"></span>
+                <span
+                    class="legend-dot skipped-dot">
+                </span>
 
                 Skipped
 
@@ -502,7 +552,9 @@
 
             <div class="legend-item">
 
-                <span class="legend-dot review-dot"></span>
+                <span
+                    class="legend-dot review-dot">
+                </span>
 
                 Marked for Review
 
@@ -521,6 +573,7 @@
             id="questionAnalysis"
             class="question-analysis-list">
 
+
             <div class="analysis-loading">
 
                 <i class="fa-solid fa-spinner fa-spin"></i>
@@ -529,29 +582,8 @@
 
             </div>
 
+
         </div>
-
-
-    </div>
-
-
-
-    <!-- ======================================
-         Action Buttons
-    ======================================= -->
-
-    <div class="result-actions">
-
-
-        <button
-            id="dashboardBtn"
-            class="dashboard-btn">
-
-            <i class="fa-solid fa-house"></i>
-
-            Back to Dashboard
-
-        </button>
 
 
     </div>
@@ -562,12 +594,35 @@
 
 
 <!-- ==========================================
+     ACTION BUTTONS
+========================================== -->
+
+<div class="result-actions">
+
+
+    <button
+        id="dashboardBtn"
+        class="dashboard-btn">
+
+        <i class="fa-solid fa-house"></i>
+
+        Back to Dashboard
+
+    </button>
+
+
+</div>
+
+
+<!-- ==========================================
      Supabase
 ========================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+</script>
 
 <script src="assets/js/supabase.js">
 </script>

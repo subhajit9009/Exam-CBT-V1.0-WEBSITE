@@ -1287,3 +1287,277 @@ body {
     }
 
 }
+
+/* ==========================================
+   RESULT OPTIONS
+========================================== */
+
+.result-options {
+
+    margin-top: 25px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+}
+
+
+/* ==========================================
+   Detailed Analysis Button
+========================================== */
+
+.analysis-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 13px 24px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #6366f1
+        );
+
+    color: white;
+
+    font-family:
+        'Poppins',
+        sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+
+        0 10px 25px
+        rgba(124,58,237,.20);
+
+    transition:
+        .25s ease;
+
+}
+
+
+.analysis-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+
+        0 15px 30px
+        rgba(124,58,237,.28);
+
+}
+
+
+#analysisArrow {
+
+    margin-left: 3px;
+
+    transition:
+        transform .25s ease;
+
+}
+
+
+.analysis-btn.active
+#analysisArrow {
+
+    transform:
+        rotate(180deg);
+
+}
+
+
+/* ==========================================
+   PDF Button
+========================================== */
+
+.pdf-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 13px 24px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ef4444
+        );
+
+    color: white;
+
+    font-family:
+        'Poppins',
+        sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+
+        0 10px 25px
+        rgba(220,38,38,.20);
+
+    transition:
+        .25s ease;
+
+}
+
+
+.pdf-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+
+        0 15px 30px
+        rgba(220,38,38,.28);
+
+}
+
+
+.pdf-btn:disabled {
+
+    opacity: .65;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+}
+
+
+/* ==========================================
+   Hidden Analysis
+========================================== */
+
+.analysis-section {
+
+    margin-top: 20px;
+
+    overflow: hidden;
+
+    max-height:
+        50000px;
+
+    opacity: 1;
+
+    transition:
+
+        max-height .45s ease,
+
+        opacity .35s ease;
+
+}
+
+
+.analysis-section.hidden {
+
+    max-height: 0;
+
+    opacity: 0;
+
+    margin-top: 0;
+
+    pointer-events: none;
+
+}
+
+
+/* ==========================================
+   PDF MODE
+========================================== */
+
+.pdf-mode {
+
+    background: white !important;
+
+    padding: 20px !important;
+
+}
+
+
+.pdf-mode .analysis-section {
+
+    max-height:
+        none !important;
+
+    opacity: 1 !important;
+
+}
+
+
+.pdf-mode .result-options,
+
+.pdf-mode .result-actions {
+
+    display: none !important;
+
+}
+
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media(max-width: 600px) {
+
+    .result-options {
+
+        flex-direction: column;
+
+        width: 100%;
+
+    }
+
+
+    .analysis-btn,
+    .pdf-btn {
+
+        width: 100%;
+
+    }
+
+}

@@ -574,6 +574,14 @@ async function loadResult() {
 
         }
 
+// ==========================================
+// Setup Result Page Controls
+// ==========================================
+
+setupAnalysisButton();
+
+setupPdfButton();
+
 
         // ==========================================
         // Console
@@ -1412,5 +1420,412 @@ function showAnalysisError(
         </div>
 
     `;
+
+}
+
+// ==========================================
+// Detailed Analysis Toggle
+// ==========================================
+
+function setupAnalysisButton() {
+
+    const analysisBtn =
+        document.getElementById(
+            "analysisBtn"
+        );
+
+
+    const analysisSection =
+        document.getElementById(
+            "analysisSection"
+        );
+
+
+    const analysisArrow =
+        document.getElementById(
+            "analysisArrow"
+        );
+
+
+    if (
+        !analysisBtn ||
+        !analysisSection
+    ) {
+
+        return;
+
+    }
+
+
+    analysisBtn.addEventListener(
+        "click",
+        () => {
+
+
+            const isHidden =
+                analysisSection.classList.contains(
+                    "hidden"
+                );
+
+
+            if (isHidden) {
+
+                analysisSection.classList.remove(
+                    "hidden"
+                );
+
+
+                analysisBtn.classList.add(
+                    "active"
+                );
+
+
+                analysisBtn.innerHTML = `
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    Hide Detailed Analysis
+
+                    <i
+                        id="analysisArrow"
+                        class="fa-solid fa-chevron-up">
+                    </i>
+
+                `;
+
+            }
+
+            else {
+
+                analysisSection.classList.add(
+                    "hidden"
+                );
+
+
+                analysisBtn.classList.remove(
+                    "active"
+                );
+
+
+                analysisBtn.innerHTML = `
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    Detailed Analysis
+
+                    <i
+                        id="analysisArrow"
+                        class="fa-solid fa-chevron-down">
+                    </i>
+
+                `;
+
+            }
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// PDF DOWNLOAD
+// ==========================================
+
+function setupPdfButton() {
+
+    const pdfButton =
+        document.getElementById(
+            "downloadPdfBtn"
+        );
+
+
+    if (!pdfButton) {
+
+        return;
+
+    }
+
+
+    pdfButton.addEventListener(
+        "click",
+        downloadResultPDF
+    );
+
+}
+
+
+// ==========================================
+// Generate Result PDF
+// ==========================================
+
+async function downloadResultPDF() {
+
+    const pdfButton =
+        document.getElementById(
+            "downloadPdfBtn"
+        );
+
+
+    const resultWrapper =
+        document.querySelector(
+            ".result-wrapper"
+        );
+
+
+    const analysisSection =
+        document.getElementById(
+            "analysisSection"
+        );
+
+
+    if (
+        !resultWrapper ||
+        !pdfButton
+    ) {
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // Check PDF Library
+    // ==========================================
+
+    if (
+        typeof html2pdf ===
+        "undefined"
+    ) {
+
+        alert(
+            "PDF generator is not loaded. Please check your internet connection and try again."
+        );
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // Button State
+    // ==========================================
+
+    const oldText =
+        pdfButton.innerHTML;
+
+
+    pdfButton.disabled =
+        true;
+
+
+    pdfButton.innerHTML = `
+
+        <i class="fa-solid fa-spinner fa-spin"></i>
+
+        Generating PDF...
+
+    `;
+
+
+    try {
+
+
+        // ==========================================
+        // Temporarily Show Analysis
+        // ==========================================
+
+        const wasHidden =
+            analysisSection &&
+            analysisSection.classList.contains(
+                "hidden"
+            );
+
+
+        if (analysisSection) {
+
+            analysisSection.classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        // ==========================================
+        // PDF Mode
+        // ==========================================
+
+        resultWrapper.classList.add(
+            "pdf-mode"
+        );
+
+
+        // Give browser time to render
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    400
+                )
+        );
+
+
+        // ==========================================
+        // PDF Settings
+        // ==========================================
+
+        const attemptId =
+            sessionStorage.getItem(
+                "attemptId"
+            );
+
+
+        const fileName =
+            "ExamVerse_Result_" +
+            (
+                attemptId
+                    ? attemptId.substring(
+                        0,
+                        8
+                    )
+                    : "Report"
+            ) +
+            ".pdf";
+
+
+        const options = {
+
+            margin: [
+                8,
+                8,
+                8,
+                8
+            ],
+
+            filename:
+                fileName,
+
+            image: {
+
+                type:
+                    "jpeg",
+
+                quality:
+                    0.98
+
+            },
+
+            html2canvas: {
+
+                scale:
+                    2,
+
+                useCORS:
+                    true,
+
+                backgroundColor:
+                    "#ffffff",
+
+                scrollX:
+                    0,
+
+                scrollY:
+                    0
+
+            },
+
+            jsPDF: {
+
+                unit:
+                    "mm",
+
+                format:
+                    "a4",
+
+                orientation:
+                    "portrait"
+
+            },
+
+            pagebreak: {
+
+                mode: [
+                    "avoid-all",
+                    "css",
+                    "legacy"
+                ]
+
+            }
+
+        };
+
+
+        // ==========================================
+        // Generate
+        // ==========================================
+
+        await html2pdf()
+
+            .set(options)
+
+            .from(resultWrapper)
+
+            .save();
+
+
+        // ==========================================
+        // Restore Page
+        // ==========================================
+
+        resultWrapper.classList.remove(
+            "pdf-mode"
+        );
+
+
+        if (
+            analysisSection &&
+            wasHidden
+        ) {
+
+            analysisSection.classList.add(
+                "hidden"
+            );
+
+        }
+
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "PDF Generation Error:",
+            error
+        );
+
+
+        alert(
+            "Unable to generate the result PDF."
+        );
+
+
+        resultWrapper.classList.remove(
+            "pdf-mode"
+        );
+
+    }
+
+
+    finally {
+
+        pdfButton.disabled =
+            false;
+
+
+        pdfButton.innerHTML =
+            oldText;
+
+    }
 
 }
