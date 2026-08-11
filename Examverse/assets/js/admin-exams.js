@@ -897,20 +897,25 @@ async function saveExamSections(examId){
 
         const sectionData = {
 
-            exam_id: examId,
+    exam_id: examId,
 
-            section_name:
-                section.section_name.trim(),
+    section_name:
+        section.section_name.trim(),
 
-            section_order:
-                i + 1,
+    section_order:
+        i + 1,
 
-            duration_minutes:
-                Number(
-                    section.duration_minutes
-                ) || 0
+    duration_minutes:
+        Number(
+            section.duration_minutes
+        ) || 0,
 
-        };
+    question_count:
+        Number(
+            section.question_count
+        ) || 0
+
+};
 
 
         // ======================================
@@ -1275,44 +1280,12 @@ async function editExam(id){
         of (sections || [])
     ){
 
-        let questionCount =
-            0;
+        const questionCount =
+    Number(
+        section.question_count
+    ) || 0;
 
-
-        const {
-            count,
-            error:
-                questionCountError
-        } = await supabaseClient
-
-            .from("questions")
-
-            .select(
-                "id",
-                {
-                    count: "exact",
-                    head: true
-                }
-            )
-
-            .eq(
-                "section_id",
-                section.id
-            );
-
-
-        if(
-            !questionCountError
-            &&
-            count !== null
-        ){
-
-            questionCount =
-                count;
-
-        }
-
-
+    
         examSections.push({
 
             id:
