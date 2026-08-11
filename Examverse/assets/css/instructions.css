@@ -2037,3 +2037,17 @@ footer strong {
     box-shadow: 0 2px 5px rgba(15,23,42,.25);
     z-index: 2;
 }
+
+/* ==========================================
+   INSTRUCTIONS PAGE - SMOOTH LOADER TRANSITION
+   Only affects this page
+========================================== */
+
+#loader {
+    isolation: isolate;
+}
+
+.instructionContainer,
+.background {
+    transform: translateZ(0);
+}
