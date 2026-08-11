@@ -291,6 +291,95 @@ placeholder="Exam Description"></textarea>
 
 </select>
 
+<!-- ==========================
+     SECTIONAL TIMER
+========================== -->
+
+<div class="sectional-timer-setting">
+
+    <label class="sectional-toggle-row">
+
+        <span>
+            <strong>Sectional Timer</strong>
+            <small>Enable separate time limits for exam sections</small>
+        </span>
+
+        <label class="toggle-switch">
+
+            <input
+                type="checkbox"
+                id="sectionalTimerEnabled">
+
+            <span class="toggle-slider"></span>
+
+        </label>
+
+    </label>
+
+</div>
+
+<!-- ==========================
+     SECTION BUILDER
+========================== -->
+
+<div
+    id="sectionBuilder"
+    class="section-builder"
+    style="display:none;">
+
+    <div class="section-builder-header">
+
+        <div>
+            <strong>Exam Sections</strong>
+
+            <small>
+                Configure the time and question count for each section.
+            </small>
+        </div>
+
+        <button
+            type="button"
+            id="addSectionBtn"
+            class="add-section-btn">
+
+            ➕ Add Section
+
+        </button>
+
+    </div>
+
+    <div id="sectionsContainer"></div>
+
+    <div class="section-summary">
+
+        <div>
+            Questions:
+            <strong>
+                <span id="sectionQuestionTotal">0</span>
+                /
+                <span id="examQuestionTotal">0</span>
+            </strong>
+        </div>
+
+        <div>
+            Time:
+            <strong>
+                <span id="sectionTimeTotal">0</span>
+                /
+                <span id="examTimeTotal">0</span>
+                min
+            </strong>
+        </div>
+
+    </div>
+
+    <p
+        id="sectionValidationMessage"
+        class="section-validation-message">
+    </p>
+
+</div>
+
 <div class="modal-buttons">
 
 <button id="saveExam">

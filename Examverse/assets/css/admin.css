@@ -504,3 +504,220 @@ table td{
     list-style:none;
 
 }
+
+/* ==========================================
+   SECTIONAL TIMER SETTING
+========================================== */
+
+.sectional-timer-setting {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.sectional-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.sectional-toggle-row strong {
+    display: block;
+    font-size: 15px;
+    color: #1e293b;
+}
+
+.sectional-toggle-row small {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* Toggle */
+
+.toggle-switch {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    background: #cbd5e1;
+    border-radius: 30px;
+    transition: 0.25s ease;
+}
+
+.toggle-slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.25s ease;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: #2d6cff;
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(22px);
+}
+
+/* ==========================================
+   SECTION BUILDER
+========================================== */
+
+.section-builder {
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.section-builder-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.section-builder-header strong {
+    display: block;
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.section-builder-header small {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.add-section-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 9px 13px;
+    cursor: pointer;
+    background: #2d6cff;
+    color: white;
+    font-weight: 600;
+}
+
+.add-section-btn:hover {
+    opacity: 0.9;
+}
+
+/* Individual section */
+
+.section-card {
+    position: relative;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+}
+
+.section-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.section-card-title {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.remove-section-btn {
+    border: none;
+    background: transparent;
+    color: #dc2626;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.section-fields {
+    display: grid;
+    grid-template-columns: 1fr 140px 140px;
+    gap: 12px;
+}
+
+.section-fields label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.section-fields input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    outline: none;
+}
+
+.section-fields input:focus {
+    border-color: #2d6cff;
+}
+
+/* Summary */
+
+.section-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 15px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #334155;
+}
+
+.section-validation-message {
+    margin: 10px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+
+    .section-builder-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .section-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .section-summary {
+        flex-direction: column;
+    }
+
+}
