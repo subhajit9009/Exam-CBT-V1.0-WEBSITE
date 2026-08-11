@@ -2627,3 +2627,89 @@ body {
 
     color: #475569 !important;
 }
+
+/* =========================================================
+   PDF LAYOUT FIX
+   Full width + equal left/right spacing
+========================================================= */
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .pdf-container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 auto !important;
+        padding: 12mm !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* =========================================================
+   PDF MODE - REMOVE LEFT/RIGHT IMBALANCE
+========================================================= */
+
+.pdf-mode .pdf-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   FINAL SCORE CARD
+   FULL LIGHT YELLOW BACKGROUND
+========================================================= */
+
+.pdf-mode .final-score-card,
+.pdf-mode .score-card {
+    background: #fff8d8 !important;
+    background-color: #fff8d8 !important;
+
+    border: 1px solid #f3df91 !important;
+    border-radius: 14px !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* Make the complete score area yellow */
+
+.pdf-mode .final-score-card > *,
+.pdf-mode .score-card > * {
+    background-color: transparent !important;
+}
+
+
+/* Score gradient stays inside its own bar */
+
+.pdf-mode .final-score-card .score-value,
+.pdf-mode .score-card .score-value {
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   PDF HEADER / CANDIDATE NAME
+========================================================= */
+
+.pdf-mode .attempted-by {
+    margin-top: 8px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+}
