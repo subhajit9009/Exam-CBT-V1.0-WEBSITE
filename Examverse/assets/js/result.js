@@ -67,6 +67,70 @@ async function loadResult() {
 
                 .single();
 
+                // ==========================================
+// Get Candidate Name
+// ==========================================
+
+let attemptedUserName = "Student";
+
+if (attempt?.user_id) {
+
+    const {
+        data: profile,
+        error: profileError
+    } = await supabaseClient
+
+        .from("profiles")
+
+        .select(
+            "first_name, middle_name, last_name"
+        )
+
+        .eq(
+            "id",
+            attempt.user_id
+        )
+
+        .single();
+
+
+    if (profileError) {
+
+        console.error(
+            "Profile Load Error:",
+            profileError
+        );
+
+    }
+
+
+    if (profile) {
+
+        attemptedUserName = [
+
+            profile.first_name,
+
+            profile.middle_name,
+
+            profile.last_name
+
+        ]
+
+            .filter(Boolean)
+
+            .join(" ");
+
+
+        if (!attemptedUserName) {
+
+            attemptedUserName = "Student";
+
+        }
+
+    }
+
+}
+
 
         if (error) {
 
@@ -1673,8 +1737,12 @@ async function downloadResultPDF() {
                 </div>
 
                 <div class="pdf-brand-subtitle">
-                    Examination Result Report
+                    Examination Result Report CARD
                 </div>
+
+                <div class="attempted-by">
+    Attempted By: ${attemptedUserName}
+</div>
 
             </div>
 
