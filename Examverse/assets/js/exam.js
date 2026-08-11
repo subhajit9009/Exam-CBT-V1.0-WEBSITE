@@ -478,11 +478,11 @@ async function loadQuestions() {
 
     await loadSavedAnswers();
 
+loadVisitedQuestions();
 
-    createPalette();
+createPalette();
 
-
-    showQuestion(0);
+showQuestion(0);
 
 }
 
@@ -490,6 +490,64 @@ async function loadQuestions() {
 // ==========================================
 // Load Saved Answers
 // ==========================================
+
+// ==========================================
+// Save Visited Questions
+// ==========================================
+
+function saveVisitedQuestions() {
+
+    const attemptId =
+        sessionStorage.getItem("attemptId");
+
+    if (!attemptId) return;
+
+    sessionStorage.setItem(
+        "visitedQuestions_" + attemptId,
+        JSON.stringify(visitedQuestions)
+    );
+}
+
+
+// ==========================================
+// Load Visited Questions
+// ==========================================
+
+function loadVisitedQuestions() {
+
+    const attemptId =
+        sessionStorage.getItem("attemptId");
+
+    if (!attemptId) return;
+
+    const saved =
+        sessionStorage.getItem(
+            "visitedQuestions_" + attemptId
+        );
+
+    if (!saved) return;
+
+    try {
+
+        const parsed =
+            JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+
+            visitedQuestions =
+                parsed;
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Visited Questions Load Error:",
+            error
+        );
+
+    }
+}
 
 async function loadSavedAnswers() {
 
@@ -619,6 +677,10 @@ function showQuestion(index) {
         );
 
     }
+
+    // save visited status //
+
+    saveVisitedQuestions();
 
 
     const q =
