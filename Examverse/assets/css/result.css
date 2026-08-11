@@ -2713,3 +2713,52 @@ body {
     font-weight: 600 !important;
     color: #475569 !important;
 }
+
+/* ==========================================
+   FINAL PDF SCORE FIX
+   Remove gradient rendering issue in PDF
+========================================== */
+
+.pdf-mode .score-card .score-value {
+    background: none !important;
+    background-image: none !important;
+
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
+
+    -webkit-text-fill-color: #1e3a8a !important;
+    color: #1e3a8a !important;
+
+    display: block !important;
+}
+
+/* ==========================================
+   FINAL PDF HORIZONTAL ALIGNMENT
+========================================== */
+
+.pdf-mode {
+    width: 100% !important;
+    max-width: none !important;
+
+    margin: 0 !important;
+
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+.pdf-mode .pdf-report-header,
+.pdf-mode .score-card,
+.pdf-mode .stats-grid,
+.pdf-mode .pdf-performance-card,
+.pdf-mode .details-card,
+.pdf-mode .question-analysis-card {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+
+    box-sizing: border-box !important;
+}

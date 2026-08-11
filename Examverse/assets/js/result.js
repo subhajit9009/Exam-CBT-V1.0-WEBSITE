@@ -1948,7 +1948,7 @@ async function downloadResultPDF() {
             margin: [
                 8,
                 8,
-                10,
+                8,
                 8
             ],
 
@@ -1991,7 +1991,7 @@ async function downloadResultPDF() {
                     0,
 
                 windowWidth:
-    resultWrapper.clientWidth
+    document.documentElement.clientWidth
 
             },
 
