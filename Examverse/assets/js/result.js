@@ -3,6 +3,7 @@
    Created by Subhajit Paul
 ========================================== */
 
+let attemptedUserName = "Student";
 
 window.addEventListener(
     "DOMContentLoaded",
@@ -71,7 +72,7 @@ async function loadResult() {
 // Get Candidate Name
 // ==========================================
 
-let attemptedUserName = "Student";
+attemptedUserName = "Student";
 
 if (attempt?.user_id) {
 
