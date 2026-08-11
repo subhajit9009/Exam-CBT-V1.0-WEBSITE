@@ -140,17 +140,29 @@ Manage all questions for every examination.
 
 <div class="top-bar">
 
-<button
-id="addQuestionBtn">
+    <div class="question-actions">
 
-➕ Add Question
+        <button
+            id="addQuestionBtn">
 
-</button>
+            ➕ Add Question
 
-<input
-type="text"
-id="searchQuestion"
-placeholder="🔍 Search Question...">
+        </button>
+
+        <button
+            id="importExcelBtn"
+            type="button">
+
+            📊 Import Excel
+
+        </button>
+
+    </div>
+
+    <input
+        type="text"
+        id="searchQuestion"
+        placeholder="🔍 Search Question...">
 
 </div>
 
@@ -394,33 +406,142 @@ MCQ
 
 <div class="modal-buttons">
 
-<button
-id="saveQuestionBtn">
-
-💾 Save Question
-
+<button id="saveQuestionBtn" type="button">
+    💾 Save Question
 </button>
 
 <button
-id="closeQuestionBtn">
+    id="closeQuestionBtn"
+    type="button">
 
-❌ Cancel
+    ❌ Cancel
 
 </button>
 
 </div>
 
 </div>
+
+</div>
+
+<!-- ===========================
+     Excel Import Modal
+============================ -->
+
+<div
+    id="excelImportModal"
+    class="modal">
+
+    <div class="modal-content excel-import-content">
+
+        <h2>
+            📊 Import Questions from Excel
+        </h2>
+
+        <p id="excelImportMode">
+            Select an exam first.
+        </p>
+
+        <div class="excel-import-section">
+
+            <label>
+                Select Exam
+            </label>
+
+            <select id="excelExamSelect">
+
+                <option value="">
+                    Select Exam
+                </option>
+
+            </select>
+
+            <div
+    id="excelExamInfo"
+    style="
+        margin-top: 14px;
+        margin-bottom: 20px;
+        padding: 14px 16px;
+        background: #f4f7fb;
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        line-height: 1.7;
+        font-size: 14px;
+    "
+>
+    <strong>Select an exam first.</strong>
+</div>
+
+        </div>
+
+        <div class="excel-import-section">
+
+            <label>
+                Excel File
+            </label>
+
+            <input
+                type="file"
+                id="excelFile"
+                accept=".xlsx,.xls">
+
+        </div>
+
+        <div
+            id="excelFileStatus"
+            class="excel-validation-status">
+
+            No file selected.
+            
+        </div>
+
+        <div
+            id="excelPreview"
+            class="excel-preview">
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                id="validateExcelBtn"
+                type="button">
+
+                🔍 Validate Excel
+
+            </button>
+
+            <button
+                id="importExcelBtnModal"
+                type="button"
+                disabled>
+
+                💾 Import Questions
+
+            </button>
+
+            <button
+                id="closeExcelBtn"
+                type="button">
+
+                ❌ Cancel
+
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<!-- Excel Parser -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <script src="assets/js/supabase.js"></script>
 
 <script src="assets/js/admin-auth.js"></script>
-
-<script src="assets/js/admin-common.js"></script>
 
 <script src="assets/js/admin-questions.js"></script>
 

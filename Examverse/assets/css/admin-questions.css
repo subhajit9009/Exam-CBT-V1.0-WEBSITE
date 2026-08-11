@@ -362,3 +362,224 @@ width:95%;
 }
 
 }
+
+/* ==========================
+   Question Action Buttons
+========================== */
+
+.question-actions{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+}
+
+#addQuestionBtn,
+#importExcelBtn{
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    color:white;
+
+}
+
+#importExcelBtn{
+
+    background:#198754;
+
+}
+
+#importExcelBtn:hover{
+
+    background:#157347;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ==========================
+   Excel Import
+========================== */
+
+.excel-import-content{
+
+    width:900px;
+
+}
+
+.excel-import-section{
+
+    margin-bottom:20px;
+
+}
+
+.excel-import-section label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+}
+
+.excel-import-section input,
+.excel-import-section select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+}
+
+.excel-validation-status{
+
+    padding:15px;
+
+    margin:15px 0;
+
+    border-radius:8px;
+
+    background:#f5f7fb;
+
+}
+
+.excel-preview{
+
+    max-height:400px;
+
+    overflow:auto;
+
+    margin-top:15px;
+
+}
+
+.excel-preview table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.excel-preview th{
+
+    background:#1e3c72;
+
+    color:white;
+
+    padding:10px;
+
+}
+
+.excel-preview td{
+
+    padding:10px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+/* ==========================================
+   Excel Import Modal Buttons
+========================================== */
+
+.excel-import-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.excel-import-actions button {
+    flex: 1;
+    min-height: 52px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+/* Validate */
+#validateExcelBtn {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+#validateExcelBtn:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+/* Import */
+#importExcelBtn {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+#importExcelBtn:hover:not(:disabled) {
+    background: #15803d;
+    transform: translateY(-1px);
+}
+
+/* Cancel */
+#closeExcelBtn {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+#closeExcelBtn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* Disabled state */
+.excel-import-actions button:disabled {
+    background: #d1d5db !important;
+    color: #6b7280 !important;
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.8;
+}
+
+/* ======================================================
+   Excel Import Button - Enabled State
+====================================================== */
+
+#importExcelBtnModal:not(:disabled) {
+    background: #16a34a !important;
+    color: #ffffff !important;
+    border: 1px solid #16a34a !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+}
+
+#importExcelBtnModal:not(:disabled):hover {
+    background: #15803d !important;
+    border-color: #15803d !important;
+}
+
+/* Disabled Import button */
+#importExcelBtnModal:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
