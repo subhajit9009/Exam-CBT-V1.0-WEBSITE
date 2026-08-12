@@ -178,33 +178,19 @@ async function initExam() {
 
 await loadQuestions();
 
-
-// ==========================================
-// Start Timer According To Exam Mode
-// ==========================================
-
 if (isSectionalExam) {
 
     console.log(
-        "📌 SECTIONAL EXAM MODE"
+        "📌 Sectional exam detected."
     );
 
-    console.log(
-        "Sections:",
-        examSections
-    );
-
-    // Sectional timer will be added
-    // in the next step.
+    updateSectionSubmitButton();
 
 } else {
 
     console.log(
-        "📘 NORMAL EXAM MODE"
+        "📘 Normal exam detected."
     );
-
-    // Existing normal exam timer
-    // remains completely unchanged.
 
     startExamTimer();
 
@@ -2146,14 +2132,119 @@ async function submitExam(
 // SUBMIT CURRENT SECTION
 // ==========================================
 
-async function submitCurrentSection(
-    autoSubmit = false
-) {
+// ==========================================
+// SUBMIT EXAM / SUBMIT SECTION
+// ==========================================
+
+async function submitExam(autoSubmit = false) {
+
+    // ==========================================
+    // SECTIONAL EXAM
+    // ==========================================
+
+    if (isSectionalExam) {
+
+        await submitCurrentSection(autoSubmit);
+
+        return;
+    }
+
+
+    // ==========================================
+    // NORMAL EXAM — EXISTING BEHAVIOR
+    // ==========================================
+
+    const totalQuestions =
+        questions.length;
+
+    const answeredQuestions =
+        Object.keys(answers).length;
+
+    const unansweredQuestions =
+        totalQuestions - answeredQuestions;
+
+    const reviewCount =
+        reviewQuestions.length;
+
+
+    if (!autoSubmit) {
+
+        const message =
+            "SUBMIT EXAMINATION?\n\n" +
+
+            "Total Questions: " +
+            totalQuestions +
+
+            "\nAnswered: " +
+            answeredQuestions +
+
+            "\nUnanswered: " +
+            unansweredQuestions +
+
+            "\nMarked for Review: " +
+            reviewCount +
+
+            "\n\nAre you sure you want to submit your examination?";
+
+
+        const confirmed =
+            window.confirm(message);
+
+
+        if (!confirmed) {
+            return;
+        }
+    }
+
+
+    if (timerInterval) {
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".navigation button, .paletteBtn, #submitBtn"
+        )
+        .forEach(button => {
+
+            button.disabled = true;
+
+        });
+
+
+    const finalized =
+        await finalizeExamAttempt(autoSubmit);
+
+
+    if (!finalized) {
+        return;
+    }
+
+
+    window.location.replace(
+        "result.html"
+    );
+
+}
+
+// ==========================================
+// SUBMIT CURRENT SECTION
+// ==========================================
+
+async function submitCurrentSection(autoSubmit = false) {
+
+    if (!isSectionalExam) {
+        return;
+    }
+
 
     const section =
-        examSections[
-            currentSectionIndex
-        ];
+        examSections[currentSectionIndex];
 
 
     if (!section) {
@@ -2167,53 +2258,44 @@ async function submitCurrentSection(
     }
 
 
-    const sectionStart =
+    const start =
         currentSectionStartIndex;
 
-
-    const sectionEnd =
+    const end =
         currentSectionEndIndex;
 
 
+    const sectionQuestions =
+        questions.slice(
+            start,
+            end + 1
+        );
+
+
     const sectionQuestionIds =
-        questions
-            .slice(
-                sectionStart,
-                sectionEnd + 1
-            )
-            .map(
-                question =>
-                    String(
-                        question.id
-                    )
-            );
-
-
-    const sectionAnswers =
-        sectionQuestionIds.filter(
-            questionId =>
-                answers[
-                    questionId
-                ]
+        sectionQuestions.map(
+            question =>
+                String(question.id)
         );
 
 
     const answeredCount =
-        sectionAnswers.length;
+        sectionQuestionIds.filter(
+            id =>
+                answers[id] !== undefined &&
+                answers[id] !== null &&
+                String(answers[id]).trim() !== ""
+        ).length;
 
 
-    const sectionQuestionCount =
+    const totalSectionQuestions =
         sectionQuestionIds.length;
 
 
     const unansweredCount =
-        sectionQuestionCount -
+        totalSectionQuestions -
         answeredCount;
 
-
-    // ==========================================
-    // LAST SECTION?
-    // ==========================================
 
     const isLastSection =
         currentSectionIndex >=
@@ -2221,7 +2303,7 @@ async function submitCurrentSection(
 
 
     // ==========================================
-    // MANUAL SUBMISSION
+    // CONFIRM SECTION SUBMISSION
     // ==========================================
 
     if (!autoSubmit) {
@@ -2231,14 +2313,13 @@ async function submitCurrentSection(
         if (isLastSection) {
 
             message =
-
                 "SUBMIT EXAMINATION?\n\n" +
 
                 "Section: " +
                 section.section_name +
 
                 "\nQuestions: " +
-                sectionQuestionCount +
+                totalSectionQuestions +
 
                 "\nAnswered: " +
                 answeredCount +
@@ -2246,22 +2327,21 @@ async function submitCurrentSection(
                 "\nUnanswered: " +
                 unansweredCount +
 
-                "\n\nThis is the last section. " +
-                "Submitting will finish the examination.\n\n" +
+                "\n\nThis is the LAST section." +
+                "\nSubmitting will finish the examination." +
 
-                "Are you sure?";
+                "\n\nAre you sure?";
 
         } else {
 
             message =
-
                 "SUBMIT SECTION?\n\n" +
 
                 "Section: " +
                 section.section_name +
 
                 "\nQuestions: " +
-                sectionQuestionCount +
+                totalSectionQuestions +
 
                 "\nAnswered: " +
                 answeredCount +
@@ -2270,17 +2350,15 @@ async function submitCurrentSection(
                 unansweredCount +
 
                 "\n\nYou cannot return to this section " +
-                "after submitting it.\n\n" +
+                "after submitting it." +
 
-                "Continue to the next section?";
+                "\n\nContinue to the next section?";
 
         }
 
 
         const confirmed =
-            window.confirm(
-                message
-            );
+            window.confirm(message);
 
 
         if (!confirmed) {
@@ -2297,8 +2375,7 @@ async function submitCurrentSection(
     // ==========================================
 
     if (
-        typeof sectionTimerInterval !==
-        "undefined" &&
+        typeof sectionTimerInterval !== "undefined" &&
         sectionTimerInterval
     ) {
 
@@ -2306,8 +2383,7 @@ async function submitCurrentSection(
             sectionTimerInterval
         );
 
-        sectionTimerInterval =
-            null;
+        sectionTimerInterval = null;
 
     }
 
@@ -2322,14 +2398,11 @@ async function submitCurrentSection(
             .querySelectorAll(
                 ".navigation button, .paletteBtn, #submitBtn"
             )
-            .forEach(
-                button => {
+            .forEach(button => {
 
-                    button.disabled =
-                        true;
+                button.disabled = true;
 
-                }
-            );
+            });
 
 
         const finalized =
@@ -2350,7 +2423,6 @@ async function submitCurrentSection(
         );
 
         return;
-
     }
 
 
@@ -2379,15 +2451,11 @@ async function submitCurrentSection(
     );
 
 
-    // ==========================================
-    // UPDATE SECTION SUBMIT BUTTON
-    // ==========================================
-
     updateSectionSubmitButton();
 
 
     console.log(
-        "➡️ Moved to section:",
+        "➡️ NEXT SECTION:",
         examSections[
             currentSectionIndex
         ].section_name
@@ -2397,6 +2465,10 @@ async function submitCurrentSection(
 
 // ==========================================
 // UPDATE SECTION SUBMIT BUTTON
+// ==========================================
+
+// ==========================================
+// UPDATE SUBMIT BUTTON
 // ==========================================
 
 function updateSectionSubmitButton() {
@@ -2439,7 +2511,6 @@ function updateSectionSubmitButton() {
     }
 
 }
-
 
 // ==========================================
 // FINALIZE EXAM ATTEMPT
