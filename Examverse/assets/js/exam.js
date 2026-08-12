@@ -1068,6 +1068,38 @@ async function loadSavedAnswers() {
 
 function showQuestion(index) {
 
+    // ==========================================
+// SECTION ACCESS PROTECTION
+// ==========================================
+
+if (isSectionalExam) {
+
+    const question =
+        questions[index];
+
+    if (!question) {
+        return;
+    }
+
+    const allowed =
+        currentSectionQuestions.some(
+            q =>
+                String(q.id) ===
+                String(question.id)
+        );
+
+    if (!allowed) {
+
+        console.warn(
+            "Blocked question outside current section:",
+            index + 1
+        );
+
+        return;
+    }
+
+}
+
     currentQuestion =
         index;
 
@@ -1206,6 +1238,10 @@ function showQuestion(index) {
 // Create Palette
 // ==========================
 
+// ==========================================
+// CREATE QUESTION PALETTE
+// ==========================================
+
 function createPalette() {
 
     const palette =
@@ -1213,35 +1249,123 @@ function createPalette() {
             "questionPalette"
         );
 
+    if (!palette) {
+        console.error(
+            "questionPalette not found."
+        );
+        return;
+    }
 
-    palette.innerHTML =
-        "";
+    palette.innerHTML = "";
 
 
-    questions.forEach(
-        (
-            q,
-            index
-        ) => {
+    // ==========================================
+    // DETERMINE QUESTIONS TO SHOW
+    // ==========================================
 
-            palette.innerHTML +=
+    let paletteQuestions;
 
-                `
-                <button
-                    class="paletteBtn"
-                    id="palette${index}"
-                    onclick="showQuestion(${index})">
+    if (isSectionalExam) {
 
-                    ${index + 1}
+        paletteQuestions =
+            currentSectionQuestions;
 
-                </button>
-                `;
+    } else {
+
+        paletteQuestions =
+            questions;
+
+    }
+
+
+    // ==========================================
+    // CREATE BUTTONS
+    // ==========================================
+
+    paletteQuestions.forEach(
+        (question) => {
+
+            const globalIndex =
+                questions.findIndex(
+                    q =>
+                        String(q.id) ===
+                        String(question.id)
+                );
+
+            if (globalIndex === -1) {
+                return;
+            }
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+
+            button.className =
+                "paletteBtn";
+
+            button.id =
+                `palette${globalIndex}`;
+
+            button.textContent =
+                globalIndex + 1;
+
+
+            // ==================================
+            // CLICK PALETTE QUESTION
+            // ==================================
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    /*
+                     * Extra safety:
+                     * sectional exam can only open
+                     * questions belonging to the
+                     * current section.
+                     */
+
+                    if (
+                        isSectionalExam &&
+                        !currentSectionQuestions.some(
+                            q =>
+                                String(q.id) ===
+                                String(
+                                    questions[
+                                        globalIndex
+                                    ].id
+                                )
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    showQuestion(
+                        globalIndex
+                    );
+
+                }
+            );
+
+
+            palette.appendChild(
+                button
+            );
 
         }
     );
 
-}
 
+    updatePalette();
+
+}
 
 // ==========================
 // Update Palette
@@ -1398,6 +1522,22 @@ function updatePalette() {
 
 function nextQuestion() {
 
+    if (isSectionalExam) {
+
+    if (
+        currentQuestion >=
+        currentSectionEndIndex
+    ) {
+
+        console.log(
+            "Reached end of current section."
+        );
+
+        return;
+    }
+
+}
+
     if (
         currentQuestion <
         questions.length - 1
@@ -1413,6 +1553,22 @@ function nextQuestion() {
 
 
 function previousQuestion() {
+
+    if (isSectionalExam) {
+
+    if (
+        currentQuestion <=
+        currentSectionStartIndex
+    ) {
+
+        console.log(
+            "Already at beginning of current section."
+        );
+
+        return;
+    }
+
+}
 
     if (
         currentQuestion > 0
