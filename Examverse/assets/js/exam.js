@@ -1999,13 +1999,31 @@ async function markForReview() {
 // Submit Exam
 // ==========================================
 
+// ==========================================
+// SUBMIT EXAM / SUBMIT SECTION
+// ==========================================
+
 async function submitExam(
     autoSubmit = false
 ) {
 
-    // ------------------------------------------
-    // Calculate current exam status
-    // ------------------------------------------
+    // ==========================================
+    // SECTIONAL EXAM
+    // ==========================================
+
+    if (isSectionalExam) {
+
+        await submitCurrentSection(
+            autoSubmit
+        );
+
+        return;
+    }
+
+
+    // ==========================================
+    // NORMAL EXAM
+    // ==========================================
 
     const totalQuestions =
         questions.length;
@@ -2067,7 +2085,7 @@ async function submitExam(
 
 
     // ------------------------------------------
-    // Stop Timer
+    // Stop normal exam timer
     // ------------------------------------------
 
     if (timerInterval) {
@@ -2083,7 +2101,7 @@ async function submitExam(
 
 
     // ------------------------------------------
-    // Disable Examination Controls
+    // Disable controls
     // ------------------------------------------
 
     document
@@ -2100,9 +2118,9 @@ async function submitExam(
         );
 
 
-    // ==========================================
-    // Finalize Exam in Database
-    // ==========================================
+    // ------------------------------------------
+    // Finalize NORMAL exam
+    // ------------------------------------------
 
     const finalized =
         await finalizeExamAttempt(
@@ -2118,8 +2136,307 @@ async function submitExam(
 
 
     window.location.replace(
-    "result.html"
-);
+        "result.html"
+    );
+
+}
+
+
+// ==========================================
+// SUBMIT CURRENT SECTION
+// ==========================================
+
+async function submitCurrentSection(
+    autoSubmit = false
+) {
+
+    const section =
+        examSections[
+            currentSectionIndex
+        ];
+
+
+    if (!section) {
+
+        console.error(
+            "Current section not found."
+        );
+
+        return;
+
+    }
+
+
+    const sectionStart =
+        currentSectionStartIndex;
+
+
+    const sectionEnd =
+        currentSectionEndIndex;
+
+
+    const sectionQuestionIds =
+        questions
+            .slice(
+                sectionStart,
+                sectionEnd + 1
+            )
+            .map(
+                question =>
+                    String(
+                        question.id
+                    )
+            );
+
+
+    const sectionAnswers =
+        sectionQuestionIds.filter(
+            questionId =>
+                answers[
+                    questionId
+                ]
+        );
+
+
+    const answeredCount =
+        sectionAnswers.length;
+
+
+    const sectionQuestionCount =
+        sectionQuestionIds.length;
+
+
+    const unansweredCount =
+        sectionQuestionCount -
+        answeredCount;
+
+
+    // ==========================================
+    // LAST SECTION?
+    // ==========================================
+
+    const isLastSection =
+        currentSectionIndex >=
+        examSections.length - 1;
+
+
+    // ==========================================
+    // MANUAL SUBMISSION
+    // ==========================================
+
+    if (!autoSubmit) {
+
+        let message;
+
+        if (isLastSection) {
+
+            message =
+
+                "SUBMIT EXAMINATION?\n\n" +
+
+                "Section: " +
+                section.section_name +
+
+                "\nQuestions: " +
+                sectionQuestionCount +
+
+                "\nAnswered: " +
+                answeredCount +
+
+                "\nUnanswered: " +
+                unansweredCount +
+
+                "\n\nThis is the last section. " +
+                "Submitting will finish the examination.\n\n" +
+
+                "Are you sure?";
+
+        } else {
+
+            message =
+
+                "SUBMIT SECTION?\n\n" +
+
+                "Section: " +
+                section.section_name +
+
+                "\nQuestions: " +
+                sectionQuestionCount +
+
+                "\nAnswered: " +
+                answeredCount +
+
+                "\nUnanswered: " +
+                unansweredCount +
+
+                "\n\nYou cannot return to this section " +
+                "after submitting it.\n\n" +
+
+                "Continue to the next section?";
+
+        }
+
+
+        const confirmed =
+            window.confirm(
+                message
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+    }
+
+
+    // ==========================================
+    // STOP SECTION TIMER
+    // ==========================================
+
+    if (
+        typeof sectionTimerInterval !==
+        "undefined" &&
+        sectionTimerInterval
+    ) {
+
+        clearInterval(
+            sectionTimerInterval
+        );
+
+        sectionTimerInterval =
+            null;
+
+    }
+
+
+    // ==========================================
+    // LAST SECTION
+    // ==========================================
+
+    if (isLastSection) {
+
+        document
+            .querySelectorAll(
+                ".navigation button, .paletteBtn, #submitBtn"
+            )
+            .forEach(
+                button => {
+
+                    button.disabled =
+                        true;
+
+                }
+            );
+
+
+        const finalized =
+            await finalizeExamAttempt(
+                autoSubmit
+            );
+
+
+        if (!finalized) {
+
+            return;
+
+        }
+
+
+        window.location.replace(
+            "result.html"
+        );
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // MOVE TO NEXT SECTION
+    // ==========================================
+
+    currentSectionIndex++;
+
+
+    buildCurrentSection();
+
+
+    createSectionNavigation();
+
+
+    createPalette();
+
+
+    currentQuestion =
+        currentSectionStartIndex;
+
+
+    showQuestion(
+        currentQuestion
+    );
+
+
+    // ==========================================
+    // UPDATE SECTION SUBMIT BUTTON
+    // ==========================================
+
+    updateSectionSubmitButton();
+
+
+    console.log(
+        "➡️ Moved to section:",
+        examSections[
+            currentSectionIndex
+        ].section_name
+    );
+
+}
+
+// ==========================================
+// UPDATE SECTION SUBMIT BUTTON
+// ==========================================
+
+function updateSectionSubmitButton() {
+
+    const submitBtn =
+        document.getElementById(
+            "submitBtn"
+        );
+
+    if (!submitBtn) {
+        return;
+    }
+
+
+    if (!isSectionalExam) {
+
+        submitBtn.textContent =
+            "Submit Exam";
+
+        return;
+
+    }
+
+
+    const isLastSection =
+        currentSectionIndex >=
+        examSections.length - 1;
+
+
+    if (isLastSection) {
+
+        submitBtn.textContent =
+            "Submit Exam";
+
+    } else {
+
+        submitBtn.textContent =
+            "Submit Section & Next";
+
+    }
 
 }
 
