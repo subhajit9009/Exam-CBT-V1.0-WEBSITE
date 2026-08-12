@@ -8,6 +8,16 @@ let answerSavePromise = null;
 let questions = [];
 let currentQuestion = 0;
 
+// ==========================================
+// EXAM MODE / SECTIONAL STATE
+// ==========================================
+
+let examSections = [];
+
+let isSectionalExam = false;
+
+let currentSectionIndex = 0;
+
 // ==========================
 // Exam State
 // ==========================
@@ -158,12 +168,43 @@ async function initExam() {
 
     // Load Questions
 
-    await loadQuestions();
+    // ==========================================
+// Load Questions + Detect Exam Mode
+// ==========================================
+
+await loadQuestions();
 
 
-    // Start exam timer
+// ==========================================
+// Start Timer According To Exam Mode
+// ==========================================
+
+if (isSectionalExam) {
+
+    console.log(
+        "📌 SECTIONAL EXAM MODE"
+    );
+
+    console.log(
+        "Sections:",
+        examSections
+    );
+
+    // Sectional timer will be added
+    // in the next step.
+
+} else {
+
+    console.log(
+        "📘 NORMAL EXAM MODE"
+    );
+
+    // Existing normal exam timer
+    // remains completely unchanged.
 
     startExamTimer();
+
+}
 
 
     document.getElementById(
@@ -430,6 +471,10 @@ function startExamTimer() {
 // Load Questions
 // ==========================
 
+// ==========================
+// Load Questions
+// ==========================
+
 async function loadQuestions() {
 
     const {
@@ -465,7 +510,7 @@ async function loadQuestions() {
     }
 
 
-    questions = data;
+    questions = data || [];
 
 
     document.getElementById(
@@ -474,15 +519,146 @@ async function loadQuestions() {
         questions.length;
 
 
-    // Load previously saved answers
+    // ==========================================
+    // LOAD PREVIOUSLY SAVED ANSWERS
+    // ==========================================
 
     await loadSavedAnswers();
 
-loadVisitedQuestions();
+    loadVisitedQuestions();
 
-createPalette();
 
-showQuestion(0);
+    // ==========================================
+    // DETECT EXAM MODE
+    // ==========================================
+
+    const {
+        data: sections,
+        error: sectionError
+    } = await supabaseClient
+
+        .from("exam_sections")
+
+        .select(`
+            id,
+            section_name,
+            section_order,
+            question_count,
+            duration_minutes
+        `)
+
+        .eq(
+            "exam_id",
+            selectedExam.id
+        )
+
+        .order(
+            "section_order",
+            {
+                ascending: true
+            }
+        );
+
+
+    // ==========================================
+    // SECTION QUERY ERROR
+    // ==========================================
+
+    if (sectionError) {
+
+        console.error(
+            "Section detection error:",
+            sectionError
+        );
+
+        /*
+         * IMPORTANT:
+         *
+         * If we cannot determine whether the
+         * exam is sectional, we DO NOT silently
+         * treat it as sectional.
+         *
+         * We keep the existing normal exam
+         * behavior for safety.
+         */
+
+        examSections = [];
+
+        isSectionalExam = false;
+
+    }
+
+    else {
+
+        examSections =
+            sections || [];
+
+        isSectionalExam =
+            examSections.length > 0;
+
+    }
+
+
+    // ==========================================
+    // DEBUG INFORMATION
+    // ==========================================
+
+    console.log(
+        "=========================================="
+    );
+
+    console.log(
+        "EXAM MODE DETECTION"
+    );
+
+    console.log(
+        "Exam:",
+        selectedExam.exam_name
+    );
+
+    console.log(
+        "Exam ID:",
+        selectedExam.id
+    );
+
+    console.log(
+        "Total Questions:",
+        questions.length
+    );
+
+    console.log(
+        "Sections Found:",
+        examSections.length
+    );
+
+    console.log(
+        "Is Sectional:",
+        isSectionalExam
+    );
+
+    console.log(
+        "Sections:",
+        examSections
+    );
+
+    console.log(
+        "=========================================="
+    );
+
+
+    // ==========================================
+    // EXISTING NORMAL PALETTE / QUESTION
+    // ==========================================
+    //
+    // We intentionally keep these unchanged
+    // for now.
+    //
+    // Section-specific palette/navigation
+    // will be added in the next phase.
+
+    createPalette();
+
+    showQuestion(0);
 
 }
 
