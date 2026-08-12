@@ -18,6 +18,10 @@ let isSectionalExam = false;
 
 let currentSectionIndex = 0;
 
+let currentSectionQuestions = [];
+let currentSectionStartIndex = 0;
+let currentSectionEndIndex = 0;
+
 // ==========================
 // Exam State
 // ==========================
@@ -656,10 +660,238 @@ async function loadQuestions() {
     // Section-specific palette/navigation
     // will be added in the next phase.
 
-    createPalette();
+    if (isSectionalExam) {
 
-    showQuestion(0);
+    // Build Section 1
+    currentSectionIndex = 0;
 
+    buildCurrentSection();
+
+    // Show section categories
+    createSectionNavigation();
+
+} else {
+
+    // Normal exam
+    currentSectionQuestions = [];
+    currentSectionStartIndex = 0;
+    currentSectionEndIndex = 0;
+
+}
+
+createPalette();
+
+showQuestion(0);
+
+}
+
+// ==========================================
+// BUILD CURRENT SECTION
+// ==========================================
+
+function buildCurrentSection() {
+
+    if (!isSectionalExam) {
+        return;
+    }
+
+    const section =
+        examSections[currentSectionIndex];
+
+    if (!section) {
+        console.error(
+            "Section not found:",
+            currentSectionIndex
+        );
+        return;
+    }
+
+    // Calculate where this section starts
+    currentSectionStartIndex =
+        examSections
+            .slice(0, currentSectionIndex)
+            .reduce(
+                (total, item) =>
+                    total +
+                    Number(
+                        item.question_count || 0
+                    ),
+                0
+            );
+
+    const questionCount =
+        Number(
+            section.question_count || 0
+        );
+
+    currentSectionEndIndex =
+        currentSectionStartIndex +
+        questionCount -
+        1;
+
+    currentSectionQuestions =
+        questions.slice(
+            currentSectionStartIndex,
+            currentSectionStartIndex +
+            questionCount
+        );
+
+    console.log(
+        "================================"
+    );
+
+    console.log(
+        "CURRENT SECTION"
+    );
+
+    console.log(
+        "Section:",
+        section.section_name
+    );
+
+    console.log(
+        "Section index:",
+        currentSectionIndex
+    );
+
+    console.log(
+        "Start question:",
+        currentSectionStartIndex + 1
+    );
+
+    console.log(
+        "End question:",
+        currentSectionEndIndex + 1
+    );
+
+    console.log(
+        "Questions:",
+        currentSectionQuestions
+    );
+
+    console.log(
+        "================================"
+    );
+}
+
+// ==========================================
+// HTML SAFE TEXT HELPER
+// ==========================================
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+// ==========================================
+// CREATE SECTION NAVIGATION
+// ==========================================
+
+function createSectionNavigation() {
+
+    if (!isSectionalExam) {
+        return;
+    }
+
+    let navigation =
+        document.getElementById(
+            "sectionNavigation"
+        );
+
+    if (!navigation) {
+
+        navigation =
+            document.createElement("div");
+
+        navigation.id =
+            "sectionNavigation";
+
+        navigation.className =
+            "section-navigation";
+
+        const questionPalette =
+            document.getElementById(
+                "questionPalette"
+            );
+
+        if (questionPalette) {
+
+            questionPalette.parentNode.insertBefore(
+                navigation,
+                questionPalette
+            );
+
+        } else {
+
+            console.error(
+                "questionPalette not found."
+            );
+
+            return;
+        }
+    }
+
+    navigation.innerHTML = "";
+
+    examSections.forEach(
+        (section, index) => {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+
+            button.className =
+                "section-tab";
+
+            if (
+                index === currentSectionIndex
+            ) {
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+            button.innerHTML = `
+
+                <span>
+                    ${escapeHTML(
+                        section.section_name
+                    )}
+                </span>
+
+                <small>
+                    ${Number(
+                        section.question_count || 0
+                    )}
+                    Questions
+                </small>
+
+            `;
+
+            /*
+             * For now, section buttons are
+             * display-only.
+             *
+             * We will control navigation
+             * properly when the sectional
+             * timer is added.
+             */
+
+            navigation.appendChild(
+                button
+            );
+
+        }
+    );
 }
 
 
