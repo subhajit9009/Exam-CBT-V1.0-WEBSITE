@@ -183,37 +183,88 @@ await loadQuestions();
 // RESTORE SECTION AFTER REFRESH
 // ==========================================
 
+// ==========================================
+// RESTORE / INITIALIZE EXAM POSITION
+// ==========================================
+
+const freshAttempt =
+    sessionStorage.getItem(
+        "attemptStartedFresh"
+    ) === "true";
+
+
 if (isSectionalExam) {
 
-    const savedSection =
-        sessionStorage.getItem(
-            "currentSectionIndex"
+    // ==========================================
+    // NEW ATTEMPT
+    // ==========================================
+
+    if (freshAttempt) {
+
+        console.log(
+            "🆕 NEW ATTEMPT — STARTING FROM SECTION 1"
         );
 
-    if (
-        savedSection !== null &&
-        !isNaN(
-            Number(savedSection)
-        )
-    ) {
-
-        currentSectionIndex =
-            Number(savedSection);
-
-    } else {
-
         currentSectionIndex = 0;
+
+        currentQuestion = 0;
+
+        sessionStorage.setItem(
+            "currentSectionIndex",
+            "0"
+        );
+
+        sessionStorage.setItem(
+            "currentQuestionIndex",
+            "0"
+        );
+
+        // Consume the fresh-attempt flag
+        sessionStorage.removeItem(
+            "attemptStartedFresh"
+        );
+
+    }
+
+    // ==========================================
+    // EXISTING ATTEMPT / REFRESH
+    // ==========================================
+
+    else {
+
+        const savedSection =
+            sessionStorage.getItem(
+                "currentSectionIndex"
+            );
+
+        if (
+            savedSection !== null &&
+            Number.isInteger(
+                Number(savedSection)
+            )
+        ) {
+
+            currentSectionIndex =
+                Number(savedSection);
+
+        } else {
+
+            currentSectionIndex = 0;
+
+        }
 
     }
 
 
     console.log(
-        "📌 Restored section:",
+        "📌 Current Section:",
         currentSectionIndex + 1
     );
 
 
-    // Rebuild correct section
+    // ==========================================
+    // BUILD CURRENT SECTION
+    // ==========================================
 
     buildCurrentSection();
 
@@ -222,11 +273,41 @@ if (isSectionalExam) {
     createPalette();
 
 
-    // Start from first question
-    // of restored section
+    // ==========================================
+    // QUESTION POSITION
+    // ==========================================
+
+    let savedQuestion =
+        Number(
+            sessionStorage.getItem(
+                "currentQuestionIndex"
+            )
+        );
+
+
+    if (
+        freshAttempt ||
+        !Number.isInteger(savedQuestion) ||
+        savedQuestion <
+            currentSectionStartIndex ||
+        savedQuestion >
+            currentSectionEndIndex
+    ) {
+
+        savedQuestion =
+            currentSectionStartIndex;
+
+    }
+
 
     currentQuestion =
-        currentSectionStartIndex;
+        savedQuestion;
+
+
+    sessionStorage.setItem(
+        "currentQuestionIndex",
+        String(currentQuestion)
+    );
 
 
     showQuestion(
@@ -241,6 +322,15 @@ if (isSectionalExam) {
 
     console.log(
         "📘 Normal exam detected."
+    );
+
+    // Normal exam always starts at Q1
+    // for a newly created attempt.
+
+    currentQuestion = 0;
+
+    showQuestion(
+        currentQuestion
     );
 
     startExamTimer();
@@ -699,12 +789,11 @@ async function loadQuestions() {
 
     if (isSectionalExam) {
 
-    // Build Section 1
-    currentSectionIndex = 0;
+    // Section/question state is controlled by initExam().
+    // Do NOT reset currentSectionIndex here.
 
     buildCurrentSection();
 
-    // Show section categories
     createSectionNavigation();
 
 } else {
@@ -717,8 +806,6 @@ async function loadQuestions() {
 }
 
 createPalette();
-
-showQuestion(0);
 
 }
 
@@ -1109,6 +1196,15 @@ function showQuestion(index) {
     "currentQuestionIndex",
     String(index)
 );
+
+if (isSectionalExam) {
+
+    sessionStorage.setItem(
+        "currentSectionIndex",
+        String(currentSectionIndex)
+    );
+
+}
 
     // ==========================================
 // SECTION ACCESS PROTECTION
@@ -2603,24 +2699,22 @@ sessionStorage.setItem(
     createPalette();
 
 
-    let savedQuestion =
-    Number(
-        sessionStorage.getItem(
-            "currentQuestionIndex"
-        )
-    );
+    // New section always starts at its first question
 
-if (
-    !Number.isInteger(savedQuestion) ||
-    savedQuestion <
-        currentSectionStartIndex ||
-    savedQuestion >
-        currentSectionEndIndex
-) {
+let savedQuestion =
+    currentSectionStartIndex;
 
-    savedQuestion =
-        currentSectionStartIndex;
-}
+    currentQuestion =
+    savedQuestion;
+
+sessionStorage.setItem(
+    "currentQuestionIndex",
+    String(currentQuestion)
+);
+
+showQuestion(
+    currentQuestion
+);
 
 currentQuestion =
     savedQuestion;

@@ -95,6 +95,10 @@ async function loadExam() {
         selectedExam =
             data;
 
+            await loadSectionPattern(
+    data.id
+);
+
 
         // ==========================================
         // Display Exam Information
@@ -545,6 +549,24 @@ async function startExam() {
             new Date().toISOString()
         );
 
+        // ==========================================
+// RESET CBT STATE FOR NEW ATTEMPT
+// ==========================================
+
+sessionStorage.removeItem("currentSectionIndex");
+sessionStorage.removeItem("currentSection");
+sessionStorage.removeItem("currentQuestion");
+sessionStorage.removeItem("currentQuestionIndex");
+sessionStorage.removeItem("sectionIndex");
+sessionStorage.removeItem("sectionalState");
+sessionStorage.removeItem("sectionState");
+
+
+// Save fresh attempt-specific state
+sessionStorage.setItem(
+    "attemptStartedFresh",
+    "true"
+);
 
         // ==========================================
         // Save Selected Exam
@@ -602,3 +624,179 @@ async function startExam() {
 // ==========================================
 
 loadExam();
+
+// ==========================================
+// LOAD SECTION-WISE EXAMINATION PATTERN
+// ==========================================
+
+async function loadSectionPattern(examId) {
+
+    const sectionCard =
+        document.getElementById(
+            "sectionPatternCard"
+        );
+
+    const sectionContent =
+        document.getElementById(
+            "sectionPatternContent"
+        );
+
+
+    if (
+        !sectionCard ||
+        !sectionContent
+    ) {
+
+        return;
+
+    }
+
+
+    // ------------------------------------------
+    // Hide by default
+    // ------------------------------------------
+
+    sectionCard.style.display =
+        "none";
+
+    sectionContent.innerHTML =
+        "";
+
+
+    if (!examId) {
+
+        return;
+
+    }
+
+
+    // ------------------------------------------
+    // Load sections
+    // ------------------------------------------
+
+    const {
+        data: sections,
+        error
+    } = await supabaseClient
+
+        .from("exam_sections")
+
+        .select(`
+            id,
+            section_name,
+            section_order,
+            question_count,
+            duration_minutes
+        `)
+
+        .eq(
+            "exam_id",
+            examId
+        )
+
+        .order(
+            "section_order",
+            {
+                ascending: true
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Section pattern loading error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    // ------------------------------------------
+    // NORMAL EXAM
+    // ------------------------------------------
+
+    if (
+        !sections ||
+        sections.length === 0
+    ) {
+
+        sectionCard.style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    // ------------------------------------------
+    // SECTIONAL EXAM
+    // ------------------------------------------
+
+    sectionCard.style.display =
+        "block";
+
+
+    sectionContent.innerHTML = "";
+
+
+    sections.forEach(
+        (section, index) => {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "instruction-section-row";
+
+
+            row.innerHTML = `
+
+                <div class="section-number">
+                    ${index + 1}
+                </div>
+
+                <div class="section-main">
+
+                    <strong>
+                        ${escapeHTML(
+                            section.section_name
+                        )}
+                    </strong>
+
+                    <span>
+                        ${Number(
+                            section.question_count || 0
+                        )}
+                        Questions
+                    </span>
+
+                </div>
+
+                <div class="section-time">
+
+                    <i class="fa-regular fa-clock"></i>
+
+                    ${Number(
+                        section.duration_minutes || 0
+                    )}
+                    min
+
+                </div>
+
+            `;
+
+
+            sectionContent.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
