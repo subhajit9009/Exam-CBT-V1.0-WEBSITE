@@ -178,13 +178,64 @@ async function initExam() {
 
 await loadQuestions();
 
+
+// ==========================================
+// RESTORE SECTION AFTER REFRESH
+// ==========================================
+
 if (isSectionalExam) {
 
+    const savedSection =
+        sessionStorage.getItem(
+            "currentSectionIndex"
+        );
+
+    if (
+        savedSection !== null &&
+        !isNaN(
+            Number(savedSection)
+        )
+    ) {
+
+        currentSectionIndex =
+            Number(savedSection);
+
+    } else {
+
+        currentSectionIndex = 0;
+
+    }
+
+
     console.log(
-        "📌 Sectional exam detected."
+        "📌 Restored section:",
+        currentSectionIndex + 1
     );
 
+
+    // Rebuild correct section
+
+    buildCurrentSection();
+
+    createSectionNavigation();
+
+    createPalette();
+
+
+    // Start from first question
+    // of restored section
+
+    currentQuestion =
+        currentSectionStartIndex;
+
+
+    showQuestion(
+        currentQuestion
+    );
+
+
     updateSectionSubmitButton();
+
 
 } else {
 
@@ -1053,6 +1104,11 @@ async function loadSavedAnswers() {
 // ==========================
 
 function showQuestion(index) {
+
+    sessionStorage.setItem(
+    "currentQuestionIndex",
+    String(index)
+);
 
     // ==========================================
 // SECTION ACCESS PROTECTION
@@ -2432,6 +2488,11 @@ async function submitCurrentSection(autoSubmit = false) {
 
     currentSectionIndex++;
 
+sessionStorage.setItem(
+    "currentSectionIndex",
+    String(currentSectionIndex)
+);
+
 
     buildCurrentSection();
 
@@ -2442,13 +2503,31 @@ async function submitCurrentSection(autoSubmit = false) {
     createPalette();
 
 
-    currentQuestion =
-        currentSectionStartIndex;
-
-
-    showQuestion(
-        currentQuestion
+    let savedQuestion =
+    Number(
+        sessionStorage.getItem(
+            "currentQuestionIndex"
+        )
     );
+
+if (
+    !Number.isInteger(savedQuestion) ||
+    savedQuestion <
+        currentSectionStartIndex ||
+    savedQuestion >
+        currentSectionEndIndex
+) {
+
+    savedQuestion =
+        currentSectionStartIndex;
+}
+
+currentQuestion =
+    savedQuestion;
+
+showQuestion(
+    currentQuestion
+);
 
 
     updateSectionSubmitButton();
