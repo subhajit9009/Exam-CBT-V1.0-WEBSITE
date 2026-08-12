@@ -1413,44 +1413,109 @@ function createPalette() {
 // Update Palette
 // ==========================
 
+// ==========================================
+// UPDATE PALETTE
+// SECTION-AWARE VERSION
+// ==========================================
+
 function updatePalette() {
 
-    document.querySelectorAll(
-        ".paletteBtn"
-    ).forEach(
-        (
-            btn,
-            index
-        ) => {
+    const paletteButtons =
+        document.querySelectorAll(
+            ".paletteBtn"
+        );
+
+
+    // ==========================================
+    // WHICH QUESTIONS DOES THIS PALETTE SHOW?
+    // ==========================================
+
+    let paletteQuestions;
+
+    if (
+        typeof isSectionalExam !== "undefined" &&
+        isSectionalExam
+    ) {
+
+        paletteQuestions =
+            currentSectionQuestions || [];
+
+    } else {
+
+        paletteQuestions =
+            questions || [];
+
+    }
+
+
+    // ==========================================
+    // UPDATE EACH PALETTE BUTTON
+    // ==========================================
+
+    paletteButtons.forEach(
+        (btn, localIndex) => {
 
             const q =
-                questions[index];
+                paletteQuestions[
+                    localIndex
+                ];
+
+
+            if (!q) {
+
+                btn.className =
+                    "paletteBtn";
+
+                btn.innerHTML =
+                    localIndex + 1;
+
+                return;
+
+            }
+
+
+            // ==================================
+            // QUESTION STATUS
+            // ==================================
 
             const isAnswered =
                 !!answers[q.id];
+
 
             const isReview =
                 reviewQuestions.includes(
                     q.id
                 );
 
-            const isVisited =
-                visitedQuestions.includes(
-                    index
+
+            const globalIndex =
+                questions.findIndex(
+                    question =>
+                        String(question.id) ===
+                        String(q.id)
                 );
 
 
-            // Reset
+            const isVisited =
+                globalIndex !== -1 &&
+                visitedQuestions.includes(
+                    globalIndex
+                );
+
+
+            // ==================================
+            // RESET BUTTON
+            // ==================================
 
             btn.className =
                 "paletteBtn";
 
             btn.innerHTML =
-                `${index + 1}`;
+                localIndex + 1;
 
 
             // ==================================
-            // Review
+            // MARKED FOR REVIEW
             // ==================================
 
             if (isReview) {
@@ -1461,8 +1526,6 @@ function updatePalette() {
 
 
                 // Answered + Review
-                // Add small indicator
-
                 if (isAnswered) {
 
                     const indicator =
@@ -1470,11 +1533,14 @@ function updatePalette() {
                             "span"
                         );
 
+
                     indicator.className =
                         "reviewAnsweredDot";
 
+
                     indicator.innerHTML =
                         "✓";
+
 
                     btn.appendChild(
                         indicator
@@ -1486,7 +1552,7 @@ function updatePalette() {
 
 
             // ==================================
-            // Answered
+            // ANSWERED
             // ==================================
 
             else if (isAnswered) {
@@ -1499,7 +1565,7 @@ function updatePalette() {
 
 
             // ==================================
-            // Visited but unanswered
+            // VISITED BUT NOT ANSWERED
             // ==================================
 
             else if (isVisited) {
@@ -1515,41 +1581,75 @@ function updatePalette() {
 
 
     // ==========================================
-    // Current Question
+    // CURRENT QUESTION
     // ==========================================
 
-    const currentButton =
-        document.getElementById(
-            `palette${currentQuestion}`
+    const currentGlobalQuestion =
+        currentQuestion;
+
+
+    const currentLocalIndex =
+        paletteQuestions.findIndex(
+            q => {
+
+                const globalIndex =
+                    questions.findIndex(
+                        question =>
+                            String(
+                                question.id
+                            ) ===
+                            String(q.id)
+                    );
+
+                return (
+                    globalIndex ===
+                    currentGlobalQuestion
+                );
+
+            }
         );
 
 
-    if (currentButton) {
+    if (
+        currentLocalIndex !== -1
+    ) {
 
-        const q =
-            questions[currentQuestion];
-
-        const isAnswered =
-            !!answers[q.id];
-
-        const isReview =
-            reviewQuestions.includes(
-                q.id
-            );
+        const currentButton =
+            paletteButtons[
+                currentLocalIndex
+            ];
 
 
-        /*
-         * Don't replace the orange
-         * Review color with blue.
-         *
-         * Review always stays orange.
-         */
+        const currentQuestionData =
+            paletteQuestions[
+                currentLocalIndex
+            ];
 
-        if (!isReview) {
 
-            currentButton.classList.add(
-                "current"
-            );
+        if (
+            currentButton &&
+            currentQuestionData
+        ) {
+
+            const isReview =
+                reviewQuestions.includes(
+                    currentQuestionData.id
+                );
+
+
+            /*
+             * Current question gets blue.
+             *
+             * Review remains orange.
+             */
+
+            if (!isReview) {
+
+                currentButton.classList.add(
+                    "current"
+                );
+
+            }
 
         }
 
