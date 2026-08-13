@@ -216,6 +216,31 @@ Save & Next
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/storage.js"></script>
 <script src="assets/js/exam.js"></script>
+
+<script>
+/* ==========================================
+   ExamVerse Mobile Device Detection
+   Works even when Chrome Desktop Site is ON
+========================================== */
+
+(function () {
+
+    const isTouchDevice =
+        navigator.maxTouchPoints > 0 ||
+        'ontouchstart' in window;
+
+    if (isTouchDevice) {
+        document.documentElement.classList.add("touch-device");
+        document.body.classList.add("touch-device");
+
+        console.log("📱 Touch/mobile device detected");
+    } else {
+        console.log("🖥️ Desktop device detected");
+    }
+
+})();
+</script>
+
 <script src="assets/js/loader.js"></script>
 
 </body>

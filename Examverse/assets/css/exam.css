@@ -1435,3 +1435,489 @@ height:100%;
     }
 
 }
+
+/* =========================================================
+   EXAMVERSE
+   TOUCH DEVICE / MOBILE OVERRIDE
+   Works even when Android Chrome Desktop Site is ON
+   Does NOT affect normal desktop computers
+========================================================= */
+
+.touch-device .exam-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MOBILE HEADER
+========================================================= */
+
+.touch-device .exam-header {
+    height: auto;
+    min-height: 64px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 12px 15px;
+
+    gap: 8px;
+
+    text-align: center;
+}
+
+
+.touch-device .exam-header h2 {
+    font-size: 20px;
+    line-height: 1.3;
+    margin: 0;
+}
+
+
+.touch-device .exam-header p {
+    font-size: 12px;
+    margin: 0;
+}
+
+
+.touch-device .timer-box {
+    width: 100%;
+    min-width: 0;
+
+    min-height: 55px;
+
+    padding: 10px 15px;
+
+    font-size: 19px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MOBILE EXAM BODY
+   IMPORTANT:
+   Force single-column even in Chrome Desktop Mode
+========================================================= */
+
+.touch-device .exam-body {
+
+    display: block !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 12px !important;
+
+    box-sizing: border-box;
+
+    overflow: visible !important;
+}
+
+
+/* =========================================================
+   QUESTION AREA
+========================================================= */
+
+.touch-device .question-area {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 18px !important;
+
+    box-sizing: border-box;
+
+    overflow: visible !important;
+
+    border-radius: 14px;
+}
+
+
+.touch-device .question-number {
+
+    font-size: 19px;
+
+    margin-bottom: 16px;
+}
+
+
+.touch-device .question-box {
+
+    width: 100% !important;
+
+    min-height: 130px;
+
+    max-height: none;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    overflow: visible;
+
+}
+
+
+.touch-device .question-box p {
+
+    width: 100%;
+
+    font-size: 17px;
+
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+
+    word-break: normal;
+}
+
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+.touch-device .options {
+
+    width: 100% !important;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.touch-device .options label {
+
+    width: 100% !important;
+
+    min-height: 58px;
+
+    padding: 15px;
+
+    box-sizing: border-box;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.touch-device .navigation {
+
+    width: 100% !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 10px !important;
+
+    margin-top: 20px;
+
+    margin-bottom: 15px;
+
+    box-sizing: border-box;
+}
+
+
+.touch-device .navigation button {
+
+    width: 100% !important;
+
+    min-height: 52px;
+
+    padding: 12px 8px;
+
+    font-size: 13px;
+
+    box-sizing: border-box;
+
+    white-space: normal;
+}
+
+
+/* =========================================================
+   MOBILE PALETTE
+   Hidden until user opens it
+========================================================= */
+
+.touch-device .palette {
+
+    display: none !important;
+
+    position: fixed !important;
+
+    left: 0 !important;
+
+    right: 0 !important;
+
+    bottom: 0 !important;
+
+    width: 100% !important;
+
+    height: 82vh !important;
+
+    max-height: 82vh !important;
+
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 15px !important;
+
+    z-index: 9999 !important;
+
+    border-radius:
+        20px 20px 0 0 !important;
+
+    box-sizing: border-box;
+
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   PALETTE OPEN
+========================================================= */
+
+.touch-device .palette.mobilePaletteOpen {
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 -8px 30px
+        rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   PALETTE GRID
+========================================================= */
+
+.touch-device #questionPalette {
+
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    min-height: 0;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr)) !important;
+
+    gap: 9px;
+
+    padding: 12px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto !important;
+
+    overflow-x: hidden !important;
+
+    overflow-anchor: none;
+
+    -webkit-overflow-scrolling: touch;
+
+    overscroll-behavior: contain;
+}
+
+
+/* =========================================================
+   PALETTE BUTTONS
+========================================================= */
+
+.touch-device .paletteBtn {
+
+    width: 100% !important;
+
+    min-width: 0;
+
+    height: 48px;
+
+    min-height: 48px;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+
+    transform: none !important;
+}
+
+
+/* =========================================================
+   MOBILE PALETTE TOGGLE
+========================================================= */
+
+.touch-device #mobilePaletteToggle {
+
+    display: block !important;
+
+    position: relative !important;
+
+    left: auto !important;
+
+    right: auto !important;
+
+    bottom: auto !important;
+
+    transform: none !important;
+
+    width: 100% !important;
+
+    margin: 15px 0 20px 0 !important;
+
+    padding: 14px 18px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0, 0, 0, 0.20);
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   PALETTE TOGGLE HIDDEN WHEN PALETTE OPEN
+========================================================= */
+
+.touch-device body.mobile-palette-active
+#mobilePaletteToggle {
+
+    display: none !important;
+}
+
+
+/* =========================================================
+   CLOSE PALETTE
+========================================================= */
+
+.touch-device #mobilePaletteClose {
+
+    display: block !important;
+
+    width: calc(100% - 30px);
+
+    margin: 10px 15px;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #64748b;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON INSIDE MOBILE PALETTE
+========================================================= */
+
+.touch-device .palette #submitBtn {
+
+    width: calc(100% - 30px) !important;
+
+    margin: 10px 15px 15px !important;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   PREVENT BACKGROUND SCROLL WHEN PALETTE OPEN
+========================================================= */
+
+.touch-device body.mobile-palette-active {
+
+    overflow: hidden !important;
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .touch-device .exam-header h2 {
+        font-size: 19px;
+    }
+
+    .touch-device .timer-box {
+        font-size: 18px;
+        min-height: 54px;
+    }
+
+    .touch-device .question-area {
+        padding: 15px !important;
+    }
+
+    .touch-device .question-box {
+        padding: 18px;
+    }
+
+    .touch-device .question-box p {
+        font-size: 16px;
+    }
+
+    .touch-device .options label {
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    .touch-device .navigation button {
+        min-height: 50px;
+        font-size: 13px;
+    }
+
+}
