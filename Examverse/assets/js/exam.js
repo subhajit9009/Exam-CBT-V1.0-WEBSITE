@@ -2044,13 +2044,9 @@ if (
         // Current question
         // --------------------------------------
 
-        if (!isReview) {
-
-            currentButton.classList.add(
-                "current"
-            );
-
-        }
+        currentButton.classList.add(
+    "current"
+);
 
     }
 
@@ -2499,11 +2495,12 @@ async function markForReview() {
     const question =
         questions[currentQuestion];
 
-
     if (!question) return;
 
 
-    // Always mark as review
+    // ==========================================
+    // MARK CURRENT QUESTION FOR REVIEW
+    // ==========================================
 
     if (
         !reviewQuestions.includes(
@@ -2518,23 +2515,29 @@ async function markForReview() {
     }
 
 
+    // ==========================================
+    // UPDATE PALETTE
+    // ==========================================
+
     updatePalette();
 
 
-    // Wait for answer save
-    // to finish first
+    // ==========================================
+    // WAIT FOR ANSWER SAVE
+    // ==========================================
 
     if (answerSavePromise) {
 
         await answerSavePromise;
 
-        answerSavePromise =
-            null;
+        answerSavePromise = null;
 
     }
 
 
-    // Save review status TRUE
+    // ==========================================
+    // SAVE REVIEW STATUS
+    // ==========================================
 
     await saveReviewToDatabase(
         question.id,
@@ -2542,10 +2545,13 @@ async function markForReview() {
     );
 
 
-    questions.length - 1
+    // ==========================================
+    // MOVE TO NEXT QUESTION
+    // ==========================================
+
+    nextQuestion();
 
 }
-
 
 // ==========================================
 // Submit Exam
