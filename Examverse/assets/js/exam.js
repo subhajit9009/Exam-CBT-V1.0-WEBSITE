@@ -3732,3 +3732,97 @@ async function finalizeExamAttempt(
     }
 
 }
+
+// =========================================================
+// MOBILE QUESTION PALETTE
+// =========================================================
+
+function setupMobilePalette() {
+
+    const palette =
+        document.querySelector(".palette");
+
+    const openButton =
+        document.getElementById(
+            "mobilePaletteToggle"
+        );
+
+    const closeButton =
+        document.getElementById(
+            "mobilePaletteClose"
+        );
+
+
+    if (
+        !palette ||
+        !openButton ||
+        !closeButton
+    ) {
+
+        console.warn(
+            "Mobile palette elements not found."
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // OPEN PALETTE
+    // -----------------------------------------
+
+    openButton.addEventListener(
+        "click",
+        () => {
+
+            palette.classList.add(
+                "mobilePaletteOpen"
+            );
+
+            document.body.classList.add(
+                "mobile-palette-active"
+            );
+
+
+            // Always start palette at the
+            // appropriate/current question
+            requestAnimationFrame(() => {
+
+                updatePalette();
+
+            });
+
+        }
+    );
+
+
+    // -----------------------------------------
+    // CLOSE PALETTE
+    // -----------------------------------------
+
+    closeButton.addEventListener(
+        "click",
+        () => {
+
+            palette.classList.remove(
+                "mobilePaletteOpen"
+            );
+
+            document.body.classList.remove(
+                "mobile-palette-active"
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// INITIALIZE
+// =========================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    setupMobilePalette
+);
