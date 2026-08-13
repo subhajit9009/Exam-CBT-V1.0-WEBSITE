@@ -1606,3 +1606,175 @@ label:focus-within {
 /* =========================================================
    END OF EXAM.CSS
    ========================================================= */
+
+   /* =========================================================
+   MOBILE EXAM ACTION BAR
+   Created dynamically by exam.js
+   ========================================================= */
+
+/* Hidden on desktop */
+#mobileExamActionBar {
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE ACTION BAR
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    #mobileExamActionBar {
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%;
+
+        height: 70px;
+
+        padding: 10px;
+
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap: 10px;
+
+        background: rgba(255, 255, 255, 0.97);
+
+        border-top: 1px solid #d1d5db;
+
+        box-shadow:
+            0 -4px 18px rgba(0, 0, 0, 0.12);
+
+        z-index: 9500;
+
+        backdrop-filter: blur(8px);
+
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------
+       Palette button
+       ----------------------------------------- */
+
+    #mobileActionPalette {
+
+        width: 100%;
+        height: 50px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+        font-family: 'Poppins', sans-serif;
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+        transition:
+            background 0.2s ease,
+            transform 0.15s ease;
+    }
+
+    #mobileActionPalette:hover {
+        background: #1d4ed8;
+    }
+
+
+    /* -----------------------------------------
+       Submit Exam button
+       ----------------------------------------- */
+
+    #mobileActionSubmit {
+
+        width: 100%;
+        height: 50px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        background: #dc2626;
+
+        color: #ffffff;
+
+        font-family: 'Poppins', sans-serif;
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+        transition:
+            background 0.2s ease,
+            transform 0.15s ease;
+    }
+
+    #mobileActionSubmit:hover {
+        background: #b91c1c;
+    }
+
+
+    /* -----------------------------------------
+       Touch feedback
+       ----------------------------------------- */
+
+    #mobileActionPalette:active,
+    #mobileActionSubmit:active {
+        transform: scale(0.98);
+    }
+
+
+    /* -----------------------------------------
+       When palette is open
+       ----------------------------------------- */
+
+    body.mobile-palette-active
+    #mobileExamActionBar {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    #mobileExamActionBar {
+
+        height: 64px;
+
+        padding: 8px;
+
+        gap: 8px;
+    }
+
+    #mobileActionPalette,
+    #mobileActionSubmit {
+
+        height: 48px;
+
+        border-radius: 10px;
+
+        font-size: 13px;
+    }
+
+}
