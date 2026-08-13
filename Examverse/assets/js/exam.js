@@ -2068,22 +2068,69 @@ if (
         // Make current question visible
         // --------------------------------------
 
-        setTimeout(
-            () => {
+        // ==========================================
+// SCROLL PALETTE ONLY
+// ==========================================
 
-                currentButton.scrollIntoView({
+const paletteContainer =
+    document.getElementById(
+        "questionPalette"
+    );
 
-                    behavior: "smooth",
+if (paletteContainer) {
 
-                    block: "nearest",
+    const buttonTop =
+        currentButton.offsetTop;
 
-                    inline: "nearest"
+    const buttonBottom =
+        buttonTop +
+        currentButton.offsetHeight;
 
-                });
+    const visibleTop =
+        paletteContainer.scrollTop;
 
-            },
-            50
-        );
+    const visibleBottom =
+        visibleTop +
+        paletteContainer.clientHeight;
+
+
+    // Current button is above visible area
+    if (buttonTop < visibleTop) {
+
+        paletteContainer.scrollTo({
+
+            top:
+                buttonTop - 10,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+
+
+    // Current button is below visible area
+    else if (
+        buttonBottom >
+        visibleBottom
+    ) {
+
+        paletteContainer.scrollTo({
+
+            top:
+                buttonBottom -
+                paletteContainer.clientHeight +
+                10,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+
+}
 
     }
 
