@@ -1945,7 +1945,14 @@ function createPalette() {
     );
 
 
-    updatePalette();
+    updatePalette(false);
+
+const paletteContainer =
+    document.getElementById("questionPalette");
+
+if (paletteContainer) {
+    paletteContainer.scrollTop = 0;
+}
 
 }
 
@@ -1958,7 +1965,7 @@ function createPalette() {
 // SECTION-AWARE VERSION
 // ==========================================
 
-function updatePalette() {
+function updatePalette(shouldScroll = true) {
 
     const paletteButtons =
         document.querySelectorAll(
@@ -2157,6 +2164,7 @@ const currentLocalIndex =
 // ==========================================
 
 if (
+    shouldScroll &&
     currentLocalIndex >= 0 &&
     currentLocalIndex < paletteButtons.length
 ) {
