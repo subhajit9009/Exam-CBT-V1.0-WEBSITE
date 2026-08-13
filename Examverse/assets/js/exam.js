@@ -1664,6 +1664,27 @@ if (isSectionalExam) {
     updatePalette();
 
 
+    // ==========================================
+// NAVIGATION BUTTON STATE
+// ==========================================
+
+if (isSectionalExam) {
+
+    document.getElementById(
+        "previousBtn"
+    ).disabled =
+        currentQuestion <=
+        currentSectionStartIndex;
+
+
+    document.getElementById(
+        "nextBtn"
+    ).disabled =
+        currentQuestion >=
+        currentSectionEndIndex;
+
+} else {
+
     document.getElementById(
         "previousBtn"
     ).disabled =
@@ -1675,6 +1696,8 @@ if (isSectionalExam) {
     ).disabled =
         currentQuestion ===
         questions.length - 1;
+
+}
 
 }
 
@@ -1991,6 +2014,10 @@ function updatePalette() {
 // CURRENT QUESTION
 // ==========================================
 
+// ==========================================
+// CURRENT QUESTION
+// ==========================================
+
 const currentLocalIndex =
     paletteQuestions.findIndex(
         q => {
@@ -1998,12 +2025,8 @@ const currentLocalIndex =
             const globalIndex =
                 questions.findIndex(
                     question =>
-                        String(
-                            question.id
-                        ) ===
-                        String(
-                            q.id
-                        )
+                        String(question.id) ===
+                        String(q.id)
                 );
 
             return (
@@ -2015,10 +2038,13 @@ const currentLocalIndex =
     );
 
 
+// ==========================================
+// HIGHLIGHT + AUTO-SCROLL CURRENT QUESTION
+// ==========================================
+
 if (
     currentLocalIndex >= 0 &&
-    currentLocalIndex <
-        paletteButtons.length
+    currentLocalIndex < paletteButtons.length
 ) {
 
     const currentButton =
@@ -2026,27 +2052,38 @@ if (
             currentLocalIndex
         ];
 
+
     if (currentButton) {
 
-        const currentQuestionData =
-            paletteQuestions[
-                currentLocalIndex
-            ];
-
-
-        const isReview =
-            reviewQuestions.includes(
-                currentQuestionData.id
-            );
-
-
         // --------------------------------------
-        // Current question
+        // Always mark current question
         // --------------------------------------
 
         currentButton.classList.add(
-    "current"
-);
+            "current"
+        );
+
+
+        // --------------------------------------
+        // Make current question visible
+        // --------------------------------------
+
+        setTimeout(
+            () => {
+
+                currentButton.scrollIntoView({
+
+                    behavior: "smooth",
+
+                    block: "nearest",
+
+                    inline: "nearest"
+
+                });
+
+            },
+            50
+        );
 
     }
 
