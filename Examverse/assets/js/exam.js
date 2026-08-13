@@ -1945,14 +1945,22 @@ function createPalette() {
     );
 
 
-    updatePalette(false);
+    updatePalette();
 
-const paletteContainer =
-    document.getElementById("questionPalette");
+/*
+ * IMPORTANT:
+ * Always start the palette at Question 1
+ * when the palette is newly created.
+ */
+requestAnimationFrame(() => {
 
-if (paletteContainer) {
-    paletteContainer.scrollTop = 0;
-}
+    palette.scrollTop = 0;
+
+    requestAnimationFrame(() => {
+        palette.scrollTop = 0;
+    });
+
+});
 
 }
 
