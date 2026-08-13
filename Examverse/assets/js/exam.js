@@ -34,6 +34,12 @@ let visitedQuestions = [];
 
 let timerInterval = null;
 
+// ==========================================
+// SECTIONAL TIMER
+// ==========================================
+
+let sectionTimerInterval = null;
+
 
 // ==========================
 // Page Load
@@ -311,11 +317,13 @@ if (isSectionalExam) {
 
 
     showQuestion(
-        currentQuestion
-    );
+    currentQuestion
+);
 
+updateSectionSubmitButton();
 
-    updateSectionSubmitButton();
+// Start / restore current section timer
+startSectionTimer();
 
 
 } else {
@@ -592,6 +600,305 @@ function startExamTimer() {
     timerInterval =
         setInterval(
             updateTimer,
+            1000
+        );
+
+}
+
+// ==========================================
+// START SECTION TIMER
+// ==========================================
+
+function startSectionTimer() {
+
+    // ------------------------------------------
+    // Safety
+    // ------------------------------------------
+
+    if (!isSectionalExam) {
+        return;
+    }
+
+    const timerElement =
+        document.getElementById("timer");
+
+    if (!timerElement) {
+        console.error(
+            "Timer element not found."
+        );
+        return;
+    }
+
+
+    const section =
+        examSections[currentSectionIndex];
+
+    if (!section) {
+
+        console.error(
+            "Current section not found."
+        );
+
+        return;
+    }
+
+
+    const durationMinutes =
+        Number(
+            section.duration_minutes || 0
+        );
+
+
+    if (!durationMinutes) {
+
+        console.error(
+            "Section duration not found:",
+            section
+        );
+
+        timerElement.textContent =
+            "00:00:00";
+
+        return;
+    }
+
+
+    // ------------------------------------------
+    // Stop previous section timer
+    // ------------------------------------------
+
+    if (sectionTimerInterval) {
+
+        clearInterval(
+            sectionTimerInterval
+        );
+
+        sectionTimerInterval = null;
+
+    }
+
+
+    // ------------------------------------------
+    // Unique storage key for this section
+    // ------------------------------------------
+
+    const attemptId =
+        sessionStorage.getItem(
+            "attemptId"
+        );
+
+    if (!attemptId) {
+        return;
+    }
+
+
+    const timerKey =
+        "sectionTimerStart_" +
+        attemptId +
+        "_" +
+        currentSectionIndex;
+
+
+    // ------------------------------------------
+    // Restore existing section timer
+    // OR start a new one
+    // ------------------------------------------
+
+    let sectionStartTime =
+        sessionStorage.getItem(
+            timerKey
+        );
+
+
+    if (!sectionStartTime) {
+
+        sectionStartTime =
+            new Date().toISOString();
+
+        sessionStorage.setItem(
+            timerKey,
+            sectionStartTime
+        );
+
+    }
+
+
+    const startTime =
+        new Date(
+            sectionStartTime
+        ).getTime();
+
+
+    const totalDuration =
+        durationMinutes *
+        60 *
+        1000;
+
+
+    const endTime =
+        startTime +
+        totalDuration;
+
+
+    // ------------------------------------------
+    // Update timer
+    // ------------------------------------------
+
+    function updateSectionTimer() {
+
+        const now =
+            Date.now();
+
+
+        let remaining =
+            endTime -
+            now;
+
+
+        // --------------------------------------
+        // Time finished
+        // --------------------------------------
+
+        if (remaining <= 0) {
+
+            remaining = 0;
+
+
+            timerElement.textContent =
+                "00:00:00";
+
+
+            if (sectionTimerInterval) {
+
+                clearInterval(
+                    sectionTimerInterval
+                );
+
+                sectionTimerInterval =
+                    null;
+
+            }
+
+
+            // Prevent duplicate submission
+            const lockKey =
+                "sectionTimerSubmitted_" +
+                attemptId +
+                "_" +
+                currentSectionIndex;
+
+
+            if (
+                sessionStorage.getItem(
+                    lockKey
+                ) === "true"
+            ) {
+
+                return;
+
+            }
+
+
+            sessionStorage.setItem(
+                lockKey,
+                "true"
+            );
+
+
+            // Automatically submit
+            // current section
+
+            submitCurrentSection(
+                true
+            );
+
+            return;
+
+        }
+
+
+        // --------------------------------------
+        // Convert milliseconds
+        // --------------------------------------
+
+        const totalSeconds =
+            Math.floor(
+                remaining / 1000
+            );
+
+
+        const hours =
+            Math.floor(
+                totalSeconds / 3600
+            );
+
+
+        const minutes =
+            Math.floor(
+                (
+                    totalSeconds % 3600
+                ) / 60
+            );
+
+
+        const seconds =
+            totalSeconds % 60;
+
+
+        timerElement.textContent =
+
+            String(hours)
+                .padStart(2, "0")
+
+            + ":" +
+
+            String(minutes)
+                .padStart(2, "0")
+
+            + ":" +
+
+            String(seconds)
+                .padStart(2, "0");
+
+
+        // --------------------------------------
+        // Warning
+        // --------------------------------------
+
+        if (
+            remaining <=
+            5 * 60 * 1000
+        ) {
+
+            timerElement.classList.add(
+                "timer-warning"
+            );
+
+        } else {
+
+            timerElement.classList.remove(
+                "timer-warning"
+            );
+
+        }
+
+    }
+
+
+    // ------------------------------------------
+    // Immediate update
+    // ------------------------------------------
+
+    updateSectionTimer();
+
+
+    // ------------------------------------------
+    // Update every second
+    // ------------------------------------------
+
+    sectionTimerInterval =
+        setInterval(
+            updateSectionTimer,
             1000
         );
 
@@ -1680,41 +1987,46 @@ function updatePalette() {
     // CURRENT QUESTION
     // ==========================================
 
-    const currentGlobalQuestion =
-        currentQuestion;
+    // ==========================================
+// CURRENT QUESTION
+// ==========================================
 
+const currentLocalIndex =
+    paletteQuestions.findIndex(
+        q => {
 
-    const currentLocalIndex =
-        paletteQuestions.findIndex(
-            q => {
-
-                const globalIndex =
-                    questions.findIndex(
-                        question =>
-                            String(
-                                question.id
-                            ) ===
-                            String(q.id)
-                    );
-
-                return (
-                    globalIndex ===
-                    currentGlobalQuestion
+            const globalIndex =
+                questions.findIndex(
+                    question =>
+                        String(
+                            question.id
+                        ) ===
+                        String(
+                            q.id
+                        )
                 );
 
-            }
-        );
+            return (
+                globalIndex ===
+                currentQuestion
+            );
+
+        }
+    );
 
 
-    if (
-        currentLocalIndex !== -1
-    ) {
+if (
+    currentLocalIndex >= 0 &&
+    currentLocalIndex <
+        paletteButtons.length
+) {
 
-        const currentButton =
-            paletteButtons[
-                currentLocalIndex
-            ];
+    const currentButton =
+        paletteButtons[
+            currentLocalIndex
+        ];
 
+    if (currentButton) {
 
         const currentQuestionData =
             paletteQuestions[
@@ -1722,34 +2034,27 @@ function updatePalette() {
             ];
 
 
-        if (
-            currentButton &&
-            currentQuestionData
-        ) {
-
-            const isReview =
-                reviewQuestions.includes(
-                    currentQuestionData.id
-                );
+        const isReview =
+            reviewQuestions.includes(
+                currentQuestionData.id
+            );
 
 
-            /*
-             * Current question gets blue.
-             *
-             * Review remains orange.
-             */
+        // --------------------------------------
+        // Current question
+        // --------------------------------------
 
-            if (!isReview) {
+        if (!isReview) {
 
-                currentButton.classList.add(
-                    "current"
-                );
-
-            }
+            currentButton.classList.add(
+                "current"
+            );
 
         }
 
     }
+
+}
 
 }
 
@@ -1760,21 +2065,31 @@ function updatePalette() {
 
 function nextQuestion() {
 
+    // ==========================================
+    // SECTIONAL EXAM
+    // ==========================================
+
     if (isSectionalExam) {
 
-    if (
-        currentQuestion >=
-        currentSectionEndIndex
-    ) {
+        if (
+            currentQuestion >=
+            currentSectionEndIndex
+        ) {
 
-        console.log(
-            "Reached end of current section."
-        );
+            console.log(
+                "End of current section."
+            );
 
-        return;
+            return;
+
+        }
+
     }
 
-}
+
+    // ==========================================
+    // NORMAL EXAM
+    // ==========================================
 
     if (
         currentQuestion <
@@ -1792,21 +2107,31 @@ function nextQuestion() {
 
 function previousQuestion() {
 
+    // ==========================================
+    // SECTIONAL EXAM
+    // ==========================================
+
     if (isSectionalExam) {
 
-    if (
-        currentQuestion <=
-        currentSectionStartIndex
-    ) {
+        if (
+            currentQuestion <=
+            currentSectionStartIndex
+        ) {
 
-        console.log(
-            "Already at beginning of current section."
-        );
+            console.log(
+                "Beginning of current section."
+            );
 
-        return;
+            return;
+
+        }
+
     }
 
-}
+
+    // ==========================================
+    // NORMAL EXAM
+    // ==========================================
 
     if (
         currentQuestion > 0
@@ -2217,18 +2542,7 @@ async function markForReview() {
     );
 
 
-    // Move to next question
-
-    if (
-        currentQuestion <
-        questions.length - 1
-    ) {
-
-        showQuestion(
-            currentQuestion + 1
-        );
-
-    }
+    questions.length - 1
 
 }
 
@@ -2682,7 +2996,11 @@ async function submitCurrentSection(autoSubmit = false) {
     // MOVE TO NEXT SECTION
     // ==========================================
 
-    currentSectionIndex++;
+    // ==========================================
+// MOVE TO NEXT SECTION
+// ==========================================
+
+currentSectionIndex++;
 
 sessionStorage.setItem(
     "currentSectionIndex",
@@ -2690,41 +3008,69 @@ sessionStorage.setItem(
 );
 
 
-    buildCurrentSection();
+// ------------------------------------------
+// Build new section
+// ------------------------------------------
+
+buildCurrentSection();
 
 
-    createSectionNavigation();
+// ------------------------------------------
+// Update section navigation
+// ------------------------------------------
+
+createSectionNavigation();
 
 
-    createPalette();
+// ------------------------------------------
+// Create NEW section palette
+// ------------------------------------------
+
+createPalette();
 
 
-    // New section always starts at its first question
+// ------------------------------------------
+// Start at FIRST question of new section
+// ------------------------------------------
 
-let savedQuestion =
+currentQuestion =
     currentSectionStartIndex;
-
-    currentQuestion =
-    savedQuestion;
 
 sessionStorage.setItem(
     "currentQuestionIndex",
     String(currentQuestion)
 );
 
-showQuestion(
-    currentQuestion
-);
 
-currentQuestion =
-    savedQuestion;
+// ------------------------------------------
+// Display first question
+// ------------------------------------------
 
 showQuestion(
     currentQuestion
 );
 
 
-    updateSectionSubmitButton();
+// ------------------------------------------
+// Update submit button
+// ------------------------------------------
+
+updateSectionSubmitButton();
+
+
+// ------------------------------------------
+// Start NEW section timer
+// ------------------------------------------
+
+startSectionTimer();
+
+
+console.log(
+    "➡️ NEXT SECTION:",
+    examSections[
+        currentSectionIndex
+    ].section_name
+);
 
 
     console.log(
