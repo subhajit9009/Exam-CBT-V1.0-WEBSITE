@@ -3826,3 +3826,153 @@ document.addEventListener(
     "DOMContentLoaded",
     setupMobilePalette
 );
+
+/* =========================================================
+   EXAMVERSE MOBILE CBT ACTION BAR
+========================================================= */
+
+(function createMobileActionBar() {
+
+    function initMobileActionBar() {
+
+        /* -----------------------------------------
+           Prevent duplicate creation
+        ----------------------------------------- */
+
+        if (
+            document.getElementById(
+                "mobileExamActionBar"
+            )
+        ) {
+            return;
+        }
+
+
+        /* -----------------------------------------
+           Create action bar
+        ----------------------------------------- */
+
+        const bar =
+            document.createElement("div");
+
+        bar.id =
+            "mobileExamActionBar";
+
+
+        /* -----------------------------------------
+           Palette button
+        ----------------------------------------- */
+
+        const paletteButton =
+            document.createElement("button");
+
+        paletteButton.type =
+            "button";
+
+        paletteButton.id =
+            "mobileActionPalette";
+
+        paletteButton.innerHTML =
+            "☰ Palette";
+
+
+        /* -----------------------------------------
+           Submit button
+        ----------------------------------------- */
+
+        const submitButton =
+            document.createElement("button");
+
+        submitButton.type =
+            "button";
+
+        submitButton.id =
+            "mobileActionSubmit";
+
+        submitButton.innerHTML =
+            "✓ Submit Exam";
+
+
+        /* -----------------------------------------
+           Add buttons
+        ----------------------------------------- */
+
+        bar.appendChild(
+            paletteButton
+        );
+
+        bar.appendChild(
+            submitButton
+        );
+
+
+        document.body.appendChild(
+            bar
+        );
+
+
+        /* =========================================
+           PALETTE BUTTON
+        ========================================= */
+
+        paletteButton.onclick =
+            function () {
+
+                const original =
+                    document.getElementById(
+                        "mobilePaletteToggle"
+                    );
+
+                if (original) {
+
+                    original.click();
+
+                }
+
+            };
+
+
+        /* =========================================
+           SUBMIT BUTTON
+        ========================================= */
+
+        submitButton.onclick =
+            function () {
+
+                const original =
+                    document.getElementById(
+                        "submitBtn"
+                    );
+
+                if (original) {
+
+                    original.click();
+
+                }
+
+            };
+
+    }
+
+
+    /* =========================================
+       INITIALIZE
+    ========================================= */
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initMobileActionBar
+        );
+
+    } else {
+
+        initMobileActionBar();
+
+    }
+
+})();

@@ -1921,3 +1921,370 @@ height:100%;
     }
 
 }
+
+/* =========================================================
+   EXAMVERSE - FINAL MOBILE CBT FIX
+   Normal mobile + Chrome Desktop Mode
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* =========================================
+       BODY
+    ========================================= */
+
+    html,
+    body {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        overflow-x: hidden !important;
+    }
+
+
+    /* =========================================
+       EXAM BODY
+       Remove desktop fixed-height behaviour
+    ========================================= */
+
+    .exam-body {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        height: auto !important;
+
+        min-height: 0 !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        padding:
+            10px !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================================
+       QUESTION AREA
+    ========================================= */
+
+    .question-area {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        height: auto !important;
+
+        min-height: 0 !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        padding: 15px !important;
+
+        margin: 0 !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================================
+       QUESTION CARD
+    ========================================= */
+
+    .question-card {
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        min-height: 0 !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================================
+       OPTIONS
+    ========================================= */
+
+    .options {
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================================
+       NAVIGATION BUTTONS
+    ========================================= */
+
+    .navigation {
+
+        display: grid !important;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 10px !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        max-height: none !important;
+
+        overflow: visible !important;
+
+        margin:
+            20px 0 15px 0 !important;
+
+        padding: 0 !important;
+
+        box-sizing: border-box;
+    }
+
+
+    .navigation button {
+
+        display: flex !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        min-height: 54px !important;
+
+        height: auto !important;
+
+        padding:
+            12px 8px !important;
+
+        margin: 0 !important;
+
+        font-size: 13px !important;
+
+        line-height: 1.25 !important;
+
+        white-space: normal !important;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================================
+       MOBILE PALETTE BUTTON
+    ========================================= */
+
+    #mobilePaletteToggle {
+
+        display: block !important;
+
+        position: relative !important;
+
+        left: auto !important;
+
+        right: auto !important;
+
+        bottom: auto !important;
+
+        transform: none !important;
+
+        width: 100% !important;
+
+        min-height: 52px !important;
+
+        margin:
+            5px 0 100px 0 !important;
+
+        padding:
+            14px 18px !important;
+
+        border: none !important;
+
+        border-radius: 12px !important;
+
+        background: #2563eb !important;
+
+        color: #ffffff !important;
+
+        font-size: 15px !important;
+
+        font-weight: 700 !important;
+
+        box-shadow:
+            0 4px 12px
+            rgba(37, 99, 235, 0.25);
+
+        box-sizing: border-box;
+
+        cursor: pointer;
+    }
+
+}
+
+/* =========================================================
+   MOBILE CBT ACTION BAR
+========================================================= */
+
+#mobileExamActionBar {
+
+    display: none;
+
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+.touch-device #mobileExamActionBar {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+
+    position: fixed;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 0;
+
+    width: 100%;
+
+    height: 72px;
+
+    padding:
+        10px 12px;
+
+    background:
+        rgba(255, 255, 255, 0.97);
+
+    border-top:
+        1px solid #dbe2ea;
+
+    box-shadow:
+        0 -5px 20px
+        rgba(0, 0, 0, 0.12);
+
+    z-index: 10000;
+
+    box-sizing: border-box;
+
+    backdrop-filter:
+        blur(10px);
+
+    -webkit-backdrop-filter:
+        blur(10px);
+}
+
+
+/* =========================================
+   ACTION BAR BUTTONS
+========================================= */
+
+#mobileExamActionBar button {
+
+    width: 100%;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+/* =========================================
+   PALETTE
+========================================= */
+
+#mobileActionPalette {
+
+    background: #2563eb;
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   SUBMIT
+========================================= */
+
+#mobileActionSubmit {
+
+    background: #dc2626;
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   EXTRA BOTTOM SPACE
+   So content never hides behind bar
+========================================= */
+
+@media (max-width: 768px) {
+
+    body {
+
+        padding-bottom: 85px !important;
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    #mobilePaletteToggle {
+
+        display: none !important;
+
+    }
+
+}
