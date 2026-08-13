@@ -54,11 +54,12 @@ window.addEventListener("DOMContentLoaded", initExam);
 
 async function initExam() {
 
-    // Get selected exam from localStorage
-    selectedExam =
-        JSON.parse(
-            localStorage.getItem("selectedExam")
-        );
+    // Get selected exam
+selectedExam =
+    JSON.parse(
+        sessionStorage.getItem("selectedExam")
+    );
+
 
     const attemptId =
         sessionStorage.getItem("attemptId");
@@ -332,16 +333,71 @@ startSectionTimer();
         "📘 Normal exam detected."
     );
 
-    // Normal exam always starts at Q1
-    // for a newly created attempt.
+    // ==========================================
+    // NEW NORMAL EXAM
+    // ==========================================
 
-    currentQuestion = 0;
+    if (freshAttempt) {
+
+        console.log(
+            "🆕 NEW NORMAL ATTEMPT — STARTING FROM Q1"
+        );
+
+        currentQuestion = 0;
+
+        sessionStorage.setItem(
+            "currentQuestionIndex",
+            "0"
+        );
+
+        // Consume fresh-attempt flag
+        sessionStorage.removeItem(
+            "attemptStartedFresh"
+        );
+
+    }
+
+    // ==========================================
+    // EXISTING NORMAL EXAM / REFRESH
+    // ==========================================
+
+    else {
+
+        const savedQuestion =
+            Number(
+                sessionStorage.getItem(
+                    "currentQuestionIndex"
+                )
+            );
+
+        if (
+            Number.isInteger(savedQuestion) &&
+            savedQuestion >= 0 &&
+            savedQuestion < questions.length
+        ) {
+
+            currentQuestion =
+                savedQuestion;
+
+        } else {
+
+            currentQuestion = 0;
+
+        }
+
+    }
+
+    console.log(
+        "📌 Restored normal question:",
+        currentQuestion + 1
+    );
 
     showQuestion(
         currentQuestion
     );
 
     startExamTimer();
+
 
 }
 
@@ -2644,144 +2700,6 @@ async function markForReview() {
 // ==========================================
 // SUBMIT EXAM / SUBMIT SECTION
 // ==========================================
-
-async function submitExam(
-    autoSubmit = false
-) {
-
-    // ==========================================
-    // SECTIONAL EXAM
-    // ==========================================
-
-    if (isSectionalExam) {
-
-        await submitCurrentSection(
-            autoSubmit
-        );
-
-        return;
-    }
-
-
-    // ==========================================
-    // NORMAL EXAM
-    // ==========================================
-
-    const totalQuestions =
-        questions.length;
-
-
-    const answeredQuestions =
-        Object.keys(
-            answers
-        ).length;
-
-
-    const unansweredQuestions =
-        totalQuestions -
-        answeredQuestions;
-
-
-    const reviewCount =
-        reviewQuestions.length;
-
-
-    // ------------------------------------------
-    // Manual submission confirmation
-    // ------------------------------------------
-
-    if (!autoSubmit) {
-
-        const message =
-
-            "SUBMIT EXAMINATION?\n\n" +
-
-            "Total Questions: " +
-            totalQuestions +
-
-            "\nAnswered: " +
-            answeredQuestions +
-
-            "\nUnanswered: " +
-            unansweredQuestions +
-
-            "\nMarked for Review: " +
-            reviewCount +
-
-            "\n\nAre you sure you want to submit your examination?";
-
-
-        const confirmed =
-            window.confirm(
-                message
-            );
-
-
-        if (!confirmed) {
-
-            return;
-
-        }
-
-    }
-
-
-    // ------------------------------------------
-    // Stop normal exam timer
-    // ------------------------------------------
-
-    if (timerInterval) {
-
-        clearInterval(
-            timerInterval
-        );
-
-        timerInterval =
-            null;
-
-    }
-
-
-    // ------------------------------------------
-    // Disable controls
-    // ------------------------------------------
-
-    document
-        .querySelectorAll(
-            ".navigation button, .paletteBtn, #submitBtn"
-        )
-        .forEach(
-            button => {
-
-                button.disabled =
-                    true;
-
-            }
-        );
-
-
-    // ------------------------------------------
-    // Finalize NORMAL exam
-    // ------------------------------------------
-
-    const finalized =
-        await finalizeExamAttempt(
-            autoSubmit
-        );
-
-
-    if (!finalized) {
-
-        return;
-
-    }
-
-
-    window.location.replace(
-        "result.html"
-    );
-
-}
 
 
 // ==========================================
