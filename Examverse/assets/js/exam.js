@@ -2225,7 +2225,7 @@ if (paletteContainer) {
                 buttonTop - 10,
 
             behavior:
-                "smooth"
+                "auto"
 
         });
 
@@ -2246,7 +2246,7 @@ if (paletteContainer) {
                 10,
 
             behavior:
-                "smooth"
+                "auto"
 
         });
 
