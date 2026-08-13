@@ -54,11 +54,69 @@ window.addEventListener("DOMContentLoaded", initExam);
 
 async function initExam() {
 
-    // Get selected exam
-selectedExam =
-    JSON.parse(
-        sessionStorage.getItem("selectedExam")
+    // ==========================================
+// GET SELECTED EXAM
+// ==========================================
+
+const selectedExamId =
+    sessionStorage.getItem("selectedExam");
+
+if (!selectedExamId) {
+
+    alert("No exam selected.");
+
+    window.location.href =
+        "exam-list.html";
+
+    return;
+}
+
+
+// ==========================================
+// LOAD EXAM DETAILS FROM SUPABASE
+// ==========================================
+
+const {
+    data: examData,
+    error: examError
+} = await supabaseClient
+
+    .from("exams")
+
+    .select("*")
+
+    .eq("id", selectedExamId)
+
+    .single();
+
+
+if (examError || !examData) {
+
+    console.error(
+        "Selected exam loading error:",
+        examError
     );
+
+    alert(
+        "Unable to load the selected examination."
+    );
+
+    window.location.href =
+        "exam-list.html";
+
+    return;
+}
+
+
+// Store complete exam object
+
+selectedExam = examData;
+
+
+console.log(
+    "✅ Selected Exam Loaded:",
+    selectedExam
+);
 
 
     const attemptId =
