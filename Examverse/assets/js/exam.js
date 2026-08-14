@@ -1782,38 +1782,118 @@ if (isSectionalExam) {
 // NAVIGATION BUTTON STATE
 // ==========================================
 
-if (isSectionalExam) {
+// ==========================================
+// NAVIGATION BUTTON STATE
+// ==========================================
 
-    document.getElementById(
-        "previousBtn"
-    ).disabled =
-        currentQuestion <=
-        currentSectionStartIndex;
+const previousBtn =
+    document.getElementById("previousBtn");
 
-
-    document.getElementById(
-        "nextBtn"
-    ).disabled =
-        currentQuestion >=
-        currentSectionEndIndex;
-
-} else {
-
-    document.getElementById(
-        "previousBtn"
-    ).disabled =
-        currentQuestion === 0;
+const nextBtn =
+    document.getElementById("nextBtn");
 
 
-    document.getElementById(
-        "nextBtn"
-    ).disabled =
-        currentQuestion ===
-        questions.length - 1;
+// ==========================================
+// PREVIOUS BUTTON
+// ==========================================
+
+if (previousBtn) {
+
+    if (isSectionalExam) {
+
+        previousBtn.disabled =
+            currentQuestion <=
+            currentSectionStartIndex;
+
+    } else {
+
+        previousBtn.disabled =
+            currentQuestion === 0;
+
+    }
+
+}
+
+
+// ==========================================
+// NEXT / SUBMIT BUTTON
+// ==========================================
+
+// IMPORTANT:
+// Never disable the Next button on the
+// final question.
+// At the final question it will perform
+// the appropriate submit action.
+
+if (nextBtn) {
+
+    nextBtn.disabled = false;
+
+}
+
+// ==========================================
+// UPDATE NEXT BUTTON TEXT
+// ==========================================
+
+if (nextBtn) {
+
+    if (isSectionalExam) {
+
+        const lastQuestionOfSection =
+            currentQuestion >=
+            currentSectionEndIndex;
+
+        const lastSection =
+            currentSectionIndex >=
+            examSections.length - 1;
+
+
+        if (lastQuestionOfSection) {
+
+            if (lastSection) {
+
+                nextBtn.textContent =
+                    "Submit Exam";
+
+            } else {
+
+                nextBtn.textContent =
+                    "Submit Section & Next";
+
+            }
+
+        } else {
+
+            nextBtn.textContent =
+                "Save & Next";
+
+        }
+
+    } else {
+
+        const lastQuestion =
+            currentQuestion >=
+            questions.length - 1;
+
+
+        if (lastQuestion) {
+
+            nextBtn.textContent =
+                "Submit Exam";
+
+        } else {
+
+            nextBtn.textContent =
+                "Save & Next";
+
+        }
+
+    }
 
 }
 
 }
+
 
 
 // ==========================
@@ -1947,22 +2027,8 @@ function createPalette() {
 
     updatePalette();
 
-/*
- * IMPORTANT:
- * Always start the palette at Question 1
- * when the palette is newly created.
- */
-requestAnimationFrame(() => {
-
-    palette.scrollTop = 0;
-
-    requestAnimationFrame(() => {
-        palette.scrollTop = 0;
-    });
-
-});
-
 }
+
 
 // ==========================
 // Update Palette
@@ -2273,7 +2339,11 @@ if (paletteContainer) {
 // Navigation Buttons
 // ==========================
 
-function nextQuestion() {
+// ==========================================
+// NEXT QUESTION
+// ==========================================
+
+async function nextQuestion() {
 
     // ==========================================
     // SECTIONAL EXAM
@@ -2281,18 +2351,35 @@ function nextQuestion() {
 
     if (isSectionalExam) {
 
+        // --------------------------------------
+        // Last question of current section
+        // --------------------------------------
+
         if (
             currentQuestion >=
             currentSectionEndIndex
         ) {
 
             console.log(
-                "End of current section."
+                "Last question of current section."
             );
+
+            await submitCurrentSection(false);
 
             return;
 
         }
+
+
+        // --------------------------------------
+        // Normal question inside section
+        // --------------------------------------
+
+        showQuestion(
+            currentQuestion + 1
+        );
+
+        return;
 
     }
 
@@ -2310,7 +2397,20 @@ function nextQuestion() {
             currentQuestion + 1
         );
 
+        return;
+
     }
+
+
+    // ==========================================
+    // LAST QUESTION OF NORMAL EXAM
+    // ==========================================
+
+    console.log(
+        "Last question reached. Submitting exam."
+    );
+
+    await submitExam(false);
 
 }
 
