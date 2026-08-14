@@ -1831,70 +1831,7 @@ if (nextBtn) {
 
 }
 
-// ==========================================
-// UPDATE NEXT BUTTON TEXT
-// ==========================================
-
-if (nextBtn) {
-
-    if (isSectionalExam) {
-
-        const lastQuestionOfSection =
-            currentQuestion >=
-            currentSectionEndIndex;
-
-        const lastSection =
-            currentSectionIndex >=
-            examSections.length - 1;
-
-
-        if (lastQuestionOfSection) {
-
-            if (lastSection) {
-
-                nextBtn.textContent =
-                    "Submit Exam";
-
-            } else {
-
-                nextBtn.textContent =
-                    "Submit Section & Next";
-
-            }
-
-        } else {
-
-            nextBtn.textContent =
-                "Save & Next";
-
-        }
-
-    } else {
-
-        const lastQuestion =
-            currentQuestion >=
-            questions.length - 1;
-
-
-        if (lastQuestion) {
-
-            nextBtn.textContent =
-                "Submit Exam";
-
-        } else {
-
-            nextBtn.textContent =
-                "Save & Next";
-
-        }
-
-    }
-
 }
-
-}
-
-
 
 // ==========================
 // Create Palette
@@ -2343,7 +2280,11 @@ if (paletteContainer) {
 // NEXT QUESTION
 // ==========================================
 
-async function nextQuestion() {
+// ==========================================
+// NEXT QUESTION
+// ==========================================
+
+function nextQuestion() {
 
     // ==========================================
     // SECTIONAL EXAM
@@ -2354,25 +2295,28 @@ async function nextQuestion() {
         // --------------------------------------
         // Last question of current section
         // --------------------------------------
-
         if (
             currentQuestion >=
             currentSectionEndIndex
         ) {
 
             console.log(
-                "Last question of current section."
+                "End of section reached. Returning to section Q1."
             );
 
-            await submitCurrentSection(false);
+
+            // Go back to FIRST question
+            // of the CURRENT section.
+            showQuestion(
+                currentSectionStartIndex
+            );
 
             return;
-
         }
 
 
         // --------------------------------------
-        // Normal question inside section
+        // Normal next question
         // --------------------------------------
 
         showQuestion(
@@ -2380,7 +2324,6 @@ async function nextQuestion() {
         );
 
         return;
-
     }
 
 
@@ -2388,32 +2331,35 @@ async function nextQuestion() {
     // NORMAL EXAM
     // ==========================================
 
+    // ------------------------------------------
+    // Last question of entire exam
+    // ------------------------------------------
+
     if (
-        currentQuestion <
+        currentQuestion >=
         questions.length - 1
     ) {
 
-        showQuestion(
-            currentQuestion + 1
+        console.log(
+            "End of exam reached. Returning to Q1."
         );
 
-        return;
 
+        // Go back to Question 1
+        showQuestion(0);
+
+        return;
     }
 
 
-    // ==========================================
-    // LAST QUESTION OF NORMAL EXAM
-    // ==========================================
+    // ------------------------------------------
+    // Normal next question
+    // ------------------------------------------
 
-    console.log(
-        "Last question reached. Submitting exam."
+    showQuestion(
+        currentQuestion + 1
     );
-
-    await submitExam(false);
-
 }
-
 
 function previousQuestion() {
 
