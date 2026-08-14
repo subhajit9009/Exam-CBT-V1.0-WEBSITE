@@ -1432,11 +1432,69 @@ function createSectionNavigation() {
              */
 
             navigation.appendChild(
-                button
-            );
+    button
+);
 
         }
     );
+
+
+// ==========================================
+// AUTO-SCROLL ACTIVE SECTION
+// ==========================================
+
+const activeSection =
+    navigation.querySelector(
+        ".section-tab.active"
+    );
+
+if (activeSection) {
+
+    requestAnimationFrame(() => {
+
+        const navRect =
+            navigation.getBoundingClientRect();
+
+        const activeRect =
+            activeSection.getBoundingClientRect();
+
+        // ======================================
+        // ACTIVE SECTION IS TOO FAR LEFT
+        // ======================================
+
+        if (
+            activeRect.left <
+            navRect.left
+        ) {
+
+            navigation.scrollLeft -=
+                navRect.left -
+                activeRect.left +
+                20;
+
+        }
+
+
+        // ======================================
+        // ACTIVE SECTION IS TOO FAR RIGHT
+        // ======================================
+
+        else if (
+            activeRect.right >
+            navRect.right
+        ) {
+
+            navigation.scrollLeft +=
+                activeRect.right -
+                navRect.right +
+                20;
+
+        }
+
+    });
+
+}
+
 }
 
 
@@ -2201,20 +2259,20 @@ if (
         // Make current question visible
         // --------------------------------------
 
-        // ==========================================
-// SCROLL PALETTE TO CURRENT QUESTION
-// Works BOTH directions
+       // ==========================================
+// SMART PALETTE AUTO-SCROLL
+// Keeps current question comfortably visible
+// and works in BOTH directions
 // ==========================================
 
 const paletteContainer =
-    document.getElementById(
-        "questionPalette"
-    );
+    document.getElementById("questionPalette");
 
-if (paletteContainer) {
+if (
+    paletteContainer &&
+    shouldScroll
+) {
 
-    // Wait until the palette layout has
-    // completely updated.
     requestAnimationFrame(() => {
 
         const containerRect =
@@ -2223,49 +2281,89 @@ if (paletteContainer) {
         const buttonRect =
             currentButton.getBoundingClientRect();
 
+        const containerHeight =
+            paletteContainer.clientHeight;
 
         // ======================================
-        // CURRENT QUESTION IS ABOVE
+        // SAFE VISIBLE ZONE
+        // ======================================
+        //
+        // We don't wait until the button
+        // completely disappears.
+        //
+        // Top  = 25% of palette
+        // Bottom = 75% of palette
+        //
+        // This makes upward and downward
+        // scrolling feel much smoother.
+        // ======================================
+
+        const safeTop =
+            containerRect.top +
+            containerHeight * 0.25;
+
+        const safeBottom =
+            containerRect.top +
+            containerHeight * 0.75;
+
+
+        // ======================================
+        // CURRENT QUESTION TOO HIGH
         // ======================================
 
         if (
             buttonRect.top <
-            containerRect.top
+            safeTop
         ) {
 
-            const amountAbove =
-                containerRect.top -
-                buttonRect.top;
+            const target =
+                currentButton.offsetTop -
+                containerHeight * 0.35;
 
+            paletteContainer.scrollTo({
 
-            paletteContainer.scrollTop =
-                Math.max(
+                top: Math.max(
                     0,
-                    paletteContainer.scrollTop -
-                    amountAbove -
-                    10
-                );
+                    target
+                ),
+
+                behavior: "smooth"
+
+            });
 
         }
 
 
         // ======================================
-        // CURRENT QUESTION IS BELOW
+        // CURRENT QUESTION TOO LOW
         // ======================================
 
         else if (
             buttonRect.bottom >
-            containerRect.bottom
+            safeBottom
         ) {
 
-            const amountBelow =
-                buttonRect.bottom -
-                containerRect.bottom;
+            const target =
+                currentButton.offsetTop -
+                containerHeight * 0.65;
 
+            const maxScroll =
+                paletteContainer.scrollHeight -
+                paletteContainer.clientHeight;
 
-            paletteContainer.scrollTop +=
-                amountBelow +
-                10;
+            paletteContainer.scrollTo({
+
+                top: Math.min(
+                    maxScroll,
+                    Math.max(
+                        0,
+                        target
+                    )
+                ),
+
+                behavior: "smooth"
+
+            });
 
         }
 
@@ -2274,6 +2372,7 @@ if (paletteContainer) {
 }
 
     }
+
 }
 
 }
