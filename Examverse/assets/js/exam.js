@@ -3172,42 +3172,94 @@ console.log(
 // UPDATE SUBMIT BUTTON
 // ==========================================
 
+// ==========================================
+// UPDATE SUBMIT BUTTONS
+// Desktop + Mobile
+// ==========================================
+
 function updateSectionSubmitButton() {
 
     const submitBtn =
+        document.getElementById("submitBtn");
+
+    const mobileSubmitBtn =
         document.getElementById(
-            "submitBtn"
+            "mobileActionSubmit"
         );
 
-    if (!submitBtn) {
+
+    // ------------------------------------------
+    // Safety check
+    // ------------------------------------------
+
+    if (!submitBtn && !mobileSubmitBtn) {
         return;
     }
 
+
+    // ------------------------------------------
+    // NORMAL EXAM
+    // ------------------------------------------
 
     if (!isSectionalExam) {
 
-        submitBtn.textContent =
-            "Submit Exam";
+        if (submitBtn) {
+            submitBtn.textContent =
+                "Submit Exam";
+        }
+
+        if (mobileSubmitBtn) {
+            mobileSubmitBtn.innerHTML =
+                "✓ Submit Exam";
+        }
 
         return;
-
     }
 
+
+    // ------------------------------------------
+    // SECTIONAL EXAM
+    // ------------------------------------------
 
     const isLastSection =
         currentSectionIndex >=
         examSections.length - 1;
 
 
+    // ------------------------------------------
+    // LAST SECTION
+    // ------------------------------------------
+
     if (isLastSection) {
 
-        submitBtn.textContent =
-            "Submit Exam";
+        if (submitBtn) {
+            submitBtn.textContent =
+                "Submit Exam";
+        }
 
-    } else {
+        if (mobileSubmitBtn) {
+            mobileSubmitBtn.innerHTML =
+                "✓ Submit Exam";
+        }
 
-        submitBtn.textContent =
-            "Submit Section & Next";
+    }
+
+
+    // ------------------------------------------
+    // NOT LAST SECTION
+    // ------------------------------------------
+
+    else {
+
+        if (submitBtn) {
+            submitBtn.textContent =
+                "Submit Section & Next";
+        }
+
+        if (mobileSubmitBtn) {
+            mobileSubmitBtn.innerHTML =
+                "✓ Submit Section & Next";
+        }
 
     }
 

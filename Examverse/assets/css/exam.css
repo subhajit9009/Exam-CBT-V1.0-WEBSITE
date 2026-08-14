@@ -1778,3 +1778,51 @@ label:focus-within {
     }
 
 }
+
+/* =========================================================
+   MOBILE CBT NAVIGATION FIX
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* Make the 4 exam controls fit properly */
+    .navigation {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+
+        width: 100%;
+
+        margin-top: 18px;
+
+        /* Space so fixed bottom bar never covers navigation */
+        margin-bottom: 90px !important;
+    }
+
+    .navigation button {
+        width: 100% !important;
+        min-width: 0 !important;
+
+        min-height: 58px;
+
+        padding: 10px 8px;
+
+        font-size: 14px;
+
+        white-space: normal;
+    }
+
+
+    /* Extra breathing room at the bottom of the question area */
+    .question-area {
+        padding-bottom: 100px !important;
+    }
+
+
+    /*
+       Keep the mobile action bar above everything
+    */
+    #mobileExamActionBar {
+        z-index: 99999 !important;
+    }
+}
