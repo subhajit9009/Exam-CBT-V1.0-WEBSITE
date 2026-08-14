@@ -2202,7 +2202,8 @@ if (
         // --------------------------------------
 
         // ==========================================
-// SCROLL PALETTE ONLY
+// SCROLL PALETTE TO CURRENT QUESTION
+// Works BOTH directions
 // ==========================================
 
 const paletteContainer =
@@ -2212,65 +2213,70 @@ const paletteContainer =
 
 if (paletteContainer) {
 
-    const buttonTop =
-        currentButton.offsetTop;
+    // Wait until the palette layout has
+    // completely updated.
+    requestAnimationFrame(() => {
 
-    const buttonBottom =
-        buttonTop +
-        currentButton.offsetHeight;
+        const containerRect =
+            paletteContainer.getBoundingClientRect();
 
-    const visibleTop =
-        paletteContainer.scrollTop;
-
-    const visibleBottom =
-        visibleTop +
-        paletteContainer.clientHeight;
+        const buttonRect =
+            currentButton.getBoundingClientRect();
 
 
-    // Current button is above visible area
-    if (buttonTop < visibleTop) {
+        // ======================================
+        // CURRENT QUESTION IS ABOVE
+        // ======================================
 
-        paletteContainer.scrollTo({
+        if (
+            buttonRect.top <
+            containerRect.top
+        ) {
 
-            top:
-                buttonTop - 10,
-
-            behavior:
-                "auto"
-
-        });
-
-    }
+            const amountAbove =
+                containerRect.top -
+                buttonRect.top;
 
 
-    // Current button is below visible area
-    else if (
-        buttonBottom >
-        visibleBottom
-    ) {
+            paletteContainer.scrollTop =
+                Math.max(
+                    0,
+                    paletteContainer.scrollTop -
+                    amountAbove -
+                    10
+                );
 
-        paletteContainer.scrollTo({
+        }
 
-            top:
-                buttonBottom -
-                paletteContainer.clientHeight +
-                10,
 
-            behavior:
-                "auto"
+        // ======================================
+        // CURRENT QUESTION IS BELOW
+        // ======================================
 
-        });
+        else if (
+            buttonRect.bottom >
+            containerRect.bottom
+        ) {
 
-    }
+            const amountBelow =
+                buttonRect.bottom -
+                containerRect.bottom;
+
+
+            paletteContainer.scrollTop +=
+                amountBelow +
+                10;
+
+        }
+
+    });
 
 }
 
     }
-
 }
 
 }
-
 
 // ==========================
 // Navigation Buttons
