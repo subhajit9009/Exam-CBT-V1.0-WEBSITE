@@ -1968,7 +1968,9 @@ function createPalette() {
                 `palette${globalIndex}`;
 
             button.textContent =
-                globalIndex + 1;
+    isSectionalExam
+        ? paletteQuestions.indexOf(question) + 1
+        : globalIndex + 1;
 
 
             // ==================================
