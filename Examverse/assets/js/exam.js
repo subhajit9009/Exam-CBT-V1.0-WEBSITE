@@ -2345,27 +2345,115 @@ if (
             safeBottom
         ) {
 
-            const target =
-                currentButton.offsetTop -
-                containerHeight * 0.65;
+            // ==========================================
+// TCS-STYLE GRID ROW AUTO SCROLL
+// ==========================================
+// Never stop in the middle of a palette row.
+// The first visible row is always complete.
+// ==========================================
 
-            const maxScroll =
-                paletteContainer.scrollHeight -
-                paletteContainer.clientHeight;
+const rowTop = currentButton.offsetTop;
 
-            paletteContainer.scrollTo({
+// Find the approximate row height.
+// This works with the 5-column desktop palette.
+const buttons =
+    Array.from(
+        paletteButtons
+    );
 
-                top: Math.min(
-                    maxScroll,
-                    Math.max(
-                        0,
-                        target
-                    )
-                ),
+let rowHeight = 0;
 
-                behavior: "smooth"
+if (buttons.length > 1) {
 
-            });
+    const first =
+        buttons[0];
+
+    const secondRowButton =
+        buttons.find(
+            btn =>
+                btn.offsetTop >
+                first.offsetTop
+        );
+
+    if (secondRowButton) {
+
+        rowHeight =
+            secondRowButton.offsetTop -
+            first.offsetTop;
+
+    }
+}
+
+// Fallback
+if (!rowHeight) {
+
+    rowHeight =
+        currentButton.offsetHeight + 12;
+
+}
+
+
+// ==========================================
+// FIND CURRENT ROW
+// ==========================================
+
+const currentRow =
+    Math.floor(
+        rowTop / rowHeight
+    );
+
+
+// ==========================================
+// SCROLL TO COMPLETE ROW
+// ==========================================
+//
+// Current row becomes the first visible
+// complete row.
+//
+// This prevents:
+//
+//   [half cut buttons]
+//   6  7  8  9 10
+//
+// and produces:
+//
+//   6  7  8  9 10
+//   11 12 13 14 15
+//
+// ==========================================
+
+const target =
+    currentRow *
+    rowHeight;
+
+
+const maxScroll =
+    Math.max(
+        0,
+        paletteContainer.scrollHeight -
+        paletteContainer.clientHeight
+    );
+
+
+const finalScroll =
+    Math.min(
+        maxScroll,
+        Math.max(
+            0,
+            target
+        )
+    );
+
+
+paletteContainer.scrollTo({
+
+    top:
+        finalScroll,
+
+    behavior:
+        "smooth"
+
+});
 
         }
 
