@@ -1913,8 +1913,12 @@ function createPalette() {
         return;
     }
 
-    palette.innerHTML = "";
+    // IMPORTANT:
+    // Every time the palette is rebuilt,
+    // start from the top.
 
+    palette.innerHTML = "";
+    palette.scrollTop = 0;
 
     // ==========================================
     // DETERMINE QUESTIONS TO SHOW
@@ -2267,8 +2271,14 @@ if (
 // and works in BOTH directions
 // ==========================================
 
+// ==========================================
+// PALETTE AUTO-SCROLL
+// ==========================================
+
 const paletteContainer =
-    document.getElementById("questionPalette");
+    document.getElementById(
+        "questionPalette"
+    );
 
 if (
     paletteContainer &&
@@ -2277,183 +2287,98 @@ if (
 
     requestAnimationFrame(() => {
 
-        const containerRect =
-            paletteContainer.getBoundingClientRect();
+        const buttons =
+            Array.from(
+                paletteButtons
+            );
 
-        const buttonRect =
-            currentButton.getBoundingClientRect();
-
-        const containerHeight =
-            paletteContainer.clientHeight;
-
-        // ======================================
-        // SAFE VISIBLE ZONE
-        // ======================================
-        //
-        // We don't wait until the button
-        // completely disappears.
-        //
-        // Top  = 25% of palette
-        // Bottom = 75% of palette
-        //
-        // This makes upward and downward
-        // scrolling feel much smoother.
-        // ======================================
-
-        const safeTop =
-            containerRect.top +
-            containerHeight * 0.25;
-
-        const safeBottom =
-            containerRect.top +
-            containerHeight * 0.75;
+        if (!buttons.length) {
+            return;
+        }
 
 
         // ======================================
-        // CURRENT QUESTION TOO HIGH
+        // FIND CURRENT ROW
         // ======================================
 
-        if (
-            buttonRect.top <
-            safeTop
+        const currentTop =
+            currentButton.offsetTop;
+
+        let rowTop =
+            currentTop;
+
+
+        for (
+            let i = 0;
+            i < buttons.length;
+            i++
         ) {
 
-            const target =
-                currentButton.offsetTop -
-                containerHeight * 0.35;
+            const button =
+                buttons[i];
 
-            paletteContainer.scrollTo({
+            if (
+                button.offsetTop <=
+                currentTop
+            ) {
 
-                top: Math.max(
-                    0,
-                    target
-                ),
+                rowTop =
+                    Math.max(
+                        rowTop,
+                        button.offsetTop
+                    );
 
-                behavior: "smooth"
-
-            });
+            }
 
         }
 
 
         // ======================================
-        // CURRENT QUESTION TOO LOW
+        // MAXIMUM SCROLL
         // ======================================
 
-        else if (
-            buttonRect.bottom >
-            safeBottom
+        const maxScroll =
+            Math.max(
+                0,
+                paletteContainer.scrollHeight -
+                paletteContainer.clientHeight
+            );
+
+
+        // ======================================
+        // TARGET
+        // ======================================
+
+        const targetScroll =
+            Math.min(
+                maxScroll,
+                Math.max(
+                    0,
+                    rowTop - 2
+                )
+            );
+
+
+        // ======================================
+        // MOVE PALETTE
+        // ======================================
+
+        if (
+            Math.abs(
+                paletteContainer.scrollTop -
+                targetScroll
+            ) > 3
         ) {
 
-            // ==========================================
-// TCS-STYLE GRID ROW AUTO SCROLL
-// ==========================================
-// Never stop in the middle of a palette row.
-// The first visible row is always complete.
-// ==========================================
+            paletteContainer.scrollTo({
 
-const rowTop = currentButton.offsetTop;
+                top:
+                    targetScroll,
 
-// Find the approximate row height.
-// This works with the 5-column desktop palette.
-const buttons =
-    Array.from(
-        paletteButtons
-    );
+                behavior:
+                    "smooth"
 
-let rowHeight = 0;
-
-if (buttons.length > 1) {
-
-    const first =
-        buttons[0];
-
-    const secondRowButton =
-        buttons.find(
-            btn =>
-                btn.offsetTop >
-                first.offsetTop
-        );
-
-    if (secondRowButton) {
-
-        rowHeight =
-            secondRowButton.offsetTop -
-            first.offsetTop;
-
-    }
-}
-
-// Fallback
-if (!rowHeight) {
-
-    rowHeight =
-        currentButton.offsetHeight + 12;
-
-}
-
-
-// ==========================================
-// FIND CURRENT ROW
-// ==========================================
-
-const currentRow =
-    Math.floor(
-        rowTop / rowHeight
-    );
-
-
-// ==========================================
-// SCROLL TO COMPLETE ROW
-// ==========================================
-//
-// Current row becomes the first visible
-// complete row.
-//
-// This prevents:
-//
-//   [half cut buttons]
-//   6  7  8  9 10
-//
-// and produces:
-//
-//   6  7  8  9 10
-//   11 12 13 14 15
-//
-// ==========================================
-
-const target =
-    currentRow *
-    rowHeight;
-
-
-const maxScroll =
-    Math.max(
-        0,
-        paletteContainer.scrollHeight -
-        paletteContainer.clientHeight
-    );
-
-
-const finalScroll =
-    Math.min(
-        maxScroll,
-        Math.max(
-            0,
-            target
-        )
-    );
-
-
-paletteContainer.scrollTo({
-
-    top:
-        finalScroll,
-
-    behavior:
-        "smooth"
-
-});
+            });
 
         }
 
@@ -4081,9 +4006,11 @@ function setupMobilePalette() {
             // appropriate/current question
             requestAnimationFrame(() => {
 
-                updatePalette();
+    palette.scrollTop = 0;
 
-            });
+    updatePalette(true);
+
+});
 
         }
     );
