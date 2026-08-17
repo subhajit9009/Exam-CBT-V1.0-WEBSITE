@@ -2344,147 +2344,175 @@ function updatePalette(
             // FIND CURRENT ROW
             // ======================================
 
-            const currentRowTop =
-                currentButton.offsetTop;
+           // ==========================================
+// ROBUST CURRENT ROW AUTO-SCROLL
+// ==========================================
+
+// Find the actual visual position of the
+// current button and its entire row.
+
+const currentButtonRect =
+    currentButton.getBoundingClientRect();
+
+const paletteRect =
+    paletteContainer.getBoundingClientRect();
 
 
-            const currentRowButtons =
-                paletteButtons.filter(
-                    button =>
-                        button.offsetTop ===
-                        currentRowTop
-                );
+// ==========================================
+// FIND ALL BUTTONS IN CURRENT ROW
+// ==========================================
+
+const currentRowButtons =
+    paletteButtons.filter(button => {
+
+        const rect =
+            button.getBoundingClientRect();
+
+        // Small tolerance is important because
+        // browser layout can produce fractional
+        // pixel values.
+
+        return Math.abs(
+            rect.top -
+            currentButtonRect.top
+        ) < 2;
+
+    });
 
 
-            if (
-                currentRowButtons.length === 0
-            ) {
+if (
+    currentRowButtons.length === 0
+) {
 
-                return;
+    return;
 
-            }
-
-
-            // ======================================
-            // ROW BOTTOM
-            // ======================================
-
-            let rowBottom = 0;
+}
 
 
-            currentRowButtons.forEach(
-                button => {
+// ==========================================
+// CALCULATE ACTUAL ROW BOUNDARIES
+// ==========================================
 
-                    rowBottom =
-                        Math.max(
-                            rowBottom,
-                            button.offsetTop +
-                            button.offsetHeight
-                        );
+let rowTop =
+    Infinity;
 
-                }
+let rowBottom =
+    -Infinity;
+
+
+currentRowButtons.forEach(
+    button => {
+
+        const rect =
+            button.getBoundingClientRect();
+
+        rowTop =
+            Math.min(
+                rowTop,
+                rect.top
             );
 
+        rowBottom =
+            Math.max(
+                rowBottom,
+                rect.bottom
+            );
 
-            // ======================================
-            // CURRENT VISIBLE AREA
-            // ======================================
-
-            const visibleTop =
-                paletteContainer.scrollTop;
-
-
-            const visibleBottom =
-                visibleTop +
-                paletteContainer.clientHeight;
+    }
+);
 
 
-            // ======================================
-            // SMALL SAFE SPACE
-            // ======================================
+// ==========================================
+// PALETTE VISIBLE AREA
+// ==========================================
 
-            const padding = 6;
+const paletteTop =
+    paletteRect.top;
 
-
-            // ======================================
-            // CURRENT ROW IS ABOVE VIEW
-            // ======================================
-
-            if (
-                currentRowTop <
-                visibleTop + padding
-            ) {
-
-                const newScrollTop =
-                    Math.max(
-                        0,
-                        currentRowTop -
-                        padding
-                    );
+const paletteBottom =
+    paletteRect.bottom;
 
 
-                if (
-                    Math.abs(
-                        paletteContainer.scrollTop -
-                        newScrollTop
-                    ) > 2
-                ) {
+// ==========================================
+// SAFE ZONE
+// ==========================================
 
-                    paletteContainer.scrollTop =
-                        newScrollTop;
+// Keep the current row away from the
+// extreme top and bottom edges.
 
-                }
+const safeTop =
+    paletteTop +
+    20;
 
-
-                return;
-
-            }
+const safeBottom =
+    paletteBottom -
+    20;
 
 
-            // ======================================
-            // CURRENT ROW IS BELOW VIEW
-            // ======================================
+// ==========================================
+// CURRENT ROW IS TOO HIGH
+// ==========================================
 
-            if (
-                rowBottom >
-                visibleBottom - padding
-            ) {
+if (
+    rowTop <
+    safeTop
+) {
 
-                const newScrollTop =
-                    Math.min(
-                        paletteContainer.scrollHeight -
-                        paletteContainer.clientHeight,
-
-                        rowBottom -
-                        paletteContainer.clientHeight +
-                        padding
-                    );
+    const distance =
+        safeTop -
+        rowTop;
 
 
-                if (
-                    Math.abs(
-                        paletteContainer.scrollTop -
-                        newScrollTop
-                    ) > 2
-                ) {
-
-                    paletteContainer.scrollTop =
-                        newScrollTop;
-
-                }
+    paletteContainer.scrollTop =
+        Math.max(
+            0,
+            paletteContainer.scrollTop -
+            distance
+        );
 
 
-                return;
+    return;
 
-            }
+}
 
 
-            // ======================================
-            // CURRENT ROW IS ALREADY VISIBLE
-            // ======================================
+// ==========================================
+// CURRENT ROW IS TOO LOW
+// ==========================================
 
-            // DO NOTHING.
+if (
+    rowBottom >
+    safeBottom
+) {
 
+    const distance =
+        rowBottom -
+        safeBottom;
+
+
+    const maxScrollTop =
+        paletteContainer.scrollHeight -
+        paletteContainer.clientHeight;
+
+
+    paletteContainer.scrollTop =
+        Math.min(
+            maxScrollTop,
+            paletteContainer.scrollTop +
+            distance
+        );
+
+
+    return;
+
+}
+
+
+// ==========================================
+// CURRENT ROW IS ALREADY IN SAFE ZONE
+// ==========================================
+
+// Do nothing.
         }
     );
 
