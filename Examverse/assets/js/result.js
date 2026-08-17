@@ -584,22 +584,25 @@ if (attempt?.user_id) {
 
 
         // ==========================================
-        // Question-wise Analysis
-        // ==========================================
-
-        renderQuestionAnalysis(
-            resultQuestions || [],
-            userAnswers || []
-        );
-
-        // ==========================================
-// Section-wise Performance
+// Section Detection + Question Analysis
 // ==========================================
 
-renderSectionPerformance(
-    attempt.exam_id,
+const sections =
+    await renderSectionPerformance(
+        attempt.exam_id,
+        resultQuestions || [],
+        userAnswers || []
+    );
+
+
+// ==========================================
+// Question-wise Analysis
+// ==========================================
+
+renderQuestionAnalysis(
     resultQuestions || [],
-    userAnswers || []
+    userAnswers || [],
+    sections || []
 );
 
 
@@ -735,16 +738,20 @@ function setText(
 // Question-wise Analysis
 // ==========================================
 
+// ==========================================
+// Question-wise Analysis
+// ==========================================
+
 function renderQuestionAnalysis(
     questions,
-    userAnswers
+    userAnswers,
+    sections = []
 ) {
 
     const container =
         document.getElementById(
             "questionAnalysis"
         );
-
 
     const countElement =
         document.getElementById(
@@ -753,9 +760,7 @@ function renderQuestionAnalysis(
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -788,9 +793,7 @@ function renderQuestionAnalysis(
             0
         );
 
-
         return;
-
     }
 
 
@@ -814,7 +817,7 @@ function renderQuestionAnalysis(
         new Map();
 
 
-    userAnswers.forEach(
+    (userAnswers || []).forEach(
         answer => {
 
             answerMap.set(
@@ -829,35 +832,184 @@ function renderQuestionAnalysis(
 
 
     // ==========================================
-    // Render Questions
+    // NORMAL / NON-SECTIONAL EXAM
     // ==========================================
 
-    container.innerHTML =
-        questions
-            .map(
-                (
-                    question,
-                    index
-                ) => {
+    if (
+        !sections ||
+        sections.length === 0
+    ) {
 
-                    const answer =
-                        answerMap.get(
-                            String(
-                                question.id
-                            )
+        container.innerHTML =
+            questions
+                .map(
+                    (
+                        question,
+                        index
+                    ) => {
+
+                        const answer =
+                            answerMap.get(
+                                String(
+                                    question.id
+                                )
+                            );
+
+
+                        return createQuestionCard(
+                            question,
+                            answer,
+                            index
+                        );
+
+                    }
+                )
+                .join("");
+
+
+        return;
+    }
+
+
+    // ==========================================
+    // SECTIONAL EXAM
+    // ==========================================
+
+    const sortedQuestions =
+        [...questions].sort(
+            (a, b) =>
+                Number(
+                    a.question_no || 0
+                ) -
+                Number(
+                    b.question_no || 0
+                )
+        );
+
+
+    let questionPointer = 0;
+
+
+    const sectionHTML =
+        sections
+            .map(
+                section => {
+
+                    const questionCount =
+                        Number(
+                            section.question_count || 0
                         );
 
 
-                    return createQuestionCard(
-                        question,
-                        answer,
-                        index
-                    );
+                    const sectionQuestions =
+                        sortedQuestions.slice(
+                            questionPointer,
+                            questionPointer +
+                            questionCount
+                        );
+
+
+                    const startIndex =
+                        questionPointer;
+
+
+                    questionPointer +=
+                        questionCount;
+
+
+                    // ------------------------------------------
+                    // Section Header
+                    // ------------------------------------------
+
+                    let html = `
+
+                        <div class="analysis-section-block">
+
+                            <div class="analysis-section-header">
+
+                                <div class="analysis-section-title">
+
+                                    <i class="fa-solid fa-layer-group"></i>
+
+                                    <div>
+
+                                        <h3>
+                                            ${escapeHTML(
+                                                section.section_name ||
+                                                "Section"
+                                            )}
+                                        </h3>
+
+                                        <span>
+                                            ${sectionQuestions.length}
+                                            Questions
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="analysis-section-questions">
+
+                    `;
+
+
+                    // ------------------------------------------
+                    // Questions inside section
+                    // ------------------------------------------
+
+                    html +=
+                        sectionQuestions
+                            .map(
+                                (
+                                    question,
+                                    localIndex
+                                ) => {
+
+                                    const answer =
+                                        answerMap.get(
+                                            String(
+                                                question.id
+                                            )
+                                        );
+
+
+                                    const globalIndex =
+                                        startIndex +
+                                        localIndex;
+
+
+                                    return createQuestionCard(
+                                        question,
+                                        answer,
+                                        globalIndex
+                                    );
+
+                                }
+                            )
+                            .join("");
+
+
+                    html += `
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+
+                    return html;
 
                 }
             )
             .join("");
 
+
+    container.innerHTML =
+        sectionHTML;
 
 }
 
@@ -2213,6 +2365,21 @@ async function renderSectionPerformance(
             "sectionResultList"
         );
 
+        // ==========================================
+// Hide Immediately
+// ==========================================
+
+// Prevent the loading/buffering box from
+// appearing while Supabase is being queried.
+
+if (sectionContainer) {
+
+    sectionContainer.classList.add(
+        "hidden"
+    );
+
+}
+
 
     // ------------------------------------------
     // SAFETY CHECK
@@ -2276,7 +2443,7 @@ async function renderSectionPerformance(
                 "hidden"
             );
 
-            return;
+            return [];
         }
 
 
@@ -2817,6 +2984,7 @@ async function renderSectionPerformance(
             "Section performance:",
             sectionResults
         );
+        return sections;
 
     }
 

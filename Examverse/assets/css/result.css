@@ -3651,3 +3651,75 @@ body {
     }
 
 }
+
+/* ==========================================
+   Detailed Analysis - Section Blocks
+   ========================================== */
+
+.analysis-section-block {
+    margin-bottom: 28px;
+}
+
+
+.analysis-section-header {
+    background: linear-gradient(
+        135deg,
+        #eef4ff,
+        #f7f9ff
+    );
+
+    border: 1px solid #dbe5ff;
+
+    border-radius: 14px;
+
+    padding: 18px 22px;
+
+    margin-bottom: 16px;
+}
+
+
+.analysis-section-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.analysis-section-title > i {
+    font-size: 20px;
+
+    color: #2563eb;
+}
+
+
+.analysis-section-title h3 {
+    margin: 0;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: #172554;
+}
+
+
+.analysis-section-title span {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+
+.analysis-section-questions {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+}
