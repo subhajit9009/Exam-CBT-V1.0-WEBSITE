@@ -592,6 +592,16 @@ if (attempt?.user_id) {
             userAnswers || []
         );
 
+        // ==========================================
+// Section-wise Performance
+// ==========================================
+
+renderSectionPerformance(
+    attempt.exam_id,
+    resultQuestions || [],
+    userAnswers || []
+);
+
 
         // ==========================================
         // Dashboard Button
@@ -2178,6 +2188,649 @@ async function downloadResultPDF() {
 
         pdfButton.innerHTML =
             oldText;
+
+    }
+
+}
+
+// ==========================================
+// SECTION-WISE PERFORMANCE
+// ==========================================
+
+async function renderSectionPerformance(
+    examId,
+    questions,
+    userAnswers
+) {
+
+    const sectionContainer =
+        document.getElementById(
+            "sectionResult"
+        );
+
+    const sectionList =
+        document.getElementById(
+            "sectionResultList"
+        );
+
+
+    // ------------------------------------------
+    // SAFETY CHECK
+    // ------------------------------------------
+
+    if (
+        !sectionContainer ||
+        !sectionList
+    ) {
+        return;
+    }
+
+
+    try {
+
+        // ------------------------------------------
+        // LOAD EXAM SECTIONS
+        // ------------------------------------------
+
+        const {
+            data: sections,
+            error: sectionError
+        } =
+            await supabaseClient
+
+                .from("exam_sections")
+
+                .select(`
+                    id,
+                    section_name,
+                    section_order,
+                    question_count,
+                    duration_minutes
+                `)
+
+                .eq(
+                    "exam_id",
+                    examId
+                )
+
+                .order(
+                    "section_order",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        // ------------------------------------------
+        // SECTION QUERY ERROR
+        // ------------------------------------------
+
+        if (sectionError) {
+
+            console.error(
+                "Section Result Error:",
+                sectionError
+            );
+
+            sectionContainer.classList.add(
+                "hidden"
+            );
+
+            return;
+        }
+
+
+        // ------------------------------------------
+        // NORMAL EXAM
+        // ------------------------------------------
+
+        if (
+            !sections ||
+            sections.length === 0
+        ) {
+
+            sectionContainer.classList.add(
+                "hidden"
+            );
+
+            return;
+        }
+
+
+        // ------------------------------------------
+        // SORT QUESTIONS
+        // ------------------------------------------
+
+        const sortedQuestions =
+            [...questions].sort(
+                (a, b) =>
+                    Number(
+                        a.question_no || 0
+                    ) -
+                    Number(
+                        b.question_no || 0
+                    )
+            );
+
+
+        // ------------------------------------------
+        // ANSWER LOOKUP
+        // ------------------------------------------
+
+        const answerMap =
+            new Map();
+
+        (userAnswers || []).forEach(
+            answer => {
+
+                answerMap.set(
+                    String(
+                        answer.question_id
+                    ),
+                    answer
+                );
+
+            }
+        );
+
+
+        // ------------------------------------------
+        // BUILD SECTION RESULTS
+        // ------------------------------------------
+
+        let questionPointer = 0;
+
+        const sectionResults =
+            sections.map(
+                section => {
+
+                    const questionCount =
+                        Number(
+                            section.question_count || 0
+                        );
+
+
+                    const sectionQuestions =
+                        sortedQuestions.slice(
+                            questionPointer,
+                            questionPointer +
+                            questionCount
+                        );
+
+
+                    questionPointer +=
+                        questionCount;
+
+
+                    // ----------------------------------
+                    // SECTION STATISTICS
+                    // ----------------------------------
+
+                    let attempted = 0;
+
+                    let correct = 0;
+
+                    let wrong = 0;
+
+                    let skipped = 0;
+
+                    let markedReview = 0;
+
+                    let positiveMarks = 0;
+
+                    let negativeMarks = 0;
+
+                    let totalMarks = 0;
+
+
+                    sectionQuestions.forEach(
+                        question => {
+
+                            const marks =
+                                Number(
+                                    question.marks || 0
+                                );
+
+                            const negative =
+                                Number(
+                                    question.negative_marks || 0
+                                );
+
+
+                            totalMarks +=
+                                marks;
+
+
+                            const answer =
+                                answerMap.get(
+                                    String(
+                                        question.id
+                                    )
+                                );
+
+
+                            // ------------------------------
+                            // NO ANSWER
+                            // ------------------------------
+
+                            if (
+                                !answer ||
+                                !answer.selected_option
+                            ) {
+
+                                skipped++;
+
+                                if (
+                                    answer &&
+                                    answer.is_review === true
+                                ) {
+
+                                    markedReview++;
+
+                                }
+
+                                return;
+                            }
+
+
+                            // ------------------------------
+                            // ATTEMPTED
+                            // ------------------------------
+
+                            attempted++;
+
+
+                            if (
+                                answer.is_review === true
+                            ) {
+
+                                markedReview++;
+
+                            }
+
+
+                            // ------------------------------
+                            // CORRECT
+                            // ------------------------------
+
+                            if (
+                                String(
+                                    answer.selected_option
+                                )
+                                .trim()
+                                .toUpperCase() ===
+
+                                String(
+                                    question.correct_answer
+                                )
+                                .trim()
+                                .toUpperCase()
+                            ) {
+
+                                correct++;
+
+                                positiveMarks +=
+                                    marks;
+
+                            }
+
+
+                            // ------------------------------
+                            // WRONG
+                            // ------------------------------
+
+                            else {
+
+                                wrong++;
+
+                                negativeMarks +=
+                                    negative;
+
+                            }
+
+                        }
+                    );
+
+
+                    // ----------------------------------
+                    // FINAL SCORE
+                    // ----------------------------------
+
+                    const score =
+                        positiveMarks -
+                        negativeMarks;
+
+
+                    // ----------------------------------
+                    // PERCENTAGE
+                    // ----------------------------------
+
+                    const percentage =
+                        totalMarks > 0
+
+                            ? (
+                                (
+                                    score /
+                                    totalMarks
+                                ) * 100
+                            )
+
+                            : 0;
+
+
+                    // ----------------------------------
+                    // ACCURACY
+                    // ----------------------------------
+
+                    const accuracy =
+                        attempted > 0
+
+                            ? (
+                                (
+                                    correct /
+                                    attempted
+                                ) * 100
+                            )
+
+                            : 0;
+
+
+                    return {
+
+                        section_name:
+                            section.section_name ||
+                            "Section",
+
+                        question_count:
+                            questionCount,
+
+                        attempted:
+                            attempted,
+
+                        correct:
+                            correct,
+
+                        wrong:
+                            wrong,
+
+                        skipped:
+                            skipped,
+
+                        markedReview:
+                            markedReview,
+
+                        positiveMarks:
+                            positiveMarks,
+
+                        negativeMarks:
+                            negativeMarks,
+
+                        score:
+                            score,
+
+                        totalMarks:
+                            totalMarks,
+
+                        percentage:
+                            percentage,
+
+                        accuracy:
+                            accuracy,
+
+                        duration:
+                            Number(
+                                section.duration_minutes || 0
+                            )
+
+                    };
+
+                }
+            );
+
+
+        // ------------------------------------------
+        // SHOW SECTION CONTAINER
+        // ------------------------------------------
+
+        sectionContainer.classList.remove(
+            "hidden"
+        );
+
+
+        // ------------------------------------------
+        // RENDER
+        // ------------------------------------------
+
+        sectionList.innerHTML =
+            sectionResults
+                .map(
+                    section => {
+
+                        const scoreText =
+                            Number(
+                                section.score
+                            ).toFixed(2);
+
+
+                        const positiveText =
+                            Number(
+                                section.positiveMarks
+                            ).toFixed(2);
+
+
+                        const negativeText =
+                            Number(
+                                section.negativeMarks
+                            ).toFixed(2);
+
+
+                        const percentageText =
+                            Number(
+                                Math.max(
+                                    0,
+                                    section.percentage
+                                )
+                            ).toFixed(1);
+
+
+                        const accuracyText =
+                            Number(
+                                section.accuracy
+                            ).toFixed(1);
+
+
+                        return `
+
+                            <div
+                                class="section-result-item">
+
+                                <div
+                                    class="section-result-title">
+
+                                    <div>
+
+                                        <h3>
+                                            ${escapeHTML(
+                                                section.section_name
+                                            )}
+                                        </h3>
+
+                                        <span>
+                                            ${
+                                                section.question_count
+                                            }
+                                            Questions
+                                        </span>
+
+                                    </div>
+
+                                    <div
+                                        class="section-result-score">
+
+                                        <strong>
+                                            ${scoreText}
+                                        </strong>
+
+                                        <small>
+                                            / ${Number(
+                                                section.totalMarks
+                                            ).toFixed(2)}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div
+                                    class="section-result-stats">
+
+
+                                    <div
+                                        class="section-stat">
+
+                                        <span>
+                                            Attempted
+                                        </span>
+
+                                        <strong>
+                                            ${
+                                                section.attempted
+                                            }
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="section-stat correct">
+
+                                        <span>
+                                            Correct
+                                        </span>
+
+                                        <strong>
+                                            ${
+                                                section.correct
+                                            }
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="section-stat wrong">
+
+                                        <span>
+                                            Wrong
+                                        </span>
+
+                                        <strong>
+                                            ${
+                                                section.wrong
+                                            }
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="section-stat skipped">
+
+                                        <span>
+                                            Skipped
+                                        </span>
+
+                                        <strong>
+                                            ${
+                                                section.skipped
+                                            }
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="section-stat">
+
+                                        <span>
+                                            Accuracy
+                                        </span>
+
+                                        <strong>
+                                            ${accuracyText}%
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div
+                                        class="section-stat">
+
+                                        <span>
+                                            Percentage
+                                        </span>
+
+                                        <strong>
+                                            ${percentageText}%
+                                        </strong>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <div
+                                    class="section-result-marks">
+
+                                    <span>
+                                        Positive:
+                                        +${positiveText}
+                                    </span>
+
+                                    <span>
+                                        Negative:
+                                        -${negativeText}
+                                    </span>
+
+                                    <span>
+                                        Review:
+                                        ${
+                                            section.markedReview
+                                        }
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+                        `;
+
+                    }
+                )
+                .join("");
+
+
+        console.log(
+            "Section performance:",
+            sectionResults
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Section Performance Error:",
+            error
+        );
+
+        sectionContainer.classList.add(
+            "hidden"
+        );
 
     }
 

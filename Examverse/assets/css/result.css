@@ -2762,3 +2762,892 @@ body {
 
     box-sizing: border-box !important;
 }
+
+/* =========================================================
+   SECTION-WISE PERFORMANCE
+   ========================================================= */
+
+.section-result-card {
+
+    width: 100%;
+
+    margin-top: 24px;
+    margin-bottom: 24px;
+
+    padding: 0;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 6px 22px
+        rgba(30,41,59,.07);
+
+    overflow: hidden;
+
+}
+
+
+/* =========================================================
+   SECTION RESULT HEADER
+   ========================================================= */
+
+.section-result-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding:
+        20px
+        22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbff,
+            #ffffff
+        );
+
+    border-bottom:
+        1px solid
+        #e2e8f0;
+
+}
+
+
+.section-result-header h2 {
+
+    margin: 0;
+
+    color:
+        #172554;
+
+    font-size:
+        18px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.3;
+
+}
+
+
+.section-result-header h2 i {
+
+    margin-right:
+        8px;
+
+    color:
+        #2563eb;
+
+}
+
+
+.section-result-header p {
+
+    margin:
+        6px 0 0;
+
+    color:
+        #64748b;
+
+    font-size:
+        12px;
+
+    font-weight:
+        500;
+
+}
+
+
+/* =========================================================
+   SECTION RESULT LIST
+   ========================================================= */
+
+.section-result-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        14px;
+
+    padding:
+        18px;
+
+}
+
+
+/* =========================================================
+   INDIVIDUAL SECTION CARD
+   ========================================================= */
+
+.section-result-item {
+
+    width:
+        100%;
+
+    padding:
+        18px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(30,41,59,.045);
+
+    box-sizing:
+        border-box;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+
+}
+
+
+.section-result-item:hover {
+
+    transform:
+        translateY(-1px);
+
+    border-color:
+        #cbd5e1;
+
+    box-shadow:
+        0 6px 18px
+        rgba(30,41,59,.07);
+
+}
+
+
+/* =========================================================
+   SECTION TITLE + SCORE
+   ========================================================= */
+
+.section-result-title {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding-bottom:
+        15px;
+
+    margin-bottom:
+        15px;
+
+    border-bottom:
+        1px solid
+        #f1f5f9;
+
+}
+
+
+.section-result-title h3 {
+
+    margin:
+        0;
+
+    color:
+        #172554;
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.35;
+
+}
+
+
+.section-result-title span {
+
+    display:
+        inline-block;
+
+    margin-top:
+        5px;
+
+    color:
+        #64748b;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+}
+
+
+/* =========================================================
+   SECTION SCORE
+   ========================================================= */
+
+.section-result-score {
+
+    flex-shrink:
+        0;
+
+    text-align:
+        right;
+
+}
+
+
+.section-result-score strong {
+
+    color:
+        #2563eb;
+
+    font-size:
+        22px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1;
+
+}
+
+
+.section-result-score small {
+
+    margin-left:
+        3px;
+
+    color:
+        #64748b;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+}
+
+
+/* =========================================================
+   SECTION STATISTICS
+   ========================================================= */
+
+.section-result-stats {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            6,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap:
+        9px;
+
+}
+
+
+.section-stat {
+
+    min-width:
+        0;
+
+    padding:
+        11px 8px;
+
+    text-align:
+        center;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-radius:
+        10px;
+
+}
+
+
+.section-stat span {
+
+    display:
+        block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        #64748b;
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    line-height:
+        1.25;
+
+}
+
+
+.section-stat strong {
+
+    display:
+        block;
+
+    color:
+        #172554;
+
+    font-size:
+        15px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1.2;
+
+}
+
+
+/* =========================================================
+   STAT STATUS COLORS
+   ========================================================= */
+
+.section-stat.correct {
+
+    background:
+        #f0fdf4;
+
+    border-color:
+        #dcfce7;
+
+}
+
+
+.section-stat.correct strong {
+
+    color:
+        #15803d;
+
+}
+
+
+.section-stat.wrong {
+
+    background:
+        #fef2f2;
+
+    border-color:
+        #fee2e2;
+
+}
+
+
+.section-stat.wrong strong {
+
+    color:
+        #dc2626;
+
+}
+
+
+.section-stat.skipped {
+
+    background:
+        #fffbeb;
+
+    border-color:
+        #fef3c7;
+
+}
+
+
+.section-stat.skipped strong {
+
+    color:
+        #d97706;
+
+}
+
+
+/* =========================================================
+   POSITIVE / NEGATIVE / REVIEW ROW
+   ========================================================= */
+
+.section-result-marks {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+    margin-top:
+        13px;
+
+}
+
+
+.section-result-marks span {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    min-height:
+        28px;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        20px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    color:
+        #64748b;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+}
+
+
+/* =========================================================
+   LOADING STATE
+   ========================================================= */
+
+.section-result-loading {
+
+    padding:
+        30px 20px;
+
+    text-align:
+        center;
+
+    color:
+        #64748b;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+}
+
+
+.section-result-loading i {
+
+    margin-right:
+        7px;
+
+    color:
+        #2563eb;
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .section-result-card {
+
+        margin-top:
+            18px;
+
+        margin-bottom:
+            18px;
+
+        border-radius:
+            15px;
+
+    }
+
+
+    .section-result-header {
+
+        padding:
+            17px;
+
+    }
+
+
+    .section-result-header h2 {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .section-result-header p {
+
+        font-size:
+            11px;
+
+    }
+
+
+    .section-result-list {
+
+        gap:
+            12px;
+
+        padding:
+            12px;
+
+    }
+
+
+    .section-result-item {
+
+        padding:
+            14px;
+
+        border-radius:
+            12px;
+
+    }
+
+
+    .section-result-title {
+
+        gap:
+            10px;
+
+        padding-bottom:
+            12px;
+
+        margin-bottom:
+            12px;
+
+    }
+
+
+    .section-result-title h3 {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .section-result-title span {
+
+        font-size:
+            10px;
+
+    }
+
+
+    .section-result-score strong {
+
+        font-size:
+            19px;
+
+    }
+
+
+    .section-result-score small {
+
+        font-size:
+            10px;
+
+    }
+
+
+    .section-result-stats {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap:
+            7px;
+
+    }
+
+
+    .section-stat {
+
+        padding:
+            9px 5px;
+
+    }
+
+
+    .section-stat span {
+
+        font-size:
+            9px;
+
+    }
+
+
+    .section-stat strong {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .section-result-marks {
+
+        gap:
+            6px;
+
+    }
+
+
+    .section-result-marks span {
+
+        padding:
+            5px 8px;
+
+        font-size:
+            9px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .section-result-header {
+
+        padding:
+            15px;
+
+    }
+
+
+    .section-result-header h2 {
+
+        font-size:
+            15px;
+
+    }
+
+
+    .section-result-list {
+
+        padding:
+            10px;
+
+    }
+
+
+    .section-result-item {
+
+        padding:
+            12px;
+
+    }
+
+
+    .section-result-title {
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .section-result-score {
+
+        text-align:
+            right;
+
+    }
+
+
+    .section-result-score strong {
+
+        font-size:
+            17px;
+
+    }
+
+
+    .section-result-stats {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap:
+            7px;
+
+    }
+
+
+    .section-stat {
+
+        padding:
+            9px 6px;
+
+    }
+
+
+    .section-result-marks {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .section-result-marks span {
+
+        justify-content:
+            center;
+
+        text-align:
+            center;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .section-result-header h2 {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .section-result-header p {
+
+        font-size:
+            10px;
+
+    }
+
+
+    .section-result-title h3 {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .section-result-score strong {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .section-stat span {
+
+        font-size:
+            8px;
+
+    }
+
+
+    .section-stat strong {
+
+        font-size:
+            12px;
+
+    }
+
+}
