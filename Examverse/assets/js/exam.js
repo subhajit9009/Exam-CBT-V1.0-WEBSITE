@@ -2051,29 +2051,59 @@ function createPalette() {
 // SECTION-AWARE VERSION
 // ==========================================
 
-function updatePalette(shouldScroll = true) {
+// ==========================================
+// UPDATE QUESTION PALETTE
+// SECTION-AWARE + STABLE AUTO-SCROLL
+// ==========================================
+
+function updatePalette(
+    shouldScroll = true
+) {
+
+    const paletteContainer =
+        document.getElementById(
+            "questionPalette"
+        );
+
+
+    if (!paletteContainer) {
+
+        console.warn(
+            "questionPalette not found."
+        );
+
+        return;
+
+    }
+
 
     const paletteButtons =
-        document.querySelectorAll(
-            ".paletteBtn"
+        Array.from(
+            paletteContainer.querySelectorAll(
+                ".paletteBtn"
+            )
         );
 
 
     // ==========================================
-    // WHICH QUESTIONS DOES THIS PALETTE SHOW?
+    // DETERMINE QUESTIONS SHOWN IN PALETTE
     // ==========================================
 
     let paletteQuestions;
 
+
     if (
-        typeof isSectionalExam !== "undefined" &&
+        typeof isSectionalExam !==
+        "undefined" &&
         isSectionalExam
     ) {
 
         paletteQuestions =
             currentSectionQuestions || [];
 
-    } else {
+    }
+
+    else {
 
         paletteQuestions =
             questions || [];
@@ -2082,24 +2112,27 @@ function updatePalette(shouldScroll = true) {
 
 
     // ==========================================
-    // UPDATE EACH PALETTE BUTTON
+    // UPDATE QUESTION STATUS
     // ==========================================
 
     paletteButtons.forEach(
-        (btn, localIndex) => {
+        (
+            button,
+            localIndex
+        ) => {
 
-            const q =
+            const question =
                 paletteQuestions[
                     localIndex
                 ];
 
 
-            if (!q) {
+            if (!question) {
 
-                btn.className =
+                button.className =
                     "paletteBtn";
 
-                btn.innerHTML =
+                button.textContent =
                     localIndex + 1;
 
                 return;
@@ -2107,25 +2140,27 @@ function updatePalette(shouldScroll = true) {
             }
 
 
-            // ==================================
+            // ======================================
             // QUESTION STATUS
-            // ==================================
+            // ======================================
 
             const isAnswered =
-                !!answers[q.id];
+                !!answers[
+                    question.id
+                ];
 
 
             const isReview =
                 reviewQuestions.includes(
-                    q.id
+                    question.id
                 );
 
 
             const globalIndex =
                 questions.findIndex(
-                    question =>
-                        String(question.id) ===
-                        String(q.id)
+                    item =>
+                        String(item.id) ===
+                        String(question.id)
                 );
 
 
@@ -2136,24 +2171,25 @@ function updatePalette(shouldScroll = true) {
                 );
 
 
-            // ==================================
+            // ======================================
             // RESET BUTTON
-            // ==================================
+            // ======================================
 
-            btn.className =
+            button.className =
                 "paletteBtn";
 
-            btn.innerHTML =
+
+            button.innerHTML =
                 localIndex + 1;
 
 
-            // ==================================
+            // ======================================
             // MARKED FOR REVIEW
-            // ==================================
+            // ======================================
 
             if (isReview) {
 
-                btn.classList.add(
+                button.classList.add(
                     "review"
                 );
 
@@ -2175,7 +2211,7 @@ function updatePalette(shouldScroll = true) {
                         "✓";
 
 
-                    btn.appendChild(
+                    button.appendChild(
                         indicator
                     );
 
@@ -2184,26 +2220,26 @@ function updatePalette(shouldScroll = true) {
             }
 
 
-            // ==================================
+            // ======================================
             // ANSWERED
-            // ==================================
+            // ======================================
 
             else if (isAnswered) {
 
-                btn.classList.add(
+                button.classList.add(
                     "answered"
                 );
 
             }
 
 
-            // ==================================
+            // ======================================
             // VISITED BUT NOT ANSWERED
-            // ==================================
+            // ======================================
 
             else if (isVisited) {
 
-                btn.classList.add(
+                button.classList.add(
                     "notAnswered"
                 );
 
@@ -2214,46 +2250,44 @@ function updatePalette(shouldScroll = true) {
 
 
     // ==========================================
-    // CURRENT QUESTION
+    // FIND CURRENT QUESTION
     // ==========================================
 
-    // ==========================================
-// CURRENT QUESTION
-// ==========================================
+    const currentLocalIndex =
+        paletteQuestions.findIndex(
+            question => {
 
-// ==========================================
-// CURRENT QUESTION
-// ==========================================
+                const globalIndex =
+                    questions.findIndex(
+                        item =>
+                            String(item.id) ===
+                            String(question.id)
+                    );
 
-const currentLocalIndex =
-    paletteQuestions.findIndex(
-        q => {
 
-            const globalIndex =
-                questions.findIndex(
-                    question =>
-                        String(question.id) ===
-                        String(q.id)
+                return (
+                    globalIndex ===
+                    currentQuestion
                 );
 
-            return (
-                globalIndex ===
-                currentQuestion
-            );
-
-        }
-    );
+            }
+        );
 
 
-// ==========================================
-// HIGHLIGHT + AUTO-SCROLL CURRENT QUESTION
-// ==========================================
+    // ==========================================
+    // CURRENT QUESTION DOES NOT EXIST
+    // ==========================================
 
-if (
-    shouldScroll &&
-    currentLocalIndex >= 0 &&
-    currentLocalIndex < paletteButtons.length
-) {
+    if (
+        currentLocalIndex < 0 ||
+        currentLocalIndex >=
+            paletteButtons.length
+    ) {
+
+        return;
+
+    }
+
 
     const currentButton =
         paletteButtons[
@@ -2261,145 +2295,198 @@ if (
         ];
 
 
-    if (currentButton) {
+    if (!currentButton) {
 
-        // --------------------------------------
-        // Always mark current question
-        // --------------------------------------
-
-        currentButton.classList.add(
-            "current"
-        );
-
-
-        // --------------------------------------
-        // Make current question visible
-        // --------------------------------------
-
-       // ==========================================
-// SMART PALETTE AUTO-SCROLL
-// Keeps current question comfortably visible
-// and works in BOTH directions
-// ==========================================
-
-// ==========================================
-// PALETTE AUTO-SCROLL
-// ==========================================
-
-const paletteContainer =
-    document.getElementById(
-        "questionPalette"
-    );
-
-if (
-    paletteContainer &&
-    shouldScroll
-) {
-
-    requestAnimationFrame(() => {
-
-        const buttons =
-            Array.from(
-                paletteButtons
-            );
-
-        if (!buttons.length) {
-            return;
-        }
-
-
-        // ======================================
-        // FIND CURRENT ROW
-        // ======================================
-
-        const currentTop =
-            currentButton.offsetTop;
-
-        let rowTop =
-            currentTop;
-
-
-        for (
-            let i = 0;
-            i < buttons.length;
-            i++
-        ) {
-
-            const button =
-                buttons[i];
-
-            if (
-                button.offsetTop <=
-                currentTop
-            ) {
-
-                rowTop =
-                    Math.max(
-                        rowTop,
-                        button.offsetTop
-                    );
-
-            }
-
-        }
-
-
-        // ======================================
-        // MAXIMUM SCROLL
-        // ======================================
-
-        const maxScroll =
-            Math.max(
-                0,
-                paletteContainer.scrollHeight -
-                paletteContainer.clientHeight
-            );
-
-
-        // ======================================
-        // TARGET
-        // ======================================
-
-        const targetScroll =
-            Math.min(
-                maxScroll,
-                Math.max(
-                    0,
-                    rowTop - 2
-                )
-            );
-
-
-        // ======================================
-        // MOVE PALETTE
-        // ======================================
-
-        if (
-            Math.abs(
-                paletteContainer.scrollTop -
-                targetScroll
-            ) > 3
-        ) {
-
-            paletteContainer.scrollTo({
-
-                top:
-                    targetScroll,
-
-                behavior:
-                    "smooth"
-
-            });
-
-        }
-
-    });
-
-}
+        return;
 
     }
 
-}
+
+    // ==========================================
+    // HIGHLIGHT CURRENT QUESTION
+    // ==========================================
+
+    currentButton.classList.add(
+        "current"
+    );
+
+
+    // ==========================================
+    // STOP HERE IF AUTO-SCROLL IS NOT REQUESTED
+    // ==========================================
+
+    if (!shouldScroll) {
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // WAIT UNTIL BROWSER HAS FINISHED LAYOUT
+    // ==========================================
+
+    requestAnimationFrame(
+        () => {
+
+
+            if (
+                !currentButton.isConnected ||
+                !paletteContainer.isConnected
+            ) {
+
+                return;
+
+            }
+
+
+            // ======================================
+            // FIND CURRENT ROW
+            // ======================================
+
+            const currentRowTop =
+                currentButton.offsetTop;
+
+
+            const currentRowButtons =
+                paletteButtons.filter(
+                    button =>
+                        button.offsetTop ===
+                        currentRowTop
+                );
+
+
+            if (
+                currentRowButtons.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            // ======================================
+            // ROW BOTTOM
+            // ======================================
+
+            let rowBottom = 0;
+
+
+            currentRowButtons.forEach(
+                button => {
+
+                    rowBottom =
+                        Math.max(
+                            rowBottom,
+                            button.offsetTop +
+                            button.offsetHeight
+                        );
+
+                }
+            );
+
+
+            // ======================================
+            // CURRENT VISIBLE AREA
+            // ======================================
+
+            const visibleTop =
+                paletteContainer.scrollTop;
+
+
+            const visibleBottom =
+                visibleTop +
+                paletteContainer.clientHeight;
+
+
+            // ======================================
+            // SMALL SAFE SPACE
+            // ======================================
+
+            const padding = 6;
+
+
+            // ======================================
+            // CURRENT ROW IS ABOVE VIEW
+            // ======================================
+
+            if (
+                currentRowTop <
+                visibleTop + padding
+            ) {
+
+                const newScrollTop =
+                    Math.max(
+                        0,
+                        currentRowTop -
+                        padding
+                    );
+
+
+                if (
+                    Math.abs(
+                        paletteContainer.scrollTop -
+                        newScrollTop
+                    ) > 2
+                ) {
+
+                    paletteContainer.scrollTop =
+                        newScrollTop;
+
+                }
+
+
+                return;
+
+            }
+
+
+            // ======================================
+            // CURRENT ROW IS BELOW VIEW
+            // ======================================
+
+            if (
+                rowBottom >
+                visibleBottom - padding
+            ) {
+
+                const newScrollTop =
+                    Math.min(
+                        paletteContainer.scrollHeight -
+                        paletteContainer.clientHeight,
+
+                        rowBottom -
+                        paletteContainer.clientHeight +
+                        padding
+                    );
+
+
+                if (
+                    Math.abs(
+                        paletteContainer.scrollTop -
+                        newScrollTop
+                    ) > 2
+                ) {
+
+                    paletteContainer.scrollTop =
+                        newScrollTop;
+
+                }
+
+
+                return;
+
+            }
+
+
+            // ======================================
+            // CURRENT ROW IS ALREADY VISIBLE
+            // ======================================
+
+            // DO NOTHING.
+
+        }
+    );
 
 }
 
@@ -2407,13 +2494,6 @@ if (
 // Navigation Buttons
 // ==========================
 
-// ==========================================
-// NEXT QUESTION
-// ==========================================
-
-// ==========================================
-// NEXT QUESTION
-// ==========================================
 
 function nextQuestion() {
 
