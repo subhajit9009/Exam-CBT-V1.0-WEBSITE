@@ -592,7 +592,7 @@ const sections =
         attempt.exam_id,
         resultQuestions || [],
         userAnswers || [],
-        exam?.is_sectional === true
+        exam?.is_sectional
     );
 
 
@@ -2383,21 +2383,58 @@ if (sectionContainer) {
 }
 
 // ==========================================
+// DETERMINE SECTIONAL STATUS
+// ==========================================
+
+// Supabase may return boolean values as
+// true, "true", 1 or "1".
+
+const sectionalExam =
+    isSectionalExam === true ||
+    isSectionalExam === "true" ||
+    isSectionalExam === 1 ||
+    isSectionalExam === "1";
+
+console.log(
+    "Sectional Exam:",
+    sectionalExam,
+    "Raw value:",
+    isSectionalExam
+);
+
+
+// ==========================================
+// NON-SECTIONAL EXAM
+// ==========================================
+
+if (!sectionalExam) {
+
+    console.log(
+        "Non-sectional exam — Section-wise Performance hidden."
+    );
+
+    if (sectionContainer) {
+
+        sectionContainer.classList.add(
+            "hidden"
+        );
+
+        // Force hide even if CSS overrides .hidden
+        sectionContainer.style.display = "none";
+
+    }
+
+    return [];
+
+}
+
+// ==========================================
 // NON-SECTIONAL EXAM
 // ==========================================
 
 // If this exam is not sectional,
 // never load or display section-wise performance.
 
-if (isSectionalExam !== true) {
-
-    console.log(
-        "Non-sectional exam — Section-wise Performance hidden."
-    );
-
-    return [];
-
-}
 
     // ------------------------------------------
     // SAFETY CHECK
@@ -2780,6 +2817,8 @@ if (isSectionalExam !== true) {
         sectionContainer.classList.remove(
             "hidden"
         );
+
+        sectionContainer.style.display = "";
 
 
         // ------------------------------------------
