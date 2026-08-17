@@ -335,8 +335,6 @@ if (isSectionalExam) {
 
     createSectionNavigation();
 
-    createPalette();
-
 
     // ==========================================
     // QUESTION POSITION
@@ -366,16 +364,23 @@ if (isSectionalExam) {
 
 
     currentQuestion =
-        savedQuestion;
+    savedQuestion;
 
 
-    sessionStorage.setItem(
-        "currentQuestionIndex",
-        String(currentQuestion)
-    );
+sessionStorage.setItem(
+    "currentQuestionIndex",
+    String(currentQuestion)
+);
 
 
-    showQuestion(
+// ==========================================
+// NOW CREATE THE PALETTE
+// ==========================================
+
+createPalette();
+
+
+showQuestion(
     currentQuestion
 );
 
@@ -446,13 +451,21 @@ startSectionTimer();
     }
 
     console.log(
-        "📌 Restored normal question:",
-        currentQuestion + 1
-    );
+    "📌 Restored normal question:",
+    currentQuestion + 1
+);
 
-    showQuestion(
-        currentQuestion
-    );
+
+// ==========================================
+// CREATE PALETTE AFTER QUESTION IS RESTORED
+// ==========================================
+
+createPalette();
+
+
+showQuestion(
+    currentQuestion
+);
 
     startExamTimer();
 
@@ -1225,8 +1238,6 @@ async function loadQuestions() {
     currentSectionEndIndex = 0;
 
 }
-
-createPalette();
 
 }
 
