@@ -584,7 +584,7 @@ if (attempt?.user_id) {
 
 
         // ==========================================
-// Section Detection + Question Analysis
+// Section Detection + Question Analysis.
 // ==========================================
 
 const sections =
