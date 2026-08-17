@@ -591,7 +591,8 @@ const sections =
     await renderSectionPerformance(
         attempt.exam_id,
         resultQuestions || [],
-        userAnswers || []
+        userAnswers || [],
+        exam?.is_sectional === true
     );
 
 
@@ -2352,7 +2353,8 @@ async function downloadResultPDF() {
 async function renderSectionPerformance(
     examId,
     questions,
-    userAnswers
+    userAnswers,
+    isSectionalExam
 ) {
 
     const sectionContainer =
@@ -2380,6 +2382,22 @@ if (sectionContainer) {
 
 }
 
+// ==========================================
+// NON-SECTIONAL EXAM
+// ==========================================
+
+// If this exam is not sectional,
+// never load or display section-wise performance.
+
+if (isSectionalExam !== true) {
+
+    console.log(
+        "Non-sectional exam — Section-wise Performance hidden."
+    );
+
+    return [];
+
+}
 
     // ------------------------------------------
     // SAFETY CHECK
