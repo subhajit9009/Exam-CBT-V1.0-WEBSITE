@@ -2410,73 +2410,98 @@ function updatePalette(
             // CURRENT ROW IS ABOVE VIEW
             // ======================================
 
-            if (
-                currentRowTop <
-                visibleTop + padding
-            ) {
-
-                const newScrollTop =
-                    Math.max(
-                        0,
-                        currentRowTop -
-                        padding
-                    );
-
-
-                if (
-                    Math.abs(
-                        paletteContainer.scrollTop -
-                        newScrollTop
-                    ) > 2
-                ) {
-
-                    paletteContainer.scrollTop =
-                        newScrollTop;
-
-                }
-
-
-                return;
-
-            }
-
-
             // ======================================
-            // CURRENT ROW IS BELOW VIEW
-            // ======================================
+// CURRENT ROW IS ABOVE SAFE ZONE
+// ======================================
 
-            if (
-                rowBottom >
-                visibleBottom - padding
-            ) {
-
-                const newScrollTop =
-                    Math.min(
-                        paletteContainer.scrollHeight -
-                        paletteContainer.clientHeight,
-
-                        rowBottom -
-                        paletteContainer.clientHeight +
-                        padding
-                    );
+const safeZoneTop =
+    visibleTop +
+    (
+        paletteContainer.clientHeight *
+        0.25
+    );
 
 
-                if (
-                    Math.abs(
-                        paletteContainer.scrollTop -
-                        newScrollTop
-                    ) > 2
-                ) {
+if (
+    currentRowTop <
+    safeZoneTop
+) {
 
-                    paletteContainer.scrollTop =
-                        newScrollTop;
+    const newScrollTop =
+        Math.max(
+            0,
+            currentRowTop -
+            (
+                paletteContainer.clientHeight *
+                0.25
+            )
+        );
 
-                }
+
+    if (
+        Math.abs(
+            paletteContainer.scrollTop -
+            newScrollTop
+        ) > 2
+    ) {
+
+        paletteContainer.scrollTop =
+            newScrollTop;
+
+    }
 
 
-                return;
+    return;
 
-            }
+}
+
+
+           // ======================================
+// CURRENT ROW IS BELOW SAFE ZONE
+// ======================================
+
+const safeZoneBottom =
+    visibleTop +
+    (
+        paletteContainer.clientHeight *
+        0.75
+    );
+
+
+if (
+    rowBottom >
+    safeZoneBottom
+) {
+
+    const newScrollTop =
+        Math.min(
+            paletteContainer.scrollHeight -
+            paletteContainer.clientHeight,
+
+            rowBottom -
+            (
+                paletteContainer.clientHeight *
+                0.75
+            )
+        );
+
+
+    if (
+        Math.abs(
+            paletteContainer.scrollTop -
+            newScrollTop
+        ) > 2
+    ) {
+
+        paletteContainer.scrollTop =
+            newScrollTop;
+
+    }
+
+
+    return;
+
+}
 
 
             // ======================================
