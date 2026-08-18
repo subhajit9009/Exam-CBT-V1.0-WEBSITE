@@ -1780,6 +1780,11 @@ function setupPdfButton() {
 // EXAMVERSE NATIVE PDF / PRINT
 // ==========================================
 
+// ==========================================
+// EXAMVERSE PROFESSIONAL PDF REPORT
+// Native Browser Print / Save as PDF
+// ==========================================
+
 function downloadResultPDF() {
 
     const resultWrapper =
@@ -1804,7 +1809,7 @@ function downloadResultPDF() {
 
 
     // ==========================================
-    // CLONE RESULT
+    // OPEN PRINT WINDOW
     // ==========================================
 
     const printWindow =
@@ -1817,7 +1822,7 @@ function downloadResultPDF() {
     if (!printWindow) {
 
         alert(
-            "Please allow pop-ups for ExamVerse to generate the PDF."
+            "Please allow pop-ups for ExamVerse."
         );
 
         return;
@@ -1825,27 +1830,22 @@ function downloadResultPDF() {
 
 
     // ==========================================
-    // GET RESULT CONTENT
+    // CLONE RESULT
     // ==========================================
 
-    const resultHTML =
-        resultWrapper.cloneNode(
-            true
-        );
+    const resultClone =
+        resultWrapper.cloneNode(true);
 
 
     // ==========================================
     // REMOVE WEB-ONLY ELEMENTS
     // ==========================================
 
-    resultHTML
+    resultClone
         .querySelectorAll(
             ".result-header, " +
             ".result-options, " +
-            ".result-actions, " +
-            "#downloadPdfBtn, " +
-            "#analysisBtn, " +
-            ".dashboard-btn"
+            ".result-actions"
         )
         .forEach(
             element => {
@@ -1857,11 +1857,11 @@ function downloadResultPDF() {
 
 
     // ==========================================
-    // SHOW DETAILED ANALYSIS
+    // FORCE ANALYSIS OPEN IN PDF
     // ==========================================
 
     const analysisSection =
-        resultHTML.querySelector(
+        resultClone.querySelector(
             "#analysisSection"
         );
 
@@ -1875,17 +1875,17 @@ function downloadResultPDF() {
         analysisSection.style.display =
             "block";
 
-        analysisSection.style.maxHeight =
-            "none";
-
-        analysisSection.style.height =
-            "auto";
+        analysisSection.style.visibility =
+            "visible";
 
         analysisSection.style.opacity =
             "1";
 
-        analysisSection.style.visibility =
-            "visible";
+        analysisSection.style.height =
+            "auto";
+
+        analysisSection.style.maxHeight =
+            "none";
 
         analysisSection.style.overflow =
             "visible";
@@ -1894,43 +1894,512 @@ function downloadResultPDF() {
 
 
     // ==========================================
-    // SHOW QUESTION ANALYSIS
+    // READ ACTUAL RESULT VALUES
     // ==========================================
 
-    const questionAnalysis =
-        resultHTML.querySelector(
-            "#questionAnalysis"
+    const getValue =
+        function(id) {
+
+            const element =
+                resultClone.querySelector(
+                    "#" + id
+                );
+
+            if (!element) {
+                return "0";
+            }
+
+            return element.textContent.trim();
+
+        };
+
+
+    const examName =
+        getValue("examName") ||
+        "Examination Result";
+
+
+    const score =
+        getValue("score");
+
+
+    const totalMarks =
+        getValue("totalMarks");
+
+
+    const attempted =
+        getValue("attempted");
+
+
+    const correct =
+        getValue("correct");
+
+
+    const wrong =
+        getValue("wrong");
+
+
+    const skipped =
+        getValue("skipped");
+
+
+    const markedReview =
+        getValue("markedReview");
+
+
+    const totalQuestions =
+        getValue("totalQuestions");
+
+
+    const positiveMarks =
+        getValue("positiveMarks");
+
+
+    const negativeMarks =
+        getValue("negativeMarks");
+
+
+    const percentage =
+        getValue("percentage");
+
+
+    const passingMarks =
+        getValue("passingMarks");
+
+
+    const timeTaken =
+        getValue("timeTaken");
+
+
+    const status =
+        getValue("status");
+
+
+    const resultBadge =
+        getValue("resultBadge");
+
+
+    // ==========================================
+    // PERCENTAGE NUMBER
+    // ==========================================
+
+    let percentageNumber =
+        parseFloat(
+            percentage.replace(
+                /[^0-9.-]/g,
+                ""
+            )
         );
 
 
-    if (questionAnalysis) {
+    if (
+        Number.isNaN(
+            percentageNumber
+        )
+    ) {
 
-        questionAnalysis.style.display =
-            "block";
+        percentageNumber = 0;
 
-        questionAnalysis.style.height =
-            "auto";
+    }
 
-        questionAnalysis.style.maxHeight =
-            "none";
 
-        questionAnalysis.style.opacity =
-            "1";
+    percentageNumber =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percentageNumber
+            )
+        );
 
-        questionAnalysis.style.visibility =
-            "visible";
 
-        questionAnalysis.style.overflow =
-            "visible";
+    // ==========================================
+    // QUESTION DISTRIBUTION
+    // ==========================================
+
+    const correctNumber =
+        parseFloat(
+            correct.replace(
+                /[^0-9.-]/g,
+                ""
+            )
+        ) || 0;
+
+
+    const wrongNumber =
+        parseFloat(
+            wrong.replace(
+                /[^0-9.-]/g,
+                ""
+            )
+        ) || 0;
+
+
+    const skippedNumber =
+        parseFloat(
+            skipped.replace(
+                /[^0-9.-]/g,
+                ""
+            )
+        ) || 0;
+
+
+    const answeredTotal =
+        correctNumber +
+        wrongNumber +
+        skippedNumber;
+
+
+    let correctWidth = 0;
+
+    let wrongWidth = 0;
+
+    let skippedWidth = 0;
+
+
+    if (
+        answeredTotal > 0
+    ) {
+
+        correctWidth =
+            (
+                correctNumber /
+                answeredTotal
+            ) * 100;
+
+
+        wrongWidth =
+            (
+                wrongNumber /
+                answeredTotal
+            ) * 100;
+
+
+        skippedWidth =
+            (
+                skippedNumber /
+                answeredTotal
+            ) * 100;
 
     }
 
 
     // ==========================================
-    // BUILD PRINT DOCUMENT
+    // RESULT HEADER
     // ==========================================
 
-    const documentHTML = `
+    const reportHeader = `
+
+        <div class="ev-header">
+
+            <div>
+
+                <div class="ev-logo">
+                    EXAMVERSE
+                </div>
+
+                <div class="ev-report-name">
+                    Examination Result Report
+                </div>
+
+            </div>
+
+
+            <div class="ev-result-status">
+
+                ${resultBadge}
+
+            </div>
+
+        </div>
+
+
+        <div class="ev-exam-name">
+
+            ${examName}
+
+        </div>
+
+    `;
+
+
+    // ==========================================
+    // SCORE AREA
+    // ==========================================
+
+    const scoreArea = `
+
+        <div class="ev-score-section">
+
+            <div class="ev-score-main">
+
+                <span class="ev-label">
+                    FINAL SCORE
+                </span>
+
+                <strong>
+                    ${score}
+                </strong>
+
+                <span class="ev-out-of">
+                    out of ${totalMarks}
+                </span>
+
+            </div>
+
+
+            <div
+                class="ev-ring"
+                style="
+                    --progress:
+                    ${percentageNumber}%;
+                "
+            >
+
+                <div class="ev-ring-inner">
+
+                    <strong>
+                        ${percentageNumber.toFixed(1)}%
+                    </strong>
+
+                    <span>
+                        Performance
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    // ==========================================
+    // STATISTICS
+    // ==========================================
+
+    const statistics = `
+
+        <div class="ev-stat-grid">
+
+
+            <div class="ev-stat">
+
+                <span>
+                    Attempted
+                </span>
+
+                <strong>
+                    ${attempted}
+                </strong>
+
+            </div>
+
+
+            <div class="ev-stat correct">
+
+                <span>
+                    Correct
+                </span>
+
+                <strong>
+                    ${correct}
+                </strong>
+
+            </div>
+
+
+            <div class="ev-stat wrong">
+
+                <span>
+                    Wrong
+                </span>
+
+                <strong>
+                    ${wrong}
+                </strong>
+
+            </div>
+
+
+            <div class="ev-stat skipped">
+
+                <span>
+                    Skipped
+                </span>
+
+                <strong>
+                    ${skipped}
+                </strong>
+
+            </div>
+
+
+            <div class="ev-stat review">
+
+                <span>
+                    Marked Review
+                </span>
+
+                <strong>
+                    ${markedReview}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    `;
+
+
+    // ==========================================
+    // ANSWER DISTRIBUTION
+    // ==========================================
+
+    const distribution = `
+
+        <div class="ev-distribution">
+
+            <h3>
+                Answer Distribution
+            </h3>
+
+
+            <div class="ev-distribution-bar">
+
+                <div
+                    class="ev-correct-bar"
+                    style="
+                        width:
+                        ${correctWidth}%;
+                    "
+                ></div>
+
+
+                <div
+                    class="ev-wrong-bar"
+                    style="
+                        width:
+                        ${wrongWidth}%;
+                    "
+                ></div>
+
+
+                <div
+                    class="ev-skipped-bar"
+                    style="
+                        width:
+                        ${skippedWidth}%;
+                    "
+                ></div>
+
+            </div>
+
+
+            <div class="ev-distribution-legend">
+
+                <span>
+                    <i class="correct-dot"></i>
+                    Correct ${correct}
+                </span>
+
+
+                <span>
+                    <i class="wrong-dot"></i>
+                    Wrong ${wrong}
+                </span>
+
+
+                <span>
+                    <i class="skipped-dot"></i>
+                    Skipped ${skipped}
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    // ==========================================
+    // SUMMARY TABLE
+    // ==========================================
+
+    const summary = `
+
+        <div class="ev-summary">
+
+            <h2>
+                Result Summary
+            </h2>
+
+
+            <div class="ev-summary-grid">
+
+
+                <div>
+                    <span>Total Questions</span>
+                    <strong>${totalQuestions}</strong>
+                </div>
+
+
+                <div>
+                    <span>Attempted</span>
+                    <strong>${attempted}</strong>
+                </div>
+
+
+                <div>
+                    <span>Positive Marks</span>
+                    <strong>${positiveMarks}</strong>
+                </div>
+
+
+                <div>
+                    <span>Negative Marks</span>
+                    <strong>${negativeMarks}</strong>
+                </div>
+
+
+                <div>
+                    <span>Percentage</span>
+                    <strong>${percentage}</strong>
+                </div>
+
+
+                <div>
+                    <span>Passing Marks</span>
+                    <strong>${passingMarks}</strong>
+                </div>
+
+
+                <div>
+                    <span>Time Taken</span>
+                    <strong>${timeTaken}</strong>
+                </div>
+
+
+                <div>
+                    <span>Status</span>
+                    <strong>${status}</strong>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    // ==========================================
+    // PRINT DOCUMENT
+    // ==========================================
+
+    const printHTML = `
 
 <!DOCTYPE html>
 
@@ -1946,381 +2415,767 @@ function downloadResultPDF() {
 >
 
 <title>
-    ExamVerse Examination Result
+    ExamVerse Result
 </title>
 
 
-<!-- Poppins -->
-
 <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
->
-
-
-<!-- Font Awesome -->
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
->
-
-
-<!-- ORIGINAL RESULT CSS -->
-
-<link
-    rel="stylesheet"
-    href="assets/css/result.css"
 >
 
 
 <style>
 
-/* =====================================================
-   EXAMVERSE NATIVE PRINT SYSTEM
-   ===================================================== */
-
-
-/* ---------- PAGE ---------- */
+/* ==========================================
+   A4
+========================================== */
 
 @page {
 
-    size: A4 portrait;
+    size:
+        A4 portrait;
 
     margin:
-        12mm
-        12mm
-        12mm
         12mm;
 
 }
 
 
-/* ---------- BASE ---------- */
+/* ==========================================
+   BASE
+========================================== */
+
+* {
+
+    box-sizing:
+        border-box;
+
+}
+
 
 html,
 body {
 
-    margin: 0 !important;
+    margin:
+        0;
 
-    padding: 0 !important;
+    padding:
+        0;
 
-    width: 100% !important;
-
-    min-height: 100% !important;
-
-    background: #ffffff !important;
+    background:
+        #ffffff;
 
 }
 
 
 body {
 
-    display: block !important;
-
     font-family:
         'Poppins',
         Arial,
-        sans-serif !important;
+        sans-serif;
 
-    color: #172554;
-
-}
-
-
-/* ---------- RESULT WIDTH ---------- */
-
-.result-wrapper {
-
-    width: 100% !important;
-
-    max-width: none !important;
-
-    margin: 0 !important;
-
-    padding: 0 !important;
-
-    box-sizing: border-box !important;
+    color:
+        #172554;
 
 }
 
 
-/* ---------- REMOVE WEB ELEMENTS ---------- */
+/* ==========================================
+   REPORT
+========================================== */
 
-.result-header,
-.result-options,
-.result-actions,
-#downloadPdfBtn,
-#analysisBtn,
-.dashboard-btn {
+.ev-report {
 
-    display: none !important;
+    width:
+        100%;
 
-}
-
-
-/* ---------- SCORE ---------- */
-
-.score-card {
-
-    width: 100% !important;
-
-    max-width: none !important;
+    max-width:
+        186mm;
 
     margin:
-        0
-        0
-        8mm
-        0 !important;
-
-    box-shadow: none !important;
-
-    backdrop-filter: none !important;
-
-    -webkit-backdrop-filter: none !important;
-
-    break-inside: avoid;
-
-    page-break-inside: avoid;
+        auto;
 
 }
 
 
-/* ---------- STATISTICS ---------- */
+/* ==========================================
+   HEADER
+========================================== */
 
-.stats-grid {
+.ev-header {
 
-    display: grid !important;
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding-bottom:
+        5mm;
+
+    border-bottom:
+        2px solid #e2e8f0;
+
+}
+
+
+.ev-logo {
+
+    font-size:
+        22px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+    color:
+        #2563eb;
+
+}
+
+
+.ev-report-name {
+
+    margin-top:
+        1mm;
+
+    font-size:
+        9px;
+
+    color:
+        #64748b;
+
+}
+
+
+.ev-result-status {
+
+    padding:
+        6px 12px;
+
+    border-radius:
+        20px;
+
+    background:
+        #eff6ff;
+
+    color:
+        #2563eb;
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+}
+
+
+.ev-exam-name {
+
+    margin:
+        5mm 0;
+
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+
+    color:
+        #0f172a;
+
+}
+
+
+/* ==========================================
+   SCORE
+========================================== */
+
+.ev-score-section {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        7mm;
+
+    border-radius:
+        15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #f8fafc
+        );
+
+    border:
+        1px solid #dbeafe;
+
+}
+
+
+.ev-score-main {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.ev-label {
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    color:
+        #64748b;
+
+}
+
+
+.ev-score-main strong {
+
+    margin-top:
+        1mm;
+
+    font-size:
+        30px;
+
+    line-height:
+        1;
+
+    color:
+        #1d4ed8;
+
+}
+
+
+.ev-out-of {
+
+    margin-top:
+        2mm;
+
+    font-size:
+        8px;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ==========================================
+   CIRCULAR GRAPHIC
+========================================== */
+
+.ev-ring {
+
+    width:
+        36mm;
+
+    height:
+        36mm;
+
+    border-radius:
+        50%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        conic-gradient(
+            #2563eb
+            var(--progress),
+            #dbeafe
+            var(--progress)
+        );
+
+    position:
+        relative;
+
+}
+
+
+.ev-ring::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        27mm;
+
+    height:
+        27mm;
+
+    border-radius:
+        50%;
+
+    background:
+        #ffffff;
+
+}
+
+
+.ev-ring-inner {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    text-align:
+        center;
+
+}
+
+
+.ev-ring-inner strong {
+
+    display:
+        block;
+
+    font-size:
+        17px;
+
+    color:
+        #1d4ed8;
+
+}
+
+
+.ev-ring-inner span {
+
+    display:
+        block;
+
+    margin-top:
+        1mm;
+
+    font-size:
+        6px;
+
+    color:
+        #64748b;
+
+}
+
+
+/* ==========================================
+   STATISTICS
+========================================== */
+
+.ev-stat-grid {
+
+    display:
+        grid;
 
     grid-template-columns:
         repeat(
-            4,
-            minmax(0, 1fr)
-        ) !important;
+            5,
+            1fr
+        );
 
-    width: 100% !important;
+    gap:
+        3mm;
 
-    max-width: none !important;
-
-    gap: 4mm !important;
-
-    break-inside: avoid;
-
-    page-break-inside: avoid;
+    margin-top:
+        5mm;
 
 }
 
 
-.stat-card {
+.ev-stat {
 
-    min-width: 0 !important;
+    padding:
+        4mm 2mm;
 
-    width: 100% !important;
+    text-align:
+        center;
 
-    box-shadow: none !important;
+    border:
+        1px solid #e2e8f0;
 
-    break-inside: avoid;
-
-    page-break-inside: avoid;
-
-}
-
-
-/* ---------- DETAILS ---------- */
-
-.details-card {
-
-    width: 100% !important;
-
-    max-width: none !important;
-
-    box-shadow: none !important;
-
-    break-inside: avoid;
-
-    page-break-inside: avoid;
+    border-radius:
+        10px;
 
 }
 
 
-.details-grid {
+.ev-stat span {
 
-    display: grid !important;
+    display:
+        block;
+
+    font-size:
+        7px;
+
+    color:
+        #64748b;
+
+}
+
+
+.ev-stat strong {
+
+    display:
+        block;
+
+    margin-top:
+        1mm;
+
+    font-size:
+        16px;
+
+    color:
+        #0f172a;
+
+}
+
+
+.ev-stat.correct strong {
+
+    color:
+        #15803d;
+
+}
+
+
+.ev-stat.wrong strong {
+
+    color:
+        #dc2626;
+
+}
+
+
+.ev-stat.skipped strong {
+
+    color:
+        #d97706;
+
+}
+
+
+.ev-stat.review strong {
+
+    color:
+        #7c3aed;
+
+}
+
+
+/* ==========================================
+   DISTRIBUTION
+========================================== */
+
+.ev-distribution {
+
+    margin-top:
+        5mm;
+
+    padding:
+        5mm;
+
+    border-radius:
+        12px;
+
+    background:
+        #f8fafc;
+
+}
+
+
+.ev-distribution h3 {
+
+    margin:
+        0 0 3mm;
+
+    font-size:
+        11px;
+
+}
+
+
+.ev-distribution-bar {
+
+    display:
+        flex;
+
+    width:
+        100%;
+
+    height:
+        7mm;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        20px;
+
+    background:
+        #e2e8f0;
+
+}
+
+
+.ev-correct-bar {
+
+    background:
+        #22c55e;
+
+}
+
+
+.ev-wrong-bar {
+
+    background:
+        #ef4444;
+
+}
+
+
+.ev-skipped-bar {
+
+    background:
+        #f59e0b;
+
+}
+
+
+.ev-distribution-legend {
+
+    display:
+        flex;
+
+    gap:
+        8mm;
+
+    margin-top:
+        3mm;
+
+    font-size:
+        7px;
+
+    color:
+        #475569;
+
+}
+
+
+.ev-distribution-legend i {
+
+    display:
+        inline-block;
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    margin-right:
+        3px;
+
+    border-radius:
+        50%;
+
+}
+
+
+.correct-dot {
+
+    background:
+        #22c55e;
+
+}
+
+
+.wrong-dot {
+
+    background:
+        #ef4444;
+
+}
+
+
+.skipped-dot {
+
+    background:
+        #f59e0b;
+
+}
+
+
+/* ==========================================
+   SUMMARY
+========================================== */
+
+.ev-summary {
+
+    margin-top:
+        6mm;
+
+}
+
+
+.ev-summary h2 {
+
+    margin:
+        0 0 3mm;
+
+    font-size:
+        13px;
+
+}
+
+
+.ev-summary-grid {
+
+    display:
+        grid;
 
     grid-template-columns:
         repeat(
             2,
-            minmax(0, 1fr)
-        ) !important;
+            1fr
+        );
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius:
+        10px;
+
+    overflow:
+        hidden;
 
 }
 
 
-/* ---------- DETAIL ITEMS ---------- */
+.ev-summary-grid > div {
 
-.detail-item {
+    display:
+        flex;
 
-    break-inside: avoid;
+    justify-content:
+        space-between;
 
-    page-break-inside: avoid;
+    padding:
+        3mm;
 
-}
+    border-bottom:
+        1px solid #e2e8f0;
 
-
-/* ---------- ANALYSIS ---------- */
-
-#analysisSection {
-
-    display: block !important;
-
-    width: 100% !important;
-
-    max-width: none !important;
-
-    height: auto !important;
-
-    max-height: none !important;
-
-    opacity: 1 !important;
-
-    visibility: visible !important;
-
-    overflow: visible !important;
+    font-size:
+        8px;
 
 }
 
 
-/* ---------- ANALYSIS CARD ---------- */
+.ev-summary-grid span {
 
-.question-analysis-card {
-
-    width: 100% !important;
-
-    max-width: none !important;
-
-    box-shadow: none !important;
+    color:
+        #64748b;
 
 }
 
 
-/* ---------- QUESTION LIST ---------- */
+.ev-summary-grid strong {
 
-.question-analysis-list {
-
-    display: block !important;
-
-    width: 100% !important;
-
-    max-width: none !important;
-
-    height: auto !important;
-
-    max-height: none !important;
-
-    overflow: visible !important;
+    color:
+        #0f172a;
 
 }
 
 
-/* ---------- QUESTION CARD ---------- */
+/* ==========================================
+   ORIGINAL ANALYSIS
+========================================== */
 
-.question-result-card {
+.ev-analysis {
 
-    width: 100% !important;
-
-    max-width: none !important;
-
-    box-shadow: none !important;
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
+    margin-top:
+        7mm;
 
 }
 
 
-/* ---------- ANSWER GRID ---------- */
+/* ==========================================
+   PAGE BREAK SAFETY
+========================================== */
 
-.answer-result-grid {
-
-    display: grid !important;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        ) !important;
-
-    width: 100% !important;
-
-}
-
-
-/* ---------- SECTION RESULT ---------- */
-
-.section-result-item {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-/* ---------- IMAGES ---------- */
-
-img {
-
-    max-width: 100% !important;
-
-    height: auto !important;
-
-}
-
-
-/* ---------- TEXT ---------- */
-
-p,
-span,
-strong,
-div {
-
-    overflow-wrap:
-        break-word;
-
-}
-
-
-/* ---------- PAGE BREAK ---------- */
-
-.pdf-page-break {
-
-    break-before: page !important;
-
-    page-break-before: always !important;
-
-}
-
-
-/* ---------- DON'T SPLIT ---------- */
-
-.score-card,
-.stat-card,
-.details-card,
-.detail-item,
+.ev-score-section,
+.ev-stat-grid,
+.ev-distribution,
+.ev-summary,
 .question-result-card,
 .section-result-item,
-.analysis-header,
-.analysis-legend {
+.details-card {
 
-    break-inside: avoid !important;
+    break-inside:
+        avoid;
 
-    page-break-inside: avoid !important;
+    page-break-inside:
+        avoid;
 
 }
 
 
-/* ---------- PRINT BACKGROUND ---------- */
+/* ==========================================
+   ORIGINAL CONTENT WIDTH
+========================================== */
+
+.ev-original {
+
+    width:
+        100%;
+
+}
+
+
+.ev-original * {
+
+    max-width:
+        100%;
+
+}
+
+
+/* ==========================================
+   PRINT COLORS
+========================================== */
 
 * {
 
@@ -2333,28 +3188,87 @@ div {
 }
 
 
-/* ---------- LINKS ---------- */
+/* ==========================================
+   TOOLBAR
+========================================== */
 
-a {
+.ev-toolbar {
 
-    color: inherit !important;
+    position:
+        fixed;
 
-    text-decoration: none !important;
+    top:
+        12px;
+
+    right:
+        12px;
+
+    z-index:
+        999999;
+
+    display:
+        flex;
+
+    gap:
+        8px;
 
 }
 
 
-/* ---------- MOBILE PRINT ---------- */
+.ev-toolbar button {
+
+    border:
+        none;
+
+    border-radius:
+        8px;
+
+    padding:
+        9px 14px;
+
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+}
+
+
+.ev-print {
+
+    background:
+        #2563eb;
+
+    color:
+        white;
+
+}
+
+
+.ev-close {
+
+    background:
+        #e2e8f0;
+
+    color:
+        #334155;
+
+}
+
 
 @media print {
 
-    html,
-    body {
+    .ev-toolbar {
 
-        width: 100% !important;
-
-        background:
-            #ffffff !important;
+        display:
+            none !important;
 
     }
 
@@ -2367,7 +3281,64 @@ a {
 
 <body>
 
-${resultHTML.outerHTML}
+
+<!-- ==========================================
+     PRINT TOOLBAR
+========================================== -->
+
+<div class="ev-toolbar">
+
+    <button
+        class="ev-print"
+        onclick="window.print()"
+    >
+
+        🖨 Print / Save PDF
+
+    </button>
+
+
+    <button
+        class="ev-close"
+        onclick="window.close()"
+    >
+
+        ✕ Close
+
+    </button>
+
+</div>
+
+
+<div class="ev-report">
+
+
+    ${reportHeader}
+
+
+    ${scoreArea}
+
+
+    ${statistics}
+
+
+    ${distribution}
+
+
+    ${summary}
+
+
+    <div class="ev-analysis">
+
+        ${analysisSection
+            ? analysisSection.outerHTML
+            : ""
+        }
+
+    </div>
+
+
+</div>
 
 
 <script>
@@ -2376,19 +3347,13 @@ window.addEventListener(
     "load",
     function () {
 
-        /*
-           Wait for fonts/images/layout.
-        */
-
         setTimeout(
             function () {
-
-                window.focus();
 
                 window.print();
 
             },
-            700
+            800
         );
 
     }
@@ -2405,20 +3370,20 @@ window.addEventListener(
 
 
     // ==========================================
-    // WRITE PRINT DOCUMENT
+    // WRITE PRINT PAGE
     // ==========================================
 
     printWindow.document.open();
 
     printWindow.document.write(
-        documentHTML
+        printHTML
     );
 
     printWindow.document.close();
 
 
     // ==========================================
-    // BUTTON FEEDBACK
+    // RESTORE BUTTON
     // ==========================================
 
     if (pdfButton) {
@@ -2426,11 +3391,13 @@ window.addEventListener(
         const oldText =
             pdfButton.innerHTML;
 
+
         pdfButton.disabled =
             true;
 
+
         pdfButton.innerHTML = `
-            <i class="fa-solid fa-print"></i>
+            <i class="fa-solid fa-file-pdf"></i>
             Preparing PDF...
         `;
 
