@@ -1510,1259 +1510,6 @@ body {
    PDF MODE
 ========================================== */
 
-.pdf-mode {
-
-    background: white !important;
-
-    padding: 20px !important;
-
-}
-
-
-.pdf-mode .analysis-section {
-
-    max-height:
-        none !important;
-
-    opacity: 1 !important;
-
-}
-
-
-.pdf-mode .result-options,
-
-.pdf-mode .result-actions {
-
-    display: none !important;
-
-}
-
-
-/* ==========================================
-   Mobile
-========================================== */
-
-@media(max-width: 600px) {
-
-    .result-options {
-
-        flex-direction: column;
-
-        width: 100%;
-
-    }
-
-
-    .analysis-btn,
-    .pdf-btn {
-
-        width: 100%;
-
-    }
-
-}
-
-/* ==========================================
-   PDF PAGE BREAK FIX
-========================================== */
-
-.pdf-mode .question-result-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-mode .details-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-mode .score-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-mode .stats-grid {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-mode .stat-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-mode .analysis-header {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-mode .analysis-legend {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-/*
-   Important:
-   Don't allow the analysis container itself
-   to become one huge unbreakable element.
-*/
-
-.pdf-mode .analysis-section {
-
-    max-height: none !important;
-
-    overflow: visible !important;
-
-}
-
-
-/*
-   Keep the question list printable.
-*/
-
-.pdf-mode .question-analysis-list {
-
-    overflow: visible !important;
-
-}
-
-
-/*
-   PDF should use normal white page background.
-*/
-
-.pdf-mode {
-
-    background: white !important;
-
-}
-
-
-/*
-   Remove visual shadows in PDF.
-*/
-
-.pdf-mode .score-card,
-.pdf-mode .details-card,
-.pdf-mode .question-analysis-card,
-.pdf-mode .question-result-card {
-
-    box-shadow: none !important;
-
-}
-
-/* ==========================================
-   PDF - SAFE STATISTICS LAYOUT
-========================================== */
-
-.pdf-mode .stats-grid {
-
-    display: grid !important;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr)) !important;
-
-    gap: 12px !important;
-
-    width: 100% !important;
-
-    max-width: 100% !important;
-
-    box-sizing: border-box !important;
-
-}
-
-
-.pdf-mode .stat-card {
-
-    width: 100% !important;
-
-    min-width: 0 !important;
-
-    max-width: 100% !important;
-
-    box-sizing: border-box !important;
-
-}
-
-
-/* Keep every statistic card inside the PDF */
-
-.pdf-mode .stat-card * {
-
-    min-width: 0 !important;
-
-    max-width: 100% !important;
-
-}
-
-
-/* Don't allow text to escape */
-
-.pdf-mode .stat-card h3,
-.pdf-mode .stat-card p,
-.pdf-mode .stat-card span {
-
-    overflow-wrap: break-word !important;
-
-}
-
-
-/* Prevent individual cards from splitting */
-
-.pdf-mode .stat-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-/* =========================================================
-   EXAMVERSE PROFESSIONAL PDF REPORT
-========================================================= */
-
-
-/* ---------------------------------------------------------
-   PDF BRAND HEADER
---------------------------------------------------------- */
-
-.pdf-report-header {
-
-    display: none;
-
-}
-
-
-.pdf-mode .pdf-report-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 20px;
-
-    padding: 14px 18px;
-
-    margin-bottom: 14px;
-
-    border-bottom: 2px solid #e2e8f0;
-
-}
-
-
-.pdf-brand-name {
-
-    font-size: 25px;
-
-    font-weight: 800;
-
-    color: #1e3a8a;
-
-    letter-spacing: .3px;
-
-}
-
-
-.pdf-brand-subtitle {
-
-    margin-top: 2px;
-
-    font-size: 10px;
-
-    color: #64748b;
-
-    font-weight: 500;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
-
-}
-
-
-.pdf-exam-name {
-
-    max-width: 52%;
-
-    text-align: right;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    color: #172554;
-
-    overflow-wrap: break-word;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF PERFORMANCE CARD
---------------------------------------------------------- */
-
-.pdf-performance-card {
-
-    display: none;
-
-}
-
-
-.pdf-mode .pdf-performance-card {
-
-    display: block;
-
-    margin-top: 14px;
-
-    margin-bottom: 16px;
-
-    padding: 15px 18px;
-
-    border-radius: 14px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-.pdf-performance-title {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin-bottom: 13px;
-
-    font-size: 13px;
-
-    font-weight: 800;
-
-    color: #1e3a8a;
-
-}
-
-
-.pdf-performance-title i {
-
-    color: #2563eb;
-
-}
-
-
-/* ---------------------------------------------------------
-   CHART ROW
---------------------------------------------------------- */
-
-.pdf-chart-row {
-
-    display: grid;
-
-    grid-template-columns:
-        75px
-        1fr
-        35px;
-
-    align-items: center;
-
-    gap: 9px;
-
-    margin-top: 9px;
-
-}
-
-
-.pdf-chart-label {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 6px;
-
-    font-size: 10px;
-
-    color: #475569;
-
-    font-weight: 600;
-
-}
-
-
-.pdf-chart-label strong {
-
-    color: #172554;
-
-    font-size: 10px;
-
-}
-
-
-.pdf-chart-track {
-
-    height: 10px;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    border-radius: 20px;
-
-    background: #e2e8f0;
-
-}
-
-
-.pdf-chart-bar {
-
-    height: 100%;
-
-    min-width: 2px;
-
-    border-radius: 20px;
-
-}
-
-
-.correct-bar {
-
-    background: #22c55e;
-
-}
-
-
-.wrong-bar {
-
-    background: #ef4444;
-
-}
-
-
-.skipped-bar {
-
-    background: #f59e0b;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF SCORE CARD
---------------------------------------------------------- */
-
-.pdf-mode .score-card {
-
-    padding: 22px 20px !important;
-
-    margin-bottom: 12px;
-
-    border-radius: 16px !important;
-
-    background: #f8fafc !important;
-
-    border: 1px solid #e2e8f0 !important;
-
-}
-
-
-.pdf-mode .score-label {
-
-    font-size: 10px !important;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
-
-}
-
-
-.pdf-mode .score-value {
-
-    margin-top: 2px;
-
-    font-size: 42px !important;
-
-}
-
-
-.pdf-mode .score-out-of {
-
-    font-size: 11px !important;
-
-}
-
-
-.pdf-mode .result-badge {
-
-    margin-top: 9px;
-
-    padding: 5px 18px;
-
-    font-size: 10px;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF STATISTICS
---------------------------------------------------------- */
-
-.pdf-mode .stats-grid {
-
-    display: grid !important;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr)) !important;
-
-    gap: 9px !important;
-
-    margin-top: 12px !important;
-
-}
-
-
-.pdf-mode .stat-card {
-
-    display: flex !important;
-
-    align-items: center !important;
-
-    gap: 8px !important;
-
-    padding: 10px !important;
-
-    min-width: 0 !important;
-
-    border-radius: 10px !important;
-
-    background: #ffffff !important;
-
-    border: 1px solid #e2e8f0 !important;
-
-    box-shadow: none !important;
-
-}
-
-
-.pdf-mode .stat-icon {
-
-    width: 30px !important;
-
-    height: 30px !important;
-
-    min-width: 30px !important;
-
-    border-radius: 8px !important;
-
-    font-size: 12px !important;
-
-}
-
-
-.pdf-mode .stat-card span {
-
-    font-size: 8px !important;
-
-    white-space: nowrap;
-
-}
-
-
-.pdf-mode .stat-card strong {
-
-    margin-top: 1px !important;
-
-    font-size: 15px !important;
-
-}
-
-
-/*
-   Review card gets its own second row.
-   This prevents the "Marked for Review"
-   text from being cut off.
-*/
-
-.pdf-mode .stats-grid .stat-card:nth-child(5) {
-
-    grid-column:
-        1 / -1;
-
-    justify-content: center;
-
-    max-width: 220px;
-
-    margin: 0 auto;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF RESULT SUMMARY
---------------------------------------------------------- */
-
-.pdf-mode .details-card {
-
-    margin-top: 14px !important;
-
-    padding: 16px !important;
-
-    border-radius: 14px !important;
-
-    background: #ffffff !important;
-
-    border: 1px solid #e2e8f0 !important;
-
-}
-
-
-.pdf-mode .details-card h2 {
-
-    margin-bottom: 12px !important;
-
-    font-size: 14px !important;
-
-}
-
-
-.pdf-mode .details-grid {
-
-    gap: 7px !important;
-
-}
-
-
-.pdf-mode .detail-item {
-
-    padding: 9px 11px !important;
-
-    border-radius: 8px !important;
-
-}
-
-
-.pdf-mode .detail-item span {
-
-    font-size: 9px !important;
-
-}
-
-
-.pdf-mode .detail-item strong {
-
-    font-size: 10px !important;
-
-}
-
-
-/* ---------------------------------------------------------
-   PAGE 2 QUESTION ANALYSIS
---------------------------------------------------------- */
-
-.pdf-mode .question-analysis-card {
-
-    margin-top: 14px;
-
-    padding: 16px;
-
-    border-radius: 14px;
-
-}
-
-
-.pdf-mode .analysis-header h2 {
-
-    font-size: 14px;
-
-}
-
-
-.pdf-mode .analysis-header p {
-
-    font-size: 9px;
-
-}
-
-
-.pdf-mode .analysis-count {
-
-    padding: 6px 10px;
-
-    font-size: 9px;
-
-}
-
-
-.pdf-mode .analysis-count span {
-
-    font-size: 13px;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF PAGE CONTROL
---------------------------------------------------------- */
-
-/*
-   Question analysis begins cleanly after
-   the first-page result summary.
-*/
-
-.pdf-mode .question-analysis-card {
-
-    break-before: page;
-
-    page-break-before: always;
-
-}
-
-
-/*
-   Don't split individual question cards.
-*/
-
-.pdf-mode .question-result-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-/*
-   Don't split summary blocks.
-*/
-
-.pdf-mode .details-card,
-.pdf-mode .score-card,
-.pdf-mode .pdf-performance-card {
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF BODY WIDTH
---------------------------------------------------------- */
-
-.pdf-mode {
-
-    width: 100% !important;
-
-    max-width: 100% !important;
-
-    padding: 12px !important;
-
-    background: #ffffff !important;
-
-}
-
-
-/* ---------------------------------------------------------
-   REMOVE WEBPAGE-ONLY ELEMENTS
---------------------------------------------------------- */
-
-.pdf-mode .result-header {
-
-    display: none !important;
-
-}
-
-
-.pdf-mode .result-options,
-
-.pdf-mode .result-actions {
-
-    display: none !important;
-
-}
-
-
-/* ---------------------------------------------------------
-   REMOVE HEAVY WEB SHADOWS
---------------------------------------------------------- */
-
-.pdf-mode .score-card,
-.pdf-mode .details-card,
-.pdf-mode .question-analysis-card,
-.pdf-mode .question-result-card,
-.pdf-mode .stat-card {
-
-    box-shadow: none !important;
-
-}
-
-
-/* ---------------------------------------------------------
-   PDF MOBILE/SMALL SCREEN SAFETY
---------------------------------------------------------- */
-
-@media(max-width: 600px) {
-
-    .pdf-mode .stats-grid {
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr))
-            !important;
-
-    }
-
-
-    .pdf-mode .stats-grid
-    .stat-card:nth-child(5) {
-
-        grid-column:
-            1 / -1;
-
-    }
-
-}
-
-/* =========================================================
-   PDF PERFECT CENTERING
-========================================================= */
-
-.pdf-mode {
-
-    width: 100% !important;
-
-    max-width: 100% !important;
-
-    box-sizing: border-box !important;
-
-    margin-left: auto !important;
-
-    margin-right: auto !important;
-
-    padding-left: 18px !important;
-
-    padding-right: 18px !important;
-
-}
-
-
-/*
-   Keep every major PDF section aligned
-   to the same central content area.
-*/
-
-.pdf-mode .pdf-report-header,
-.pdf-mode .score-card,
-.pdf-mode .stats-grid,
-.pdf-mode .pdf-performance-card,
-.pdf-mode .details-card,
-.pdf-mode .question-analysis-card {
-
-    width: 100% !important;
-
-    box-sizing: border-box !important;
-
-    margin-left: auto !important;
-
-    margin-right: auto !important;
-
-}
-
-
-/*
-   Prevent internal elements from creating
-   horizontal overflow.
-*/
-
-.pdf-mode * {
-
-    box-sizing: border-box !important;
-
-    max-width: 100%;
-
-}
-
-
-/*
-   Keep the performance bars properly centered.
-*/
-
-.pdf-mode .pdf-performance-card {
-
-    width: 100% !important;
-
-}
-
-
-/*
-   Result summary stays perfectly aligned.
-*/
-
-.pdf-mode .details-grid {
-
-    width: 100% !important;
-
-}
-
-
-/*
-   Question analysis stays inside the
-   same page boundaries.
-*/
-
-.pdf-mode .question-analysis-list {
-
-    width: 100% !important;
-
-    overflow: visible !important;
-
-}
-
-/* ==========================================
-   FINAL PDF HORIZONTAL ALIGNMENT
-========================================== */
-
-/* PDF CENTER ALIGNMENT */
-
-.pdf-mode {
-    position: relative !important;
-    left: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    box-sizing: border-box !important;
-}
-
-/* ==========================================
-   PDF PAGE BREAK SPACING
-========================================== */
-
-.pdf-mode .question-analysis-card {
-    break-before: page !important;
-    page-break-before: always !important;
-
-    padding-top: 20px !important;
-}
-
-.pdf-mode .question-analysis-card h2,
-.pdf-mode .question-analysis-card .section-title {
-    margin-top: 10px !important;
-}
-
-
-/* Prevent question cards from being split */
-.pdf-mode .question-card {
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-}
-
-
-/* Keep the analysis heading with its legend */
-.pdf-mode .question-analysis-card > * {
-    break-inside: avoid !important;
-}
-
-/* ==========================================
-   MARKED FOR REVIEW - ORANGE
-========================================== */
-
-.pdf-mode .review-dot,
-.pdf-mode .legend-dot.review,
-.pdf-mode .legend-dot.marked-review,
-.pdf-mode .review-indicator {
-    background: #f59e0b !important;
-    background-color: #f59e0b !important;
-    color: #f59e0b !important;
-}
-
-/* ==========================================
-   PREMIUM FINAL SCORE CARD
-========================================== */
-
-.pdf-mode .score-card {
-    position: relative !important;
-
-    overflow: hidden !important;
-
-    border-radius: 18px !important;
-
-    border: 1px solid #dbe4ff !important;
-
-    background: linear-gradient(
-        135deg,
-        #f8fbff 0%,
-        #ffffff 55%,
-        #f4f7ff 100%
-    ) !important;
-
-    box-shadow:
-        0 8px 24px rgba(37, 99, 235, 0.10) !important;
-
-    padding: 28px !important;
-}
-
-
-/* Decorative blue line at the top */
-
-.pdf-mode .score-card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 5px;
-
-    background: linear-gradient(
-        90deg,
-        #2563eb,
-        #4f46e5
-    );
-}
-
-
-/* Final Score label */
-
-.pdf-mode .score-card .score-label {
-    color: #64748b !important;
-
-    font-size: 13px !important;
-
-    font-weight: 700 !important;
-
-    letter-spacing: 1.5px !important;
-
-    text-transform: uppercase !important;
-}
-
-
-/* Big score */
-
-.pdf-mode .score-card .score-value {
-    font-size: 52px !important;
-
-    font-weight: 800 !important;
-
-    letter-spacing: -1px !important;
-
-    color: #1e3a8a !important;
-
-    margin: 8px 0 !important;
-}
-
-
-/* Out of marks */
-
-.pdf-mode .score-card .score-out-of {
-    color: #64748b !important;
-
-    font-size: 14px !important;
-}
-
-
-/* Pass / Fail badge */
-
-.pdf-mode .score-card .result-badge {
-    margin-top: 14px !important;
-
-    padding: 7px 18px !important;
-
-    border-radius: 999px !important;
-
-    font-weight: 700 !important;
-}
-
-/* ==========================================
-   PDF CANDIDATE NAME
-========================================== */
-
-.pdf-mode .attempted-by {
-    margin-top: 8px !important;
-
-    font-size: 12px !important;
-
-    font-weight: 600 !important;
-
-    color: #475569 !important;
-}
-
-/* =========================================================
-   PDF LAYOUT FIX
-   Full width + equal left/right spacing
-========================================================= */
-
-@media print {
-
-    @page {
-        size: A4 portrait;
-        margin: 0;
-    }
-
-    html,
-    body {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .pdf-container {
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0 auto !important;
-        padding: 12mm !important;
-        box-sizing: border-box !important;
-    }
-}
-
-
-/* =========================================================
-   PDF MODE - REMOVE LEFT/RIGHT IMBALANCE
-========================================================= */
-
-.pdf-mode .pdf-container {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    box-sizing: border-box !important;
-}
-
-
-/* =========================================================
-   FINAL SCORE CARD
-   FULL LIGHT YELLOW BACKGROUND
-========================================================= */
-
-.pdf-mode .final-score-card,
-.pdf-mode .score-card {
-    background: #fff8d8 !important;
-    background-color: #fff8d8 !important;
-
-    border: 1px solid #f3df91 !important;
-    border-radius: 14px !important;
-
-    box-sizing: border-box !important;
-}
-
-
-/* Make the complete score area yellow */
-
-.pdf-mode .final-score-card > *,
-.pdf-mode .score-card > * {
-    background-color: transparent !important;
-}
-
-
-/* Score gradient stays inside its own bar */
-
-.pdf-mode .final-score-card .score-value,
-.pdf-mode .score-card .score-value {
-    box-sizing: border-box !important;
-}
-
-
-/* =========================================================
-   PDF HEADER / CANDIDATE NAME
-========================================================= */
-
-.pdf-mode .attempted-by {
-    margin-top: 8px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: #475569 !important;
-}
-
-/* ==========================================
-   FINAL PDF SCORE FIX
-   Remove gradient rendering issue in PDF
-========================================== */
-
-.pdf-mode .score-card .score-value {
-    background: none !important;
-    background-image: none !important;
-
-    background-clip: initial !important;
-    -webkit-background-clip: initial !important;
-
-    -webkit-text-fill-color: #1e3a8a !important;
-    color: #1e3a8a !important;
-
-    display: block !important;
-}
-
-/* ==========================================
-   FINAL PDF HORIZONTAL ALIGNMENT
-========================================== */
-
-.pdf-mode {
-    width: 100% !important;
-    max-width: none !important;
-
-    margin: 0 !important;
-
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-
-    box-sizing: border-box !important;
-}
-
-.pdf-mode .pdf-report-header,
-.pdf-mode .score-card,
-.pdf-mode .stats-grid,
-.pdf-mode .pdf-performance-card,
-.pdf-mode .details-card,
-.pdf-mode .question-analysis-card {
-    width: 100% !important;
-    max-width: 100% !important;
-
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-
-    box-sizing: border-box !important;
-}
-
 /* =========================================================
    SECTION-WISE PERFORMANCE
    ========================================================= */
@@ -3727,19 +2474,30 @@ body {
 
 
 /* =========================================================
+   EXAMVERSE - FINAL ISOLATED PDF SYSTEM
+   ========================================================= */
+
+/*
+   IMPORTANT
+
+   These rules apply ONLY when JavaScript adds
+   .pdf-mode to the temporary PDF clone.
+
+   They do NOT control the normal result page.
+*/
+
+
+/* =========================================================
    PDF ROOT
    ========================================================= */
 
 .pdf-mode {
 
     width: 794px !important;
-
     min-width: 794px !important;
-
     max-width: 794px !important;
 
     margin: 0 !important;
-
     padding: 18px !important;
 
     box-sizing: border-box !important;
@@ -3748,24 +2506,141 @@ body {
 
     overflow: visible !important;
 
+    position: relative !important;
 }
 
 
 /* =========================================================
-   PDF ANALYSIS
+   GLOBAL PDF BOX SIZING
+   ========================================================= */
+
+.pdf-mode *,
+.pdf-mode *::before,
+.pdf-mode *::after {
+
+    box-sizing: border-box !important;
+
+}
+
+
+/* =========================================================
+   PDF WIDTH SAFETY
+   ========================================================= */
+
+.pdf-mode .result-wrapper,
+.pdf-mode .pdf-container,
+.pdf-mode .result-content,
+.pdf-mode .result-main {
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/* =========================================================
+   HIDE WEB-ONLY CONTROLS
+   ========================================================= */
+
+.pdf-mode .result-header,
+.pdf-mode .result-options,
+.pdf-mode .result-actions,
+.pdf-mode .analysis-btn,
+.pdf-mode .pdf-btn,
+.pdf-mode .dashboard-btn {
+
+    display: none !important;
+
+}
+
+
+/* =========================================================
+   DETAILED ANALYSIS
    ========================================================= */
 
 .pdf-mode .analysis-section {
 
     display: block !important;
 
-    max-height: none !important;
-
-    height: auto !important;
+    visibility: visible !important;
 
     opacity: 1 !important;
 
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
     margin-top: 20px !important;
+
+}
+
+
+/*
+   The normal page uses .hidden to collapse
+   Detailed Analysis.
+
+   PDF must always ignore that state.
+*/
+
+.pdf-mode .analysis-section.hidden {
+
+    display: block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    margin-top: 20px !important;
+
+}
+
+
+/* =========================================================
+   ANALYSIS CONTENT
+   ========================================================= */
+
+.pdf-mode #questionAnalysis {
+
+    display: block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+}
+
+
+.pdf-mode .question-analysis-list {
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    height: auto !important;
+
+    max-height: none !important;
 
     overflow: visible !important;
 
@@ -3773,14 +2648,37 @@ body {
 
 
 /* =========================================================
-   REMOVE WEB-ONLY ELEMENTS
+   ANALYSIS SECTION BLOCKS
    ========================================================= */
 
-.pdf-mode .result-header,
-.pdf-mode .result-options,
-.pdf-mode .result-actions {
+.pdf-mode .analysis-section-block {
 
-    display: none !important;
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    margin-bottom: 24px !important;
+
+}
+
+
+/* =========================================================
+   ANALYSIS HEADER
+   ========================================================= */
+
+.pdf-mode .analysis-header,
+.pdf-mode .analysis-legend,
+.pdf-mode .analysis-section-header {
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
 
 }
 
@@ -3795,34 +2693,25 @@ body {
 
     max-width: 100% !important;
 
-    margin:
-        0 0 12px 0 !important;
+    margin: 0 0 14px 0 !important;
 
-    padding: 28px !important;
+    padding: 24px !important;
 
     box-sizing: border-box !important;
 
-    background:
-        #fff8d8 !important;
+    background: #fff8d8 !important;
 
-    background-color:
-        #fff8d8 !important;
+    background-color: #fff8d8 !important;
 
-    border:
-        1px solid
-        #f3df91 !important;
+    border: 1px solid #f3df91 !important;
 
-    border-radius:
-        14px !important;
+    border-radius: 14px !important;
 
-    box-shadow:
-        none !important;
+    box-shadow: none !important;
 
-    break-inside:
-        avoid !important;
+    break-inside: avoid !important;
 
-    page-break-inside:
-        avoid !important;
+    page-break-inside: avoid !important;
 
 }
 
@@ -3833,23 +2722,17 @@ body {
 
 .pdf-mode .score-value {
 
-    background:
-        none !important;
+    background: none !important;
 
-    background-image:
-        none !important;
+    background-image: none !important;
 
-    background-clip:
-        initial !important;
+    background-clip: initial !important;
 
-    -webkit-background-clip:
-        initial !important;
+    -webkit-background-clip: initial !important;
 
-    -webkit-text-fill-color:
-        #1e3a8a !important;
+    -webkit-text-fill-color: #1e3a8a !important;
 
-    color:
-        #1e3a8a !important;
+    color: #1e3a8a !important;
 
 }
 
@@ -3860,167 +2743,60 @@ body {
 
 .pdf-mode .stats-grid {
 
-    display:
-        grid !important;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
             4,
-            minmax(
-                0,
-                1fr
-            )
+            minmax(0, 1fr)
         ) !important;
 
-    gap:
-        9px !important;
+    gap: 9px !important;
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    margin-top:
-        12px !important;
+    margin-top: 12px !important;
 
-    box-sizing:
-        border-box !important;
-
-    break-inside:
-        avoid !important;
-
-    page-break-inside:
-        avoid !important;
+    box-sizing: border-box !important;
 
 }
 
-
-/* =========================================================
-   STAT CARD
-   ========================================================= */
 
 .pdf-mode .stat-card {
 
-    display:
-        flex !important;
+    width: 100% !important;
 
-    align-items:
-        center !important;
+    min-width: 0 !important;
 
-    gap:
-        8px !important;
+    max-width: 100% !important;
 
-    width:
-        100% !important;
+    padding: 10px !important;
 
-    min-width:
-        0 !important;
+    box-sizing: border-box !important;
 
-    max-width:
-        100% !important;
+    box-shadow: none !important;
 
-    padding:
-        10px !important;
+    break-inside: avoid !important;
 
-    box-sizing:
-        border-box !important;
-
-    border-radius:
-        10px !important;
-
-    box-shadow:
-        none !important;
-
-    break-inside:
-        avoid !important;
-
-    page-break-inside:
-        avoid !important;
+    page-break-inside: avoid !important;
 
 }
 
 
-/* =========================================================
-   FIFTH STATISTIC
-   MARKED FOR REVIEW
-   ========================================================= */
+/* Fifth statistic */
 
-.pdf-mode
-.stats-grid
+.pdf-mode .stats-grid
 .stat-card:nth-child(5) {
 
-    grid-column:
-        1 / -1 !important;
+    grid-column: 1 / -1 !important;
 
-    justify-self:
-        center !important;
+    justify-self: center !important;
 
-    width:
-        220px !important;
+    width: 220px !important;
 
-    max-width:
-        220px !important;
-
-}
-
-
-/* =========================================================
-   STAT CONTENT
-   ========================================================= */
-
-.pdf-mode .stat-card * {
-
-    min-width:
-        0 !important;
-
-    max-width:
-        100% !important;
-
-    overflow-wrap:
-        break-word !important;
-
-}
-
-
-.pdf-mode .stat-icon {
-
-    width:
-        30px !important;
-
-    height:
-        30px !important;
-
-    min-width:
-        30px !important;
-
-    border-radius:
-        8px !important;
-
-    font-size:
-        12px !important;
-
-}
-
-
-.pdf-mode .stat-card span {
-
-    font-size:
-        8px !important;
-
-    white-space:
-        normal !important;
-
-}
-
-
-.pdf-mode .stat-card strong {
-
-    margin-top:
-        1px !important;
-
-    font-size:
-        15px !important;
+    max-width: 220px !important;
 
 }
 
@@ -4031,39 +2807,23 @@ body {
 
 .pdf-mode .details-card {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    margin-top:
-        14px !important;
+    margin-top: 14px !important;
 
-    padding:
-        16px !important;
+    padding: 16px !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
-    border-radius:
-        14px !important;
+    border-radius: 14px !important;
 
-    background:
-        #ffffff !important;
+    box-shadow: none !important;
 
-    border:
-        1px solid
-        #e2e8f0 !important;
+    break-inside: avoid !important;
 
-    box-shadow:
-        none !important;
-
-    break-inside:
-        avoid !important;
-
-    page-break-inside:
-        avoid !important;
+    page-break-inside: avoid !important;
 
 }
 
@@ -4074,130 +2834,57 @@ body {
 
 .pdf-mode .details-grid {
 
-    display:
-        grid !important;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
             2,
-            minmax(
-                0,
-                1fr
-            )
+            minmax(0, 1fr)
         ) !important;
 
-    gap:
-        7px !important;
+    gap: 7px !important;
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
 }
 
 
 .pdf-mode .detail-item {
 
-    min-width:
-        0 !important;
+    min-width: 0 !important;
 
-    padding:
-        9px 11px !important;
+    padding: 9px 11px !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
 }
 
 
 /* =========================================================
-   QUESTION ANALYSIS CONTAINER
+   QUESTION ANALYSIS CARD
    ========================================================= */
 
 .pdf-mode .question-analysis-card {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    margin-top:
-        14px !important;
+    margin-top: 14px !important;
 
-    padding:
-        16px !important;
+    padding: 16px !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
-    border-radius:
-        14px !important;
+    border-radius: 14px !important;
 
-    box-shadow:
-        none !important;
+    box-shadow: none !important;
 
-    break-before:
-        page !important;
+    break-before: page !important;
 
-    page-break-before:
-        always !important;
-
-}
-
-
-/* =========================================================
-   ANALYSIS HEADER
-   ========================================================= */
-
-.pdf-mode .analysis-header {
-
-    break-inside:
-        avoid !important;
-
-    page-break-inside:
-        avoid !important;
-
-}
-
-
-/* =========================================================
-   ANALYSIS LEGEND
-   ========================================================= */
-
-.pdf-mode .analysis-legend {
-
-    break-inside:
-        avoid !important;
-
-    page-break-inside:
-        avoid !important;
-
-}
-
-
-/* =========================================================
-   QUESTION ANALYSIS LIST
-   ========================================================= */
-
-.pdf-mode .question-analysis-list {
-
-    display:
-        flex !important;
-
-    flex-direction:
-        column !important;
-
-    width:
-        100% !important;
-
-    max-width:
-        100% !important;
-
-    overflow:
-        visible !important;
+    page-break-before: always !important;
 
 }
 
@@ -4208,23 +2895,17 @@ body {
 
 .pdf-mode .question-result-card {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
-    box-shadow:
-        none !important;
+    box-shadow: none !important;
 
-    break-inside:
-        avoid !important;
+    break-inside: avoid !important;
 
-    page-break-inside:
-        avoid !important;
+    page-break-inside: avoid !important;
 
 }
 
@@ -4235,37 +2916,30 @@ body {
 
 .pdf-mode .answer-result-grid {
 
-    display:
-        grid !important;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
             2,
-            minmax(
-                0,
-                1fr
-            )
+            minmax(0, 1fr)
         ) !important;
 
-    gap:
-        10px !important;
+    gap: 10px !important;
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
 }
 
 
 .pdf-mode .answer-box {
 
-    min-width:
-        0 !important;
+    min-width: 0 !important;
 
-    box-sizing:
-        border-box !important;
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
 
 }
 
@@ -4276,41 +2950,32 @@ body {
 
 .pdf-mode #sectionResult {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    height:
-        auto !important;
+    height: auto !important;
 
-    max-height:
-        none !important;
+    max-height: none !important;
 
-    overflow:
-        visible !important;
+    overflow: visible !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
 }
 
 
-/* =========================================================
-   SECTION RESULT LIST
-   ========================================================= */
-
 .pdf-mode #sectionResultList {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    overflow:
-        visible !important;
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
 
 }
 
@@ -4321,23 +2986,17 @@ body {
 
 .pdf-mode .section-result-card {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
-    box-shadow:
-        none !important;
+    box-shadow: none !important;
 
-    break-inside:
-        auto !important;
+    break-inside: auto !important;
 
-    page-break-inside:
-        auto !important;
+    page-break-inside: auto !important;
 
 }
 
@@ -4348,23 +3007,17 @@ body {
 
 .pdf-mode .section-result-item {
 
-    width:
-        100% !important;
+    width: 100% !important;
 
-    max-width:
-        100% !important;
+    max-width: 100% !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
-    box-shadow:
-        none !important;
+    box-shadow: none !important;
 
-    break-inside:
-        avoid !important;
+    break-inside: avoid !important;
 
-    page-break-inside:
-        avoid !important;
+    page-break-inside: avoid !important;
 
 }
 
@@ -4375,8 +3028,7 @@ body {
 
 .pdf-mode .section-result-stats {
 
-    display:
-        grid !important;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
@@ -4387,50 +3039,37 @@ body {
             )
         ) !important;
 
-    gap:
-        7px !important;
+    gap: 7px !important;
+
+    width: 100% !important;
 
 }
 
 
 .pdf-mode .section-stat {
 
-    min-width:
-        0 !important;
+    min-width: 0 !important;
 
-    box-sizing:
-        border-box !important;
+    box-sizing: border-box !important;
 
 }
 
 
 /* =========================================================
-   SECTION TITLE / MARKS
+   TEXT SAFETY
    ========================================================= */
 
-.pdf-mode .section-result-title,
-.pdf-mode .section-result-marks {
+.pdf-mode h1,
+.pdf-mode h2,
+.pdf-mode h3,
+.pdf-mode h4,
+.pdf-mode p,
+.pdf-mode span,
+.pdf-mode strong {
 
-    break-inside:
-        avoid !important;
+    overflow-wrap: break-word !important;
 
-    page-break-inside:
-        avoid !important;
-
-}
-
-
-/* =========================================================
-   GLOBAL PDF WIDTH SAFETY
-   ========================================================= */
-
-.pdf-mode * {
-
-    box-sizing:
-        border-box !important;
-
-    max-width:
-        100%;
+    word-break: normal !important;
 
 }
 
@@ -4443,31 +3082,54 @@ body {
 .pdf-mode .details-card,
 .pdf-mode .stat-card,
 .pdf-mode .question-result-card,
-.pdf-mode .section-result-item {
+.pdf-mode .section-result-item,
+.pdf-mode .analysis-header,
+.pdf-mode .analysis-legend {
 
-    break-inside:
-        avoid !important;
+    break-inside: avoid !important;
 
-    page-break-inside:
-        avoid !important;
+    page-break-inside: avoid !important;
 
 }
 
 
 /* =========================================================
-   PRINT PAGE
+   DO NOT CREATE HORIZONTAL SCROLLING
+   ========================================================= */
+
+.pdf-mode {
+
+    overflow: visible !important;
+
+}
+
+
+.pdf-mode img {
+
+    max-width: 100% !important;
+
+    height: auto !important;
+
+}
+
+
+/* =========================================================
+   PDF PRINT PAGE
    ========================================================= */
 
 @media print {
 
     @page {
 
-        size:
-            A4 portrait;
+        size: A4 portrait;
 
-        margin:
-            0;
+        margin: 0;
 
     }
 
 }
+
+
+/* =========================================================
+   END OF EXAMVERSE PDF SYSTEM
+   ========================================================= */
