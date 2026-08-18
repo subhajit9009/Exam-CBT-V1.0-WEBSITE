@@ -1776,37 +1776,27 @@ function setupPdfButton() {
 // FINAL STABLE PDF RENDERER
 // ==========================================
 
-async function downloadResultPDF() {
+// ==========================================
+// EXAMVERSE NATIVE PDF / PRINT
+// ==========================================
 
-    const pdfButton =
-        document.getElementById("downloadPdfBtn");
+function downloadResultPDF() {
 
     const resultWrapper =
-        document.querySelector(".result-wrapper");
-
-
-    // ==========================================
-    // SAFETY CHECK
-    // ==========================================
-
-    if (!resultWrapper || !pdfButton) {
-
-        console.error(
-            "PDF: Result wrapper or PDF button not found."
+        document.querySelector(
+            ".result-wrapper"
         );
 
-        return;
-    }
+    const pdfButton =
+        document.getElementById(
+            "downloadPdfBtn"
+        );
 
 
-    // ==========================================
-    // HTML2PDF CHECK
-    // ==========================================
-
-    if (typeof html2pdf === "undefined") {
+    if (!resultWrapper) {
 
         alert(
-            "PDF generator is not loaded. Please check your internet connection."
+            "Result content is not available."
         );
 
         return;
@@ -1814,1005 +1804,649 @@ async function downloadResultPDF() {
 
 
     // ==========================================
-    // OPEN PDF WINDOW IMMEDIATELY
-    //
-    // This prevents popup blockers from stopping
-    // the PDF viewer on mobile browsers.
+    // CLONE RESULT
     // ==========================================
 
-    let pdfWindow = null;
-
-    try {
-
-        pdfWindow =
-            window.open(
-                "",
-                "_blank"
-            );
-
-        if (pdfWindow) {
-
-            pdfWindow.document.title =
-                "ExamVerse Examination Result";
-
-            pdfWindow.document.body.innerHTML = `
-                <div style="
-                    font-family:Arial,sans-serif;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    height:100vh;
-                    color:#475569;
-                    font-size:16px;
-                ">
-                    Preparing your result PDF...
-                </div>
-            `;
-
-        }
-
-    }
-    catch (popupError) {
-
-        console.warn(
-            "PDF popup could not be opened:",
-            popupError
+    const printWindow =
+        window.open(
+            "",
+            "_blank"
         );
 
+
+    if (!printWindow) {
+
+        alert(
+            "Please allow pop-ups for ExamVerse to generate the PDF."
+        );
+
+        return;
     }
 
 
     // ==========================================
-    // SAVE BUTTON STATE
+    // GET RESULT CONTENT
     // ==========================================
 
-    const oldText =
-        pdfButton.innerHTML;
-
-    pdfButton.disabled = true;
-
-    pdfButton.innerHTML = `
-        <i class="fa-solid fa-spinner fa-spin"></i>
-        Generating PDF...
-    `;
+    const resultHTML =
+        resultWrapper.cloneNode(
+            true
+        );
 
 
-    let pdfHost = null;
+    // ==========================================
+    // REMOVE WEB-ONLY ELEMENTS
+    // ==========================================
+
+    resultHTML
+        .querySelectorAll(
+            ".result-header, " +
+            ".result-options, " +
+            ".result-actions, " +
+            "#downloadPdfBtn, " +
+            "#analysisBtn, " +
+            ".dashboard-btn"
+        )
+        .forEach(
+            element => {
+
+                element.remove();
+
+            }
+        );
 
 
-    try {
+    // ==========================================
+    // SHOW DETAILED ANALYSIS
+    // ==========================================
 
-        // ==========================================
-        // FILE NAME
-        // ==========================================
-
-        const attemptId =
-            sessionStorage.getItem(
-                "attemptId"
-            );
-
-        const fileName =
-            "ExamVerse_Result_" +
-            (
-                attemptId
-                    ? attemptId.substring(0, 8)
-                    : "Report"
-            ) +
-            ".pdf";
+    const analysisSection =
+        resultHTML.querySelector(
+            "#analysisSection"
+        );
 
 
-        // ==========================================
-        // CREATE ISOLATED PDF HOST
-        //
-        // IMPORTANT:
-        // The host is fixed, so it does NOT become
-        // part of body's flex layout.
-        // ==========================================
+    if (analysisSection) {
 
-        pdfHost =
-            document.createElement(
-                "div"
-            );
+        analysisSection.classList.remove(
+            "hidden"
+        );
 
-        pdfHost.className =
-            "examverse-pdf-host";
+        analysisSection.style.display =
+            "block";
 
-
-        pdfHost.style.position =
-            "fixed";
-
-        pdfHost.style.left =
-            "0";
-
-        pdfHost.style.top =
-            "0";
-
-        pdfHost.style.width =
-            "794px";
-
-        pdfHost.style.minWidth =
-            "794px";
-
-        pdfHost.style.maxWidth =
-            "794px";
-
-        pdfHost.style.height =
-            "auto";
-
-        pdfHost.style.margin =
-            "0";
-
-        pdfHost.style.padding =
-            "0";
-
-        pdfHost.style.background =
-            "#ffffff";
-
-        pdfHost.style.overflow =
-            "visible";
-
-        pdfHost.style.pointerEvents =
+        analysisSection.style.maxHeight =
             "none";
 
-        /*
-           Keep it invisible to the user.
+        analysisSection.style.height =
+            "auto";
 
-           html2canvas's onclone() below will make
-           the rendering copy visible.
-        */
-
-        pdfHost.style.visibility =
-            "hidden";
-
-        pdfHost.style.opacity =
+        analysisSection.style.opacity =
             "1";
 
-        pdfHost.style.zIndex =
-            "-1";
-
-
-        document.body.appendChild(
-            pdfHost
-        );
-
-
-        // ==========================================
-        // CLONE RESULT PAGE
-        // ==========================================
-
-        const pdfRoot =
-            resultWrapper.cloneNode(
-                true
-            );
-
-
-        pdfRoot.classList.add(
-            "pdf-mode"
-        );
-
-
-        pdfRoot.setAttribute(
-            "data-pdf-render",
-            "true"
-        );
-
-
-        // ==========================================
-        // FORCE A4 CSS WIDTH
-        // ==========================================
-
-        pdfRoot.style.width =
-            "794px";
-
-        pdfRoot.style.minWidth =
-            "794px";
-
-        pdfRoot.style.maxWidth =
-            "794px";
-
-        pdfRoot.style.flex =
-            "0 0 794px";
-
-        pdfRoot.style.margin =
-            "0";
-
-        pdfRoot.style.padding =
-            "18px";
-
-        pdfRoot.style.boxSizing =
-            "border-box";
-
-        pdfRoot.style.background =
-            "#ffffff";
-
-        pdfRoot.style.height =
-            "auto";
-
-        pdfRoot.style.minHeight =
-            "0";
-
-        pdfRoot.style.maxHeight =
-            "none";
-
-        pdfRoot.style.overflow =
+        analysisSection.style.visibility =
             "visible";
 
+        analysisSection.style.overflow =
+            "visible";
 
-        pdfHost.appendChild(
-            pdfRoot
+    }
+
+
+    // ==========================================
+    // SHOW QUESTION ANALYSIS
+    // ==========================================
+
+    const questionAnalysis =
+        resultHTML.querySelector(
+            "#questionAnalysis"
         );
 
 
-        // ==========================================
-        // REMOVE WEB-ONLY ELEMENTS
-        // ==========================================
+    if (questionAnalysis) {
 
-        pdfRoot
-            .querySelectorAll(
-                ".result-header, " +
-                ".result-options, " +
-                ".result-actions, " +
-                "#downloadPdfBtn, " +
-                "#analysisBtn, " +
-                ".dashboard-btn"
-            )
-            .forEach(
-                element => {
+        questionAnalysis.style.display =
+            "block";
 
-                    element.remove();
+        questionAnalysis.style.height =
+            "auto";
 
-                }
-            );
+        questionAnalysis.style.maxHeight =
+            "none";
 
+        questionAnalysis.style.opacity =
+            "1";
 
-        // ==========================================
-        // FORCE DETAILED ANALYSIS
-        // ==========================================
+        questionAnalysis.style.visibility =
+            "visible";
 
-        const analysisSection =
-            pdfRoot.querySelector(
-                "#analysisSection"
-            );
+        questionAnalysis.style.overflow =
+            "visible";
 
+    }
 
-        if (analysisSection) {
 
-            analysisSection.classList.remove(
-                "hidden"
-            );
+    // ==========================================
+    // BUILD PRINT DOCUMENT
+    // ==========================================
 
-            analysisSection.style.display =
-                "block";
+    const documentHTML = `
 
-            analysisSection.style.visibility =
-                "visible";
+<!DOCTYPE html>
 
-            analysisSection.style.opacity =
-                "1";
+<html lang="en">
 
-            analysisSection.style.height =
-                "auto";
+<head>
 
-            analysisSection.style.maxHeight =
-                "none";
+<meta charset="UTF-8">
 
-            analysisSection.style.overflow =
-                "visible";
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-            analysisSection.style.marginTop =
-                "20px";
+<title>
+    ExamVerse Examination Result
+</title>
 
-        }
 
+<!-- Poppins -->
 
-        // ==========================================
-        // QUESTION ANALYSIS
-        // ==========================================
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
 
-        const questionAnalysis =
-            pdfRoot.querySelector(
-                "#questionAnalysis"
-            );
 
+<!-- Font Awesome -->
 
-        if (questionAnalysis) {
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
 
-            questionAnalysis.style.display =
-                "block";
 
-            questionAnalysis.style.visibility =
-                "visible";
+<!-- ORIGINAL RESULT CSS -->
 
-            questionAnalysis.style.opacity =
-                "1";
+<link
+    rel="stylesheet"
+    href="assets/css/result.css"
+>
 
-            questionAnalysis.style.height =
-                "auto";
 
-            questionAnalysis.style.maxHeight =
-                "none";
+<style>
 
-            questionAnalysis.style.overflow =
-                "visible";
+/* =====================================================
+   EXAMVERSE NATIVE PRINT SYSTEM
+   ===================================================== */
 
-        }
 
+/* ---------- PAGE ---------- */
 
-        const questionList =
-            pdfRoot.querySelector(
-                ".question-analysis-list"
-            );
+@page {
 
+    size: A4 portrait;
 
-        if (questionList) {
+    margin:
+        12mm
+        12mm
+        12mm
+        12mm;
 
-            questionList.style.display =
-                "flex";
+}
 
-            questionList.style.flexDirection =
-                "column";
 
-            questionList.style.width =
-                "100%";
+/* ---------- BASE ---------- */
 
-            questionList.style.maxWidth =
-                "100%";
+html,
+body {
 
-            questionList.style.height =
-                "auto";
+    margin: 0 !important;
 
-            questionList.style.maxHeight =
-                "none";
+    padding: 0 !important;
 
-            questionList.style.overflow =
-                "visible";
+    width: 100% !important;
 
-        }
+    min-height: 100% !important;
 
+    background: #ffffff !important;
 
-        // ==========================================
-        // SECTION RESULT
-        // ==========================================
+}
 
-        const sectionResult =
-            pdfRoot.querySelector(
-                "#sectionResult"
-            );
 
-        const sectionResultList =
-            pdfRoot.querySelector(
-                "#sectionResultList"
-            );
+body {
 
+    display: block !important;
 
-        if (sectionResult) {
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif !important;
 
-            const hasSectionResults =
-                sectionResultList &&
-                sectionResultList.children.length > 0;
+    color: #172554;
 
+}
 
-            if (hasSectionResults) {
 
-                sectionResult.classList.remove(
-                    "hidden"
-                );
+/* ---------- RESULT WIDTH ---------- */
 
-                sectionResult.style.display =
-                    "block";
+.result-wrapper {
 
-                sectionResult.style.visibility =
-                    "visible";
+    width: 100% !important;
 
-                sectionResult.style.opacity =
-                    "1";
+    max-width: none !important;
 
-                sectionResult.style.height =
-                    "auto";
+    margin: 0 !important;
 
-                sectionResult.style.maxHeight =
-                    "none";
+    padding: 0 !important;
 
-                sectionResult.style.overflow =
-                    "visible";
+    box-sizing: border-box !important;
 
-            }
-            else {
+}
 
-                sectionResult.style.display =
-                    "none";
 
-            }
+/* ---------- REMOVE WEB ELEMENTS ---------- */
 
-        }
+.result-header,
+.result-options,
+.result-actions,
+#downloadPdfBtn,
+#analysisBtn,
+.dashboard-btn {
 
+    display: none !important;
 
-        // ==========================================
-        // FORCE CONTENT WIDTH
-        // ==========================================
+}
 
-        pdfRoot
-            .querySelectorAll(
-                ".score-card, " +
-                ".stats-grid, " +
-                ".stat-card, " +
-                ".details-card, " +
-                ".details-grid, " +
-                ".detail-item, " +
-                ".question-analysis-card, " +
-                ".question-result-card, " +
-                ".answer-result-grid, " +
-                ".answer-box, " +
-                ".section-result-card, " +
-                ".section-result-list, " +
-                ".section-result-item"
-            )
-            .forEach(
-                element => {
 
-                    element.style.boxSizing =
-                        "border-box";
+/* ---------- SCORE ---------- */
 
-                    element.style.maxWidth =
-                        "100%";
+.score-card {
 
-                }
-            );
+    width: 100% !important;
 
+    max-width: none !important;
 
-        // ==========================================
-        // SCORE CARD
-        // ==========================================
+    margin:
+        0
+        0
+        8mm
+        0 !important;
 
-        const scoreCard =
-            pdfRoot.querySelector(
-                ".score-card"
-            );
+    box-shadow: none !important;
 
+    backdrop-filter: none !important;
 
-        if (scoreCard) {
+    -webkit-backdrop-filter: none !important;
 
-            scoreCard.style.width =
-                "100%";
+    break-inside: avoid;
 
-            scoreCard.style.maxWidth =
-                "100%";
+    page-break-inside: avoid;
 
-            scoreCard.style.boxSizing =
-                "border-box";
+}
 
-        }
 
+/* ---------- STATISTICS ---------- */
 
-        // ==========================================
-        // STATISTICS
-        // ==========================================
+.stats-grid {
 
-        const statsGrid =
-            pdfRoot.querySelector(
-                ".stats-grid"
-            );
+    display: grid !important;
 
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        ) !important;
 
-        if (statsGrid) {
+    width: 100% !important;
 
-            statsGrid.style.display =
-                "grid";
+    max-width: none !important;
 
-            statsGrid.style.gridTemplateColumns =
-                "repeat(4, minmax(0, 1fr))";
+    gap: 4mm !important;
 
-            statsGrid.style.width =
-                "100%";
+    break-inside: avoid;
 
-            statsGrid.style.maxWidth =
-                "100%";
+    page-break-inside: avoid;
 
-            statsGrid.style.boxSizing =
-                "border-box";
+}
 
-        }
 
+.stat-card {
 
-        // ==========================================
-        // DETAILS
-        // ==========================================
+    min-width: 0 !important;
 
-        const detailsGrid =
-            pdfRoot.querySelector(
-                ".details-grid"
-            );
+    width: 100% !important;
 
+    box-shadow: none !important;
 
-        if (detailsGrid) {
+    break-inside: avoid;
 
-            detailsGrid.style.display =
-                "grid";
+    page-break-inside: avoid;
 
-            detailsGrid.style.gridTemplateColumns =
-                "repeat(2, minmax(0, 1fr))";
+}
 
-            detailsGrid.style.width =
-                "100%";
 
-            detailsGrid.style.maxWidth =
-                "100%";
+/* ---------- DETAILS ---------- */
 
-        }
+.details-card {
 
+    width: 100% !important;
 
-        // ==========================================
-        // ANSWERS
-        // ==========================================
+    max-width: none !important;
 
-        pdfRoot
-            .querySelectorAll(
-                ".answer-result-grid"
-            )
-            .forEach(
-                grid => {
+    box-shadow: none !important;
 
-                    grid.style.display =
-                        "grid";
+    break-inside: avoid;
 
-                    grid.style.gridTemplateColumns =
-                        "repeat(2, minmax(0, 1fr))";
+    page-break-inside: avoid;
 
-                    grid.style.width =
-                        "100%";
+}
 
-                    grid.style.maxWidth =
-                        "100%";
 
-                }
-            );
+.details-grid {
 
+    display: grid !important;
 
-        // ==========================================
-        // QUESTION CARDS
-        // ==========================================
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        ) !important;
 
-        pdfRoot
-            .querySelectorAll(
-                ".question-result-card"
-            )
-            .forEach(
-                card => {
+}
 
-                    card.style.width =
-                        "100%";
 
-                    card.style.maxWidth =
-                        "100%";
+/* ---------- DETAIL ITEMS ---------- */
 
-                    card.style.boxSizing =
-                        "border-box";
+.detail-item {
 
-                    card.style.visibility =
-                        "visible";
+    break-inside: avoid;
 
-                    card.style.opacity =
-                        "1";
+    page-break-inside: avoid;
 
-                    card.style.height =
-                        "auto";
+}
 
-                    card.style.maxHeight =
-                        "none";
 
-                    card.style.overflow =
-                        "visible";
+/* ---------- ANALYSIS ---------- */
 
-                }
-            );
+#analysisSection {
 
+    display: block !important;
 
-        // ==========================================
-        // ALL IMAGES
-        // ==========================================
+    width: 100% !important;
 
-        pdfRoot
-            .querySelectorAll(
-                "img"
-            )
-            .forEach(
-                img => {
+    max-width: none !important;
 
-                    img.style.maxWidth =
-                        "100%";
+    height: auto !important;
 
-                    img.style.height =
-                        "auto";
+    max-height: none !important;
 
-                }
-            );
+    opacity: 1 !important;
 
+    visibility: visible !important;
 
-        // ==========================================
-        // WAIT FOR LAYOUT
-        // ==========================================
+    overflow: visible !important;
 
-        await new Promise(
-            resolve => {
+}
 
-                requestAnimationFrame(
-                    () => {
 
-                        requestAnimationFrame(
-                            () => {
+/* ---------- ANALYSIS CARD ---------- */
 
-                                setTimeout(
-                                    resolve,
-                                    150
-                                );
+.question-analysis-card {
 
-                            }
-                        );
+    width: 100% !important;
 
-                    }
-                );
+    max-width: none !important;
 
-            }
-        );
+    box-shadow: none !important;
 
+}
 
-        // ==========================================
-        // PDF OPTIONS
-        // ==========================================
 
-        const options = {
+/* ---------- QUESTION LIST ---------- */
 
-            margin: [
-                8,
-                8,
-                8,
-                8
-            ],
+.question-analysis-list {
 
-            filename:
-                fileName,
+    display: block !important;
 
-            image: {
+    width: 100% !important;
 
-                type:
-                    "jpeg",
+    max-width: none !important;
 
-                quality:
-                    0.98
+    height: auto !important;
 
-            },
+    max-height: none !important;
 
-            html2canvas: {
+    overflow: visible !important;
 
-                scale:
-                    1.5,
+}
 
-                useCORS:
-                    true,
 
-                allowTaint:
-                    false,
+/* ---------- QUESTION CARD ---------- */
 
-                backgroundColor:
-                    "#ffffff",
+.question-result-card {
 
-                logging:
-                    false,
+    width: 100% !important;
 
-                scrollX:
-                    0,
+    max-width: none !important;
 
-                scrollY:
-                    0,
+    box-shadow: none !important;
 
-                /*
-                   IMPORTANT:
+    break-inside: avoid !important;
 
-                   Never use the real mobile
-                   viewport width here.
+    page-break-inside: avoid !important;
 
-                   A4 CSS width is 794px.
-                */
+}
 
-                windowWidth:
-                    794,
 
-                windowHeight:
-                    Math.max(
-                        pdfRoot.scrollHeight,
-                        1123
-                    ),
+/* ---------- ANSWER GRID ---------- */
 
-                onclone:
-                    clonedDocument => {
+.answer-result-grid {
 
-                        const clonedHost =
-                            clonedDocument.querySelector(
-                                ".examverse-pdf-host"
-                            );
+    display: grid !important;
 
-                        if (clonedHost) {
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        ) !important;
 
-                            clonedHost.style.visibility =
-                                "visible";
+    width: 100% !important;
 
-                            clonedHost.style.opacity =
-                                "1";
+}
 
-                            clonedHost.style.position =
-                                "fixed";
 
-                            clonedHost.style.left =
-                                "0";
+/* ---------- SECTION RESULT ---------- */
 
-                            clonedHost.style.top =
-                                "0";
+.section-result-item {
 
-                            clonedHost.style.width =
-                                "794px";
+    break-inside: avoid !important;
 
-                            clonedHost.style.minWidth =
-                                "794px";
+    page-break-inside: avoid !important;
 
-                            clonedHost.style.maxWidth =
-                                "794px";
+}
 
-                            clonedHost.style.zIndex =
-                                "1";
 
-                        }
+/* ---------- IMAGES ---------- */
 
+img {
 
-                        const clonedRoot =
-                            clonedDocument.querySelector(
-                                ".pdf-mode"
-                            );
+    max-width: 100% !important;
 
-                        if (clonedRoot) {
+    height: auto !important;
 
-                            clonedRoot.style.position =
-                                "relative";
+}
 
-                            clonedRoot.style.left =
-                                "0";
 
-                            clonedRoot.style.top =
-                                "0";
+/* ---------- TEXT ---------- */
 
-                            clonedRoot.style.width =
-                                "794px";
+p,
+span,
+strong,
+div {
 
-                            clonedRoot.style.minWidth =
-                                "794px";
+    overflow-wrap:
+        break-word;
 
-                            clonedRoot.style.maxWidth =
-                                "794px";
+}
 
-                            clonedRoot.style.margin =
-                                "0";
 
-                            clonedRoot.style.transform =
-                                "none";
+/* ---------- PAGE BREAK ---------- */
 
-                        }
+.pdf-page-break {
 
-                    }
+    break-before: page !important;
 
-            },
+    page-break-before: always !important;
 
-            jsPDF: {
+}
 
-                unit:
-                    "mm",
 
-                format:
-                    "a4",
+/* ---------- DON'T SPLIT ---------- */
 
-                orientation:
-                    "portrait",
+.score-card,
+.stat-card,
+.details-card,
+.detail-item,
+.question-result-card,
+.section-result-item,
+.analysis-header,
+.analysis-legend {
 
-                compress:
-                    true
+    break-inside: avoid !important;
 
-            },
+    page-break-inside: avoid !important;
 
-            pagebreak: {
+}
 
-                mode: [
-                    "css",
-                    "legacy"
-                ],
 
-                before: [
-                    ".pdf-page-break"
-                ],
+/* ---------- PRINT BACKGROUND ---------- */
 
-                after: [],
+* {
 
-                avoid: [
+    -webkit-print-color-adjust:
+        exact !important;
 
-                    ".question-result-card",
+    print-color-adjust:
+        exact !important;
 
-                    ".details-card",
+}
 
-                    ".score-card",
 
-                    ".stat-card",
+/* ---------- LINKS ---------- */
 
-                    ".analysis-header",
+a {
 
-                    ".analysis-legend",
+    color: inherit !important;
 
-                    ".section-result-item"
+    text-decoration: none !important;
 
-                ]
+}
 
-            }
 
-        };
+/* ---------- MOBILE PRINT ---------- */
 
+@media print {
 
-        // ==========================================
-        // GENERATE PDF
-        // ==========================================
+    html,
+    body {
 
-        const pdf =
-            await html2pdf()
-                .set(options)
-                .from(pdfRoot)
-                .toPdf()
-                .get("pdf");
+        width: 100% !important;
 
+        background:
+            #ffffff !important;
 
-        // ==========================================
-        // PDF METADATA
-        // ==========================================
+    }
 
-        pdf.setProperties({
+}
 
-            title:
-                "ExamVerse Examination Result",
+</style>
 
-            subject:
-                "Examination Result",
+</head>
 
-            author:
-                "ExamVerse",
 
-            creator:
-                "ExamVerse"
+<body>
 
-        });
+${resultHTML.outerHTML}
 
 
-        // ==========================================
-        // SHOW PDF IN NEW TAB
-        // ==========================================
+<script>
 
-        const pdfBlob =
-            pdf.output(
-                "blob"
-            );
+window.addEventListener(
+    "load",
+    function () {
 
-
-        const pdfUrl =
-            URL.createObjectURL(
-                pdfBlob
-            );
-
-
-        if (pdfWindow &&
-            !pdfWindow.closed) {
-
-            pdfWindow.location.href =
-                pdfUrl;
-
-        }
-        else {
-
-            /*
-               Popup was blocked.
-
-               Fall back to downloading.
-            */
-
-            const downloadLink =
-                document.createElement(
-                    "a"
-                );
-
-            downloadLink.href =
-                pdfUrl;
-
-            downloadLink.download =
-                fileName;
-
-            document.body.appendChild(
-                downloadLink
-            );
-
-            downloadLink.click();
-
-            downloadLink.remove();
-
-        }
-
-
-        // ==========================================
-        // CLEAN URL LATER
-        // ==========================================
+        /*
+           Wait for fonts/images/layout.
+        */
 
         setTimeout(
-            () => {
+            function () {
 
-                URL.revokeObjectURL(
-                    pdfUrl
-                );
+                window.focus();
+
+                window.print();
 
             },
-            60000
-        );
-
-
-    }
-    catch (error) {
-
-        console.error(
-            "PDF Generation Error:",
-            error
-        );
-
-
-        if (pdfWindow &&
-            !pdfWindow.closed) {
-
-            pdfWindow.document.body.innerHTML = `
-                <div style="
-                    font-family:Arial,sans-serif;
-                    padding:40px;
-                    color:#b91c1c;
-                ">
-                    Unable to generate the result PDF.
-                </div>
-            `;
-
-        }
-
-
-        alert(
-            "Unable to generate the result PDF. Check the browser console for details."
+            700
         );
 
     }
+);
+
+</script>
 
 
-    finally {
+</body>
 
-        // ==========================================
-        // REMOVE PDF HOST
-        // ==========================================
+</html>
 
-        if (
-            pdfHost &&
-            pdfHost.parentNode
-        ) {
-
-            pdfHost.parentNode.removeChild(
-                pdfHost
-            );
-
-        }
+`;
 
 
-        // ==========================================
-        // RESTORE BUTTON
-        // ==========================================
+    // ==========================================
+    // WRITE PRINT DOCUMENT
+    // ==========================================
+
+    printWindow.document.open();
+
+    printWindow.document.write(
+        documentHTML
+    );
+
+    printWindow.document.close();
+
+
+    // ==========================================
+    // BUTTON FEEDBACK
+    // ==========================================
+
+    if (pdfButton) {
+
+        const oldText =
+            pdfButton.innerHTML;
 
         pdfButton.disabled =
-            false;
+            true;
 
-        pdfButton.innerHTML =
-            oldText;
+        pdfButton.innerHTML = `
+            <i class="fa-solid fa-print"></i>
+            Preparing PDF...
+        `;
+
+
+        setTimeout(
+            function () {
+
+                pdfButton.disabled =
+                    false;
+
+                pdfButton.innerHTML =
+                    oldText;
+
+            },
+            1500
+        );
 
     }
 
