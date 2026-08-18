@@ -1810,7 +1810,6 @@ async function downloadResultPDF() {
         return;
     }
 
-
     const oldText =
         pdfButton.innerHTML;
 
@@ -1821,69 +1820,126 @@ async function downloadResultPDF() {
         Generating PDF...
     `;
 
-
-    let wasHidden = false;
-
+    let pdfWrapper = null;
     let pdfHeader = null;
     let performanceChart = null;
 
-
     try {
 
-        /* ==========================================
-           SHOW ANALYSIS TEMPORARILY
-        ========================================== */
+        // ==========================================
+        // GET CURRENT RESULT VALUES
+        // ==========================================
 
-        if (analysisSection) {
+        const examName =
+            document.getElementById("examName")
+                ?.textContent
+                ?.trim()
+            || "Examination";
 
-            wasHidden =
-                analysisSection.classList.contains("hidden");
+        const score =
+            document.getElementById("score")
+                ?.textContent
+                ?.trim()
+            || "0.00";
 
-            analysisSection.classList.remove("hidden");
+        const totalMarks =
+            document.getElementById("totalMarks")
+                ?.textContent
+                ?.trim()
+            || "0";
+
+        const resultText =
+            document.getElementById("resultBadge")
+                ?.textContent
+                ?.trim()
+            || "Completed";
+
+        const attempted =
+            document.getElementById("attempted")
+                ?.textContent
+                ?.trim()
+            || "0";
+
+        const correct =
+            document.getElementById("correct")
+                ?.textContent
+                ?.trim()
+            || "0";
+
+        const wrong =
+            document.getElementById("wrong")
+                ?.textContent
+                ?.trim()
+            || "0";
+
+        const skipped =
+            document.getElementById("skipped")
+                ?.textContent
+                ?.trim()
+            || "0";
+
+
+        // ==========================================
+        // CREATE FIXED PDF COPY
+        // ==========================================
+
+        pdfWrapper =
+            resultWrapper.cloneNode(true);
+
+        pdfWrapper.classList.remove("pdf-mode");
+
+        pdfWrapper.classList.add("pdf-mode");
+
+
+        // ==========================================
+        // FIXED DESKTOP-LIKE PDF WIDTH
+        // ==========================================
+
+        pdfWrapper.style.width = "1200px";
+        pdfWrapper.style.maxWidth = "1200px";
+        pdfWrapper.style.minWidth = "1200px";
+
+        pdfWrapper.style.margin = "0";
+        pdfWrapper.style.padding = "0";
+
+        pdfWrapper.style.position = "absolute";
+        pdfWrapper.style.left = "-100000px";
+        pdfWrapper.style.top = "0";
+
+        pdfWrapper.style.overflow = "visible";
+
+        pdfWrapper.style.height = "auto";
+        pdfWrapper.style.minHeight = "0";
+
+        pdfWrapper.style.background = "#ffffff";
+
+
+        // ==========================================
+        // ANALYSIS MUST BE VISIBLE IN PDF
+        // ==========================================
+
+        const clonedAnalysis =
+            pdfWrapper.querySelector(
+                "#analysisSection"
+            );
+
+        if (clonedAnalysis) {
+
+            clonedAnalysis.classList.remove(
+                "hidden"
+            );
+
+            clonedAnalysis.style.display = "block";
+            clonedAnalysis.style.height = "auto";
+            clonedAnalysis.style.maxHeight = "none";
+            clonedAnalysis.style.overflow = "visible";
 
         }
 
 
-        /* ==========================================
-           GET CURRENT RESULT VALUES
-        ========================================== */
-
-        const examName =
-            document.getElementById("examName")?.textContent?.trim()
-            || "Examination";
-
-        const score =
-            document.getElementById("score")?.textContent?.trim()
-            || "0.00";
-
-        const totalMarks =
-            document.getElementById("totalMarks")?.textContent?.trim()
-            || "0";
-
-        const resultText =
-            document.getElementById("resultBadge")?.textContent?.trim()
-            || "Completed";
-
-        const attempted =
-            document.getElementById("attempted")?.textContent?.trim()
-            || "0";
-
-        const correct =
-            document.getElementById("correct")?.textContent?.trim()
-            || "0";
-
-        const wrong =
-            document.getElementById("wrong")?.textContent?.trim()
-            || "0";
-
-        const skipped =
-            document.getElementById("skipped")?.textContent?.trim()
-            || "0";
-
-
-        /* ==========================================
-           CREATE PDF HEADER
-        ========================================== */
+        // ==========================================
+        // CREATE PDF HEADER
+        // ==========================================
 
         pdfHeader =
             document.createElement("div");
@@ -1904,11 +1960,12 @@ async function downloadResultPDF() {
                 </div>
 
                 <div class="attempted-by">
-    Attempted By: ${attemptedUserName}
-</div>
+                    Attempted By: ${escapeHTML(
+                        attemptedUserName
+                    )}
+                </div>
 
             </div>
-
 
             <div class="pdf-exam-name">
 
@@ -1918,20 +1975,20 @@ async function downloadResultPDF() {
 
         `;
 
+        pdfWrapper.prepend(
+            pdfHeader
+        );
 
-        resultWrapper.prepend(pdfHeader);
 
-
-        /* ==========================================
-           CREATE PERFORMANCE CHART
-        ========================================== */
+        // ==========================================
+        // CREATE PERFORMANCE CHART
+        // ==========================================
 
         performanceChart =
             document.createElement("div");
 
         performanceChart.className =
             "pdf-performance-card";
-
 
         const attemptedNumber =
             Number(attempted) || 0;
@@ -1945,7 +2002,6 @@ async function downloadResultPDF() {
         const skippedNumber =
             Number(skipped) || 0;
 
-
         const chartMaximum =
             Math.max(
                 attemptedNumber,
@@ -1954,7 +2010,6 @@ async function downloadResultPDF() {
                 skippedNumber,
                 1
             );
-
 
         const correctWidth =
             (correctNumber / chartMaximum) * 100;
@@ -2036,12 +2091,14 @@ async function downloadResultPDF() {
         `;
 
 
-        /*
-           Put chart immediately after statistics.
-        */
+        // ==========================================
+        // INSERT CHART
+        // ==========================================
 
         const statsGrid =
-            resultWrapper.querySelector(".stats-grid");
+            pdfWrapper.querySelector(
+                ".stats-grid"
+            );
 
         if (statsGrid) {
 
@@ -2053,57 +2110,62 @@ async function downloadResultPDF() {
         }
         else {
 
-            resultWrapper.appendChild(
+            pdfWrapper.appendChild(
                 performanceChart
             );
 
         }
 
 
-        /* ==========================================
-           PDF MODE
-        ========================================== */
+        // ==========================================
+        // PUT COPY INTO DOCUMENT
+        // ==========================================
 
-        resultWrapper.classList.add("pdf-mode");
+        document.body.appendChild(
+            pdfWrapper
+        );
 
 
-        /*
-           Give browser time to render
-           dynamically-created PDF elements.
-        */
+        // ==========================================
+        // WAIT FOR BROWSER RENDER
+        // ==========================================
 
         await new Promise(
             resolve =>
                 setTimeout(
                     resolve,
-                    700
+                    1000
                 )
         );
 
 
-        /* ==========================================
-           FILE NAME
-        ========================================== */
+        // ==========================================
+        // FILE NAME
+        // ==========================================
 
         const attemptId =
-            sessionStorage.getItem("attemptId");
-
+            sessionStorage.getItem(
+                "attemptId"
+            );
 
         const fileName =
             "ExamVerse_Result_" +
 
             (
                 attemptId
-                    ? attemptId.substring(0, 8)
+                    ? attemptId.substring(
+                        0,
+                        8
+                    )
                     : "Report"
             ) +
 
             ".pdf";
 
 
-        /* ==========================================
-           PDF SETTINGS
-        ========================================== */
+        // ==========================================
+        // PDF OPTIONS
+        // ==========================================
 
         const options = {
 
@@ -2117,7 +2179,6 @@ async function downloadResultPDF() {
             filename:
                 fileName,
 
-
             image: {
 
                 type:
@@ -2127,7 +2188,6 @@ async function downloadResultPDF() {
                     0.98
 
             },
-
 
             html2canvas: {
 
@@ -2153,10 +2213,15 @@ async function downloadResultPDF() {
                     0,
 
                 windowWidth:
-    document.documentElement.clientWidth
+                    1200,
+
+                windowHeight:
+                    Math.max(
+                        800,
+                        pdfWrapper.scrollHeight
+                    )
 
             },
-
 
             jsPDF: {
 
@@ -2173,7 +2238,6 @@ async function downloadResultPDF() {
                     true
 
             },
-
 
             pagebreak: {
 
@@ -2211,15 +2275,15 @@ async function downloadResultPDF() {
         };
 
 
-        /* ==========================================
-           GENERATE PDF
-        ========================================== */
+        // ==========================================
+        // GENERATE PDF
+        // ==========================================
 
         await html2pdf()
 
             .set(options)
 
-            .from(resultWrapper)
+            .from(pdfWrapper)
 
             .toPdf()
 
@@ -2250,40 +2314,6 @@ async function downloadResultPDF() {
             .save();
 
 
-        /* ==========================================
-           RESTORE PAGE
-        ========================================== */
-
-        resultWrapper.classList.remove(
-            "pdf-mode"
-        );
-
-
-        if (
-            analysisSection &&
-            wasHidden
-        ) {
-
-            analysisSection.classList.add(
-                "hidden"
-            );
-
-        }
-
-
-        if (pdfHeader) {
-
-            pdfHeader.remove();
-
-        }
-
-
-        if (performanceChart) {
-
-            performanceChart.remove();
-
-        }
-
     }
 
 
@@ -2294,46 +2324,25 @@ async function downloadResultPDF() {
             error
         );
 
-
         alert(
             "Unable to generate the result PDF."
         );
-
-
-        resultWrapper.classList.remove(
-            "pdf-mode"
-        );
-
-
-        if (
-            analysisSection &&
-            wasHidden
-        ) {
-
-            analysisSection.classList.add(
-                "hidden"
-            );
-
-        }
-
-
-        if (pdfHeader) {
-
-            pdfHeader.remove();
-
-        }
-
-
-        if (performanceChart) {
-
-            performanceChart.remove();
-
-        }
 
     }
 
 
     finally {
+
+        // ==========================================
+        // REMOVE TEMPORARY PDF COPY
+        // ==========================================
+
+        if (pdfWrapper) {
+
+            pdfWrapper.remove();
+
+        }
+
 
         pdfButton.disabled =
             false;
@@ -2365,18 +2374,17 @@ async function renderSectionPerformance(
             "sectionResultList"
         );
 
-        // ==========================================
+    
+
+// ==========================================
 // Hide Immediately
 // ==========================================
 
-// Prevent the loading/buffering box from
-// appearing while Supabase is being queried.
-
 if (sectionContainer) {
 
-    sectionContainer.classList.add(
-        "hidden"
-    );
+    sectionContainer.classList.add("hidden");
+
+    sectionContainer.style.display = "none";
 
 }
 
@@ -2434,17 +2442,16 @@ if (sectionContainer) {
 
         if (sectionError) {
 
-            console.error(
-                "Section Result Error:",
-                sectionError
-            );
+    console.error(
+        "Section Result Error:",
+        sectionError
+    );
 
-            sectionContainer.classList.add(
-                "hidden"
-            );
+    sectionContainer.classList.add("hidden");
+    sectionContainer.style.display = "none";
 
-            return [];
-        }
+    return [];
+}
 
 
         // ------------------------------------------
@@ -2452,16 +2459,15 @@ if (sectionContainer) {
         // ------------------------------------------
 
         if (
-            !sections ||
-            sections.length === 0
-        ) {
+    !sections ||
+    sections.length === 0
+) {
 
-            sectionContainer.classList.add(
-                "hidden"
-            );
+    sectionContainer.classList.add("hidden");
+    sectionContainer.style.display = "none";
 
-            return;
-        }
+    return [];
+}
 
 
         // ------------------------------------------
