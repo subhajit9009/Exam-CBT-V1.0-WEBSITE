@@ -1771,6 +1771,11 @@ function setupPdfButton() {
 // ISOLATED PDF RENDERER
 // ==========================================
 
+// ==========================================
+// GENERATE RESULT PDF
+// FINAL STABLE PDF RENDERER
+// ==========================================
+
 async function downloadResultPDF() {
 
     const pdfButton =
@@ -1809,6 +1814,55 @@ async function downloadResultPDF() {
 
 
     // ==========================================
+    // OPEN PDF WINDOW IMMEDIATELY
+    //
+    // This prevents popup blockers from stopping
+    // the PDF viewer on mobile browsers.
+    // ==========================================
+
+    let pdfWindow = null;
+
+    try {
+
+        pdfWindow =
+            window.open(
+                "",
+                "_blank"
+            );
+
+        if (pdfWindow) {
+
+            pdfWindow.document.title =
+                "ExamVerse Examination Result";
+
+            pdfWindow.document.body.innerHTML = `
+                <div style="
+                    font-family:Arial,sans-serif;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    height:100vh;
+                    color:#475569;
+                    font-size:16px;
+                ">
+                    Preparing your result PDF...
+                </div>
+            `;
+
+        }
+
+    }
+    catch (popupError) {
+
+        console.warn(
+            "PDF popup could not be opened:",
+            popupError
+        );
+
+    }
+
+
+    // ==========================================
     // SAVE BUTTON STATE
     // ==========================================
 
@@ -1823,11 +1877,7 @@ async function downloadResultPDF() {
     `;
 
 
-    // ==========================================
-    // CREATE A COMPLETELY SEPARATE PDF ROOT
-    // ==========================================
-
-    let pdfRoot = null;
+    let pdfHost = null;
 
 
     try {
@@ -1837,7 +1887,9 @@ async function downloadResultPDF() {
         // ==========================================
 
         const attemptId =
-            sessionStorage.getItem("attemptId");
+            sessionStorage.getItem(
+                "attemptId"
+            );
 
         const fileName =
             "ExamVerse_Result_" +
@@ -1850,20 +1902,94 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // CLONE RESULT
+        // CREATE ISOLATED PDF HOST
+        //
+        // IMPORTANT:
+        // The host is fixed, so it does NOT become
+        // part of body's flex layout.
         // ==========================================
 
-        pdfRoot =
-            resultWrapper.cloneNode(true);
+        pdfHost =
+            document.createElement(
+                "div"
+            );
+
+        pdfHost.className =
+            "examverse-pdf-host";
+
+
+        pdfHost.style.position =
+            "fixed";
+
+        pdfHost.style.left =
+            "0";
+
+        pdfHost.style.top =
+            "0";
+
+        pdfHost.style.width =
+            "794px";
+
+        pdfHost.style.minWidth =
+            "794px";
+
+        pdfHost.style.maxWidth =
+            "794px";
+
+        pdfHost.style.height =
+            "auto";
+
+        pdfHost.style.margin =
+            "0";
+
+        pdfHost.style.padding =
+            "0";
+
+        pdfHost.style.background =
+            "#ffffff";
+
+        pdfHost.style.overflow =
+            "visible";
+
+        pdfHost.style.pointerEvents =
+            "none";
+
+        /*
+           Keep it invisible to the user.
+
+           html2canvas's onclone() below will make
+           the rendering copy visible.
+        */
+
+        pdfHost.style.visibility =
+            "hidden";
+
+        pdfHost.style.opacity =
+            "1";
+
+        pdfHost.style.zIndex =
+            "-1";
+
+
+        document.body.appendChild(
+            pdfHost
+        );
 
 
         // ==========================================
-        // MARK PDF ROOT
+        // CLONE RESULT PAGE
         // ==========================================
+
+        const pdfRoot =
+            resultWrapper.cloneNode(
+                true
+            );
+
 
         pdfRoot.classList.add(
             "pdf-mode"
         );
+
 
         pdfRoot.setAttribute(
             "data-pdf-render",
@@ -1872,7 +1998,7 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // PDF ROOT DIMENSIONS
+        // FORCE A4 CSS WIDTH
         // ==========================================
 
         pdfRoot.style.width =
@@ -1883,6 +2009,9 @@ async function downloadResultPDF() {
 
         pdfRoot.style.maxWidth =
             "794px";
+
+        pdfRoot.style.flex =
+            "0 0 794px";
 
         pdfRoot.style.margin =
             "0";
@@ -1896,8 +2025,22 @@ async function downloadResultPDF() {
         pdfRoot.style.background =
             "#ffffff";
 
+        pdfRoot.style.height =
+            "auto";
+
+        pdfRoot.style.minHeight =
+            "0";
+
+        pdfRoot.style.maxHeight =
+            "none";
+
         pdfRoot.style.overflow =
             "visible";
+
+
+        pdfHost.appendChild(
+            pdfRoot
+        );
 
 
         // ==========================================
@@ -1906,7 +2049,12 @@ async function downloadResultPDF() {
 
         pdfRoot
             .querySelectorAll(
-                ".result-header, .result-options, .result-actions"
+                ".result-header, " +
+                ".result-options, " +
+                ".result-actions, " +
+                "#downloadPdfBtn, " +
+                "#analysisBtn, " +
+                ".dashboard-btn"
             )
             .forEach(
                 element => {
@@ -1918,10 +2066,7 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // FORCE DETAILED ANALYSIS INTO PDF
-        //
-        // THIS DOES NOT CHANGE THE REAL PAGE.
-        // IT ONLY CHANGES THE CLONE.
+        // FORCE DETAILED ANALYSIS
         // ==========================================
 
         const analysisSection =
@@ -1945,56 +2090,88 @@ async function downloadResultPDF() {
             analysisSection.style.opacity =
                 "1";
 
-            analysisSection.style.maxHeight =
-                "none";
-
             analysisSection.style.height =
                 "auto";
+
+            analysisSection.style.maxHeight =
+                "none";
 
             analysisSection.style.overflow =
                 "visible";
 
             analysisSection.style.marginTop =
                 "20px";
+
         }
 
 
         // ==========================================
-        // FORCE ANALYSIS LIST VISIBLE
+        // QUESTION ANALYSIS
         // ==========================================
 
-        const questionAnalysisList =
+        const questionAnalysis =
+            pdfRoot.querySelector(
+                "#questionAnalysis"
+            );
+
+
+        if (questionAnalysis) {
+
+            questionAnalysis.style.display =
+                "block";
+
+            questionAnalysis.style.visibility =
+                "visible";
+
+            questionAnalysis.style.opacity =
+                "1";
+
+            questionAnalysis.style.height =
+                "auto";
+
+            questionAnalysis.style.maxHeight =
+                "none";
+
+            questionAnalysis.style.overflow =
+                "visible";
+
+        }
+
+
+        const questionList =
             pdfRoot.querySelector(
                 ".question-analysis-list"
             );
 
 
-        if (questionAnalysisList) {
+        if (questionList) {
 
-            questionAnalysisList.style.display =
+            questionList.style.display =
                 "flex";
 
-            questionAnalysisList.style.visibility =
-                "visible";
+            questionList.style.flexDirection =
+                "column";
 
-            questionAnalysisList.style.opacity =
-                "1";
+            questionList.style.width =
+                "100%";
 
-            questionAnalysisList.style.height =
+            questionList.style.maxWidth =
+                "100%";
+
+            questionList.style.height =
                 "auto";
 
-            questionAnalysisList.style.maxHeight =
+            questionList.style.maxHeight =
                 "none";
 
-            questionAnalysisList.style.overflow =
+            questionList.style.overflow =
                 "visible";
+
         }
 
 
         // ==========================================
         // SECTION RESULT
-        //
-        // ONLY DISPLAY IT IF ACTUAL CONTENT EXISTS.
         // ==========================================
 
         const sectionResult =
@@ -2008,12 +2185,12 @@ async function downloadResultPDF() {
             );
 
 
-        const hasSectionResults =
-            !!sectionResultList &&
-            sectionResultList.children.length > 0;
-
-
         if (sectionResult) {
+
+            const hasSectionResults =
+                sectionResultList &&
+                sectionResultList.children.length > 0;
+
 
             if (hasSectionResults) {
 
@@ -2039,53 +2216,19 @@ async function downloadResultPDF() {
                 sectionResult.style.overflow =
                     "visible";
 
-            } else {
+            }
+            else {
 
                 sectionResult.style.display =
                     "none";
+
             }
+
         }
 
 
         // ==========================================
-        // FORCE ALL PDF CONTENT TO BE VISIBLE
-        // ==========================================
-
-        pdfRoot
-            .querySelectorAll(
-                ".analysis-section, " +
-                ".analysis-section-block, " +
-                ".analysis-section-questions, " +
-                ".question-analysis-card, " +
-                ".question-analysis-list, " +
-                ".question-result-card, " +
-                ".section-result-card, " +
-                ".section-result-list, " +
-                ".section-result-item"
-            )
-            .forEach(
-                element => {
-
-                    element.style.visibility =
-                        "visible";
-
-                    element.style.opacity =
-                        "1";
-
-                    element.style.overflow =
-                        "visible";
-
-                    element.style.maxHeight =
-                        "none";
-
-                    element.style.height =
-                        "auto";
-                }
-            );
-
-
-        // ==========================================
-        // WIDTH SAFETY
+        // FORCE CONTENT WIDTH
         // ==========================================
 
         pdfRoot
@@ -2112,12 +2255,37 @@ async function downloadResultPDF() {
 
                     element.style.maxWidth =
                         "100%";
+
                 }
             );
 
 
         // ==========================================
-        // STATS GRID
+        // SCORE CARD
+        // ==========================================
+
+        const scoreCard =
+            pdfRoot.querySelector(
+                ".score-card"
+            );
+
+
+        if (scoreCard) {
+
+            scoreCard.style.width =
+                "100%";
+
+            scoreCard.style.maxWidth =
+                "100%";
+
+            scoreCard.style.boxSizing =
+                "border-box";
+
+        }
+
+
+        // ==========================================
+        // STATISTICS
         // ==========================================
 
         const statsGrid =
@@ -2139,11 +2307,15 @@ async function downloadResultPDF() {
 
             statsGrid.style.maxWidth =
                 "100%";
+
+            statsGrid.style.boxSizing =
+                "border-box";
+
         }
 
 
         // ==========================================
-        // DETAILS GRID
+        // DETAILS
         // ==========================================
 
         const detailsGrid =
@@ -2165,11 +2337,12 @@ async function downloadResultPDF() {
 
             detailsGrid.style.maxWidth =
                 "100%";
+
         }
 
 
         // ==========================================
-        // ANSWER GRID
+        // ANSWERS
         // ==========================================
 
         pdfRoot
@@ -2190,94 +2363,73 @@ async function downloadResultPDF() {
 
                     grid.style.maxWidth =
                         "100%";
+
                 }
             );
 
 
         // ==========================================
-        // QUESTION LIST
+        // QUESTION CARDS
         // ==========================================
 
-        if (questionAnalysisList) {
+        pdfRoot
+            .querySelectorAll(
+                ".question-result-card"
+            )
+            .forEach(
+                card => {
 
-            questionAnalysisList.style.display =
-                "flex";
+                    card.style.width =
+                        "100%";
 
-            questionAnalysisList.style.flexDirection =
-                "column";
+                    card.style.maxWidth =
+                        "100%";
 
-            questionAnalysisList.style.width =
-                "100%";
+                    card.style.boxSizing =
+                        "border-box";
 
-            questionAnalysisList.style.maxWidth =
-                "100%";
+                    card.style.visibility =
+                        "visible";
 
-            questionAnalysisList.style.overflow =
-                "visible";
-        }
+                    card.style.opacity =
+                        "1";
+
+                    card.style.height =
+                        "auto";
+
+                    card.style.maxHeight =
+                        "none";
+
+                    card.style.overflow =
+                        "visible";
+
+                }
+            );
 
 
         // ==========================================
-        // SECTION LIST
+        // ALL IMAGES
         // ==========================================
 
-        if (sectionResultList) {
+        pdfRoot
+            .querySelectorAll(
+                "img"
+            )
+            .forEach(
+                img => {
 
-            sectionResultList.style.width =
-                "100%";
+                    img.style.maxWidth =
+                        "100%";
 
-            sectionResultList.style.maxWidth =
-                "100%";
+                    img.style.height =
+                        "auto";
 
-            sectionResultList.style.overflow =
-                "visible";
-        }
+                }
+            );
 
-
- // ==========================================
-// ADD PDF ROOT TO DOCUMENT
-//
-// Keep the clone inside the real viewport.
-// html2canvas must be able to paint it.
-// ==========================================
-
-pdfRoot.style.position =
-    "fixed";
-
-pdfRoot.style.left =
-    "0";
-
-pdfRoot.style.top =
-    "0";
-
-pdfRoot.style.width =
-    "794px";
-
-pdfRoot.style.minWidth =
-    "794px";
-
-pdfRoot.style.maxWidth =
-    "794px";
-
-pdfRoot.style.zIndex =
-    "2147483647";
-
-pdfRoot.style.pointerEvents =
-    "none";
-
-pdfRoot.style.background =
-    "#ffffff";
-
-pdfRoot.style.overflow =
-    "visible";
-
-
-document.body.appendChild(
-    pdfRoot
-);
 
         // ==========================================
-        // WAIT FOR BROWSER LAYOUT
+        // WAIT FOR LAYOUT
         // ==========================================
 
         await new Promise(
@@ -2287,7 +2439,14 @@ document.body.appendChild(
                     () => {
 
                         requestAnimationFrame(
-                            resolve
+                            () => {
+
+                                setTimeout(
+                                    resolve,
+                                    150
+                                );
+
+                            }
                         );
 
                     }
@@ -2319,13 +2478,14 @@ document.body.appendChild(
                     "jpeg",
 
                 quality:
-                    0.95
+                    0.98
+
             },
 
             html2canvas: {
 
                 scale:
-                    1.25,
+                    1.5,
 
                 useCORS:
                     true,
@@ -2345,13 +2505,100 @@ document.body.appendChild(
                 scrollY:
                     0,
 
+                /*
+                   IMPORTANT:
+
+                   Never use the real mobile
+                   viewport width here.
+
+                   A4 CSS width is 794px.
+                */
+
                 windowWidth:
                     794,
 
                 windowHeight:
-                    pdfRoot.scrollHeight
-            },
+                    Math.max(
+                        pdfRoot.scrollHeight,
+                        1123
+                    ),
 
+                onclone:
+                    clonedDocument => {
+
+                        const clonedHost =
+                            clonedDocument.querySelector(
+                                ".examverse-pdf-host"
+                            );
+
+                        if (clonedHost) {
+
+                            clonedHost.style.visibility =
+                                "visible";
+
+                            clonedHost.style.opacity =
+                                "1";
+
+                            clonedHost.style.position =
+                                "fixed";
+
+                            clonedHost.style.left =
+                                "0";
+
+                            clonedHost.style.top =
+                                "0";
+
+                            clonedHost.style.width =
+                                "794px";
+
+                            clonedHost.style.minWidth =
+                                "794px";
+
+                            clonedHost.style.maxWidth =
+                                "794px";
+
+                            clonedHost.style.zIndex =
+                                "1";
+
+                        }
+
+
+                        const clonedRoot =
+                            clonedDocument.querySelector(
+                                ".pdf-mode"
+                            );
+
+                        if (clonedRoot) {
+
+                            clonedRoot.style.position =
+                                "relative";
+
+                            clonedRoot.style.left =
+                                "0";
+
+                            clonedRoot.style.top =
+                                "0";
+
+                            clonedRoot.style.width =
+                                "794px";
+
+                            clonedRoot.style.minWidth =
+                                "794px";
+
+                            clonedRoot.style.maxWidth =
+                                "794px";
+
+                            clonedRoot.style.margin =
+                                "0";
+
+                            clonedRoot.style.transform =
+                                "none";
+
+                        }
+
+                    }
+
+            },
 
             jsPDF: {
 
@@ -2366,8 +2613,8 @@ document.body.appendChild(
 
                 compress:
                     true
-            },
 
+            },
 
             pagebreak: {
 
@@ -2383,48 +2630,128 @@ document.body.appendChild(
                 after: [],
 
                 avoid: [
+
                     ".question-result-card",
+
                     ".details-card",
+
                     ".score-card",
+
                     ".stat-card",
+
                     ".analysis-header",
+
                     ".analysis-legend",
+
                     ".section-result-item"
+
                 ]
+
             }
+
         };
 
 
         // ==========================================
-        // GENERATE PDF FROM THE ISOLATED CLONE
+        // GENERATE PDF
         // ==========================================
 
-        await html2pdf()
-            .set(options)
-            .from(pdfRoot)
-            .toPdf()
-            .get("pdf")
-            .then(
-                pdf => {
+        const pdf =
+            await html2pdf()
+                .set(options)
+                .from(pdfRoot)
+                .toPdf()
+                .get("pdf");
 
-                    pdf.setProperties({
 
-                        title:
-                            "ExamVerse Examination Result",
+        // ==========================================
+        // PDF METADATA
+        // ==========================================
 
-                        subject:
-                            "Examination Result",
+        pdf.setProperties({
 
-                        author:
-                            "ExamVerse",
+            title:
+                "ExamVerse Examination Result",
 
-                        creator:
-                            "ExamVerse"
-                    });
+            subject:
+                "Examination Result",
 
-                }
-            )
-            .save();
+            author:
+                "ExamVerse",
+
+            creator:
+                "ExamVerse"
+
+        });
+
+
+        // ==========================================
+        // SHOW PDF IN NEW TAB
+        // ==========================================
+
+        const pdfBlob =
+            pdf.output(
+                "blob"
+            );
+
+
+        const pdfUrl =
+            URL.createObjectURL(
+                pdfBlob
+            );
+
+
+        if (pdfWindow &&
+            !pdfWindow.closed) {
+
+            pdfWindow.location.href =
+                pdfUrl;
+
+        }
+        else {
+
+            /*
+               Popup was blocked.
+
+               Fall back to downloading.
+            */
+
+            const downloadLink =
+                document.createElement(
+                    "a"
+                );
+
+            downloadLink.href =
+                pdfUrl;
+
+            downloadLink.download =
+                fileName;
+
+            document.body.appendChild(
+                downloadLink
+            );
+
+            downloadLink.click();
+
+            downloadLink.remove();
+
+        }
+
+
+        // ==========================================
+        // CLEAN URL LATER
+        // ==========================================
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    pdfUrl
+                );
+
+            },
+            60000
+        );
 
 
     }
@@ -2434,6 +2761,22 @@ document.body.appendChild(
             "PDF Generation Error:",
             error
         );
+
+
+        if (pdfWindow &&
+            !pdfWindow.closed) {
+
+            pdfWindow.document.body.innerHTML = `
+                <div style="
+                    font-family:Arial,sans-serif;
+                    padding:40px;
+                    color:#b91c1c;
+                ">
+                    Unable to generate the result PDF.
+                </div>
+            `;
+
+        }
 
 
         alert(
@@ -2446,17 +2789,18 @@ document.body.appendChild(
     finally {
 
         // ==========================================
-        // REMOVE PDF CLONE
+        // REMOVE PDF HOST
         // ==========================================
 
         if (
-            pdfRoot &&
-            pdfRoot.parentNode
+            pdfHost &&
+            pdfHost.parentNode
         ) {
 
-            pdfRoot.parentNode.removeChild(
-                pdfRoot
+            pdfHost.parentNode.removeChild(
+                pdfHost
             );
+
         }
 
 
@@ -2469,7 +2813,9 @@ document.body.appendChild(
 
         pdfButton.innerHTML =
             oldText;
+
     }
+
 }
 
 // ==========================================
