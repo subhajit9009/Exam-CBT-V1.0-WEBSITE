@@ -2234,30 +2234,47 @@ async function downloadResultPDF() {
         }
 
 
-        // ==========================================
-        // ADD PDF ROOT TO DOCUMENT
-        //
-        // It must exist in the DOM so html2canvas
-        // can calculate layout correctly.
-        // ==========================================
+ // ==========================================
+// ADD PDF ROOT TO DOCUMENT
+//
+// Keep the clone inside the real viewport.
+// html2canvas must be able to paint it.
+// ==========================================
 
-        pdfRoot.style.position =
-            "absolute";
+pdfRoot.style.position =
+    "fixed";
 
-        pdfRoot.style.left =
-            "-100000px";
+pdfRoot.style.left =
+    "0";
 
-        pdfRoot.style.top =
-            "0";
+pdfRoot.style.top =
+    "0";
 
-        pdfRoot.style.zIndex =
-            "-1";
+pdfRoot.style.width =
+    "794px";
+
+pdfRoot.style.minWidth =
+    "794px";
+
+pdfRoot.style.maxWidth =
+    "794px";
+
+pdfRoot.style.zIndex =
+    "2147483647";
+
+pdfRoot.style.pointerEvents =
+    "none";
+
+pdfRoot.style.background =
+    "#ffffff";
+
+pdfRoot.style.overflow =
+    "visible";
 
 
-        document.body.appendChild(
-            pdfRoot
-        );
-
+document.body.appendChild(
+    pdfRoot
+);
 
         // ==========================================
         // WAIT FOR BROWSER LAYOUT
