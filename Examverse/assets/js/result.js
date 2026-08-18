@@ -1793,20 +1793,13 @@ function setupPdfButton() {
 function downloadResultPDF() {
 
     const pdfButton =
-        document.getElementById(
-            "downloadPdfBtn"
-        );
+        document.getElementById("downloadPdfBtn");
 
     const resultWrapper =
-        document.querySelector(
-            ".result-wrapper"
-        );
+        document.querySelector(".result-wrapper");
 
 
-    if (
-        !pdfButton ||
-        !resultWrapper
-    ) {
+    if (!pdfButton || !resultWrapper) {
 
         console.error(
             "ExamVerse PDF: Result page not found."
@@ -1816,25 +1809,20 @@ function downloadResultPDF() {
     }
 
 
-    // ==========================================
-    // READ LIVE RESULT DATA FIRST
-    // IMPORTANT:
-    // Do this BEFORE removing .result-header
-    // ==========================================
+    // =====================================================
+    // READ RESULT DATA FROM THE CURRENT RESULT PAGE
+    // =====================================================
 
-    const getLiveText =
-        function(id) {
+    function getLiveText(id) {
 
-            const element =
-                document.getElementById(id);
+        const element =
+            document.getElementById(id);
 
-            if (!element) {
-                return "";
-            }
+        return element
+            ? element.textContent.trim()
+            : "";
 
-            return element.textContent.trim();
-
-        };
+    }
 
 
     const examName =
@@ -1902,15 +1890,87 @@ function downloadResultPDF() {
         getLiveText("resultBadge");
 
 
+    // =====================================================
+    // CANDIDATE NAME
+    //
+    // IMPORTANT:
+    // The current uploaded PDF function does not contain
+    // a candidate-name variable or profile query.
+    //
+    // Therefore we ONLY use a name that is already exposed
+    // by the current result page.
+    // =====================================================
+
+    function findExistingCandidateName() {
+
+        const possibleElements = [
+
+            document.getElementById("candidateName"),
+
+            document.getElementById("userName"),
+
+            document.getElementById("attemptedBy"),
+
+            document.getElementById("profileName"),
+
+            document.querySelector(
+                "[data-candidate-name]"
+            ),
+
+            document.querySelector(
+                "[data-user-name]"
+            ),
+
+            document.querySelector(
+                "[data-username]"
+            )
+
+        ];
+
+
+        for (
+            const element of possibleElements
+        ) {
+
+            if (!element) {
+                continue;
+            }
+
+
+            const value =
+                element.textContent.trim();
+
+
+            if (
+                value &&
+                value.length > 1
+            ) {
+
+                return value;
+
+            }
+
+        }
+
+
+        return "Candidate name unavailable";
+
+    }
+
+
+    const candidateName =
+        findExistingCandidateName();
+
+
     console.log(
-        "ExamVerse PDF Exam Name:",
-        examName
+        "ExamVerse PDF candidate:",
+        candidateName
     );
 
 
-    // ==========================================
+    // =====================================================
     // PERCENTAGE
-    // ==========================================
+    // =====================================================
 
     let percentageNumber =
         parseFloat(
@@ -1942,9 +2002,9 @@ function downloadResultPDF() {
         );
 
 
-    // ==========================================
-    // NUMBERS
-    // ==========================================
+    // =====================================================
+    // ANSWER DISTRIBUTION
+    // =====================================================
 
     const correctNumber =
         parseFloat(
@@ -1980,7 +2040,9 @@ function downloadResultPDF() {
 
 
     let correctWidth = 0;
+
     let wrongWidth = 0;
+
     let skippedWidth = 0;
 
 
@@ -2011,27 +2073,9 @@ function downloadResultPDF() {
     }
 
 
-    // ==========================================
-    // CLONE ONLY THE CONTENT WE NEED
-    // ==========================================
-
-    const scoreCard =
-        document.querySelector(
-            ".score-card"
-        );
-
-
-    const statsGrid =
-        document.querySelector(
-            ".stats-grid"
-        );
-
-
-    const detailsCard =
-        document.querySelector(
-            ".details-card"
-        );
-
+    // =====================================================
+    // CLONE SECTION RESULT
+    // =====================================================
 
     const sectionResult =
         document.getElementById(
@@ -2039,15 +2083,74 @@ function downloadResultPDF() {
         );
 
 
+    let sectionHTML = "";
+
+
+    if (sectionResult) {
+
+        const sectionIsHidden =
+            sectionResult.classList.contains(
+                "hidden"
+            ) ||
+            getComputedStyle(
+                sectionResult
+            ).display === "none";
+
+
+        if (!sectionIsHidden) {
+
+            const sectionClone =
+                sectionResult.cloneNode(
+                    true
+                );
+
+
+            sectionClone.classList.remove(
+                "hidden"
+            );
+
+
+            sectionClone.style.display =
+                "block";
+
+
+            sectionClone.style.visibility =
+                "visible";
+
+
+            sectionClone.style.opacity =
+                "1";
+
+
+            sectionClone.style.height =
+                "auto";
+
+
+            sectionClone.style.maxHeight =
+                "none";
+
+
+            sectionClone.style.overflow =
+                "visible";
+
+
+            sectionHTML =
+                sectionClone.outerHTML;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // CLONE QUESTION ANALYSIS
+    // =====================================================
+
     const analysisSection =
         document.getElementById(
             "analysisSection"
         );
 
-
-    // ==========================================
-    // CLONE ANALYSIS
-    // ==========================================
 
     let analysisHTML = "";
 
@@ -2059,8 +2162,6 @@ function downloadResultPDF() {
                 true
             );
 
-
-        // PDF must always show analysis
 
         analysisClone.classList.remove(
             "hidden"
@@ -2097,61 +2198,9 @@ function downloadResultPDF() {
     }
 
 
-    // ==========================================
-    // SECTIONAL RESULT
-    // ==========================================
-
-    let sectionHTML = "";
-
-
-    if (sectionResult) {
-
-        const sectionClone =
-            sectionResult.cloneNode(
-                true
-            );
-
-
-        /*
-           If the real result page has
-           Section-wise Performance hidden,
-           don't put it in the PDF.
-        */
-
-        const sectionIsHidden =
-            sectionResult.classList.contains(
-                "hidden"
-            ) ||
-            sectionResult.style.display ===
-                "none";
-
-
-        if (!sectionIsHidden) {
-
-            sectionClone.classList.remove(
-                "hidden"
-            );
-
-
-            sectionClone.style.display =
-                "block";
-
-
-            sectionClone.style.visibility =
-                "visible";
-
-
-            sectionHTML =
-                sectionClone.outerHTML;
-
-        }
-
-    }
-
-
-    // ==========================================
-    // OPEN PRINT WINDOW
-    // ==========================================
+    // =====================================================
+    // OPEN PDF REPORT WINDOW
+    // =====================================================
 
     const printWindow =
         window.open(
@@ -2171,9 +2220,9 @@ function downloadResultPDF() {
     }
 
 
-    // ==========================================
-    // RESULT CSS URL
-    // ==========================================
+    // =====================================================
+    // RESULT CSS
+    // =====================================================
 
     const resultCSS =
         new URL(
@@ -2182,9 +2231,52 @@ function downloadResultPDF() {
         ).href;
 
 
-    // ==========================================
-    // BUILD PRINT PAGE
-    // ==========================================
+    // =====================================================
+    // ESCAPE TEXT FOR HTML
+    // =====================================================
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    const safeExamName =
+        escapeHTML(
+            examName
+        );
+
+
+    const safeCandidateName =
+        escapeHTML(
+            candidateName
+        );
+
+
+    // =====================================================
+    // PDF DOCUMENT
+    // =====================================================
 
     const printHTML = `
 
@@ -2203,11 +2295,11 @@ function downloadResultPDF() {
 
 
 <title>
-    ExamVerse - ${examName}
+    ExamVerse - ${safeExamName}
 </title>
 
 
-<!-- ORIGINAL RESULT CSS -->
+<!-- YOUR EXISTING RESULT STYLES -->
 
 <link
     rel="stylesheet"
@@ -2215,43 +2307,24 @@ function downloadResultPDF() {
 >
 
 
-<!-- GOOGLE FONT -->
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
->
-
-
-<!-- FONT AWESOME -->
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
->
-
-
 <style>
 
-/* =================================================
-   PDF PAGE
-================================================= */
+/* =====================================================
+   PAGE
+===================================================== */
 
 @page {
 
-    size:
-        A4 portrait;
+    size: A4 portrait;
 
-    margin:
-        10mm;
+    margin: 10mm;
 
 }
 
 
 * {
 
-    box-sizing:
-        border-box;
+    box-sizing: border-box;
 
     -webkit-print-color-adjust:
         exact !important;
@@ -2265,14 +2338,11 @@ function downloadResultPDF() {
 html,
 body {
 
-    margin:
-        0 !important;
+    margin: 0 !important;
 
-    padding:
-        0 !important;
+    padding: 0 !important;
 
-    background:
-        #ffffff !important;
+    background: #ffffff !important;
 
 }
 
@@ -2280,54 +2350,108 @@ body {
 body {
 
     font-family:
-        'Poppins',
         Arial,
+        Helvetica,
         sans-serif;
 
 }
 
 
-/* =================================================
-   PDF CONTAINER
-================================================= */
+/* =====================================================
+   PDF REPORT
+===================================================== */
 
 .ev-pdf {
 
-    width:
-        100%;
+    width: 100%;
 
-    max-width:
-        190mm;
+    max-width: 190mm;
 
-    margin:
-        0 auto;
+    margin: 0 auto;
 
-    background:
-        #ffffff;
+    background: #ffffff;
 
 }
 
 
-/* =================================================
-   PDF HEADER
-================================================= */
+/* =====================================================
+   PRINT TOOLBAR
+===================================================== */
+
+.pdf-toolbar {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 0 0 5mm 0;
+
+    padding: 0;
+
+}
+
+
+.pdf-toolbar button {
+
+    border: none;
+
+    border-radius: 7px;
+
+    padding: 8px 13px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+
+#pdfPrintBtn {
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+}
+
+
+#pdfCloseBtn {
+
+    background: #e2e8f0;
+
+    color: #334155;
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
 
 .ev-pdf-header {
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    padding:
-        5mm 0;
+    padding: 5mm 0;
 
-    margin-bottom:
-        5mm;
+    margin-bottom: 5mm;
 
     border-bottom:
         2px solid #2563eb;
@@ -2337,145 +2461,163 @@ body {
 
 .ev-pdf-brand {
 
-    font-size:
-        21px;
+    font-size: 21px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    letter-spacing:
-        1px;
+    letter-spacing: 1px;
 
-    color:
-        #2563eb;
+    color: #2563eb;
 
 }
 
 
 .ev-pdf-subtitle {
 
-    margin-top:
-        1mm;
+    margin-top: 1mm;
 
-    font-size:
-        8px;
+    font-size: 8px;
 
-    color:
-        #64748b;
+    color: #64748b;
 
 }
 
 
 .ev-pdf-status {
 
-    padding:
-        5px 12px;
+    padding: 5px 12px;
 
-    border-radius:
-        20px;
+    border-radius: 20px;
 
-    background:
-        #eff6ff;
+    background: #eff6ff;
 
-    color:
-        #2563eb;
+    color: #2563eb;
 
-    font-size:
-        8px;
+    font-size: 8px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 
 }
 
 
-/* =================================================
+/* =====================================================
+   CANDIDATE
+===================================================== */
+
+.ev-pdf-candidate {
+
+    margin-bottom: 4mm;
+
+    padding: 3.5mm 5mm;
+
+    border-left:
+        4px solid #16a34a;
+
+    border-radius: 6px;
+
+    background: #f8fafc;
+
+}
+
+
+.ev-pdf-candidate small {
+
+    display: block;
+
+    margin-bottom: 1mm;
+
+    font-size: 7px;
+
+    color: #64748b;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+}
+
+
+.ev-pdf-candidate strong {
+
+    display: block;
+
+    font-size: 13px;
+
+    color: #0f172a;
+
+    word-break: break-word;
+
+}
+
+
+/* =====================================================
    EXAM NAME
-================================================= */
+===================================================== */
 
 .ev-pdf-exam-name {
 
-    margin-bottom:
-        5mm;
+    margin-bottom: 5mm;
 
-    padding:
-        4mm 5mm;
+    padding: 4mm 5mm;
 
     border-left:
         4px solid #2563eb;
 
-    border-radius:
-        6px;
+    border-radius: 6px;
 
-    background:
-        #f8fafc;
+    background: #f8fafc;
 
 }
 
 
 .ev-pdf-exam-name small {
 
-    display:
-        block;
+    display: block;
 
-    margin-bottom:
-        1mm;
+    margin-bottom: 1mm;
 
-    font-size:
-        7px;
+    font-size: 7px;
 
-    color:
-        #64748b;
+    color: #64748b;
 
-    text-transform:
-        uppercase;
+    text-transform: uppercase;
 
-    letter-spacing:
-        .5px;
+    letter-spacing: .5px;
 
 }
 
 
 .ev-pdf-exam-name strong {
 
-    font-size:
-        15px;
+    font-size: 15px;
 
-    color:
-        #0f172a;
+    color: #0f172a;
 
 }
 
 
-/* =================================================
-   SCORE HERO
-================================================= */
+/* =====================================================
+   SCORE
+===================================================== */
 
 .ev-pdf-score {
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    min-height:
-        45mm;
+    min-height: 45mm;
 
-    padding:
-        7mm;
+    padding: 7mm;
 
-    margin-bottom:
-        5mm;
+    margin-bottom: 5mm;
 
     border:
         1px solid #dbeafe;
 
-    border-radius:
-        15px;
+    border-radius: 15px;
 
     background:
         linear-gradient(
@@ -2489,72 +2631,56 @@ body {
 
 .ev-score-label {
 
-    font-size:
-        8px;
+    font-size: 8px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 
-    color:
-        #64748b;
+    color: #64748b;
 
 }
 
 
 .ev-score-number {
 
-    margin:
-        1mm 0;
+    margin: 1mm 0;
 
-    font-size:
-        30px;
+    font-size: 30px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    line-height:
-        1;
+    line-height: 1;
 
-    color:
-        #1d4ed8;
+    color: #1d4ed8;
 
 }
 
 
 .ev-score-out {
 
-    font-size:
-        8px;
+    font-size: 8px;
 
-    color:
-        #64748b;
+    color: #64748b;
 
 }
 
 
-/* =================================================
-   CIRCULAR PERFORMANCE
-================================================= */
+/* =====================================================
+   PERFORMANCE RING
+===================================================== */
 
 .ev-ring {
 
-    width:
-        35mm;
+    width: 35mm;
 
-    height:
-        35mm;
+    height: 35mm;
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        center;
+    justify-content: center;
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
     background:
         conic-gradient(
@@ -2562,589 +2688,528 @@ body {
             #dbeafe ${percentageNumber}%
         );
 
-    position:
-        relative;
+    position: relative;
 
 }
 
 
 .ev-ring::after {
 
-    content:
-        "";
+    content: "";
 
-    position:
-        absolute;
+    position: absolute;
 
-    width:
-        26mm;
+    width: 26mm;
 
-    height:
-        26mm;
+    height: 26mm;
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
-    background:
-        #ffffff;
+    background: #ffffff;
 
 }
 
 
 .ev-ring-content {
 
-    position:
-        relative;
+    position: relative;
 
-    z-index:
-        2;
+    z-index: 2;
 
-    text-align:
-        center;
+    text-align: center;
 
 }
 
 
 .ev-ring-content strong {
 
-    display:
-        block;
+    display: block;
 
-    font-size:
-        15px;
+    font-size: 15px;
 
-    color:
-        #1d4ed8;
+    color: #1d4ed8;
 
 }
 
 
 .ev-ring-content span {
 
-    font-size:
-        6px;
+    font-size: 6px;
 
-    color:
-        #64748b;
+    color: #64748b;
 
 }
 
 
-/* =================================================
+/* =====================================================
    STATISTICS
-================================================= */
+===================================================== */
 
 .ev-pdf-stats {
 
-    display:
-        grid;
+    display: grid;
 
     grid-template-columns:
         repeat(5, 1fr);
 
-    gap:
-        3mm;
+    gap: 3mm;
 
-    margin-bottom:
-        5mm;
+    margin-bottom: 5mm;
 
 }
 
 
 .ev-pdf-stat {
 
-    padding:
-        4mm 2mm;
+    padding: 4mm 2mm;
 
-    text-align:
-        center;
+    text-align: center;
 
     border:
         1px solid #e2e8f0;
 
-    border-radius:
-        10px;
+    border-radius: 10px;
 
-    background:
-        #ffffff;
+    background: #ffffff;
 
 }
 
 
 .ev-pdf-stat span {
 
-    display:
-        block;
+    display: block;
 
-    font-size:
-        7px;
+    font-size: 7px;
 
-    color:
-        #64748b;
+    color: #64748b;
 
 }
 
 
 .ev-pdf-stat strong {
 
-    display:
-        block;
+    display: block;
 
-    margin-top:
-        1mm;
+    margin-top: 1mm;
 
-    font-size:
-        16px;
+    font-size: 16px;
 
-    color:
-        #0f172a;
+    color: #0f172a;
 
 }
 
 
 .ev-pdf-stat.correct strong {
 
-    color:
-        #16a34a;
+    color: #16a34a;
 
 }
 
 
 .ev-pdf-stat.wrong strong {
 
-    color:
-        #dc2626;
+    color: #dc2626;
 
 }
 
 
 .ev-pdf-stat.skipped strong {
 
-    color:
-        #d97706;
+    color: #d97706;
 
 }
 
 
-/* =================================================
+/* =====================================================
    DISTRIBUTION
-================================================= */
+===================================================== */
 
 .ev-distribution {
 
-    padding:
-        5mm;
+    padding: 5mm;
 
-    margin-bottom:
-        6mm;
+    margin-bottom: 6mm;
 
-    border-radius:
-        12px;
+    border-radius: 12px;
 
-    background:
-        #f8fafc;
+    background: #f8fafc;
 
 }
 
 
 .ev-distribution h3 {
 
-    margin:
-        0 0 3mm;
+    margin: 0 0 3mm;
 
-    font-size:
-        10px;
+    font-size: 10px;
 
-    color:
-        #172554;
+    color: #172554;
 
 }
 
 
 .ev-distribution-bar {
 
-    display:
-        flex;
+    display: flex;
 
-    width:
-        100%;
+    width: 100%;
 
-    height:
-        7mm;
+    height: 7mm;
 
-    overflow:
-        hidden;
+    overflow: hidden;
 
-    border-radius:
-        20px;
+    border-radius: 20px;
 
 }
 
 
 .ev-bar-correct {
 
-    width:
-        ${correctWidth}%;
+    width: ${correctWidth}%;
 
-    background:
-        #22c55e;
+    background: #22c55e;
 
 }
 
 
 .ev-bar-wrong {
 
-    width:
-        ${wrongWidth}%;
+    width: ${wrongWidth}%;
 
-    background:
-        #ef4444;
+    background: #ef4444;
 
 }
 
 
 .ev-bar-skipped {
 
-    width:
-        ${skippedWidth}%;
+    width: ${skippedWidth}%;
 
-    background:
-        #f59e0b;
+    background: #f59e0b;
 
 }
 
 
 .ev-distribution-legend {
 
-    display:
-        flex;
+    display: flex;
 
-    gap:
-        8mm;
+    gap: 8mm;
 
-    margin-top:
-        3mm;
+    margin-top: 3mm;
 
-    font-size:
-        7px;
+    font-size: 7px;
 
-    color:
-        #475569;
+    color: #475569;
 
 }
 
 
-/* =================================================
+/* =====================================================
    SUMMARY
-================================================= */
+===================================================== */
 
 .ev-summary-title {
 
-    margin:
-        0 0 3mm;
+    margin: 0 0 3mm;
 
-    font-size:
-        13px;
+    font-size: 13px;
 
-    color:
-        #172554;
+    color: #172554;
 
 }
 
 
 .ev-summary-grid {
 
-    display:
-        grid;
+    display: grid;
 
     grid-template-columns:
         repeat(2, 1fr);
 
-    margin-bottom:
-        6mm;
+    margin-bottom: 6mm;
 
     border:
         1px solid #e2e8f0;
 
-    border-radius:
-        10px;
+    border-radius: 10px;
 
-    overflow:
-        hidden;
+    overflow: hidden;
 
 }
 
 
 .ev-summary-item {
 
-    display:
-        flex;
+    display: flex;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    padding:
-        3mm;
+    padding: 3mm;
 
     border-bottom:
         1px solid #e2e8f0;
 
-    font-size:
-        8px;
+    font-size: 8px;
 
 }
 
 
 .ev-summary-item span {
 
-    color:
-        #64748b;
+    color: #64748b;
 
 }
 
 
 .ev-summary-item strong {
 
-    color:
-        #0f172a;
+    color: #0f172a;
 
 }
 
 
-/* =================================================
-   EXISTING RESULT COMPONENTS
-================================================= */
+/* =====================================================
+   EXISTING RESULT CONTENT
+===================================================== */
 
 .ev-existing {
 
-    width:
-        100%;
+    width: 100%;
 
 }
 
 
-.ev-existing .score-card {
+/* Hide duplicate web result blocks */
 
-    display:
-        none !important;
-
-}
-
-
-.ev-existing .stats-grid {
-
-    display:
-        none !important;
-
-}
-
-
+.ev-existing .score-card,
+.ev-existing .stats-grid,
 .ev-existing .details-card {
 
-    display:
-        none !important;
+    display: none !important;
 
 }
 
 
-/* =================================================
-   SECTION RESULT
-================================================= */
+/* =====================================================
+   SECTION-WISE PERFORMANCE
+===================================================== */
+
+.ev-existing .section-result-card {
+
+    width: 100% !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+
+    margin-top: 5mm !important;
+
+    margin-bottom: 4mm !important;
+
+}
+
+
+.ev-existing .section-result-list {
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+
+}
+
+
+/* Individual section cards may stay together */
+
+.ev-existing .section-result-item {
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+    margin-bottom: 3mm !important;
+
+}
+
+
+/* =====================================================
+   QUESTION ANALYSIS
+===================================================== */
+
+.ev-existing .analysis-section {
+
+    display: block !important;
+
+    visibility: visible !important;
+
+    opacity: 1 !important;
+
+    height: auto !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+
+}
+
+
+.ev-existing .question-analysis-card {
+
+    width: 100% !important;
+
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+
+}
+
+
+/* =====================================================
+   INDIVIDUAL QUESTION
+===================================================== */
+
+.ev-existing .question-result-card {
+
+    width: 100% !important;
+
+    margin-top: 0 !important;
+
+    margin-bottom: 2mm !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+/* Prevent an extra gap between consecutive cards */
 
 .ev-existing
-.section-result-card {
+.question-result-card
++ .question-result-card {
 
-    margin-top:
-        6mm;
-
-}
-
-
-.ev-existing
-.section-result-card.hidden {
-
-    display:
-        none !important;
+    margin-top: 0 !important;
 
 }
 
 
-/* =================================================
-   ANALYSIS
-================================================= */
+/* =====================================================
+   DO NOT LET LARGE PARENTS FORCE PAGE GAPS
+===================================================== */
 
-.ev-existing
-.analysis-section {
+.ev-existing .section-result-card,
+.ev-existing .section-result-list,
+.ev-existing .analysis-section,
+.ev-existing .question-analysis-card {
 
-    display:
-        block !important;
+    break-inside: auto !important;
 
-    visibility:
-        visible !important;
-
-    opacity:
-        1 !important;
-
-    height:
-        auto !important;
-
-    max-height:
-        none !important;
-
-    overflow:
-        visible !important;
+    page-break-inside: auto !important;
 
 }
 
 
-.ev-existing
-.question-analysis-card {
-
-    width:
-        100% !important;
-
-}
-
-
-.ev-existing
-.question-result-card {
-
-    break-inside:
-        avoid;
-
-    page-break-inside:
-        avoid;
-
-}
-
-
-/* =================================================
-   REMOVE WEB BUTTONS
-================================================= */
+/* =====================================================
+   REMOVE WEB-ONLY CONTROLS
+===================================================== */
 
 .result-options,
 .result-actions,
 .result-header {
 
-    display:
-        none !important;
+    display: none !important;
 
 }
 
 
-/* =================================================
-   PAGE BREAK SAFETY
-================================================= */
-
-.question-result-card {
-
-    break-inside:
-        avoid !important;
-
-    page-break-inside:
-        avoid !important;
-
-}
-
-
-/* =================================================
-   PDF TOOLBAR
-================================================= */
-
-.pdf-toolbar {
-
-    width:
-        100%;
-
-    max-width:
-        190mm;
-
-    margin:
-        0 auto 5mm;
-
-    display:
-        flex;
-
-    justify-content:
-        flex-end;
-
-    gap:
-        8px;
-
-}
-
-
-.pdf-toolbar button {
-
-    border:
-        none;
-
-    border-radius:
-        7px;
-
-    padding:
-        8px 13px;
-
-    font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    font-size:
-        8px;
-
-    font-weight:
-        600;
-
-    cursor:
-        pointer;
-
-}
-
-
-#pdfPrintBtn {
-
-    background:
-        #2563eb;
-
-    color:
-        #ffffff;
-
-}
-
-
-#pdfCloseBtn {
-
-    background:
-        #e2e8f0;
-
-    color:
-        #334155;
-
-}
-
+/* =====================================================
+   TOOLBAR
+===================================================== */
 
 @media print {
 
     .pdf-toolbar {
 
-        display:
-            none !important;
+        display: none !important;
 
     }
 
-}
-    
-/* =================================================
-   PRINT
-================================================= */
 
-@media print {
-
+    html,
     body {
 
         background:
             #ffffff !important;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALLER SCREENS IN REPORT VIEWER
+===================================================== */
+
+@media screen and (max-width: 700px) {
+
+    .ev-pdf {
+
+        width: 100%;
+
+        max-width: none;
+
+    }
+
+
+    .pdf-toolbar {
+
+        justify-content: center;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .ev-pdf-stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    .ev-pdf-score {
+
+        min-height: 40mm;
 
     }
 
@@ -3157,32 +3222,37 @@ body {
 
 <body>
 
-<div class="pdf-toolbar">
-
-    <button
-        type="button"
-        id="pdfPrintBtn"
-    >
-        <i class="fa-solid fa-print"></i>
-        Print / Save PDF
-    </button>
-
-    <button
-        type="button"
-        id="pdfCloseBtn"
-    >
-        <i class="fa-solid fa-xmark"></i>
-        Close
-    </button>
-
-</div>
 
 <div class="ev-pdf">
 
 
-    <!-- =========================================
+    <!-- =================================================
+         PDF TOOLBAR
+    ================================================= -->
+
+    <div class="pdf-toolbar">
+
+        <button
+            type="button"
+            id="pdfPrintBtn"
+        >
+            Print / Save PDF
+        </button>
+
+
+        <button
+            type="button"
+            id="pdfCloseBtn"
+        >
+            Close
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
          HEADER
-    ========================================== -->
+    ================================================= -->
 
     <div class="ev-pdf-header">
 
@@ -3201,16 +3271,33 @@ body {
 
         <div class="ev-pdf-status">
 
-            ${resultBadge}
+            ${escapeHTML(resultBadge)}
 
         </div>
 
     </div>
 
 
-    <!-- =========================================
+    <!-- =================================================
+         CANDIDATE
+    ================================================= -->
+
+    <div class="ev-pdf-candidate">
+
+        <small>
+            Attempted By
+        </small>
+
+        <strong>
+            ${safeCandidateName}
+        </strong>
+
+    </div>
+
+
+    <!-- =================================================
          EXAM NAME
-    ========================================== -->
+    ================================================= -->
 
     <div class="ev-pdf-exam-name">
 
@@ -3219,15 +3306,15 @@ body {
         </small>
 
         <strong>
-            ${examName}
+            ${safeExamName}
         </strong>
 
     </div>
 
 
-    <!-- =========================================
+    <!-- =================================================
          SCORE
-    ========================================== -->
+    ================================================= -->
 
     <div class="ev-pdf-score">
 
@@ -3238,19 +3325,17 @@ body {
             </div>
 
             <div class="ev-score-number">
-                ${score}
+                ${escapeHTML(score)}
             </div>
 
             <div class="ev-score-out">
-                out of ${totalMarks}
+                out of ${escapeHTML(totalMarks)}
             </div>
 
         </div>
 
 
-        <div
-            class="ev-ring"
-        >
+        <div class="ev-ring">
 
             <div class="ev-ring-content">
 
@@ -3269,9 +3354,9 @@ body {
     </div>
 
 
-    <!-- =========================================
+    <!-- =================================================
          STATISTICS
-    ========================================== -->
+    ================================================= -->
 
     <div class="ev-pdf-stats">
 
@@ -3283,7 +3368,7 @@ body {
             </span>
 
             <strong>
-                ${attempted}
+                ${escapeHTML(attempted)}
             </strong>
 
         </div>
@@ -3296,7 +3381,7 @@ body {
             </span>
 
             <strong>
-                ${correct}
+                ${escapeHTML(correct)}
             </strong>
 
         </div>
@@ -3309,7 +3394,7 @@ body {
             </span>
 
             <strong>
-                ${wrong}
+                ${escapeHTML(wrong)}
             </strong>
 
         </div>
@@ -3322,7 +3407,7 @@ body {
             </span>
 
             <strong>
-                ${skipped}
+                ${escapeHTML(skipped)}
             </strong>
 
         </div>
@@ -3335,18 +3420,17 @@ body {
             </span>
 
             <strong>
-                ${markedReview}
+                ${escapeHTML(markedReview)}
             </strong>
 
         </div>
 
-
     </div>
 
 
-    <!-- =========================================
+    <!-- =================================================
          DISTRIBUTION
-    ========================================== -->
+    ================================================= -->
 
     <div class="ev-distribution">
 
@@ -3357,11 +3441,19 @@ body {
 
         <div class="ev-distribution-bar">
 
-            <div class="ev-bar-correct"></div>
+            <div
+                class="ev-bar-correct"
+            ></div>
 
-            <div class="ev-bar-wrong"></div>
 
-            <div class="ev-bar-skipped"></div>
+            <div
+                class="ev-bar-wrong"
+            ></div>
+
+
+            <div
+                class="ev-bar-skipped"
+            ></div>
 
         </div>
 
@@ -3369,15 +3461,15 @@ body {
         <div class="ev-distribution-legend">
 
             <span>
-                ● Correct ${correct}
+                Correct ${escapeHTML(correct)}
             </span>
 
             <span>
-                ● Wrong ${wrong}
+                Wrong ${escapeHTML(wrong)}
             </span>
 
             <span>
-                ● Skipped ${skipped}
+                Skipped ${escapeHTML(skipped)}
             </span>
 
         </div>
@@ -3385,9 +3477,9 @@ body {
     </div>
 
 
-    <!-- =========================================
-         SUMMARY
-    ========================================== -->
+    <!-- =================================================
+         RESULT SUMMARY
+    ================================================= -->
 
     <h2 class="ev-summary-title">
 
@@ -3406,7 +3498,7 @@ body {
             </span>
 
             <strong>
-                ${totalQuestions}
+                ${escapeHTML(totalQuestions)}
             </strong>
 
         </div>
@@ -3419,7 +3511,7 @@ body {
             </span>
 
             <strong>
-                ${attempted}
+                ${escapeHTML(attempted)}
             </strong>
 
         </div>
@@ -3432,7 +3524,7 @@ body {
             </span>
 
             <strong>
-                ${positiveMarks}
+                ${escapeHTML(positiveMarks)}
             </strong>
 
         </div>
@@ -3445,7 +3537,7 @@ body {
             </span>
 
             <strong>
-                ${negativeMarks}
+                ${escapeHTML(negativeMarks)}
             </strong>
 
         </div>
@@ -3458,7 +3550,7 @@ body {
             </span>
 
             <strong>
-                ${percentage}
+                ${escapeHTML(percentage)}
             </strong>
 
         </div>
@@ -3471,7 +3563,7 @@ body {
             </span>
 
             <strong>
-                ${passingMarks}
+                ${escapeHTML(passingMarks)}
             </strong>
 
         </div>
@@ -3484,7 +3576,7 @@ body {
             </span>
 
             <strong>
-                ${timeTaken}
+                ${escapeHTML(timeTaken)}
             </strong>
 
         </div>
@@ -3497,18 +3589,17 @@ body {
             </span>
 
             <strong>
-                ${status}
+                ${escapeHTML(status)}
             </strong>
 
         </div>
 
-
     </div>
 
 
-    <!-- =========================================
-         EXISTING SECTION + ANALYSIS
-    ========================================== -->
+    <!-- =================================================
+         SECTION + QUESTION ANALYSIS
+    ================================================= -->
 
     <div class="ev-existing">
 
@@ -3522,23 +3613,52 @@ body {
 </div>
 
 
+<!-- =================================================
+     PDF CONTROLS
+===================================================== -->
+
 <script>
 
-window.addEventListener(
-    "load",
-    function() {
+const printButton =
+    document.getElementById(
+        "pdfPrintBtn"
+    );
 
-        setTimeout(
-            function() {
 
-                window.print();
+const closeButton =
+    document.getElementById(
+        "pdfCloseBtn"
+    );
 
-            },
-            1000
-        );
 
-    }
-);
+if (printButton) {
+
+    printButton.addEventListener(
+        "click",
+        function() {
+
+            window.focus();
+
+            window.print();
+
+        }
+    );
+
+}
+
+
+if (closeButton) {
+
+    closeButton.addEventListener(
+        "click",
+        function() {
+
+            window.close();
+
+        }
+    );
+
+}
 
 </script>
 
@@ -3550,9 +3670,9 @@ window.addEventListener(
 `;
 
 
-    // ==========================================
-    // WRITE DOCUMENT
-    // ==========================================
+    // =====================================================
+    // WRITE PDF WINDOW
+    // =====================================================
 
     printWindow.document.open();
 
@@ -3563,9 +3683,9 @@ window.addEventListener(
     printWindow.document.close();
 
 
-    // ==========================================
-    // BUTTON STATE
-    // ==========================================
+    // =====================================================
+    // MAIN BUTTON STATE
+    // =====================================================
 
     const oldText =
         pdfButton.innerHTML;
@@ -3575,14 +3695,15 @@ window.addEventListener(
         true;
 
 
-    pdfButton.innerHTML = `
+    pdfButton.innerHTML =
+        "Preparing PDF...";
 
-        <i class="fa-solid fa-spinner fa-spin"></i>
 
-        Preparing PDF...
-
-    `;
-
+    /*
+       Give the browser enough time to create the
+       new report window, then restore the original
+       button on the result page.
+    */
 
     setTimeout(
         function() {
@@ -3594,7 +3715,7 @@ window.addEventListener(
                 oldText;
 
         },
-        1500
+        1000
     );
 
 }
