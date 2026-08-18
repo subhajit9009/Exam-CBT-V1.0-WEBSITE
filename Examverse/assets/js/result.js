@@ -3036,22 +3036,105 @@ body {
    PAGE BREAK SAFETY
 ================================================= */
 
-.section-result-card,
-.section-result-list,
-.section-result-item,
-.question-analysis-card,
-.question-result-card,
-.details-card {
+.question-result-card {
 
     break-inside:
-        avoid;
+        avoid !important;
 
     page-break-inside:
-        avoid;
+        avoid !important;
 
 }
 
 
+/* =================================================
+   PDF TOOLBAR
+================================================= */
+
+.pdf-toolbar {
+
+    width:
+        100%;
+
+    max-width:
+        190mm;
+
+    margin:
+        0 auto 5mm;
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        8px;
+
+}
+
+
+.pdf-toolbar button {
+
+    border:
+        none;
+
+    border-radius:
+        7px;
+
+    padding:
+        8px 13px;
+
+    font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    font-size:
+        8px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+}
+
+
+#pdfPrintBtn {
+
+    background:
+        #2563eb;
+
+    color:
+        #ffffff;
+
+}
+
+
+#pdfCloseBtn {
+
+    background:
+        #e2e8f0;
+
+    color:
+        #334155;
+
+}
+
+
+@media print {
+
+    .pdf-toolbar {
+
+        display:
+            none !important;
+
+    }
+
+}
+    
 /* =================================================
    PRINT
 ================================================= */
@@ -3074,6 +3157,25 @@ body {
 
 <body>
 
+<div class="pdf-toolbar">
+
+    <button
+        type="button"
+        id="pdfPrintBtn"
+    >
+        <i class="fa-solid fa-print"></i>
+        Print / Save PDF
+    </button>
+
+    <button
+        type="button"
+        id="pdfCloseBtn"
+    >
+        <i class="fa-solid fa-xmark"></i>
+        Close
+    </button>
+
+</div>
 
 <div class="ev-pdf">
 
