@@ -1901,71 +1901,21 @@ function downloadResultPDF() {
     // by the current result page.
     // =====================================================
 
-    function findExistingCandidateName() {
+    // =====================================================
+// CANDIDATE NAME
+// =====================================================
 
-        const possibleElements = [
+// attemptedUserName is already loaded from the
+// Supabase profiles table inside loadResult().
 
-            document.getElementById("candidateName"),
-
-            document.getElementById("userName"),
-
-            document.getElementById("attemptedBy"),
-
-            document.getElementById("profileName"),
-
-            document.querySelector(
-                "[data-candidate-name]"
-            ),
-
-            document.querySelector(
-                "[data-user-name]"
-            ),
-
-            document.querySelector(
-                "[data-username]"
-            )
-
-        ];
+const candidateName =
+    attemptedUserName || "Student";
 
 
-        for (
-            const element of possibleElements
-        ) {
-
-            if (!element) {
-                continue;
-            }
-
-
-            const value =
-                element.textContent.trim();
-
-
-            if (
-                value &&
-                value.length > 1
-            ) {
-
-                return value;
-
-            }
-
-        }
-
-
-        return "Candidate name unavailable";
-
-    }
-
-
-    const candidateName =
-        findExistingCandidateName();
-
-
-    console.log(
-        "ExamVerse PDF candidate:",
-        candidateName
-    );
+console.log(
+    "ExamVerse PDF candidate:",
+    candidateName
+);
 
 
     // =====================================================
@@ -3616,6 +3566,81 @@ body {
 <!-- =================================================
      PDF CONTROLS
 ===================================================== -->
+<script>
+
+const printButton =
+    document.getElementById(
+        "pdfPrintBtn"
+    );
+
+
+const closeButton =
+    document.getElementById(
+        "pdfCloseBtn"
+    );
+
+
+/* =====================================================
+   MANUAL PRINT BUTTON
+===================================================== */
+
+if (printButton) {
+
+    printButton.addEventListener(
+        "click",
+        function() {
+
+            window.focus();
+
+            window.print();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE BUTTON
+===================================================== */
+
+if (closeButton) {
+
+    closeButton.addEventListener(
+        "click",
+        function() {
+
+            window.close();
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   AUTOMATIC PRINT DIALOG
+===================================================== */
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setTimeout(
+            function() {
+
+                window.focus();
+
+                window.print();
+
+            },
+            1200
+        );
+
+    }
+);
+
+</script>
 
 <script>
 
