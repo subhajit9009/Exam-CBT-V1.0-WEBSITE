@@ -2432,6 +2432,30 @@ body {
 
 }
 
+.ev-score-status {
+
+    display: inline-block;
+
+    margin-top: 4mm;
+
+    padding: 2.5mm 7mm;
+
+    border-radius: 20px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+
+    text-transform: uppercase;
+
+}
+
 
 .ev-pdf-status {
 
@@ -3218,13 +3242,6 @@ body {
 
         </div>
 
-
-        <div class="ev-pdf-status">
-
-            ${escapeHTML(resultBadge)}
-
-        </div>
-
     </div>
 
 
@@ -3268,21 +3285,27 @@ body {
 
     <div class="ev-pdf-score">
 
-        <div>
+       <div>
 
-            <div class="ev-score-label">
-                FINAL SCORE
-            </div>
+    <div class="ev-score-label">
+        FINAL SCORE
+    </div>
 
-            <div class="ev-score-number">
-                ${escapeHTML(score)}
-            </div>
+    <div class="ev-score-number">
+        ${escapeHTML(score)}
+    </div>
 
-            <div class="ev-score-out">
-                out of ${escapeHTML(totalMarks)}
-            </div>
+    <div class="ev-score-out">
+        out of ${escapeHTML(totalMarks)}
+    </div>
 
-        </div>
+    <div class="ev-score-status">
+
+        ${escapeHTML(resultBadge)}
+
+    </div>
+
+</div>
 
 
         <div class="ev-ring">
