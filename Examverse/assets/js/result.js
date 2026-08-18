@@ -3189,6 +3189,36 @@ body {
 
 }
 
+/* ===== SECTION AREA GAP FIX ===== */
+
+.ev-pdf .ev-section-performance,
+.ev-pdf .ev-section-wise,
+.ev-pdf .section-performance,
+.ev-pdf .section-wise,
+.ev-pdf .sections-container {
+
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+}
+
+.ev-pdf .ev-section-performance > *,
+.ev-pdf .ev-section-wise > *,
+.ev-pdf .section-performance > *,
+.ev-pdf .section-wise > * {
+
+    margin-bottom: 5mm;
+
+}
+
+.ev-pdf .ev-section-performance,
+.ev-pdf .ev-section-wise {
+
+    padding-bottom: 0 !important;
+
+}
+
 </style>
 
 </head>
