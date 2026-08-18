@@ -3723,3 +3723,253 @@ body {
 
     gap: 16px;
 }
+
+/* =========================================================
+   EXAMVERSE PDF EXPORT - ISOLATED A4 LAYOUT
+   ========================================================= */
+
+.examverse-pdf-host {
+
+    position: fixed !important;
+
+    left: -100000px !important;
+
+    top: 0 !important;
+
+    width: 794px !important;
+
+    min-width: 794px !important;
+
+    max-width: 794px !important;
+
+    background: #ffffff !important;
+
+    overflow: visible !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+}
+
+
+/* ==========================================
+   PDF WRAPPER
+   ========================================== */
+
+.examverse-pdf-host .pdf-mode {
+
+    width: 794px !important;
+
+    min-width: 794px !important;
+
+    max-width: 794px !important;
+
+    box-sizing: border-box !important;
+
+    margin: 0 !important;
+
+    padding: 20px !important;
+
+    background: #ffffff !important;
+
+    overflow: visible !important;
+
+}
+
+
+/* ==========================================
+   PDF ANALYSIS
+   ========================================== */
+
+.examverse-pdf-host
+.pdf-mode
+.analysis-section {
+
+    display: block !important;
+
+    max-height: none !important;
+
+    height: auto !important;
+
+    opacity: 1 !important;
+
+    overflow: visible !important;
+
+    margin-top: 20px !important;
+
+}
+
+
+/* ==========================================
+   PDF QUESTION LIST
+   ========================================== */
+
+.examverse-pdf-host
+.pdf-mode
+.question-analysis-list {
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    overflow: visible !important;
+
+}
+
+
+/* ==========================================
+   PDF SECTION RESULT
+   ========================================== */
+
+.examverse-pdf-host
+.pdf-mode
+#sectionResult {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+}
+
+
+.examverse-pdf-host
+.pdf-mode
+#sectionResultList {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    overflow: visible !important;
+
+}
+
+
+/* ==========================================
+   PDF SECTION CARDS
+   ========================================== */
+
+.examverse-pdf-host
+.section-result-item {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+/* ==========================================
+   PDF STATISTICS
+   ========================================== */
+
+.examverse-pdf-host
+.pdf-mode
+.stats-grid {
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        ) !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+}
+
+
+/* ==========================================
+   PDF DETAILS
+   ========================================== */
+
+.examverse-pdf-host
+.pdf-mode
+.details-grid {
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        ) !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+}
+
+
+/* ==========================================
+   PDF QUESTION CARDS
+   ========================================== */
+
+.examverse-pdf-host
+.question-result-card {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+/* ==========================================
+   PDF INTERNAL ELEMENTS
+   ========================================== */
+
+.examverse-pdf-host
+.pdf-mode
+* {
+
+    box-sizing: border-box !important;
+
+    max-width: 100%;
+
+}
+
+
+/* ==========================================
+   PDF WEB CONTROLS
+   ========================================== */
+
+.examverse-pdf-host
+.result-options,
+
+.examverse-pdf-host
+.result-actions,
+
+.examverse-pdf-host
+.result-header {
+
+    display: none !important;
+
+}

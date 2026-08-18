@@ -1650,6 +1650,7 @@ function showAnalysisError(
 
 }
 
+
 // ==========================================
 // Detailed Analysis Toggle
 // ==========================================
@@ -1661,16 +1662,9 @@ function setupAnalysisButton() {
             "analysisBtn"
         );
 
-
     const analysisSection =
         document.getElementById(
             "analysisSection"
-        );
-
-
-    const analysisArrow =
-        document.getElementById(
-            "analysisArrow"
         );
 
 
@@ -1678,16 +1672,13 @@ function setupAnalysisButton() {
         !analysisBtn ||
         !analysisSection
     ) {
-
         return;
-
     }
 
 
     analysisBtn.addEventListener(
         "click",
         () => {
-
 
             const isHidden =
                 analysisSection.classList.contains(
@@ -1708,19 +1699,16 @@ function setupAnalysisButton() {
 
 
                 analysisBtn.innerHTML = `
-
                     <i class="fa-solid fa-chart-column"></i>
-
                     Hide Detailed Analysis
-
                     <i
                         id="analysisArrow"
                         class="fa-solid fa-chevron-up">
                     </i>
-
                 `;
 
             }
+
 
             else {
 
@@ -1735,16 +1723,12 @@ function setupAnalysisButton() {
 
 
                 analysisBtn.innerHTML = `
-
                     <i class="fa-solid fa-chart-column"></i>
-
                     Detailed Analysis
-
                     <i
                         id="analysisArrow"
                         class="fa-solid fa-chevron-down">
                     </i>
-
                 `;
 
             }
@@ -1786,6 +1770,10 @@ function setupPdfButton() {
 // Generate Result PDF
 // ==========================================
 
+// ==========================================
+// Generate Result PDF
+// ==========================================
+
 async function downloadResultPDF() {
 
     const pdfButton =
@@ -1798,10 +1786,6 @@ async function downloadResultPDF() {
             ".result-wrapper"
         );
 
-    const analysisSection =
-        document.getElementById(
-            "analysisSection"
-        );
 
     if (
         !resultWrapper ||
@@ -1810,6 +1794,10 @@ async function downloadResultPDF() {
         return;
     }
 
+
+    // ==========================================
+    // CHECK PDF LIBRARY
+    // ==========================================
 
     if (
         typeof html2pdf ===
@@ -1840,44 +1828,22 @@ async function downloadResultPDF() {
 
 
     let pdfHost = null;
-    let pdfWrapper = null;
 
 
     try {
 
         // ==========================================
-        // SHOW ANALYSIS FOR PDF
-        // ==========================================
-
-        if (analysisSection) {
-
-            analysisSection.classList.remove(
-                "hidden"
-            );
-
-            analysisSection.style.display =
-                "block";
-
-            analysisSection.style.maxHeight =
-                "none";
-
-            analysisSection.style.opacity =
-                "1";
-
-            analysisSection.style.overflow =
-                "visible";
-
-        }
-
-
-        // ==========================================
-        // CREATE OFF-SCREEN PDF HOST
+        // CREATE COMPLETELY SEPARATE PDF HOST
         // ==========================================
 
         pdfHost =
             document.createElement(
                 "div"
             );
+
+
+        pdfHost.className =
+            "examverse-pdf-host";
 
 
         pdfHost.style.position =
@@ -1901,6 +1867,15 @@ async function downloadResultPDF() {
         pdfHost.style.background =
             "#ffffff";
 
+        pdfHost.style.padding =
+            "0";
+
+        pdfHost.style.margin =
+            "0";
+
+        pdfHost.style.overflow =
+            "visible";
+
         pdfHost.style.zIndex =
             "-999999";
 
@@ -1911,10 +1886,10 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // CLONE RESULT
+        // CLONE RESULT PAGE
         // ==========================================
 
-        pdfWrapper =
+        const pdfWrapper =
             resultWrapper.cloneNode(
                 true
             );
@@ -1934,26 +1909,26 @@ async function downloadResultPDF() {
         pdfWrapper.style.maxWidth =
             "794px";
 
+        pdfWrapper.style.boxSizing =
+            "border-box";
+
         pdfWrapper.style.margin =
             "0";
 
         pdfWrapper.style.padding =
             "20px";
 
-        pdfWrapper.style.boxSizing =
-            "border-box";
-
         pdfWrapper.style.background =
             "#ffffff";
-
-        pdfWrapper.style.overflow =
-            "visible";
 
         pdfWrapper.style.height =
             "auto";
 
         pdfWrapper.style.maxHeight =
             "none";
+
+        pdfWrapper.style.overflow =
+            "visible";
 
 
         pdfHost.appendChild(
@@ -1962,151 +1937,315 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // MAKE ANALYSIS VISIBLE IN CLONE
+        // PDF-ONLY ANALYSIS HANDLING
         // ==========================================
 
-        const clonedAnalysis =
+        const pdfAnalysis =
             pdfWrapper.querySelector(
                 "#analysisSection"
             );
 
 
-        if (clonedAnalysis) {
+        if (pdfAnalysis) {
 
-            clonedAnalysis.classList.remove(
+            /*
+               IMPORTANT:
+               Only the CLONE is changed.
+               The real page remains untouched.
+            */
+
+            pdfAnalysis.classList.remove(
                 "hidden"
             );
 
-            clonedAnalysis.style.display =
+
+            pdfAnalysis.style.display =
                 "block";
 
-            clonedAnalysis.style.maxHeight =
+
+            pdfAnalysis.style.maxHeight =
                 "none";
 
-            clonedAnalysis.style.height =
+
+            pdfAnalysis.style.height =
                 "auto";
 
-            clonedAnalysis.style.opacity =
+
+            pdfAnalysis.style.opacity =
                 "1";
 
-            clonedAnalysis.style.overflow =
+
+            pdfAnalysis.style.marginTop =
+                "20px";
+
+
+            pdfAnalysis.style.overflow =
                 "visible";
 
         }
 
 
         // ==========================================
-        // REMOVE WEB-ONLY ELEMENTS
+        // PDF-ONLY SECTION RESULT HANDLING
         // ==========================================
 
-        const clonedActions =
+        const pdfSection =
             pdfWrapper.querySelector(
-                ".result-actions"
+                "#sectionResult"
             );
 
-        if (clonedActions) {
 
-            clonedActions.style.display =
-                "none";
+        if (pdfSection) {
+
+            const pdfSectionList =
+                pdfWrapper.querySelector(
+                    "#sectionResultList"
+                );
+
+
+            /*
+               If the section list contains
+               actual rendered section results,
+               make it visible in the PDF clone.
+
+               If there are no sections,
+               keep it hidden.
+            */
+
+            const hasSectionResults =
+                pdfSectionList &&
+                pdfSectionList.children.length >
+                    0;
+
+
+            if (hasSectionResults) {
+
+                pdfSection.classList.remove(
+                    "hidden"
+                );
+
+
+                pdfSection.style.display =
+                    "block";
+
+
+            }
+            else {
+
+                pdfSection.classList.add(
+                    "hidden"
+                );
+
+
+                pdfSection.style.display =
+                    "none";
+
+            }
 
         }
 
 
-        const clonedOptions =
+        // ==========================================
+        // REMOVE WEB-ONLY CONTROLS
+        // ==========================================
+
+        const pdfOptions =
             pdfWrapper.querySelector(
                 ".result-options"
             );
 
-        if (clonedOptions) {
 
-            clonedOptions.style.display =
+        if (pdfOptions) {
+
+            pdfOptions.style.display =
                 "none";
 
         }
 
 
-        const clonedHeader =
+        const pdfActions =
+            pdfWrapper.querySelector(
+                ".result-actions"
+            );
+
+
+        if (pdfActions) {
+
+            pdfActions.style.display =
+                "none";
+
+        }
+
+
+        const pdfHeaderWeb =
             pdfWrapper.querySelector(
                 ".result-header"
             );
 
-        if (clonedHeader) {
 
-            clonedHeader.style.display =
+        if (pdfHeaderWeb) {
+
+            pdfHeaderWeb.style.display =
                 "none";
 
         }
 
 
         // ==========================================
-        // FORCE PDF-SAFE LAYOUT
+        // FORCE PDF-SAFE GRIDS
         // ==========================================
 
-        const clonedStats =
+        const statsGrid =
             pdfWrapper.querySelector(
                 ".stats-grid"
             );
 
-        if (clonedStats) {
 
-            clonedStats.style.display =
+        if (statsGrid) {
+
+            statsGrid.style.display =
                 "grid";
 
-            clonedStats.style.gridTemplateColumns =
-                "repeat(2, minmax(0, 1fr))";
+            statsGrid.style.gridTemplateColumns =
+                "repeat(3, minmax(0, 1fr))";
 
-            clonedStats.style.width =
+            statsGrid.style.width =
+                "100%";
+
+            statsGrid.style.maxWidth =
                 "100%";
 
         }
 
 
-        const clonedDetails =
+        const detailsGrid =
             pdfWrapper.querySelector(
                 ".details-grid"
             );
 
-        if (clonedDetails) {
 
-            clonedDetails.style.display =
+        if (detailsGrid) {
+
+            detailsGrid.style.display =
                 "grid";
 
-            clonedDetails.style.gridTemplateColumns =
+            detailsGrid.style.gridTemplateColumns =
                 "repeat(2, minmax(0, 1fr))";
 
-            clonedDetails.style.width =
+            detailsGrid.style.width =
+                "100%";
+
+            detailsGrid.style.maxWidth =
                 "100%";
 
         }
 
 
-        const clonedQuestionList =
+        const questionList =
             pdfWrapper.querySelector(
                 ".question-analysis-list"
             );
 
-        if (clonedQuestionList) {
 
-            clonedQuestionList.style.width =
+        if (questionList) {
+
+            questionList.style.display =
+                "flex";
+
+            questionList.style.flexDirection =
+                "column";
+
+            questionList.style.width =
                 "100%";
 
-            clonedQuestionList.style.overflow =
+            questionList.style.maxWidth =
+                "100%";
+
+            questionList.style.overflow =
                 "visible";
 
         }
 
 
         // ==========================================
-        // WAIT FOR CLONE TO RENDER
+        // FORCE SECTION RESULT WIDTH
+        // ==========================================
+
+        const sectionList =
+            pdfWrapper.querySelector(
+                "#sectionResultList"
+            );
+
+
+        if (sectionList) {
+
+            sectionList.style.width =
+                "100%";
+
+            sectionList.style.maxWidth =
+                "100%";
+
+            sectionList.style.overflow =
+                "visible";
+
+        }
+
+
+        // ==========================================
+        // FORCE QUESTION CARDS
+        // ==========================================
+
+        pdfWrapper
+            .querySelectorAll(
+                ".question-result-card"
+            )
+            .forEach(
+                card => {
+
+                    card.style.width =
+                        "100%";
+
+                    card.style.maxWidth =
+                        "100%";
+
+                    card.style.boxSizing =
+                        "border-box";
+
+                    card.style.breakInside =
+                        "avoid";
+
+                    card.style.pageBreakInside =
+                        "avoid";
+
+                }
+            );
+
+
+        // ==========================================
+        // WAIT FOR PDF CLONE TO RENDER
         // ==========================================
 
         await new Promise(
             resolve =>
                 setTimeout(
                     resolve,
-                    500
+                    600
                 )
         );
+
+
+        // ==========================================
+        // WAIT FOR FONTS
+        // ==========================================
+
+        if (
+            document.fonts &&
+            document.fonts.ready
+        ) {
+
+            await document.fonts.ready;
+
+        }
 
 
         // ==========================================
@@ -2135,7 +2274,7 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // PDF OPTIONS
+        // PDF SETTINGS
         // ==========================================
 
         const options = {
@@ -2150,6 +2289,7 @@ async function downloadResultPDF() {
             filename:
                 fileName,
 
+
             image: {
 
                 type:
@@ -2159,6 +2299,7 @@ async function downloadResultPDF() {
                     0.98
 
             },
+
 
             html2canvas: {
 
@@ -2194,6 +2335,7 @@ async function downloadResultPDF() {
 
             },
 
+
             jsPDF: {
 
                 unit:
@@ -2209,6 +2351,7 @@ async function downloadResultPDF() {
                     true
 
             },
+
 
             pagebreak: {
 
@@ -2237,7 +2380,9 @@ async function downloadResultPDF() {
 
                     ".analysis-header",
 
-                    ".analysis-legend"
+                    ".analysis-legend",
+
+                    ".section-result-item"
 
                 ]
 
@@ -2247,7 +2392,7 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // GENERATE PDF FROM CLONE
+        // GENERATE PDF
         // ==========================================
 
         await html2pdf()
@@ -2312,7 +2457,7 @@ async function downloadResultPDF() {
     finally {
 
         // ==========================================
-        // REMOVE TEMPORARY PDF CLONE
+        // REMOVE PDF CLONE
         // ==========================================
 
         if (pdfHost) {
@@ -2321,6 +2466,10 @@ async function downloadResultPDF() {
 
         }
 
+
+        // ==========================================
+        // RESTORE BUTTON ONLY
+        // ==========================================
 
         pdfButton.disabled =
             false;
