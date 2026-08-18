@@ -1789,133 +1789,180 @@ function setupPdfButton() {
 async function downloadResultPDF() {
 
     const pdfButton =
-        document.getElementById("downloadPdfBtn");
+        document.getElementById(
+            "downloadPdfBtn"
+        );
 
     const resultWrapper =
-        document.querySelector(".result-wrapper");
+        document.querySelector(
+            ".result-wrapper"
+        );
 
     const analysisSection =
-        document.getElementById("analysisSection");
+        document.getElementById(
+            "analysisSection"
+        );
 
-    if (!resultWrapper || !pdfButton) {
+    if (
+        !resultWrapper ||
+        !pdfButton
+    ) {
         return;
     }
 
-    if (typeof html2pdf === "undefined") {
+
+    if (
+        typeof html2pdf ===
+        "undefined"
+    ) {
 
         alert(
             "PDF generator is not loaded. Please check your internet connection."
         );
 
         return;
+
     }
+
 
     const oldText =
         pdfButton.innerHTML;
 
-    pdfButton.disabled = true;
+
+    pdfButton.disabled =
+        true;
+
 
     pdfButton.innerHTML = `
         <i class="fa-solid fa-spinner fa-spin"></i>
         Generating PDF...
     `;
 
+
+    let pdfHost = null;
     let pdfWrapper = null;
-    let pdfHeader = null;
-    let performanceChart = null;
+
 
     try {
 
         // ==========================================
-        // GET CURRENT RESULT VALUES
+        // SHOW ANALYSIS FOR PDF
         // ==========================================
 
-        const examName =
-            document.getElementById("examName")
-                ?.textContent
-                ?.trim()
-            || "Examination";
+        if (analysisSection) {
 
-        const score =
-            document.getElementById("score")
-                ?.textContent
-                ?.trim()
-            || "0.00";
+            analysisSection.classList.remove(
+                "hidden"
+            );
 
-        const totalMarks =
-            document.getElementById("totalMarks")
-                ?.textContent
-                ?.trim()
-            || "0";
+            analysisSection.style.display =
+                "block";
 
-        const resultText =
-            document.getElementById("resultBadge")
-                ?.textContent
-                ?.trim()
-            || "Completed";
+            analysisSection.style.maxHeight =
+                "none";
 
-        const attempted =
-            document.getElementById("attempted")
-                ?.textContent
-                ?.trim()
-            || "0";
+            analysisSection.style.opacity =
+                "1";
 
-        const correct =
-            document.getElementById("correct")
-                ?.textContent
-                ?.trim()
-            || "0";
+            analysisSection.style.overflow =
+                "visible";
 
-        const wrong =
-            document.getElementById("wrong")
-                ?.textContent
-                ?.trim()
-            || "0";
-
-        const skipped =
-            document.getElementById("skipped")
-                ?.textContent
-                ?.trim()
-            || "0";
+        }
 
 
         // ==========================================
-        // CREATE FIXED PDF COPY
+        // CREATE OFF-SCREEN PDF HOST
+        // ==========================================
+
+        pdfHost =
+            document.createElement(
+                "div"
+            );
+
+
+        pdfHost.style.position =
+            "fixed";
+
+        pdfHost.style.left =
+            "-100000px";
+
+        pdfHost.style.top =
+            "0";
+
+        pdfHost.style.width =
+            "794px";
+
+        pdfHost.style.minWidth =
+            "794px";
+
+        pdfHost.style.maxWidth =
+            "794px";
+
+        pdfHost.style.background =
+            "#ffffff";
+
+        pdfHost.style.zIndex =
+            "-999999";
+
+
+        document.body.appendChild(
+            pdfHost
+        );
+
+
+        // ==========================================
+        // CLONE RESULT
         // ==========================================
 
         pdfWrapper =
-            resultWrapper.cloneNode(true);
+            resultWrapper.cloneNode(
+                true
+            );
 
-        pdfWrapper.classList.remove("pdf-mode");
 
-        pdfWrapper.classList.add("pdf-mode");
+        pdfWrapper.classList.add(
+            "pdf-mode"
+        );
+
+
+        pdfWrapper.style.width =
+            "794px";
+
+        pdfWrapper.style.minWidth =
+            "794px";
+
+        pdfWrapper.style.maxWidth =
+            "794px";
+
+        pdfWrapper.style.margin =
+            "0";
+
+        pdfWrapper.style.padding =
+            "20px";
+
+        pdfWrapper.style.boxSizing =
+            "border-box";
+
+        pdfWrapper.style.background =
+            "#ffffff";
+
+        pdfWrapper.style.overflow =
+            "visible";
+
+        pdfWrapper.style.height =
+            "auto";
+
+        pdfWrapper.style.maxHeight =
+            "none";
+
+
+        pdfHost.appendChild(
+            pdfWrapper
+        );
 
 
         // ==========================================
-        // FIXED DESKTOP-LIKE PDF WIDTH
-        // ==========================================
-
-        pdfWrapper.style.width = "1200px";
-        pdfWrapper.style.maxWidth = "1200px";
-        pdfWrapper.style.minWidth = "1200px";
-
-        pdfWrapper.style.margin = "0";
-        pdfWrapper.style.padding = "0";
-
-        pdfWrapper.style.position = "absolute";
-        pdfWrapper.style.left = "-100000px";
-        pdfWrapper.style.top = "0";
-
-        pdfWrapper.style.overflow = "visible";
-
-        pdfWrapper.style.height = "auto";
-        pdfWrapper.style.minHeight = "0";
-
-        pdfWrapper.style.background = "#ffffff";
-
-
-        // ==========================================
-        // ANALYSIS MUST BE VISIBLE IN PDF
+        // MAKE ANALYSIS VISIBLE IN CLONE
         // ==========================================
 
         const clonedAnalysis =
@@ -1923,218 +1970,141 @@ async function downloadResultPDF() {
                 "#analysisSection"
             );
 
+
         if (clonedAnalysis) {
 
             clonedAnalysis.classList.remove(
                 "hidden"
             );
 
-            clonedAnalysis.style.display = "block";
-            clonedAnalysis.style.height = "auto";
-            clonedAnalysis.style.maxHeight = "none";
-            clonedAnalysis.style.overflow = "visible";
+            clonedAnalysis.style.display =
+                "block";
+
+            clonedAnalysis.style.maxHeight =
+                "none";
+
+            clonedAnalysis.style.height =
+                "auto";
+
+            clonedAnalysis.style.opacity =
+                "1";
+
+            clonedAnalysis.style.overflow =
+                "visible";
 
         }
 
 
         // ==========================================
-        // CREATE PDF HEADER
+        // REMOVE WEB-ONLY ELEMENTS
         // ==========================================
 
-        pdfHeader =
-            document.createElement("div");
-
-        pdfHeader.className =
-            "pdf-report-header";
-
-        pdfHeader.innerHTML = `
-
-            <div class="pdf-brand">
-
-                <div class="pdf-brand-name">
-                    ExamVerse
-                </div>
-
-                <div class="pdf-brand-subtitle">
-                    Examination Result Report CARD
-                </div>
-
-                <div class="attempted-by">
-                    Attempted By: ${escapeHTML(
-                        attemptedUserName
-                    )}
-                </div>
-
-            </div>
-
-            <div class="pdf-exam-name">
-
-                ${escapeHTML(examName)}
-
-            </div>
-
-        `;
-
-        pdfWrapper.prepend(
-            pdfHeader
-        );
-
-
-        // ==========================================
-        // CREATE PERFORMANCE CHART
-        // ==========================================
-
-        performanceChart =
-            document.createElement("div");
-
-        performanceChart.className =
-            "pdf-performance-card";
-
-        const attemptedNumber =
-            Number(attempted) || 0;
-
-        const correctNumber =
-            Number(correct) || 0;
-
-        const wrongNumber =
-            Number(wrong) || 0;
-
-        const skippedNumber =
-            Number(skipped) || 0;
-
-        const chartMaximum =
-            Math.max(
-                attemptedNumber,
-                correctNumber,
-                wrongNumber,
-                skippedNumber,
-                1
+        const clonedActions =
+            pdfWrapper.querySelector(
+                ".result-actions"
             );
 
-        const correctWidth =
-            (correctNumber / chartMaximum) * 100;
+        if (clonedActions) {
 
-        const wrongWidth =
-            (wrongNumber / chartMaximum) * 100;
+            clonedActions.style.display =
+                "none";
 
-        const skippedWidth =
-            (skippedNumber / chartMaximum) * 100;
+        }
 
 
-        performanceChart.innerHTML = `
+        const clonedOptions =
+            pdfWrapper.querySelector(
+                ".result-options"
+            );
 
-            <div class="pdf-performance-title">
+        if (clonedOptions) {
 
-                <i class="fa-solid fa-chart-column"></i>
+            clonedOptions.style.display =
+                "none";
 
-                Performance Overview
-
-            </div>
-
-
-            <div class="pdf-chart-row">
-
-                <div class="pdf-chart-label">
-                    <span>Correct</span>
-                    <strong>${correctNumber}</strong>
-                </div>
-
-                <div class="pdf-chart-track">
-
-                    <div
-                        class="pdf-chart-bar correct-bar"
-                        style="width:${correctWidth}%">
-                    </div>
-
-                </div>
-
-            </div>
+        }
 
 
-            <div class="pdf-chart-row">
+        const clonedHeader =
+            pdfWrapper.querySelector(
+                ".result-header"
+            );
 
-                <div class="pdf-chart-label">
-                    <span>Wrong</span>
-                    <strong>${wrongNumber}</strong>
-                </div>
+        if (clonedHeader) {
 
-                <div class="pdf-chart-track">
+            clonedHeader.style.display =
+                "none";
 
-                    <div
-                        class="pdf-chart-bar wrong-bar"
-                        style="width:${wrongWidth}%">
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="pdf-chart-row">
-
-                <div class="pdf-chart-label">
-                    <span>Skipped</span>
-                    <strong>${skippedNumber}</strong>
-                </div>
-
-                <div class="pdf-chart-track">
-
-                    <div
-                        class="pdf-chart-bar skipped-bar"
-                        style="width:${skippedWidth}%">
-                    </div>
-
-                </div>
-
-            </div>
-
-        `;
+        }
 
 
         // ==========================================
-        // INSERT CHART
+        // FORCE PDF-SAFE LAYOUT
         // ==========================================
 
-        const statsGrid =
+        const clonedStats =
             pdfWrapper.querySelector(
                 ".stats-grid"
             );
 
-        if (statsGrid) {
+        if (clonedStats) {
 
-            statsGrid.insertAdjacentElement(
-                "afterend",
-                performanceChart
-            );
+            clonedStats.style.display =
+                "grid";
 
-        }
-        else {
+            clonedStats.style.gridTemplateColumns =
+                "repeat(2, minmax(0, 1fr))";
 
-            pdfWrapper.appendChild(
-                performanceChart
-            );
+            clonedStats.style.width =
+                "100%";
 
         }
 
 
-        // ==========================================
-        // PUT COPY INTO DOCUMENT
-        // ==========================================
+        const clonedDetails =
+            pdfWrapper.querySelector(
+                ".details-grid"
+            );
 
-        document.body.appendChild(
-            pdfWrapper
-        );
+        if (clonedDetails) {
+
+            clonedDetails.style.display =
+                "grid";
+
+            clonedDetails.style.gridTemplateColumns =
+                "repeat(2, minmax(0, 1fr))";
+
+            clonedDetails.style.width =
+                "100%";
+
+        }
+
+
+        const clonedQuestionList =
+            pdfWrapper.querySelector(
+                ".question-analysis-list"
+            );
+
+        if (clonedQuestionList) {
+
+            clonedQuestionList.style.width =
+                "100%";
+
+            clonedQuestionList.style.overflow =
+                "visible";
+
+        }
 
 
         // ==========================================
-        // WAIT FOR BROWSER RENDER
+        // WAIT FOR CLONE TO RENDER
         // ==========================================
 
         await new Promise(
             resolve =>
                 setTimeout(
                     resolve,
-                    1000
+                    500
                 )
         );
 
@@ -2147,6 +2117,7 @@ async function downloadResultPDF() {
             sessionStorage.getItem(
                 "attemptId"
             );
+
 
         const fileName =
             "ExamVerse_Result_" +
@@ -2192,7 +2163,7 @@ async function downloadResultPDF() {
             html2canvas: {
 
                 scale:
-                    1.5,
+                    2,
 
                 useCORS:
                     true,
@@ -2213,11 +2184,11 @@ async function downloadResultPDF() {
                     0,
 
                 windowWidth:
-                    1200,
+                    794,
 
                 windowHeight:
                     Math.max(
-                        800,
+                        1123,
                         pdfWrapper.scrollHeight
                     )
 
@@ -2276,18 +2247,24 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // GENERATE PDF
+        // GENERATE PDF FROM CLONE
         // ==========================================
 
         await html2pdf()
 
-            .set(options)
+            .set(
+                options
+            )
 
-            .from(pdfWrapper)
+            .from(
+                pdfWrapper
+            )
 
             .toPdf()
 
-            .get("pdf")
+            .get(
+                "pdf"
+            )
 
             .then(
                 pdf => {
@@ -2324,6 +2301,7 @@ async function downloadResultPDF() {
             error
         );
 
+
         alert(
             "Unable to generate the result PDF."
         );
@@ -2334,18 +2312,19 @@ async function downloadResultPDF() {
     finally {
 
         // ==========================================
-        // REMOVE TEMPORARY PDF COPY
+        // REMOVE TEMPORARY PDF CLONE
         // ==========================================
 
-        if (pdfWrapper) {
+        if (pdfHost) {
 
-            pdfWrapper.remove();
+            pdfHost.remove();
 
         }
 
 
         pdfButton.disabled =
             false;
+
 
         pdfButton.innerHTML =
             oldText;
@@ -2769,7 +2748,8 @@ if (sectionContainer) {
             "hidden"
         );
 
-        sectionContainer.style.display = "";
+        sectionContainer.style.display =
+    "block";
 
 
         // ------------------------------------------
