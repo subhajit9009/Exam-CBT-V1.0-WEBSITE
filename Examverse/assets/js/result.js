@@ -1785,23 +1785,31 @@ function setupPdfButton() {
 // Native Browser Print / Save as PDF
 // ==========================================
 
-function downloadResultPDF() {
+// ==========================================
+// EXAMVERSE PROFESSIONAL PDF REPORT
+// Native Browser Print / Save as PDF
+// ==========================================
 
-    const resultWrapper =
-        document.querySelector(
-            ".result-wrapper"
-        );
+function downloadResultPDF() {
 
     const pdfButton =
         document.getElementById(
             "downloadPdfBtn"
         );
 
+    const resultWrapper =
+        document.querySelector(
+            ".result-wrapper"
+        );
 
-    if (!resultWrapper) {
 
-        alert(
-            "Result content is not available."
+    if (
+        !pdfButton ||
+        !resultWrapper
+    ) {
+
+        console.error(
+            "ExamVerse PDF: Result page not found."
         );
 
         return;
@@ -1809,104 +1817,19 @@ function downloadResultPDF() {
 
 
     // ==========================================
-    // OPEN PRINT WINDOW
+    // READ LIVE RESULT DATA FIRST
+    // IMPORTANT:
+    // Do this BEFORE removing .result-header
     // ==========================================
 
-    const printWindow =
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    if (!printWindow) {
-
-        alert(
-            "Please allow pop-ups for ExamVerse."
-        );
-
-        return;
-    }
-
-
-    // ==========================================
-    // CLONE RESULT
-    // ==========================================
-
-    const resultClone =
-        resultWrapper.cloneNode(true);
-
-
-    // ==========================================
-    // REMOVE WEB-ONLY ELEMENTS
-    // ==========================================
-
-    resultClone
-        .querySelectorAll(
-            ".result-header, " +
-            ".result-options, " +
-            ".result-actions"
-        )
-        .forEach(
-            element => {
-
-                element.remove();
-
-            }
-        );
-
-
-    // ==========================================
-    // FORCE ANALYSIS OPEN IN PDF
-    // ==========================================
-
-    const analysisSection =
-        resultClone.querySelector(
-            "#analysisSection"
-        );
-
-
-    if (analysisSection) {
-
-        analysisSection.classList.remove(
-            "hidden"
-        );
-
-        analysisSection.style.display =
-            "block";
-
-        analysisSection.style.visibility =
-            "visible";
-
-        analysisSection.style.opacity =
-            "1";
-
-        analysisSection.style.height =
-            "auto";
-
-        analysisSection.style.maxHeight =
-            "none";
-
-        analysisSection.style.overflow =
-            "visible";
-
-    }
-
-
-    // ==========================================
-    // READ ACTUAL RESULT VALUES
-    // ==========================================
-
-    const getValue =
+    const getLiveText =
         function(id) {
 
             const element =
-                resultClone.querySelector(
-                    "#" + id
-                );
+                document.getElementById(id);
 
             if (!element) {
-                return "0";
+                return "";
             }
 
             return element.textContent.trim();
@@ -1915,72 +1838,78 @@ function downloadResultPDF() {
 
 
     const examName =
-        getValue("examName") ||
-        "Examination Result";
+        getLiveText("examName") ||
+        "Examination";
 
 
     const score =
-        getValue("score");
+        getLiveText("score");
 
 
     const totalMarks =
-        getValue("totalMarks");
+        getLiveText("totalMarks");
 
 
     const attempted =
-        getValue("attempted");
+        getLiveText("attempted");
 
 
     const correct =
-        getValue("correct");
+        getLiveText("correct");
 
 
     const wrong =
-        getValue("wrong");
+        getLiveText("wrong");
 
 
     const skipped =
-        getValue("skipped");
+        getLiveText("skipped");
 
 
     const markedReview =
-        getValue("markedReview");
+        getLiveText("markedReview");
 
 
     const totalQuestions =
-        getValue("totalQuestions");
+        getLiveText("totalQuestions");
 
 
     const positiveMarks =
-        getValue("positiveMarks");
+        getLiveText("positiveMarks");
 
 
     const negativeMarks =
-        getValue("negativeMarks");
+        getLiveText("negativeMarks");
 
 
     const percentage =
-        getValue("percentage");
+        getLiveText("percentage");
 
 
     const passingMarks =
-        getValue("passingMarks");
+        getLiveText("passingMarks");
 
 
     const timeTaken =
-        getValue("timeTaken");
+        getLiveText("timeTaken");
 
 
     const status =
-        getValue("status");
+        getLiveText("status");
 
 
     const resultBadge =
-        getValue("resultBadge");
+        getLiveText("resultBadge");
+
+
+    console.log(
+        "ExamVerse PDF Exam Name:",
+        examName
+    );
 
 
     // ==========================================
-    // PERCENTAGE NUMBER
+    // PERCENTAGE
     // ==========================================
 
     let percentageNumber =
@@ -2014,7 +1943,7 @@ function downloadResultPDF() {
 
 
     // ==========================================
-    // QUESTION DISTRIBUTION
+    // NUMBERS
     // ==========================================
 
     const correctNumber =
@@ -2044,359 +1973,217 @@ function downloadResultPDF() {
         ) || 0;
 
 
-    const answeredTotal =
+    const distributionTotal =
         correctNumber +
         wrongNumber +
         skippedNumber;
 
 
     let correctWidth = 0;
-
     let wrongWidth = 0;
-
     let skippedWidth = 0;
 
 
     if (
-        answeredTotal > 0
+        distributionTotal > 0
     ) {
 
         correctWidth =
             (
                 correctNumber /
-                answeredTotal
+                distributionTotal
             ) * 100;
 
 
         wrongWidth =
             (
                 wrongNumber /
-                answeredTotal
+                distributionTotal
             ) * 100;
 
 
         skippedWidth =
             (
                 skippedNumber /
-                answeredTotal
+                distributionTotal
             ) * 100;
 
     }
 
 
     // ==========================================
-    // RESULT HEADER
+    // CLONE ONLY THE CONTENT WE NEED
     // ==========================================
 
-    const reportHeader = `
-
-        <div class="ev-header">
-
-            <div>
-
-                <div class="ev-logo">
-                    EXAMVERSE
-                </div>
-
-                <div class="ev-report-name">
-                    Examination Result Report
-                </div>
-
-            </div>
+    const scoreCard =
+        document.querySelector(
+            ".score-card"
+        );
 
 
-            <div class="ev-result-status">
-
-                ${resultBadge}
-
-            </div>
-
-        </div>
+    const statsGrid =
+        document.querySelector(
+            ".stats-grid"
+        );
 
 
-        <div class="ev-exam-name">
+    const detailsCard =
+        document.querySelector(
+            ".details-card"
+        );
 
-            ${examName}
 
-        </div>
+    const sectionResult =
+        document.getElementById(
+            "sectionResult"
+        );
 
-    `;
+
+    const analysisSection =
+        document.getElementById(
+            "analysisSection"
+        );
 
 
     // ==========================================
-    // SCORE AREA
+    // CLONE ANALYSIS
     // ==========================================
 
-    const scoreArea = `
-
-        <div class="ev-score-section">
-
-            <div class="ev-score-main">
-
-                <span class="ev-label">
-                    FINAL SCORE
-                </span>
-
-                <strong>
-                    ${score}
-                </strong>
-
-                <span class="ev-out-of">
-                    out of ${totalMarks}
-                </span>
-
-            </div>
+    let analysisHTML = "";
 
 
-            <div
-                class="ev-ring"
-                style="
-                    --progress:
-                    ${percentageNumber}%;
-                "
-            >
+    if (analysisSection) {
 
-                <div class="ev-ring-inner">
-
-                    <strong>
-                        ${percentageNumber.toFixed(1)}%
-                    </strong>
-
-                    <span>
-                        Performance
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    `;
+        const analysisClone =
+            analysisSection.cloneNode(
+                true
+            );
 
 
-    // ==========================================
-    // STATISTICS
-    // ==========================================
+        // PDF must always show analysis
 
-    const statistics = `
-
-        <div class="ev-stat-grid">
+        analysisClone.classList.remove(
+            "hidden"
+        );
 
 
-            <div class="ev-stat">
-
-                <span>
-                    Attempted
-                </span>
-
-                <strong>
-                    ${attempted}
-                </strong>
-
-            </div>
+        analysisClone.style.display =
+            "block";
 
 
-            <div class="ev-stat correct">
-
-                <span>
-                    Correct
-                </span>
-
-                <strong>
-                    ${correct}
-                </strong>
-
-            </div>
+        analysisClone.style.visibility =
+            "visible";
 
 
-            <div class="ev-stat wrong">
-
-                <span>
-                    Wrong
-                </span>
-
-                <strong>
-                    ${wrong}
-                </strong>
-
-            </div>
+        analysisClone.style.opacity =
+            "1";
 
 
-            <div class="ev-stat skipped">
-
-                <span>
-                    Skipped
-                </span>
-
-                <strong>
-                    ${skipped}
-                </strong>
-
-            </div>
+        analysisClone.style.height =
+            "auto";
 
 
-            <div class="ev-stat review">
-
-                <span>
-                    Marked Review
-                </span>
-
-                <strong>
-                    ${markedReview}
-                </strong>
-
-            </div>
+        analysisClone.style.maxHeight =
+            "none";
 
 
-        </div>
+        analysisClone.style.overflow =
+            "visible";
 
-    `;
+
+        analysisHTML =
+            analysisClone.outerHTML;
+
+    }
 
 
     // ==========================================
-    // ANSWER DISTRIBUTION
+    // SECTIONAL RESULT
     // ==========================================
 
-    const distribution = `
-
-        <div class="ev-distribution">
-
-            <h3>
-                Answer Distribution
-            </h3>
+    let sectionHTML = "";
 
 
-            <div class="ev-distribution-bar">
+    if (sectionResult) {
 
-                <div
-                    class="ev-correct-bar"
-                    style="
-                        width:
-                        ${correctWidth}%;
-                    "
-                ></div>
+        const sectionClone =
+            sectionResult.cloneNode(
+                true
+            );
 
 
-                <div
-                    class="ev-wrong-bar"
-                    style="
-                        width:
-                        ${wrongWidth}%;
-                    "
-                ></div>
+        /*
+           If the real result page has
+           Section-wise Performance hidden,
+           don't put it in the PDF.
+        */
+
+        const sectionIsHidden =
+            sectionResult.classList.contains(
+                "hidden"
+            ) ||
+            sectionResult.style.display ===
+                "none";
 
 
-                <div
-                    class="ev-skipped-bar"
-                    style="
-                        width:
-                        ${skippedWidth}%;
-                    "
-                ></div>
+        if (!sectionIsHidden) {
 
-            </div>
+            sectionClone.classList.remove(
+                "hidden"
+            );
 
 
-            <div class="ev-distribution-legend">
-
-                <span>
-                    <i class="correct-dot"></i>
-                    Correct ${correct}
-                </span>
+            sectionClone.style.display =
+                "block";
 
 
-                <span>
-                    <i class="wrong-dot"></i>
-                    Wrong ${wrong}
-                </span>
+            sectionClone.style.visibility =
+                "visible";
 
 
-                <span>
-                    <i class="skipped-dot"></i>
-                    Skipped ${skipped}
-                </span>
+            sectionHTML =
+                sectionClone.outerHTML;
 
-            </div>
+        }
 
-        </div>
-
-    `;
+    }
 
 
     // ==========================================
-    // SUMMARY TABLE
+    // OPEN PRINT WINDOW
     // ==========================================
 
-    const summary = `
-
-        <div class="ev-summary">
-
-            <h2>
-                Result Summary
-            </h2>
+    const printWindow =
+        window.open(
+            "",
+            "_blank"
+        );
 
 
-            <div class="ev-summary-grid">
+    if (!printWindow) {
 
+        alert(
+            "Please allow pop-ups for ExamVerse."
+        );
 
-                <div>
-                    <span>Total Questions</span>
-                    <strong>${totalQuestions}</strong>
-                </div>
+        return;
 
-
-                <div>
-                    <span>Attempted</span>
-                    <strong>${attempted}</strong>
-                </div>
-
-
-                <div>
-                    <span>Positive Marks</span>
-                    <strong>${positiveMarks}</strong>
-                </div>
-
-
-                <div>
-                    <span>Negative Marks</span>
-                    <strong>${negativeMarks}</strong>
-                </div>
-
-
-                <div>
-                    <span>Percentage</span>
-                    <strong>${percentage}</strong>
-                </div>
-
-
-                <div>
-                    <span>Passing Marks</span>
-                    <strong>${passingMarks}</strong>
-                </div>
-
-
-                <div>
-                    <span>Time Taken</span>
-                    <strong>${timeTaken}</strong>
-                </div>
-
-
-                <div>
-                    <span>Status</span>
-                    <strong>${status}</strong>
-                </div>
-
-
-            </div>
-
-        </div>
-
-    `;
+    }
 
 
     // ==========================================
-    // PRINT DOCUMENT
+    // RESULT CSS URL
+    // ==========================================
+
+    const resultCSS =
+        new URL(
+            "assets/css/result.css",
+            window.location.href
+        ).href;
+
+
+    // ==========================================
+    // BUILD PRINT PAGE
     // ==========================================
 
     const printHTML = `
@@ -2414,22 +2201,41 @@ function downloadResultPDF() {
     content="width=device-width, initial-scale=1.0"
 >
 
+
 <title>
-    ExamVerse Result
+    ExamVerse - ${examName}
 </title>
 
 
+<!-- ORIGINAL RESULT CSS -->
+
 <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
+    href="${resultCSS}"
+>
+
+
+<!-- GOOGLE FONT -->
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<!-- FONT AWESOME -->
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 >
 
 
 <style>
 
-/* ==========================================
-   A4
-========================================== */
+/* =================================================
+   PDF PAGE
+================================================= */
 
 @page {
 
@@ -2437,19 +2243,21 @@ function downloadResultPDF() {
         A4 portrait;
 
     margin:
-        12mm;
+        10mm;
 
 }
 
-
-/* ==========================================
-   BASE
-========================================== */
 
 * {
 
     box-sizing:
         border-box;
+
+    -webkit-print-color-adjust:
+        exact !important;
+
+    print-color-adjust:
+        exact !important;
 
 }
 
@@ -2458,13 +2266,13 @@ html,
 body {
 
     margin:
-        0;
+        0 !important;
 
     padding:
-        0;
+        0 !important;
 
     background:
-        #ffffff;
+        #ffffff !important;
 
 }
 
@@ -2476,35 +2284,35 @@ body {
         Arial,
         sans-serif;
 
-    color:
-        #172554;
-
 }
 
 
-/* ==========================================
-   REPORT
-========================================== */
+/* =================================================
+   PDF CONTAINER
+================================================= */
 
-.ev-report {
+.ev-pdf {
 
     width:
         100%;
 
     max-width:
-        186mm;
+        190mm;
 
     margin:
-        auto;
+        0 auto;
+
+    background:
+        #ffffff;
 
 }
 
 
-/* ==========================================
-   HEADER
-========================================== */
+/* =================================================
+   PDF HEADER
+================================================= */
 
-.ev-header {
+.ev-pdf-header {
 
     display:
         flex;
@@ -2515,19 +2323,22 @@ body {
     justify-content:
         space-between;
 
-    padding-bottom:
+    padding:
+        5mm 0;
+
+    margin-bottom:
         5mm;
 
     border-bottom:
-        2px solid #e2e8f0;
+        2px solid #2563eb;
 
 }
 
 
-.ev-logo {
+.ev-pdf-brand {
 
     font-size:
-        22px;
+        21px;
 
     font-weight:
         800;
@@ -2541,13 +2352,13 @@ body {
 }
 
 
-.ev-report-name {
+.ev-pdf-subtitle {
 
     margin-top:
         1mm;
 
     font-size:
-        9px;
+        8px;
 
     color:
         #64748b;
@@ -2555,10 +2366,10 @@ body {
 }
 
 
-.ev-result-status {
+.ev-pdf-status {
 
     padding:
-        6px 12px;
+        5px 12px;
 
     border-radius:
         20px;
@@ -2570,7 +2381,7 @@ body {
         #2563eb;
 
     font-size:
-        9px;
+        8px;
 
     font-weight:
         700;
@@ -2578,16 +2389,57 @@ body {
 }
 
 
-.ev-exam-name {
+/* =================================================
+   EXAM NAME
+================================================= */
 
-    margin:
-        5mm 0;
+.ev-pdf-exam-name {
+
+    margin-bottom:
+        5mm;
+
+    padding:
+        4mm 5mm;
+
+    border-left:
+        4px solid #2563eb;
+
+    border-radius:
+        6px;
+
+    background:
+        #f8fafc;
+
+}
+
+
+.ev-pdf-exam-name small {
+
+    display:
+        block;
+
+    margin-bottom:
+        1mm;
 
     font-size:
-        17px;
+        7px;
 
-    font-weight:
-        700;
+    color:
+        #64748b;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .5px;
+
+}
+
+
+.ev-pdf-exam-name strong {
+
+    font-size:
+        15px;
 
     color:
         #0f172a;
@@ -2595,11 +2447,11 @@ body {
 }
 
 
-/* ==========================================
-   SCORE
-========================================== */
+/* =================================================
+   SCORE HERO
+================================================= */
 
-.ev-score-section {
+.ev-pdf-score {
 
     display:
         flex;
@@ -2610,8 +2462,17 @@ body {
     justify-content:
         space-between;
 
+    min-height:
+        45mm;
+
     padding:
         7mm;
+
+    margin-bottom:
+        5mm;
+
+    border:
+        1px solid #dbeafe;
 
     border-radius:
         15px;
@@ -2623,27 +2484,13 @@ body {
             #f8fafc
         );
 
-    border:
-        1px solid #dbeafe;
-
 }
 
 
-.ev-score-main {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-}
-
-
-.ev-label {
+.ev-score-label {
 
     font-size:
-        9px;
+        8px;
 
     font-weight:
         700;
@@ -2654,13 +2501,16 @@ body {
 }
 
 
-.ev-score-main strong {
+.ev-score-number {
 
-    margin-top:
-        1mm;
+    margin:
+        1mm 0;
 
     font-size:
         30px;
+
+    font-weight:
+        800;
 
     line-height:
         1;
@@ -2671,10 +2521,7 @@ body {
 }
 
 
-.ev-out-of {
-
-    margin-top:
-        2mm;
+.ev-score-out {
 
     font-size:
         8px;
@@ -2685,20 +2532,17 @@ body {
 }
 
 
-/* ==========================================
-   CIRCULAR GRAPHIC
-========================================== */
+/* =================================================
+   CIRCULAR PERFORMANCE
+================================================= */
 
 .ev-ring {
 
     width:
-        36mm;
+        35mm;
 
     height:
-        36mm;
-
-    border-radius:
-        50%;
+        35mm;
 
     display:
         flex;
@@ -2709,12 +2553,13 @@ body {
     justify-content:
         center;
 
+    border-radius:
+        50%;
+
     background:
         conic-gradient(
-            #2563eb
-            var(--progress),
-            #dbeafe
-            var(--progress)
+            #2563eb ${percentageNumber}%,
+            #dbeafe ${percentageNumber}%
         );
 
     position:
@@ -2723,7 +2568,7 @@ body {
 }
 
 
-.ev-ring::before {
+.ev-ring::after {
 
     content:
         "";
@@ -2732,10 +2577,10 @@ body {
         absolute;
 
     width:
-        27mm;
+        26mm;
 
     height:
-        27mm;
+        26mm;
 
     border-radius:
         50%;
@@ -2746,7 +2591,7 @@ body {
 }
 
 
-.ev-ring-inner {
+.ev-ring-content {
 
     position:
         relative;
@@ -2760,13 +2605,13 @@ body {
 }
 
 
-.ev-ring-inner strong {
+.ev-ring-content strong {
 
     display:
         block;
 
     font-size:
-        17px;
+        15px;
 
     color:
         #1d4ed8;
@@ -2774,13 +2619,7 @@ body {
 }
 
 
-.ev-ring-inner span {
-
-    display:
-        block;
-
-    margin-top:
-        1mm;
+.ev-ring-content span {
 
     font-size:
         6px;
@@ -2791,31 +2630,28 @@ body {
 }
 
 
-/* ==========================================
+/* =================================================
    STATISTICS
-========================================== */
+================================================= */
 
-.ev-stat-grid {
+.ev-pdf-stats {
 
     display:
         grid;
 
     grid-template-columns:
-        repeat(
-            5,
-            1fr
-        );
+        repeat(5, 1fr);
 
     gap:
         3mm;
 
-    margin-top:
+    margin-bottom:
         5mm;
 
 }
 
 
-.ev-stat {
+.ev-pdf-stat {
 
     padding:
         4mm 2mm;
@@ -2829,10 +2665,13 @@ body {
     border-radius:
         10px;
 
+    background:
+        #ffffff;
+
 }
 
 
-.ev-stat span {
+.ev-pdf-stat span {
 
     display:
         block;
@@ -2846,7 +2685,7 @@ body {
 }
 
 
-.ev-stat strong {
+.ev-pdf-stat strong {
 
     display:
         block;
@@ -2863,15 +2702,15 @@ body {
 }
 
 
-.ev-stat.correct strong {
+.ev-pdf-stat.correct strong {
 
     color:
-        #15803d;
+        #16a34a;
 
 }
 
 
-.ev-stat.wrong strong {
+.ev-pdf-stat.wrong strong {
 
     color:
         #dc2626;
@@ -2879,7 +2718,7 @@ body {
 }
 
 
-.ev-stat.skipped strong {
+.ev-pdf-stat.skipped strong {
 
     color:
         #d97706;
@@ -2887,25 +2726,17 @@ body {
 }
 
 
-.ev-stat.review strong {
-
-    color:
-        #7c3aed;
-
-}
-
-
-/* ==========================================
+/* =================================================
    DISTRIBUTION
-========================================== */
+================================================= */
 
 .ev-distribution {
 
-    margin-top:
-        5mm;
-
     padding:
         5mm;
+
+    margin-bottom:
+        6mm;
 
     border-radius:
         12px;
@@ -2922,7 +2753,10 @@ body {
         0 0 3mm;
 
     font-size:
-        11px;
+        10px;
+
+    color:
+        #172554;
 
 }
 
@@ -2944,13 +2778,13 @@ body {
     border-radius:
         20px;
 
-    background:
-        #e2e8f0;
-
 }
 
 
-.ev-correct-bar {
+.ev-bar-correct {
+
+    width:
+        ${correctWidth}%;
 
     background:
         #22c55e;
@@ -2958,7 +2792,10 @@ body {
 }
 
 
-.ev-wrong-bar {
+.ev-bar-wrong {
+
+    width:
+        ${wrongWidth}%;
 
     background:
         #ef4444;
@@ -2966,7 +2803,10 @@ body {
 }
 
 
-.ev-skipped-bar {
+.ev-bar-skipped {
+
+    width:
+        ${skippedWidth}%;
 
     background:
         #f59e0b;
@@ -2994,69 +2834,20 @@ body {
 }
 
 
-.ev-distribution-legend i {
-
-    display:
-        inline-block;
-
-    width:
-        6px;
-
-    height:
-        6px;
-
-    margin-right:
-        3px;
-
-    border-radius:
-        50%;
-
-}
-
-
-.correct-dot {
-
-    background:
-        #22c55e;
-
-}
-
-
-.wrong-dot {
-
-    background:
-        #ef4444;
-
-}
-
-
-.skipped-dot {
-
-    background:
-        #f59e0b;
-
-}
-
-
-/* ==========================================
+/* =================================================
    SUMMARY
-========================================== */
+================================================= */
 
-.ev-summary {
-
-    margin-top:
-        6mm;
-
-}
-
-
-.ev-summary h2 {
+.ev-summary-title {
 
     margin:
         0 0 3mm;
 
     font-size:
         13px;
+
+    color:
+        #172554;
 
 }
 
@@ -3067,10 +2858,10 @@ body {
         grid;
 
     grid-template-columns:
-        repeat(
-            2,
-            1fr
-        );
+        repeat(2, 1fr);
+
+    margin-bottom:
+        6mm;
 
     border:
         1px solid #e2e8f0;
@@ -3084,7 +2875,7 @@ body {
 }
 
 
-.ev-summary-grid > div {
+.ev-summary-item {
 
     display:
         flex;
@@ -3104,7 +2895,7 @@ body {
 }
 
 
-.ev-summary-grid span {
+.ev-summary-item span {
 
     color:
         #64748b;
@@ -3112,7 +2903,7 @@ body {
 }
 
 
-.ev-summary-grid strong {
+.ev-summary-item strong {
 
     color:
         #0f172a;
@@ -3120,28 +2911,136 @@ body {
 }
 
 
-/* ==========================================
-   ORIGINAL ANALYSIS
-========================================== */
+/* =================================================
+   EXISTING RESULT COMPONENTS
+================================================= */
 
-.ev-analysis {
+.ev-existing {
 
-    margin-top:
-        7mm;
+    width:
+        100%;
 
 }
 
 
-/* ==========================================
-   PAGE BREAK SAFETY
-========================================== */
+.ev-existing .score-card {
 
-.ev-score-section,
-.ev-stat-grid,
-.ev-distribution,
-.ev-summary,
-.question-result-card,
+    display:
+        none !important;
+
+}
+
+
+.ev-existing .stats-grid {
+
+    display:
+        none !important;
+
+}
+
+
+.ev-existing .details-card {
+
+    display:
+        none !important;
+
+}
+
+
+/* =================================================
+   SECTION RESULT
+================================================= */
+
+.ev-existing
+.section-result-card {
+
+    margin-top:
+        6mm;
+
+}
+
+
+.ev-existing
+.section-result-card.hidden {
+
+    display:
+        none !important;
+
+}
+
+
+/* =================================================
+   ANALYSIS
+================================================= */
+
+.ev-existing
+.analysis-section {
+
+    display:
+        block !important;
+
+    visibility:
+        visible !important;
+
+    opacity:
+        1 !important;
+
+    height:
+        auto !important;
+
+    max-height:
+        none !important;
+
+    overflow:
+        visible !important;
+
+}
+
+
+.ev-existing
+.question-analysis-card {
+
+    width:
+        100% !important;
+
+}
+
+
+.ev-existing
+.question-result-card {
+
+    break-inside:
+        avoid;
+
+    page-break-inside:
+        avoid;
+
+}
+
+
+/* =================================================
+   REMOVE WEB BUTTONS
+================================================= */
+
+.result-options,
+.result-actions,
+.result-header {
+
+    display:
+        none !important;
+
+}
+
+
+/* =================================================
+   PAGE BREAK SAFETY
+================================================= */
+
+.section-result-card,
+.section-result-list,
 .section-result-item,
+.question-analysis-card,
+.question-result-card,
 .details-card {
 
     break-inside:
@@ -3153,122 +3052,16 @@ body {
 }
 
 
-/* ==========================================
-   ORIGINAL CONTENT WIDTH
-========================================== */
-
-.ev-original {
-
-    width:
-        100%;
-
-}
-
-
-.ev-original * {
-
-    max-width:
-        100%;
-
-}
-
-
-/* ==========================================
-   PRINT COLORS
-========================================== */
-
-* {
-
-    -webkit-print-color-adjust:
-        exact !important;
-
-    print-color-adjust:
-        exact !important;
-
-}
-
-
-/* ==========================================
-   TOOLBAR
-========================================== */
-
-.ev-toolbar {
-
-    position:
-        fixed;
-
-    top:
-        12px;
-
-    right:
-        12px;
-
-    z-index:
-        999999;
-
-    display:
-        flex;
-
-    gap:
-        8px;
-
-}
-
-
-.ev-toolbar button {
-
-    border:
-        none;
-
-    border-radius:
-        8px;
-
-    padding:
-        9px 14px;
-
-    font-family:
-        inherit;
-
-    font-size:
-        12px;
-
-    font-weight:
-        600;
-
-    cursor:
-        pointer;
-
-}
-
-
-.ev-print {
-
-    background:
-        #2563eb;
-
-    color:
-        white;
-
-}
-
-
-.ev-close {
-
-    background:
-        #e2e8f0;
-
-    color:
-        #334155;
-
-}
-
+/* =================================================
+   PRINT
+================================================= */
 
 @media print {
 
-    .ev-toolbar {
+    body {
 
-        display:
-            none !important;
+        background:
+            #ffffff !important;
 
     }
 
@@ -3282,58 +3075,344 @@ body {
 <body>
 
 
-<!-- ==========================================
-     PRINT TOOLBAR
-========================================== -->
-
-<div class="ev-toolbar">
-
-    <button
-        class="ev-print"
-        onclick="window.print()"
-    >
-
-        🖨 Print / Save PDF
-
-    </button>
+<div class="ev-pdf">
 
 
-    <button
-        class="ev-close"
-        onclick="window.close()"
-    >
+    <!-- =========================================
+         HEADER
+    ========================================== -->
 
-        ✕ Close
+    <div class="ev-pdf-header">
 
-    </button>
+        <div>
 
-</div>
+            <div class="ev-pdf-brand">
+                EXAMVERSE
+            </div>
 
+            <div class="ev-pdf-subtitle">
+                Examination Result Report
+            </div>
 
-<div class="ev-report">
-
-
-    ${reportHeader}
-
-
-    ${scoreArea}
+        </div>
 
 
-    ${statistics}
+        <div class="ev-pdf-status">
+
+            ${resultBadge}
+
+        </div>
+
+    </div>
 
 
-    ${distribution}
+    <!-- =========================================
+         EXAM NAME
+    ========================================== -->
+
+    <div class="ev-pdf-exam-name">
+
+        <small>
+            Examination
+        </small>
+
+        <strong>
+            ${examName}
+        </strong>
+
+    </div>
 
 
-    ${summary}
+    <!-- =========================================
+         SCORE
+    ========================================== -->
+
+    <div class="ev-pdf-score">
+
+        <div>
+
+            <div class="ev-score-label">
+                FINAL SCORE
+            </div>
+
+            <div class="ev-score-number">
+                ${score}
+            </div>
+
+            <div class="ev-score-out">
+                out of ${totalMarks}
+            </div>
+
+        </div>
 
 
-    <div class="ev-analysis">
+        <div
+            class="ev-ring"
+        >
 
-        ${analysisSection
-            ? analysisSection.outerHTML
-            : ""
-        }
+            <div class="ev-ring-content">
+
+                <strong>
+                    ${percentageNumber.toFixed(1)}%
+                </strong>
+
+                <span>
+                    Performance
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         STATISTICS
+    ========================================== -->
+
+    <div class="ev-pdf-stats">
+
+
+        <div class="ev-pdf-stat">
+
+            <span>
+                Attempted
+            </span>
+
+            <strong>
+                ${attempted}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-pdf-stat correct">
+
+            <span>
+                Correct
+            </span>
+
+            <strong>
+                ${correct}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-pdf-stat wrong">
+
+            <span>
+                Wrong
+            </span>
+
+            <strong>
+                ${wrong}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-pdf-stat skipped">
+
+            <span>
+                Skipped
+            </span>
+
+            <strong>
+                ${skipped}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-pdf-stat">
+
+            <span>
+                Review
+            </span>
+
+            <strong>
+                ${markedReview}
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================
+         DISTRIBUTION
+    ========================================== -->
+
+    <div class="ev-distribution">
+
+        <h3>
+            Answer Distribution
+        </h3>
+
+
+        <div class="ev-distribution-bar">
+
+            <div class="ev-bar-correct"></div>
+
+            <div class="ev-bar-wrong"></div>
+
+            <div class="ev-bar-skipped"></div>
+
+        </div>
+
+
+        <div class="ev-distribution-legend">
+
+            <span>
+                ● Correct ${correct}
+            </span>
+
+            <span>
+                ● Wrong ${wrong}
+            </span>
+
+            <span>
+                ● Skipped ${skipped}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         SUMMARY
+    ========================================== -->
+
+    <h2 class="ev-summary-title">
+
+        Result Summary
+
+    </h2>
+
+
+    <div class="ev-summary-grid">
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Total Questions
+            </span>
+
+            <strong>
+                ${totalQuestions}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Attempted
+            </span>
+
+            <strong>
+                ${attempted}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Positive Marks
+            </span>
+
+            <strong>
+                ${positiveMarks}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Negative Marks
+            </span>
+
+            <strong>
+                ${negativeMarks}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Percentage
+            </span>
+
+            <strong>
+                ${percentage}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Passing Marks
+            </span>
+
+            <strong>
+                ${passingMarks}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Time Taken
+            </span>
+
+            <strong>
+                ${timeTaken}
+            </strong>
+
+        </div>
+
+
+        <div class="ev-summary-item">
+
+            <span>
+                Status
+            </span>
+
+            <strong>
+                ${status}
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================
+         EXISTING SECTION + ANALYSIS
+    ========================================== -->
+
+    <div class="ev-existing">
+
+        ${sectionHTML}
+
+        ${analysisHTML}
 
     </div>
 
@@ -3345,15 +3424,15 @@ body {
 
 window.addEventListener(
     "load",
-    function () {
+    function() {
 
         setTimeout(
-            function () {
+            function() {
 
                 window.print();
 
             },
-            800
+            1000
         );
 
     }
@@ -3370,7 +3449,7 @@ window.addEventListener(
 
 
     // ==========================================
-    // WRITE PRINT PAGE
+    // WRITE DOCUMENT
     // ==========================================
 
     printWindow.document.open();
@@ -3383,39 +3462,38 @@ window.addEventListener(
 
 
     // ==========================================
-    // RESTORE BUTTON
+    // BUTTON STATE
     // ==========================================
 
-    if (pdfButton) {
-
-        const oldText =
-            pdfButton.innerHTML;
+    const oldText =
+        pdfButton.innerHTML;
 
 
-        pdfButton.disabled =
-            true;
+    pdfButton.disabled =
+        true;
 
 
-        pdfButton.innerHTML = `
-            <i class="fa-solid fa-file-pdf"></i>
-            Preparing PDF...
-        `;
+    pdfButton.innerHTML = `
+
+        <i class="fa-solid fa-spinner fa-spin"></i>
+
+        Preparing PDF...
+
+    `;
 
 
-        setTimeout(
-            function () {
+    setTimeout(
+        function() {
 
-                pdfButton.disabled =
-                    false;
+            pdfButton.disabled =
+                false;
 
-                pdfButton.innerHTML =
-                    oldText;
+            pdfButton.innerHTML =
+                oldText;
 
-            },
-            1500
-        );
-
-    }
+        },
+        1500
+    );
 
 }
 
