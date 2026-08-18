@@ -3724,53 +3724,26 @@ body {
     gap: 16px;
 }
 
+
+
 /* =========================================================
-   EXAMVERSE PDF EXPORT - ISOLATED A4 LAYOUT
+   PDF ROOT
    ========================================================= */
 
-.examverse-pdf-host {
-
-    position: fixed !important;
-
-    left: -100000px !important;
-
-    top: 0 !important;
+.pdf-mode {
 
     width: 794px !important;
 
     min-width: 794px !important;
 
     max-width: 794px !important;
-
-    background: #ffffff !important;
-
-    overflow: visible !important;
 
     margin: 0 !important;
 
-    padding: 0 !important;
-
-}
-
-
-/* ==========================================
-   PDF WRAPPER
-   ========================================== */
-
-.examverse-pdf-host .pdf-mode {
-
-    width: 794px !important;
-
-    min-width: 794px !important;
-
-    max-width: 794px !important;
+    padding: 18px !important;
 
     box-sizing: border-box !important;
 
-    margin: 0 !important;
-
-    padding: 20px !important;
-
     background: #ffffff !important;
 
     overflow: visible !important;
@@ -3778,13 +3751,11 @@ body {
 }
 
 
-/* ==========================================
+/* =========================================================
    PDF ANALYSIS
-   ========================================== */
+   ========================================================= */
 
-.examverse-pdf-host
-.pdf-mode
-.analysis-section {
+.pdf-mode .analysis-section {
 
     display: block !important;
 
@@ -3794,182 +3765,709 @@ body {
 
     opacity: 1 !important;
 
-    overflow: visible !important;
-
     margin-top: 20px !important;
 
-}
-
-
-/* ==========================================
-   PDF QUESTION LIST
-   ========================================== */
-
-.examverse-pdf-host
-.pdf-mode
-.question-analysis-list {
-
-    display: flex !important;
-
-    flex-direction: column !important;
-
-    width: 100% !important;
-
-    max-width: 100% !important;
-
     overflow: visible !important;
 
 }
 
 
-/* ==========================================
-   PDF SECTION RESULT
-   ========================================== */
+/* =========================================================
+   REMOVE WEB-ONLY ELEMENTS
+   ========================================================= */
 
-.examverse-pdf-host
-.pdf-mode
-#sectionResult {
+.pdf-mode .result-header,
+.pdf-mode .result-options,
+.pdf-mode .result-actions {
+
+    display: none !important;
+
+}
+
+
+/* =========================================================
+   SCORE CARD
+   ========================================================= */
+
+.pdf-mode .score-card {
 
     width: 100% !important;
 
     max-width: 100% !important;
+
+    margin:
+        0 0 12px 0 !important;
+
+    padding: 28px !important;
 
     box-sizing: border-box !important;
 
-}
+    background:
+        #fff8d8 !important;
 
+    background-color:
+        #fff8d8 !important;
 
-.examverse-pdf-host
-.pdf-mode
-#sectionResultList {
+    border:
+        1px solid
+        #f3df91 !important;
 
-    width: 100% !important;
+    border-radius:
+        14px !important;
 
-    max-width: 100% !important;
+    box-shadow:
+        none !important;
 
-    overflow: visible !important;
+    break-inside:
+        avoid !important;
 
-}
-
-
-/* ==========================================
-   PDF SECTION CARDS
-   ========================================== */
-
-.examverse-pdf-host
-.section-result-item {
-
-    width: 100% !important;
-
-    max-width: 100% !important;
-
-    box-sizing: border-box !important;
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
+    page-break-inside:
+        avoid !important;
 
 }
 
 
-/* ==========================================
-   PDF STATISTICS
-   ========================================== */
+/* =========================================================
+   SCORE VALUE
+   ========================================================= */
 
-.examverse-pdf-host
-.pdf-mode
-.stats-grid {
+.pdf-mode .score-value {
 
-    display: grid !important;
+    background:
+        none !important;
+
+    background-image:
+        none !important;
+
+    background-clip:
+        initial !important;
+
+    -webkit-background-clip:
+        initial !important;
+
+    -webkit-text-fill-color:
+        #1e3a8a !important;
+
+    color:
+        #1e3a8a !important;
+
+}
+
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.pdf-mode .stats-grid {
+
+    display:
+        grid !important;
 
     grid-template-columns:
         repeat(
-            3,
-            minmax(0, 1fr)
+            4,
+            minmax(
+                0,
+                1fr
+            )
         ) !important;
 
-    width: 100% !important;
+    gap:
+        9px !important;
 
-    max-width: 100% !important;
+    width:
+        100% !important;
 
-    box-sizing: border-box !important;
+    max-width:
+        100% !important;
+
+    margin-top:
+        12px !important;
+
+    box-sizing:
+        border-box !important;
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
 
 }
 
 
-/* ==========================================
-   PDF DETAILS
-   ========================================== */
+/* =========================================================
+   STAT CARD
+   ========================================================= */
 
-.examverse-pdf-host
+.pdf-mode .stat-card {
+
+    display:
+        flex !important;
+
+    align-items:
+        center !important;
+
+    gap:
+        8px !important;
+
+    width:
+        100% !important;
+
+    min-width:
+        0 !important;
+
+    max-width:
+        100% !important;
+
+    padding:
+        10px !important;
+
+    box-sizing:
+        border-box !important;
+
+    border-radius:
+        10px !important;
+
+    box-shadow:
+        none !important;
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   FIFTH STATISTIC
+   MARKED FOR REVIEW
+   ========================================================= */
+
 .pdf-mode
-.details-grid {
+.stats-grid
+.stat-card:nth-child(5) {
 
-    display: grid !important;
+    grid-column:
+        1 / -1 !important;
+
+    justify-self:
+        center !important;
+
+    width:
+        220px !important;
+
+    max-width:
+        220px !important;
+
+}
+
+
+/* =========================================================
+   STAT CONTENT
+   ========================================================= */
+
+.pdf-mode .stat-card * {
+
+    min-width:
+        0 !important;
+
+    max-width:
+        100% !important;
+
+    overflow-wrap:
+        break-word !important;
+
+}
+
+
+.pdf-mode .stat-icon {
+
+    width:
+        30px !important;
+
+    height:
+        30px !important;
+
+    min-width:
+        30px !important;
+
+    border-radius:
+        8px !important;
+
+    font-size:
+        12px !important;
+
+}
+
+
+.pdf-mode .stat-card span {
+
+    font-size:
+        8px !important;
+
+    white-space:
+        normal !important;
+
+}
+
+
+.pdf-mode .stat-card strong {
+
+    margin-top:
+        1px !important;
+
+    font-size:
+        15px !important;
+
+}
+
+
+/* =========================================================
+   RESULT DETAILS
+   ========================================================= */
+
+.pdf-mode .details-card {
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    margin-top:
+        14px !important;
+
+    padding:
+        16px !important;
+
+    box-sizing:
+        border-box !important;
+
+    border-radius:
+        14px !important;
+
+    background:
+        #ffffff !important;
+
+    border:
+        1px solid
+        #e2e8f0 !important;
+
+    box-shadow:
+        none !important;
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   DETAILS GRID
+   ========================================================= */
+
+.pdf-mode .details-grid {
+
+    display:
+        grid !important;
 
     grid-template-columns:
         repeat(
             2,
-            minmax(0, 1fr)
+            minmax(
+                0,
+                1fr
+            )
         ) !important;
 
-    width: 100% !important;
+    gap:
+        7px !important;
 
-    max-width: 100% !important;
+    width:
+        100% !important;
 
-    box-sizing: border-box !important;
-
-}
-
-
-/* ==========================================
-   PDF QUESTION CARDS
-   ========================================== */
-
-.examverse-pdf-host
-.question-result-card {
-
-    width: 100% !important;
-
-    max-width: 100% !important;
-
-    box-sizing: border-box !important;
-
-    break-inside: avoid !important;
-
-    page-break-inside: avoid !important;
+    max-width:
+        100% !important;
 
 }
 
 
-/* ==========================================
-   PDF INTERNAL ELEMENTS
-   ========================================== */
+.pdf-mode .detail-item {
 
-.examverse-pdf-host
-.pdf-mode
-* {
+    min-width:
+        0 !important;
 
-    box-sizing: border-box !important;
+    padding:
+        9px 11px !important;
 
-    max-width: 100%;
+    box-sizing:
+        border-box !important;
 
 }
 
 
-/* ==========================================
-   PDF WEB CONTROLS
-   ========================================== */
+/* =========================================================
+   QUESTION ANALYSIS CONTAINER
+   ========================================================= */
 
-.examverse-pdf-host
-.result-options,
+.pdf-mode .question-analysis-card {
 
-.examverse-pdf-host
-.result-actions,
+    width:
+        100% !important;
 
-.examverse-pdf-host
-.result-header {
+    max-width:
+        100% !important;
 
-    display: none !important;
+    margin-top:
+        14px !important;
+
+    padding:
+        16px !important;
+
+    box-sizing:
+        border-box !important;
+
+    border-radius:
+        14px !important;
+
+    box-shadow:
+        none !important;
+
+    break-before:
+        page !important;
+
+    page-break-before:
+        always !important;
+
+}
+
+
+/* =========================================================
+   ANALYSIS HEADER
+   ========================================================= */
+
+.pdf-mode .analysis-header {
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   ANALYSIS LEGEND
+   ========================================================= */
+
+.pdf-mode .analysis-legend {
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   QUESTION ANALYSIS LIST
+   ========================================================= */
+
+.pdf-mode .question-analysis-list {
+
+    display:
+        flex !important;
+
+    flex-direction:
+        column !important;
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    overflow:
+        visible !important;
+
+}
+
+
+/* =========================================================
+   QUESTION RESULT CARD
+   ========================================================= */
+
+.pdf-mode .question-result-card {
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    box-sizing:
+        border-box !important;
+
+    box-shadow:
+        none !important;
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   ANSWER GRID
+   ========================================================= */
+
+.pdf-mode .answer-result-grid {
+
+    display:
+        grid !important;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        ) !important;
+
+    gap:
+        10px !important;
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+}
+
+
+.pdf-mode .answer-box {
+
+    min-width:
+        0 !important;
+
+    box-sizing:
+        border-box !important;
+
+}
+
+
+/* =========================================================
+   SECTION-WISE RESULT
+   ========================================================= */
+
+.pdf-mode #sectionResult {
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    height:
+        auto !important;
+
+    max-height:
+        none !important;
+
+    overflow:
+        visible !important;
+
+    box-sizing:
+        border-box !important;
+
+}
+
+
+/* =========================================================
+   SECTION RESULT LIST
+   ========================================================= */
+
+.pdf-mode #sectionResultList {
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    overflow:
+        visible !important;
+
+}
+
+
+/* =========================================================
+   SECTION RESULT CARD
+   ========================================================= */
+
+.pdf-mode .section-result-card {
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    box-sizing:
+        border-box !important;
+
+    box-shadow:
+        none !important;
+
+    break-inside:
+        auto !important;
+
+    page-break-inside:
+        auto !important;
+
+}
+
+
+/* =========================================================
+   SECTION RESULT ITEM
+   ========================================================= */
+
+.pdf-mode .section-result-item {
+
+    width:
+        100% !important;
+
+    max-width:
+        100% !important;
+
+    box-sizing:
+        border-box !important;
+
+    box-shadow:
+        none !important;
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   SECTION STATISTICS
+   ========================================================= */
+
+.pdf-mode .section-result-stats {
+
+    display:
+        grid !important;
+
+    grid-template-columns:
+        repeat(
+            6,
+            minmax(
+                0,
+                1fr
+            )
+        ) !important;
+
+    gap:
+        7px !important;
+
+}
+
+
+.pdf-mode .section-stat {
+
+    min-width:
+        0 !important;
+
+    box-sizing:
+        border-box !important;
+
+}
+
+
+/* =========================================================
+   SECTION TITLE / MARKS
+   ========================================================= */
+
+.pdf-mode .section-result-title,
+.pdf-mode .section-result-marks {
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   GLOBAL PDF WIDTH SAFETY
+   ========================================================= */
+
+.pdf-mode * {
+
+    box-sizing:
+        border-box !important;
+
+    max-width:
+        100%;
+
+}
+
+
+/* =========================================================
+   PAGE BREAK SAFETY
+   ========================================================= */
+
+.pdf-mode .score-card,
+.pdf-mode .details-card,
+.pdf-mode .stat-card,
+.pdf-mode .question-result-card,
+.pdf-mode .section-result-item {
+
+    break-inside:
+        avoid !important;
+
+    page-break-inside:
+        avoid !important;
+
+}
+
+
+/* =========================================================
+   PRINT PAGE
+   ========================================================= */
+
+@media print {
+
+    @page {
+
+        size:
+            A4 portrait;
+
+        margin:
+            0;
+
+    }
 
 }

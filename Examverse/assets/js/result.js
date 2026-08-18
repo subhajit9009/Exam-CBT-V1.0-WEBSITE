@@ -1765,7 +1765,6 @@ function setupPdfButton() {
 
 }
 
-
 // ==========================================
 // Generate Result PDF
 // ==========================================
@@ -1787,16 +1786,24 @@ async function downloadResultPDF() {
         );
 
 
+    // ==========================================
+    // SAFETY CHECK
+    // ==========================================
+
     if (
         !resultWrapper ||
         !pdfButton
     ) {
+        console.error(
+            "Result wrapper or PDF button not found."
+        );
+
         return;
     }
 
 
     // ==========================================
-    // CHECK PDF LIBRARY
+    // CHECK HTML2PDF
     // ==========================================
 
     if (
@@ -1813,6 +1820,10 @@ async function downloadResultPDF() {
     }
 
 
+    // ==========================================
+    // SAVE BUTTON TEXT
+    // ==========================================
+
     const oldText =
         pdfButton.innerHTML;
 
@@ -1827,425 +1838,7 @@ async function downloadResultPDF() {
     `;
 
 
-    let pdfHost = null;
-
-
     try {
-
-        // ==========================================
-        // CREATE COMPLETELY SEPARATE PDF HOST
-        // ==========================================
-
-        pdfHost =
-            document.createElement(
-                "div"
-            );
-
-
-        pdfHost.className =
-            "examverse-pdf-host";
-
-
-        pdfHost.style.position =
-            "fixed";
-
-        pdfHost.style.left =
-            "-100000px";
-
-        pdfHost.style.top =
-            "0";
-
-        pdfHost.style.width =
-            "794px";
-
-        pdfHost.style.minWidth =
-            "794px";
-
-        pdfHost.style.maxWidth =
-            "794px";
-
-        pdfHost.style.background =
-            "#ffffff";
-
-        pdfHost.style.padding =
-            "0";
-
-        pdfHost.style.margin =
-            "0";
-
-        pdfHost.style.overflow =
-            "visible";
-
-        pdfHost.style.zIndex =
-            "-999999";
-
-
-        document.body.appendChild(
-            pdfHost
-        );
-
-
-        // ==========================================
-        // CLONE RESULT PAGE
-        // ==========================================
-
-        const pdfWrapper =
-            resultWrapper.cloneNode(
-                true
-            );
-
-
-        pdfWrapper.classList.add(
-            "pdf-mode"
-        );
-
-
-        pdfWrapper.style.width =
-            "794px";
-
-        pdfWrapper.style.minWidth =
-            "794px";
-
-        pdfWrapper.style.maxWidth =
-            "794px";
-
-        pdfWrapper.style.boxSizing =
-            "border-box";
-
-        pdfWrapper.style.margin =
-            "0";
-
-        pdfWrapper.style.padding =
-            "20px";
-
-        pdfWrapper.style.background =
-            "#ffffff";
-
-        pdfWrapper.style.height =
-            "auto";
-
-        pdfWrapper.style.maxHeight =
-            "none";
-
-        pdfWrapper.style.overflow =
-            "visible";
-
-
-        pdfHost.appendChild(
-            pdfWrapper
-        );
-
-
-        // ==========================================
-        // PDF-ONLY ANALYSIS HANDLING
-        // ==========================================
-
-        const pdfAnalysis =
-            pdfWrapper.querySelector(
-                "#analysisSection"
-            );
-
-
-        if (pdfAnalysis) {
-
-            /*
-               IMPORTANT:
-               Only the CLONE is changed.
-               The real page remains untouched.
-            */
-
-            pdfAnalysis.classList.remove(
-                "hidden"
-            );
-
-
-            pdfAnalysis.style.display =
-                "block";
-
-
-            pdfAnalysis.style.maxHeight =
-                "none";
-
-
-            pdfAnalysis.style.height =
-                "auto";
-
-
-            pdfAnalysis.style.opacity =
-                "1";
-
-
-            pdfAnalysis.style.marginTop =
-                "20px";
-
-
-            pdfAnalysis.style.overflow =
-                "visible";
-
-        }
-
-
-        // ==========================================
-        // PDF-ONLY SECTION RESULT HANDLING
-        // ==========================================
-
-        const pdfSection =
-            pdfWrapper.querySelector(
-                "#sectionResult"
-            );
-
-
-        if (pdfSection) {
-
-            const pdfSectionList =
-                pdfWrapper.querySelector(
-                    "#sectionResultList"
-                );
-
-
-            /*
-               If the section list contains
-               actual rendered section results,
-               make it visible in the PDF clone.
-
-               If there are no sections,
-               keep it hidden.
-            */
-
-            const hasSectionResults =
-                pdfSectionList &&
-                pdfSectionList.children.length >
-                    0;
-
-
-            if (hasSectionResults) {
-
-                pdfSection.classList.remove(
-                    "hidden"
-                );
-
-
-                pdfSection.style.display =
-                    "block";
-
-
-            }
-            else {
-
-                pdfSection.classList.add(
-                    "hidden"
-                );
-
-
-                pdfSection.style.display =
-                    "none";
-
-            }
-
-        }
-
-
-        // ==========================================
-        // REMOVE WEB-ONLY CONTROLS
-        // ==========================================
-
-        const pdfOptions =
-            pdfWrapper.querySelector(
-                ".result-options"
-            );
-
-
-        if (pdfOptions) {
-
-            pdfOptions.style.display =
-                "none";
-
-        }
-
-
-        const pdfActions =
-            pdfWrapper.querySelector(
-                ".result-actions"
-            );
-
-
-        if (pdfActions) {
-
-            pdfActions.style.display =
-                "none";
-
-        }
-
-
-        const pdfHeaderWeb =
-            pdfWrapper.querySelector(
-                ".result-header"
-            );
-
-
-        if (pdfHeaderWeb) {
-
-            pdfHeaderWeb.style.display =
-                "none";
-
-        }
-
-
-        // ==========================================
-        // FORCE PDF-SAFE GRIDS
-        // ==========================================
-
-        const statsGrid =
-            pdfWrapper.querySelector(
-                ".stats-grid"
-            );
-
-
-        if (statsGrid) {
-
-            statsGrid.style.display =
-                "grid";
-
-            statsGrid.style.gridTemplateColumns =
-                "repeat(3, minmax(0, 1fr))";
-
-            statsGrid.style.width =
-                "100%";
-
-            statsGrid.style.maxWidth =
-                "100%";
-
-        }
-
-
-        const detailsGrid =
-            pdfWrapper.querySelector(
-                ".details-grid"
-            );
-
-
-        if (detailsGrid) {
-
-            detailsGrid.style.display =
-                "grid";
-
-            detailsGrid.style.gridTemplateColumns =
-                "repeat(2, minmax(0, 1fr))";
-
-            detailsGrid.style.width =
-                "100%";
-
-            detailsGrid.style.maxWidth =
-                "100%";
-
-        }
-
-
-        const questionList =
-            pdfWrapper.querySelector(
-                ".question-analysis-list"
-            );
-
-
-        if (questionList) {
-
-            questionList.style.display =
-                "flex";
-
-            questionList.style.flexDirection =
-                "column";
-
-            questionList.style.width =
-                "100%";
-
-            questionList.style.maxWidth =
-                "100%";
-
-            questionList.style.overflow =
-                "visible";
-
-        }
-
-
-        // ==========================================
-        // FORCE SECTION RESULT WIDTH
-        // ==========================================
-
-        const sectionList =
-            pdfWrapper.querySelector(
-                "#sectionResultList"
-            );
-
-
-        if (sectionList) {
-
-            sectionList.style.width =
-                "100%";
-
-            sectionList.style.maxWidth =
-                "100%";
-
-            sectionList.style.overflow =
-                "visible";
-
-        }
-
-
-        // ==========================================
-        // FORCE QUESTION CARDS
-        // ==========================================
-
-        pdfWrapper
-            .querySelectorAll(
-                ".question-result-card"
-            )
-            .forEach(
-                card => {
-
-                    card.style.width =
-                        "100%";
-
-                    card.style.maxWidth =
-                        "100%";
-
-                    card.style.boxSizing =
-                        "border-box";
-
-                    card.style.breakInside =
-                        "avoid";
-
-                    card.style.pageBreakInside =
-                        "avoid";
-
-                }
-            );
-
-
-        // ==========================================
-        // WAIT FOR PDF CLONE TO RENDER
-        // ==========================================
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    600
-                )
-        );
-
-
-        // ==========================================
-        // WAIT FOR FONTS
-        // ==========================================
-
-        if (
-            document.fonts &&
-            document.fonts.ready
-        ) {
-
-            await document.fonts.ready;
-
-        }
 
 
         // ==========================================
@@ -2274,7 +1867,7 @@ async function downloadResultPDF() {
 
 
         // ==========================================
-        // PDF SETTINGS
+        // PDF OPTIONS
         // ==========================================
 
         const options = {
@@ -2296,15 +1889,24 @@ async function downloadResultPDF() {
                     "jpeg",
 
                 quality:
-                    0.98
+                    0.95
 
             },
 
 
             html2canvas: {
 
+                /*
+                 * IMPORTANT
+                 *
+                 * Do not use scale 2 here.
+                 * Long result pages containing 100+
+                 * questions can create an extremely
+                 * large canvas.
+                 */
+
                 scale:
-                    2,
+                    1.25,
 
                 useCORS:
                     true,
@@ -2324,17 +1926,414 @@ async function downloadResultPDF() {
                 scrollY:
                     0,
 
+
+                /*
+                 * Fixed desktop/A4 working width.
+                 */
+
                 windowWidth:
                     794,
 
-                windowHeight:
-                    Math.max(
-                        1123,
-                        pdfWrapper.scrollHeight
-                    )
+
+                // ==========================================
+                // MODIFY ONLY THE HTML2CANVAS CLONE
+                // ==========================================
+
+                onclone:
+                    function (
+                        clonedDocument
+                    ) {
+
+
+                        // ==========================================
+                        // CLONED HTML / BODY
+                        // ==========================================
+
+                        const clonedHTML =
+                            clonedDocument
+                                .documentElement;
+
+
+                        const clonedBody =
+                            clonedDocument
+                                .body;
+
+
+                        const clonedWrapper =
+                            clonedDocument
+                                .querySelector(
+                                    ".result-wrapper"
+                                );
+
+
+                        if (
+                            !clonedWrapper
+                        ) {
+
+                            console.error(
+                                "PDF clone: result wrapper not found."
+                            );
+
+                            return;
+
+                        }
+
+
+                        // ==========================================
+                        // PDF DOCUMENT WIDTH
+                        // ==========================================
+
+                        clonedHTML.style.width =
+                            "794px";
+
+                        clonedHTML.style.minWidth =
+                            "794px";
+
+
+                        clonedBody.style.width =
+                            "794px";
+
+                        clonedBody.style.minWidth =
+                            "794px";
+
+                        clonedBody.style.margin =
+                            "0";
+
+                        clonedBody.style.padding =
+                            "0";
+
+                        clonedBody.style.background =
+                            "#ffffff";
+
+                        clonedBody.style.overflow =
+                            "visible";
+
+
+                        // ==========================================
+                        // PDF MODE
+                        // ==========================================
+
+                        clonedWrapper.classList.add(
+                            "pdf-mode"
+                        );
+
+
+                        clonedWrapper.style.width =
+                            "794px";
+
+                        clonedWrapper.style.minWidth =
+                            "794px";
+
+                        clonedWrapper.style.maxWidth =
+                            "794px";
+
+                        clonedWrapper.style.margin =
+                            "0";
+
+                        clonedWrapper.style.padding =
+                            "18px";
+
+                        clonedWrapper.style.boxSizing =
+                            "border-box";
+
+                        clonedWrapper.style.background =
+                            "#ffffff";
+
+                        clonedWrapper.style.overflow =
+                            "visible";
+
+
+                        // ==========================================
+                        // REMOVE WEB-ONLY ELEMENTS
+                        // ==========================================
+
+                        clonedWrapper
+                            .querySelectorAll(
+                                ".result-header, .result-options, .result-actions"
+                            )
+                            .forEach(
+                                element => {
+
+                                    element.style.display =
+                                        "none";
+
+                                }
+                            );
+
+
+                        // ==========================================
+                        // ALWAYS INCLUDE DETAILED ANALYSIS
+                        // IN THE PDF
+                        // ==========================================
+
+                        const analysisSection =
+                            clonedDocument.getElementById(
+                                "analysisSection"
+                            );
+
+
+                        if (
+                            analysisSection
+                        ) {
+
+                            analysisSection.classList.remove(
+                                "hidden"
+                            );
+
+                            analysisSection.style.display =
+                                "block";
+
+                            analysisSection.style.maxHeight =
+                                "none";
+
+                            analysisSection.style.height =
+                                "auto";
+
+                            analysisSection.style.opacity =
+                                "1";
+
+                            analysisSection.style.marginTop =
+                                "20px";
+
+                            analysisSection.style.overflow =
+                                "visible";
+
+                        }
+
+
+                        // ==========================================
+                        // SECTION-WISE RESULT
+                        // ==========================================
+
+                        const sectionResult =
+                            clonedDocument.getElementById(
+                                "sectionResult"
+                            );
+
+
+                        const sectionResultList =
+                            clonedDocument.getElementById(
+                                "sectionResultList"
+                            );
+
+
+                        const hasSectionResults =
+                            !!sectionResultList &&
+
+                            sectionResultList
+                                .children
+                                .length > 0;
+
+
+                        if (
+                            sectionResult
+                        ) {
+
+                            if (
+                                hasSectionResults
+                            ) {
+
+                                sectionResult.classList.remove(
+                                    "hidden"
+                                );
+
+                                sectionResult.style.display =
+                                    "block";
+
+                                sectionResult.style.height =
+                                    "auto";
+
+                                sectionResult.style.maxHeight =
+                                    "none";
+
+                                sectionResult.style.overflow =
+                                    "visible";
+
+                            }
+
+                            else {
+
+                                sectionResult.classList.add(
+                                    "hidden"
+                                );
+
+                                sectionResult.style.display =
+                                    "none";
+
+                            }
+
+                        }
+
+
+                        // ==========================================
+                        // STATISTICS GRID
+                        // ==========================================
+
+                        const statsGrid =
+                            clonedWrapper.querySelector(
+                                ".stats-grid"
+                            );
+
+
+                        if (
+                            statsGrid
+                        ) {
+
+                            statsGrid.style.display =
+                                "grid";
+
+                            statsGrid.style.gridTemplateColumns =
+                                "repeat(4, minmax(0, 1fr))";
+
+                            statsGrid.style.width =
+                                "100%";
+
+                            statsGrid.style.maxWidth =
+                                "100%";
+
+                        }
+
+
+                        // ==========================================
+                        // DETAILS GRID
+                        // ==========================================
+
+                        const detailsGrid =
+                            clonedWrapper.querySelector(
+                                ".details-grid"
+                            );
+
+
+                        if (
+                            detailsGrid
+                        ) {
+
+                            detailsGrid.style.display =
+                                "grid";
+
+                            detailsGrid.style.gridTemplateColumns =
+                                "repeat(2, minmax(0, 1fr))";
+
+                            detailsGrid.style.width =
+                                "100%";
+
+                            detailsGrid.style.maxWidth =
+                                "100%";
+
+                        }
+
+
+                        // ==========================================
+                        // ANSWER OPTION GRID
+                        // ==========================================
+
+                        clonedWrapper
+                            .querySelectorAll(
+                                ".answer-result-grid"
+                            )
+                            .forEach(
+                                grid => {
+
+                                    grid.style.display =
+                                        "grid";
+
+                                    grid.style.gridTemplateColumns =
+                                        "repeat(2, minmax(0, 1fr))";
+
+                                    grid.style.width =
+                                        "100%";
+
+                                    grid.style.maxWidth =
+                                        "100%";
+
+                                }
+                            );
+
+
+                        // ==========================================
+                        // WIDTH SAFETY
+                        // ==========================================
+
+                        clonedWrapper
+                            .querySelectorAll(
+                                `
+                                .question-result-card,
+                                .section-result-item,
+                                .details-card,
+                                .score-card,
+                                .question-analysis-card
+                                `
+                            )
+                            .forEach(
+                                card => {
+
+                                    card.style.width =
+                                        "100%";
+
+                                    card.style.maxWidth =
+                                        "100%";
+
+                                    card.style.boxSizing =
+                                        "border-box";
+
+                                }
+                            );
+
+
+                        // ==========================================
+                        // QUESTION ANALYSIS LIST
+                        // ==========================================
+
+                        const questionList =
+                            clonedWrapper.querySelector(
+                                ".question-analysis-list"
+                            );
+
+
+                        if (
+                            questionList
+                        ) {
+
+                            questionList.style.width =
+                                "100%";
+
+                            questionList.style.maxWidth =
+                                "100%";
+
+                            questionList.style.overflow =
+                                "visible";
+
+                        }
+
+
+                        // ==========================================
+                        // SECTION RESULT LIST
+                        // ==========================================
+
+                        if (
+                            sectionResultList
+                        ) {
+
+                            sectionResultList.style.width =
+                                "100%";
+
+                            sectionResultList.style.maxWidth =
+                                "100%";
+
+                            sectionResultList.style.overflow =
+                                "visible";
+
+                        }
+
+
+                    }
 
             },
 
+
+            // ==========================================
+            // jsPDF
+            // ==========================================
 
             jsPDF: {
 
@@ -2352,6 +2351,10 @@ async function downloadResultPDF() {
 
             },
 
+
+            // ==========================================
+            // PAGE BREAKS
+            // ==========================================
 
             pagebreak: {
 
@@ -2375,8 +2378,6 @@ async function downloadResultPDF() {
                     ".score-card",
 
                     ".stat-card",
-
-                    ".pdf-performance-card",
 
                     ".analysis-header",
 
@@ -2402,7 +2403,7 @@ async function downloadResultPDF() {
             )
 
             .from(
-                pdfWrapper
+                resultWrapper
             )
 
             .toPdf()
@@ -2439,7 +2440,9 @@ async function downloadResultPDF() {
     }
 
 
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "PDF Generation Error:",
@@ -2448,7 +2451,7 @@ async function downloadResultPDF() {
 
 
         alert(
-            "Unable to generate the result PDF."
+            "Unable to generate the result PDF. Check the browser console for details."
         );
 
     }
@@ -2457,23 +2460,11 @@ async function downloadResultPDF() {
     finally {
 
         // ==========================================
-        // REMOVE PDF CLONE
-        // ==========================================
-
-        if (pdfHost) {
-
-            pdfHost.remove();
-
-        }
-
-
-        // ==========================================
-        // RESTORE BUTTON ONLY
+        // RESTORE BUTTON
         // ==========================================
 
         pdfButton.disabled =
             false;
-
 
         pdfButton.innerHTML =
             oldText;
