@@ -1914,3 +1914,128 @@ label:focus-within {
 
 }
 
+/* =========================================================
+   MOBILE PAUSE BUTTON - ABOVE QUESTION AREA
+   ========================================================= */
+
+/* Hidden on desktop */
+.mobile-pause-area {
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .mobile-pause-area {
+
+        display: block;
+
+        width: 100%;
+
+        padding:
+            10px
+            12px
+            0;
+
+        background: #eef2f7;
+
+    }
+
+
+    #mobilePauseBtn {
+
+        width: 100%;
+
+        min-height: 48px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background: #f59e0b;
+
+        color: #ffffff;
+
+        font-family:
+            'Poppins',
+            sans-serif;
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        box-shadow:
+            0 3px 10px
+            rgba(0, 0, 0, 0.10);
+
+        transition:
+            background 0.2s ease,
+            transform 0.15s ease;
+
+    }
+
+
+    #mobilePauseBtn:hover {
+
+        background: #d97706;
+
+    }
+
+
+    #mobilePauseBtn:active {
+
+        transform: scale(0.98);
+
+    }
+
+
+    #mobilePauseBtn:disabled {
+
+        opacity: 0.6;
+
+        cursor: not-allowed;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .mobile-pause-area {
+
+        padding:
+            8px
+            10px
+            0;
+
+    }
+
+
+    #mobilePauseBtn {
+
+        min-height: 46px;
+
+        font-size: 14px;
+
+    }
+
+}

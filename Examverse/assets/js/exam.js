@@ -3488,6 +3488,8 @@ async function markForReview() {
 
 }
 
+// pause //
+
 window.pauseExam = async function pauseExam() {
 
     // --------------------------------------
