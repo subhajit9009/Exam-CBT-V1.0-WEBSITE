@@ -26,10 +26,40 @@ let selectedExam = null;
 
 async function loadExam() {
 
-    const examId =
-        sessionStorage.getItem(
-            "selectedExam"
-        );
+    // ==========================================
+// GET EXAM ID
+// ==========================================
+
+// Check whether this is a shared exam link
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const sharedExamId =
+    urlParams.get("exam");
+
+
+// First use shared URL if available
+let examId =
+    sharedExamId ||
+    sessionStorage.getItem(
+        "selectedExam"
+    );
+
+
+// ==========================================
+// SAVE SHARED EXAM ID
+// ==========================================
+
+if (sharedExamId) {
+
+    sessionStorage.setItem(
+        "selectedExam",
+        sharedExamId
+    );
+
+}
 
 
     if (!examId) {

@@ -275,3 +275,132 @@ grid-template-columns:1fr;
 .resumeBtn:hover{
     background:#15803d !important;
 }
+
+/* ==========================================
+   EXAM CARD ACTIONS
+========================================== */
+
+.exam-card-actions {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+}
+
+
+/* ==========================================
+   START / RESUME BUTTON
+========================================== */
+
+.exam-card-actions .startBtn {
+
+    flex: 1;
+
+}
+
+/* ==========================================
+   EXAM CARD
+   ========================================== */
+
+.examCard {
+    position: relative;
+}
+
+
+/* ==========================================
+   SHARE EXAM - TOP RIGHT
+   ========================================== */
+
+.shareExamBtn {
+
+    position: absolute;
+
+    top: 18px;
+
+    right: 18px;
+
+    width: 38px;
+
+    height: 38px;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #052510;
+
+    color: #000000;
+
+    font-size: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    box-shadow:
+        0 3px 8px
+        rgba(34, 197, 94, 0.25);
+
+    transition:
+        transform 0.15s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.shareExamBtn:hover {
+
+    background: #062712;
+
+    transform:
+        scale(1.08);
+
+    box-shadow:
+        0 5px 12px
+        rgba(3, 20, 9, 0.225);
+
+}
+
+
+.shareExamBtn:active {
+
+    transform:
+        scale(0.94);
+
+}
+
+/* Keep exam title away from Share button */
+.examCard h2 {
+    padding-right: 48px;
+}
+
+.shareExamBtn i {
+    color: #000000;
+    font-weight: 900;
+}
+
+/* ==========================================
+   SHARE ICON - BLACK
+   ========================================== */
+
+.shareExamBtn i.fa-share-nodes {
+    color: #000000 !important;
+    font-weight: 900 !important;
+    opacity: 1 !important;
+}

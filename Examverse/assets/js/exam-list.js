@@ -87,7 +87,19 @@ async function loadExams(search = "") {
 
         <div class="examCard">
 
-            <h2>${exam.exam_name}</h2>
+    <!-- SHARE EXAM -->
+    <button
+        class="shareExamBtn"
+        onclick="shareExam('${exam.id}')"
+        title="Share this examination"
+        aria-label="Share this examination"
+    >
+         🔗
+        <i class="fa-solid fa-share-nodes"></i>
+    </button>
+
+
+    <h2>${exam.exam_name}</h2>
 
             <p class="examInfo">
                 📂 Category :
@@ -113,26 +125,33 @@ async function loadExams(search = "") {
                 ${paused ? "⏸ PAUSED" : "🟢 LIVE"}
             </span>
 
-            ${
-                paused
-                ? `
-                <button
-                    class="startBtn resumeBtn"
-                    onclick="resumeExam(
-                        '${paused.id}',
-                        '${exam.id}'
-                    )"
-                >
-                    ↻ Resume Exam
-                </button>`
-                : `
-                <button
-                    class="startBtn"
-                    onclick="startExam('${exam.id}')"
-                >
-                    ▶ Start Exam
-                </button>`
-            }
+            <div class="exam-card-actions">
+
+    ${
+        paused
+        ? `
+        <button
+            class="startBtn resumeBtn"
+            onclick="resumeExam(
+                '${paused.id}',
+                '${exam.id}'
+            )"
+        >
+            ↻ Resume Exam
+        </button>
+        `
+        : `
+        <button
+            class="startBtn"
+            onclick="startExam('${exam.id}')"
+        >
+            ▶ Start Exam
+        </button>
+        `
+    }
+
+
+</div>
 
         </div>`;
 
@@ -153,6 +172,100 @@ function startExam(examId) {
 
     window.location.href =
     "instructions.html";
+
+}
+
+//==========================================
+// SHARE EXAM
+//==========================================
+
+async function shareExam(examId) {
+
+    // Create direct instruction-page URL
+    const shareUrl =
+        new URL(
+            "instructions.html",
+            window.location.href
+        );
+
+    shareUrl.searchParams.set(
+        "exam",
+        examId
+    );
+
+
+    // ======================================
+    // Native Share
+    // ======================================
+
+    if (
+        navigator.share
+    ) {
+
+        try {
+
+            await navigator.share({
+
+                title:
+                    "ExamVerse Examination",
+
+                text:
+                    "Join this examination on ExamVerse.",
+
+                url:
+                    shareUrl.href
+
+            });
+
+            return;
+
+        } catch (error) {
+
+            // User cancelled the share menu
+            if (
+                error.name ===
+                "AbortError"
+            ) {
+                return;
+            }
+
+            console.error(
+                "Share failed:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ======================================
+    // Copy Link Fallback
+    // ======================================
+
+    try {
+
+        await navigator.clipboard.writeText(
+            shareUrl.href
+        );
+
+        alert(
+            "Exam link copied successfully!"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Clipboard error:",
+            error
+        );
+
+        window.prompt(
+            "Copy this examination link:",
+            shareUrl.href
+        );
+
+    }
 
 }
 
