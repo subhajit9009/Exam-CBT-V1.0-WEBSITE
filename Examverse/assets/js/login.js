@@ -209,13 +209,57 @@ console.log("Logged User ID:", data.user.id);
 console.log("Admin Data:", admin);
 console.log("Admin Error:", adminError);
 
+// ==========================
+// REDIRECT AFTER LOGIN
+// ==========================
+
+// Check whether login came
+// from a shared examination link
+
+const examLoginReturnUrl =
+    sessionStorage.getItem(
+        "examLoginReturnUrl"
+    );
+
+
+// ------------------------------------------
+// Shared Exam Login
+// ------------------------------------------
+
+if (examLoginReturnUrl) {
+
+    // Remove it first so it cannot
+    // affect a future normal login
+
+    sessionStorage.removeItem(
+        "examLoginReturnUrl"
+    );
+
+
+    // Return directly to the
+    // shared examination instruction page
+
+    window.location.href =
+        examLoginReturnUrl;
+
+    return;
+
+}
+
+
+// ------------------------------------------
+// Normal Login
+// ------------------------------------------
+
 if (admin) {
 
-    window.location.href = "admin-dashboard.html";
+    window.location.href =
+        "admin-dashboard.html";
 
 } else {
 
-    window.location.href = "dashboard.html";
+    window.location.href =
+        "dashboard.html";
 
 }
 
