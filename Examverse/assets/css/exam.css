@@ -2039,3 +2039,15 @@ label:focus-within {
     }
 
 }
+
+/* ==========================================
+   HIDE DESKTOP PAUSE BUTTON ON MOBILE
+   ========================================== */
+
+@media (max-width: 768px) {
+
+    .palette #pauseBtn {
+        display: none !important;
+    }
+
+}
