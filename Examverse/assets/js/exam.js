@@ -782,7 +782,28 @@ if (pauseBtn) {
 
     pauseBtn.addEventListener(
         "click",
-        pauseExam
+        () => {
+
+            if (
+                typeof window.pauseExam ===
+                "function"
+            ) {
+
+                window.pauseExam();
+
+            } else {
+
+                console.error(
+                    "pauseExam() function is not available."
+                );
+
+                alert(
+                    "Pause system is not loaded. Please refresh the page."
+                );
+
+            }
+
+        }
     );
 
 }
@@ -3490,7 +3511,7 @@ async function submitExam(autoSubmit = false) {
 // PAUSE EXAM
 // ==========================================
 
-async function pauseExam() {
+window.pauseExam = async function pauseExam() {
 
     // --------------------------------------
     // Prevent double-click
