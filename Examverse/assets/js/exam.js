@@ -64,6 +64,33 @@ window.addEventListener("DOMContentLoaded", initExam);
 
 async function initExam() {
 
+        // ==========================================
+    // AUTHENTICATION CHECK
+    // ==========================================
+
+    const {
+        data: authData,
+        error: authError
+    } = await supabaseClient.auth.getUser();
+
+
+    if (
+        authError ||
+        !authData ||
+        !authData.user
+    ) {
+
+        alert(
+            "Please login to access the examination."
+        );
+
+        window.location.replace(
+            "login.html"
+        );
+
+        return;
+    }
+
     // ==========================================
 // GET SELECTED EXAM
 // ==========================================

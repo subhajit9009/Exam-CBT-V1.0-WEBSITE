@@ -27,6 +27,54 @@ let selectedExam = null;
 async function loadExam() {
 
     // ==========================================
+    // AUTHENTICATION CHECK
+    // ==========================================
+
+    const {
+        data: authData,
+        error: authError
+    } = await supabaseClient.auth.getUser();
+
+
+    // ------------------------------------------
+    // User is NOT logged in
+    // ------------------------------------------
+
+    if (
+        authError ||
+        !authData ||
+        !authData.user
+    ) {
+
+        alert(
+            "Please login to access this examination."
+        );
+
+
+        // Remember the shared exam URL
+        // so we know which exam was requested
+
+        sessionStorage.setItem(
+            "examLoginReturnUrl",
+            window.location.href
+        );
+
+
+        window.location.replace(
+            "login.html"
+        );
+
+        return;
+    }
+
+
+    // ==========================================
+    // USER IS LOGGED IN
+    // Continue normally
+    // ==========================================
+
+
+    // ==========================================
 // GET EXAM ID
 // ==========================================
 
