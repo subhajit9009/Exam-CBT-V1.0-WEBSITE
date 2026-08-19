@@ -1827,3 +1827,90 @@ label:focus-within {
     }
 }
 
+/* =========================================================
+   EXAM ACTION BUTTONS
+   ========================================================= */
+
+.exam-action-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+
+/* =========================================================
+   PAUSE EXAM BUTTON
+   ========================================================= */
+
+#pauseBtn {
+    width: 100%;
+    min-height: 48px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #f59e0b;
+    color: #ffffff;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#pauseBtn:hover {
+    background: #d97706;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(0, 0, 0, 0.12);
+}
+
+#pauseBtn:active {
+    transform: translateY(0);
+}
+
+#pauseBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* =========================================================
+   PAUSE CONFIRMATION
+   ========================================================= */
+
+.pause-confirm-message {
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    #pauseBtn {
+        min-height: 46px;
+        font-size: 14px;
+    }
+
+}
+

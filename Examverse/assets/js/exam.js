@@ -34,6 +34,16 @@ let visitedQuestions = [];
 
 let timerInterval = null;
 
+let currentAttemptState = null;
+
+let normalTimerEndTime = null;
+
+let sectionTimerEndTime = null;
+
+let resumeSectionRemainingTimes = {};
+
+let pauseOperationInProgress = false;
+
 // ==========================================
 // SECTIONAL TIMER
 // ==========================================
@@ -140,17 +150,24 @@ console.log(
     // ==========================================
 
     const {
-        data: currentAttempt,
-        error: attemptError
-    } = await supabaseClient
+    data: currentAttempt,
+    error: attemptError
+} = await supabaseClient
 
-        .from("exam_attempts")
+    .from("exam_attempts")
 
-        .select("status")
+    .select(`
+        status,
+        remaining_time_seconds,
+        current_question_index,
+        current_section_index,
+        progress_state,
+        paused_at
+    `)
 
-        .eq("id", attemptId)
+    .eq("id", attemptId)
 
-        .maybeSingle();
+    .maybeSingle();
 
 
     if (attemptError) {
@@ -179,6 +196,214 @@ console.log(
         return;
 
     }
+
+    // ==========================================
+// PAUSE / RESUME RESTORATION
+// ==========================================
+
+currentAttemptState = currentAttempt;
+
+const isPausedAttempt =
+    currentAttempt.status === "Paused";
+
+
+// ------------------------------------------
+// PAUSED ATTEMPT
+// ------------------------------------------
+
+if (isPausedAttempt) {
+
+    console.log(
+        "↻ Resuming paused attempt:",
+        attemptId
+    );
+
+
+    // --------------------------------------
+    // Restore question
+    // --------------------------------------
+
+    if (
+        Number.isInteger(
+            Number(
+                currentAttempt.current_question_index
+            )
+        )
+    ) {
+
+        sessionStorage.setItem(
+            "currentQuestionIndex",
+            String(
+                currentAttempt.current_question_index
+            )
+        );
+
+    }
+
+
+    // --------------------------------------
+    // Restore section
+    // --------------------------------------
+
+    if (
+        Number.isInteger(
+            Number(
+                currentAttempt.current_section_index
+            )
+        )
+    ) {
+
+        sessionStorage.setItem(
+            "currentSectionIndex",
+            String(
+                currentAttempt.current_section_index
+            )
+        );
+
+    }
+
+
+    // --------------------------------------
+    // Restore progress state
+    // --------------------------------------
+
+    const savedProgress =
+        currentAttempt.progress_state || {};
+
+
+    resumeSectionRemainingTimes =
+        savedProgress.sectionRemainingTimes || {};
+
+
+    // --------------------------------------
+    // Restore active-time tracking
+    // --------------------------------------
+
+    sessionStorage.setItem(
+        "examActiveStartedAt",
+        new Date().toISOString()
+    );
+
+
+    // --------------------------------------
+    // NORMAL EXAM TIMER RESTORATION
+    // --------------------------------------
+
+    // --------------------------------------
+// NORMAL EXAM TIMER RESTORATION
+// --------------------------------------
+
+if (
+    !isSectionalExam &&
+    currentAttempt.remaining_time_seconds !== null &&
+    currentAttempt.remaining_time_seconds !== undefined
+) {
+
+    const durationMinutes =
+        Number(
+            selectedExam.duration_minutes ||
+            selectedExam.duration ||
+            0
+        );
+
+
+    const totalSeconds =
+        durationMinutes * 60;
+
+
+    const remainingSeconds =
+        Math.max(
+            0,
+            Number(
+                currentAttempt.remaining_time_seconds
+            )
+        );
+
+
+    // ----------------------------------
+    // Rebuild the start time
+    //
+    // This makes the timer continue
+    // from the saved remaining time.
+    // ----------------------------------
+
+    const elapsedSeconds =
+        Math.max(
+            0,
+            totalSeconds -
+            remainingSeconds
+        );
+
+
+    const restoredStart =
+        Date.now() -
+        (
+            elapsedSeconds *
+            1000
+        );
+
+
+    sessionStorage.setItem(
+        "examStartTime",
+        new Date(
+            restoredStart
+        ).toISOString()
+    );
+
+
+    // ----------------------------------
+    // Store remaining time explicitly
+    // ----------------------------------
+
+    sessionStorage.setItem(
+        "resumeRemainingTime",
+        String(
+            remainingSeconds
+        )
+    );
+
+}
+
+    // --------------------------------------
+    // Mark attempt as active again
+    // --------------------------------------
+
+    const {
+        error: resumeError
+    } = await supabaseClient
+
+        .from("exam_attempts")
+
+        .update({
+            status: "In Progress",
+            paused_at: null
+        })
+
+        .eq(
+            "id",
+            attemptId
+        );
+
+
+    if (resumeError) {
+
+        console.error(
+            "Resume Error:",
+            resumeError
+        );
+
+        alert(
+            "Unable to resume this examination."
+        );
+
+        return;
+    }
+
+
+    currentAttemptState.status =
+        "In Progress";
+
+}
 
 
     // ==========================================
@@ -467,8 +692,35 @@ showQuestion(
     currentQuestion
 );
 
-    startExamTimer();
 
+// ==========================================
+// ACTIVE EXAM TIME TRACKING
+// ==========================================
+
+if (
+    !sessionStorage.getItem(
+        "examActiveStartedAt"
+    )
+) {
+
+    const existingStart =
+        sessionStorage.getItem(
+            "examStartTime"
+        );
+
+    sessionStorage.setItem(
+        "examActiveStartedAt",
+        existingStart ||
+        new Date().toISOString()
+    );
+}
+
+
+// ==========================================
+// START / RESTORE NORMAL EXAM TIMER
+// ==========================================
+
+startExamTimer();
 
 }
 
@@ -517,6 +769,24 @@ showQuestion(
             () => submitExam(false)
         );
 
+        // ==========================================
+// PAUSE EXAM BUTTON
+// ==========================================
+
+const pauseBtn =
+    document.getElementById(
+        "pauseBtn"
+    );
+
+if (pauseBtn) {
+
+    pauseBtn.addEventListener(
+        "click",
+        pauseExam
+    );
+
+}
+
 }
 
 
@@ -526,13 +796,18 @@ showQuestion(
 
 function startExamTimer() {
 
-    // Stop any previous timer
+    // ==========================================
+    // STOP PREVIOUS TIMER
+    // ==========================================
 
     if (timerInterval) {
 
         clearInterval(
             timerInterval
         );
+
+        timerInterval =
+            null;
 
     }
 
@@ -546,7 +821,9 @@ function startExamTimer() {
     if (!timerElement) return;
 
 
-    // Get exam duration
+    // ==========================================
+    // GET EXAM DURATION
+    // ==========================================
 
     const durationMinutes =
         Number(
@@ -570,7 +847,15 @@ function startExamTimer() {
     }
 
 
-    // Get original exam start time
+    const totalDuration =
+        durationMinutes *
+        60 *
+        1000;
+
+
+    // ==========================================
+    // GET EXAM START TIME
+    // ==========================================
 
     const examStartTime =
         sessionStorage.getItem(
@@ -595,16 +880,18 @@ function startExamTimer() {
         ).getTime();
 
 
-    const totalDuration =
-        durationMinutes *
-        60 *
-        1000;
+    // ==========================================
+    // SET TIMER END TIME
+    // ==========================================
 
-
-    const endTime =
+    normalTimerEndTime =
         startTime +
         totalDuration;
 
+
+    // ==========================================
+    // UPDATE TIMER
+    // ==========================================
 
     function updateTimer() {
 
@@ -613,13 +900,13 @@ function startExamTimer() {
 
 
         let remaining =
-            endTime -
+            normalTimerEndTime -
             now;
 
 
-        // ==================================
-        // Time Finished
-        // ==================================
+        // ======================================
+        // TIME FINISHED
+        // ======================================
 
         if (remaining <= 0) {
 
@@ -630,20 +917,30 @@ function startExamTimer() {
                 "00:00:00";
 
 
+            if (timerInterval) {
+
+                clearInterval(
+                    timerInterval
+                );
+
+                timerInterval =
+                    null;
+            }
+
+
             // Automatically submit
             // the examination
 
             submitExam(true);
-
 
             return;
 
         }
 
 
-        // ==================================
-        // Convert milliseconds
-        // ==================================
+        // ======================================
+        // CONVERT MILLISECONDS
+        // ======================================
 
         const totalSeconds =
             Math.floor(
@@ -673,9 +970,9 @@ function startExamTimer() {
             60;
 
 
-        // ==================================
-        // Format HH:MM:SS
-        // ==================================
+        // ======================================
+        // FORMAT HH:MM:SS
+        // ======================================
 
         timerElement.textContent =
 
@@ -693,9 +990,9 @@ function startExamTimer() {
                 .padStart(2, "0");
 
 
-        // ==================================
-        // Low Time Warning
-        // ==================================
+        // ======================================
+        // LOW TIME WARNING
+        // ======================================
 
         if (
             remaining <=
@@ -717,12 +1014,16 @@ function startExamTimer() {
     }
 
 
-    // Update immediately
+    // ==========================================
+    // UPDATE IMMEDIATELY
+    // ==========================================
 
     updateTimer();
 
 
-    // Update every second
+    // ==========================================
+    // UPDATE EVERY SECOND
+    // ==========================================
 
     timerInterval =
         setInterval(
@@ -746,19 +1047,28 @@ function startSectionTimer() {
         return;
     }
 
+
     const timerElement =
-        document.getElementById("timer");
+        document.getElementById(
+            "timer"
+        );
+
 
     if (!timerElement) {
+
         console.error(
             "Timer element not found."
         );
+
         return;
     }
 
 
     const section =
-        examSections[currentSectionIndex];
+        examSections[
+            currentSectionIndex
+        ];
+
 
     if (!section) {
 
@@ -772,7 +1082,8 @@ function startSectionTimer() {
 
     const durationMinutes =
         Number(
-            section.duration_minutes || 0
+            section.duration_minutes ||
+            0
         );
 
 
@@ -800,13 +1111,14 @@ function startSectionTimer() {
             sectionTimerInterval
         );
 
-        sectionTimerInterval = null;
+        sectionTimerInterval =
+            null;
 
     }
 
 
     // ------------------------------------------
-    // Unique storage key for this section
+    // Attempt ID
     // ------------------------------------------
 
     const attemptId =
@@ -814,10 +1126,15 @@ function startSectionTimer() {
             "attemptId"
         );
 
+
     if (!attemptId) {
         return;
     }
 
+
+    // ------------------------------------------
+    // Unique storage key
+    // ------------------------------------------
 
     const timerKey =
         "sectionTimerStart_" +
@@ -827,34 +1144,8 @@ function startSectionTimer() {
 
 
     // ------------------------------------------
-    // Restore existing section timer
-    // OR start a new one
+    // Total section duration
     // ------------------------------------------
-
-    let sectionStartTime =
-        sessionStorage.getItem(
-            timerKey
-        );
-
-
-    if (!sectionStartTime) {
-
-        sectionStartTime =
-            new Date().toISOString();
-
-        sessionStorage.setItem(
-            timerKey,
-            sectionStartTime
-        );
-
-    }
-
-
-    const startTime =
-        new Date(
-            sectionStartTime
-        ).getTime();
-
 
     const totalDuration =
         durationMinutes *
@@ -862,14 +1153,116 @@ function startSectionTimer() {
         1000;
 
 
-    const endTime =
-        startTime +
+    let sectionStartTime;
+
+
+    // ==========================================
+    // CHECK FOR PAUSED/RESUMED TIME
+    // ==========================================
+
+    const savedRemainingTimes =
+        resumeSectionRemainingTimes || {};
+
+
+    const savedRemaining =
+        savedRemainingTimes[
+            String(
+                currentSectionIndex
+            )
+        ];
+
+
+    // ==========================================
+    // RESUME FROM SAVED TIME
+    // ==========================================
+
+    if (
+        savedRemaining !== undefined &&
+        savedRemaining !== null
+    ) {
+
+        const remainingMilliseconds =
+            Number(
+                savedRemaining
+            ) * 1000;
+
+
+        sectionStartTime =
+            Date.now() -
+            (
+                totalDuration -
+                remainingMilliseconds
+            );
+
+
+        sessionStorage.setItem(
+            timerKey,
+            new Date(
+                sectionStartTime
+            ).toISOString()
+        );
+
+
+        // We have consumed this saved value.
+        delete
+        resumeSectionRemainingTimes[
+            String(
+                currentSectionIndex
+            )
+        ];
+
+    }
+
+
+    // ==========================================
+    // NORMAL START / PAGE REFRESH
+    // ==========================================
+
+    else {
+
+        const savedStart =
+            sessionStorage.getItem(
+                timerKey
+            );
+
+
+        if (savedStart) {
+
+            sectionStartTime =
+                new Date(
+                    savedStart
+                ).getTime();
+
+        } else {
+
+            sectionStartTime =
+                Date.now();
+
+
+            sessionStorage.setItem(
+                timerKey,
+                new Date(
+                    sectionStartTime
+                ).toISOString()
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SAVE END TIME GLOBALLY
+    // ==========================================
+
+    sectionTimerEndTime =
+        sectionStartTime +
         totalDuration;
 
 
-    // ------------------------------------------
-    // Update timer
-    // ------------------------------------------
+    // ==========================================
+    // UPDATE SECTION TIMER
+    // ==========================================
 
     function updateSectionTimer() {
 
@@ -878,13 +1271,13 @@ function startSectionTimer() {
 
 
         let remaining =
-            endTime -
+            sectionTimerEndTime -
             now;
 
 
-        // --------------------------------------
-        // Time finished
-        // --------------------------------------
+        // ======================================
+        // TIME FINISHED
+        // ======================================
 
         if (remaining <= 0) {
 
@@ -907,7 +1300,10 @@ function startSectionTimer() {
             }
 
 
+            // ----------------------------------
             // Prevent duplicate submission
+            // ----------------------------------
+
             const lockKey =
                 "sectionTimerSubmitted_" +
                 attemptId +
@@ -932,65 +1328,84 @@ function startSectionTimer() {
             );
 
 
-            // Automatically submit
-            // current section
+            // ----------------------------------
+            // Automatically submit section
+            // ----------------------------------
 
             submitCurrentSection(
                 true
             );
+
 
             return;
 
         }
 
 
-        // --------------------------------------
-        // Convert milliseconds
-        // --------------------------------------
+        // ======================================
+        // CONVERT TIME
+        // ======================================
 
         const totalSeconds =
             Math.floor(
-                remaining / 1000
+                remaining /
+                1000
             );
 
 
         const hours =
             Math.floor(
-                totalSeconds / 3600
+                totalSeconds /
+                3600
             );
 
 
         const minutes =
             Math.floor(
                 (
-                    totalSeconds % 3600
+                    totalSeconds %
+                    3600
                 ) / 60
             );
 
 
         const seconds =
-            totalSeconds % 60;
+            totalSeconds %
+            60;
 
+
+        // ======================================
+        // DISPLAY HH:MM:SS
+        // ======================================
 
         timerElement.textContent =
 
             String(hours)
-                .padStart(2, "0")
+                .padStart(
+                    2,
+                    "0"
+                )
 
             + ":" +
 
             String(minutes)
-                .padStart(2, "0")
+                .padStart(
+                    2,
+                    "0"
+                )
 
             + ":" +
 
             String(seconds)
-                .padStart(2, "0");
+                .padStart(
+                    2,
+                    "0"
+                );
 
 
-        // --------------------------------------
-        // Warning
-        // --------------------------------------
+        // ======================================
+        // LOW TIME WARNING
+        // ======================================
 
         if (
             remaining <=
@@ -1012,16 +1427,16 @@ function startSectionTimer() {
     }
 
 
-    // ------------------------------------------
-    // Immediate update
-    // ------------------------------------------
+    // ==========================================
+    // UPDATE IMMEDIATELY
+    // ==========================================
 
     updateSectionTimer();
 
 
-    // ------------------------------------------
-    // Update every second
-    // ------------------------------------------
+    // ==========================================
+    // UPDATE EVERY SECOND
+    // ==========================================
 
     sectionTimerInterval =
         setInterval(
@@ -3072,6 +3487,377 @@ async function markForReview() {
 async function submitExam(autoSubmit = false) {
 
     // ==========================================
+// PAUSE EXAM
+// ==========================================
+
+async function pauseExam() {
+
+    // --------------------------------------
+    // Prevent double-click
+    // --------------------------------------
+
+    if (pauseOperationInProgress) {
+        return;
+    }
+
+
+    // --------------------------------------
+    // Get attempt ID
+    // --------------------------------------
+
+    const attemptId =
+        sessionStorage.getItem(
+            "attemptId"
+        );
+
+
+    if (!attemptId) {
+
+        alert(
+            "Exam attempt not found."
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------
+    // Confirmation
+    // --------------------------------------
+
+    const confirmed =
+        window.confirm(
+            "PAUSE EXAMINATION?\n\n" +
+            "Your answers and progress will be saved.\n\n" +
+            "The examination timer will stop.\n\n" +
+            "You can resume this examination later."
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    pauseOperationInProgress =
+        true;
+
+
+    const pauseBtn =
+        document.getElementById(
+            "pauseBtn"
+        );
+
+
+    if (pauseBtn) {
+
+        pauseBtn.disabled =
+            true;
+
+        pauseBtn.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+    }
+
+
+    try {
+
+        // ==================================
+        // WAIT FOR LAST ANSWER SAVE
+        // ==================================
+
+        if (answerSavePromise) {
+
+            await answerSavePromise;
+
+            answerSavePromise =
+                null;
+        }
+
+
+        // ==================================
+        // NORMAL EXAM TIMER
+        // ==================================
+
+        let remainingSeconds =
+            null;
+
+
+        if (
+            !isSectionalExam &&
+            normalTimerEndTime
+        ) {
+
+            remainingSeconds =
+                Math.max(
+                    0,
+                    Math.ceil(
+                        (
+                            normalTimerEndTime -
+                            Date.now()
+                        ) / 1000
+                    )
+                );
+
+
+            if (timerInterval) {
+
+                clearInterval(
+                    timerInterval
+                );
+
+                timerInterval =
+                    null;
+            }
+        }
+
+
+        // ==================================
+        // SECTIONAL EXAM TIMER
+        // ==================================
+
+        const progressState =
+            currentAttemptState &&
+            currentAttemptState.progress_state
+                ? {
+                    ...currentAttemptState.progress_state
+                }
+                : {};
+
+
+        const sectionRemainingTimes =
+            {
+                ...(progressState.sectionRemainingTimes || {})
+            };
+
+
+        if (
+            isSectionalExam &&
+            sectionTimerEndTime
+        ) {
+
+            const sectionRemaining =
+                Math.max(
+                    0,
+                    Math.ceil(
+                        (
+                            sectionTimerEndTime -
+                            Date.now()
+                        ) / 1000
+                    )
+                );
+
+
+            sectionRemainingTimes[
+                String(
+                    currentSectionIndex
+                )
+            ] =
+                sectionRemaining;
+
+
+            remainingSeconds =
+                sectionRemaining;
+
+
+            if (sectionTimerInterval) {
+
+                clearInterval(
+                    sectionTimerInterval
+                );
+
+                sectionTimerInterval =
+                    null;
+            }
+        }
+
+
+        // ==================================
+        // ACTIVE TIME
+        // ==================================
+
+        let activeTimeSeconds =
+            Number(
+                progressState.activeTimeSeconds ||
+                0
+            );
+
+
+        const activeStartedAt =
+            sessionStorage.getItem(
+                "examActiveStartedAt"
+            );
+
+
+        if (activeStartedAt) {
+
+            const activeSeconds =
+                Math.max(
+                    0,
+                    Math.floor(
+                        (
+                            Date.now() -
+                            new Date(
+                                activeStartedAt
+                            ).getTime()
+                        ) / 1000
+                    )
+                );
+
+
+            activeTimeSeconds +=
+                activeSeconds;
+        }
+
+
+        // ==================================
+        // SAVE PROGRESS STATE
+        // ==================================
+
+        progressState.activeTimeSeconds =
+            activeTimeSeconds;
+
+
+        progressState.sectionRemainingTimes =
+            sectionRemainingTimes;
+
+
+        progressState.visitedQuestions =
+            Array.isArray(
+                visitedQuestions
+            )
+                ? visitedQuestions
+                : [];
+
+
+        progressState.reviewQuestions =
+            Array.isArray(
+                reviewQuestions
+            )
+                ? reviewQuestions
+                : [];
+
+
+        // ==================================
+        // SAVE TO SUPABASE
+        // ==================================
+
+        const {
+            error
+        } =
+            await supabaseClient
+
+                .from("exam_attempts")
+
+                .update({
+
+                    status:
+                        "Paused",
+
+                    paused_at:
+                        new Date()
+                            .toISOString(),
+
+                    remaining_time_seconds:
+                        remainingSeconds,
+
+                    current_question_index:
+                        currentQuestion,
+
+                    current_section_index:
+                        currentSectionIndex,
+
+                    progress_state:
+                        progressState
+
+                })
+
+                .eq(
+                    "id",
+                    attemptId
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Pause Error:",
+                error
+            );
+
+            throw error;
+        }
+
+
+        // ==================================
+        // SAVE LOCAL POSITION
+        // ==================================
+
+        sessionStorage.setItem(
+            "currentQuestionIndex",
+            String(
+                currentQuestion
+            )
+        );
+
+
+        sessionStorage.setItem(
+            "currentSectionIndex",
+            String(
+                currentSectionIndex
+            )
+        );
+
+
+        sessionStorage.removeItem(
+            "examActiveStartedAt"
+        );
+
+
+        // ==================================
+        // SUCCESS
+        // ==================================
+
+        alert(
+            "Your examination has been paused successfully.\n\n" +
+            "Your progress has been saved."
+        );
+
+
+        window.location.replace(
+            "exam-list.html"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Pause Examination Error:",
+            error
+        );
+
+
+        alert(
+            "Unable to pause the examination.\n\n" +
+            "Please try again."
+        );
+
+
+        if (pauseBtn) {
+
+            pauseBtn.disabled =
+                false;
+
+            pauseBtn.innerHTML =
+                '<i class="fa-solid fa-pause"></i> Pause Exam';
+        }
+
+
+        pauseOperationInProgress =
+            false;
+    }
+}
+
+    // ==========================================
     // SECTIONAL EXAM
     // ==========================================
 
@@ -3417,17 +4203,35 @@ showQuestion(
     currentQuestion
 );
 
-
-// ------------------------------------------
-// Update submit button
-// ------------------------------------------
-
 updateSectionSubmitButton();
 
 
-// ------------------------------------------
-// Start NEW section timer
-// ------------------------------------------
+// ==========================================
+// ACTIVE EXAM TIME TRACKING
+// ==========================================
+
+if (
+    !sessionStorage.getItem(
+        "examActiveStartedAt"
+    )
+) {
+
+    const existingStart =
+        sessionStorage.getItem(
+            "examStartTime"
+        );
+
+    sessionStorage.setItem(
+        "examActiveStartedAt",
+        existingStart ||
+        new Date().toISOString()
+    );
+}
+
+
+// ==========================================
+// START / RESTORE CURRENT SECTION TIMER
+// ==========================================
 
 startSectionTimer();
 
@@ -3895,23 +4699,70 @@ async function finalizeExamAttempt(
             );
 
 
-        let timeTaken = 0;
+        // ==========================================
+// TIME TAKEN
+// PAUSED TIME IS NOT COUNTED
+// ==========================================
+
+let timeTaken = 0;
 
 
-        if (startTime) {
+// ------------------------------------------
+// Previously accumulated active time
+// ------------------------------------------
 
-            timeTaken =
-                Math.floor(
-                    (
-                        Date.now() -
-                        new Date(
-                            startTime
-                        ).getTime()
-                    ) / 1000
-                );
+const savedProgress =
+    currentAttemptState &&
+    currentAttemptState.progress_state
+        ? currentAttemptState.progress_state
+        : {};
 
-        }
 
+const previousActiveTime =
+    Number(
+        savedProgress.activeTimeSeconds ||
+        0
+    );
+
+
+// ------------------------------------------
+// Current active session time
+// ------------------------------------------
+
+const activeStartedAt =
+    sessionStorage.getItem(
+        "examActiveStartedAt"
+    );
+
+
+let currentActiveTime = 0;
+
+
+if (activeStartedAt) {
+
+    currentActiveTime =
+        Math.max(
+            0,
+            Math.floor(
+                (
+                    Date.now() -
+                    new Date(
+                        activeStartedAt
+                    ).getTime()
+                ) / 1000
+            )
+        );
+
+}
+
+
+// ------------------------------------------
+// Total active exam time
+// ------------------------------------------
+
+timeTaken =
+    previousActiveTime +
+    currentActiveTime;
 
         // ==========================================
         // Result Status

@@ -267,3 +267,11 @@ grid-template-columns:1fr;
 }
 
 }
+
+.resumeBtn{
+    background:#16a34a !important;
+}
+
+.resumeBtn:hover{
+    background:#15803d !important;
+}
