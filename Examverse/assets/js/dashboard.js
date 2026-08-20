@@ -104,19 +104,117 @@ else{
 // Logout
 // ======================================
 
+// ======================================
+// Logout
+// ======================================
+
 document.getElementById("logoutBtn")
 
-.addEventListener("click",()=>{
+.addEventListener(
+    "click",
+    async () => {
 
-    if(confirm("Logout from ExamVerse?")){
+        if (
+            !confirm(
+                "Logout from ExamVerse?"
+            )
+        ) {
+            return;
+        }
 
-        Storage.logout();
 
-        window.location.href="login.html";
+        try {
+
+            // ==================================
+            // SIGN OUT FROM SUPABASE
+            // ==================================
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .auth
+                    .signOut();
+
+
+            if (error) {
+
+                console.error(
+                    "Supabase Logout Error:",
+                    error
+                );
+
+            }
+
+
+            // ==================================
+            // CLEAR LOCAL EXAMVERSE USER
+            // ==================================
+
+            Storage.logout();
+
+
+            // ==================================
+            // CLEAR EXAM SESSION DATA
+            // ==================================
+
+            sessionStorage.removeItem(
+                "selectedExam"
+            );
+
+            sessionStorage.removeItem(
+                "attemptId"
+            );
+
+            sessionStorage.removeItem(
+                "attemptStartedFresh"
+            );
+
+            sessionStorage.removeItem(
+                "examStartTime"
+            );
+
+            sessionStorage.removeItem(
+                "examActiveStartedAt"
+            );
+
+            sessionStorage.removeItem(
+                "currentQuestionIndex"
+            );
+
+            sessionStorage.removeItem(
+                "currentSectionIndex"
+            );
+
+
+            // ==================================
+            // GO TO LOGIN
+            // ==================================
+
+            window.location.replace(
+                "login.html"
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Logout Error:",
+                error
+            );
+
+
+            // Still leave the protected page
+
+            window.location.replace(
+                "login.html"
+            );
+
+        }
 
     }
-
-});
+);
 
 // ======================================
 // Take New Test
