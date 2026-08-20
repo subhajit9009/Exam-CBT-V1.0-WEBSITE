@@ -387,7 +387,17 @@ grid-template-columns:1fr;
 
 /* Keep exam title away from Share button */
 .examCard h2 {
+
     padding-right: 48px;
+
+    overflow-wrap: anywhere;
+
+    word-break: break-word;
+
+    max-width: 100%;
+
+    line-height: 1.25;
+
 }
 
 .shareExamBtn i {

@@ -14,6 +14,37 @@ const searchExam =
 document.getElementById("searchExam");
 
 //==========================================
+// CLEAR STALE EXAM PAGE SESSION
+//==========================================
+
+// Being on the Exam List means the user
+// is NOT currently entering an exam.
+
+sessionStorage.removeItem(
+    "attemptId"
+);
+
+sessionStorage.removeItem(
+    "examStartTime"
+);
+
+sessionStorage.removeItem(
+    "attemptStartedFresh"
+);
+
+sessionStorage.removeItem(
+    "currentQuestionIndex"
+);
+
+sessionStorage.removeItem(
+    "currentSectionIndex"
+);
+
+sessionStorage.removeItem(
+    "examActiveStartedAt"
+);
+
+//==========================================
 // Load Exams
 //==========================================
 
