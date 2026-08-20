@@ -3859,3 +3859,495 @@ body {
     }
 
 }
+
+/* ==========================================
+   EXAMVERSE PROFESSIONAL LEADERBOARD
+========================================== */
+
+#examLeaderboard {
+
+    width: 100%;
+
+    margin-top: 28px;
+
+    margin-bottom: 28px;
+
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+.exam-leaderboard-card {
+
+    width: 100%;
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(15, 23, 42, 0.08);
+
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.leaderboard-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.leaderboard-header h2 {
+
+    margin: 0;
+
+    color: #172554;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+}
+
+
+.leaderboard-header p {
+
+    margin-top: 6px;
+
+    margin-bottom: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+
+/* ==========================================
+   ARROW BUTTON
+========================================== */
+
+.leaderboard-toggle {
+
+    flex-shrink: 0;
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.leaderboard-toggle:hover {
+
+    background: #dbeafe;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(37, 99, 235, 0.15);
+
+}
+
+
+.leaderboard-toggle:active {
+
+    transform:
+        scale(0.92);
+
+}
+
+
+/* ==========================================
+   TABLE HEADER
+========================================== */
+
+.leaderboard-heading {
+
+    display: grid;
+
+    grid-template-columns:
+        100px
+        1fr
+        120px;
+
+    align-items: center;
+
+    padding:
+        13px
+        18px;
+
+    background: #f1f5f9;
+
+    border-radius: 12px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+
+/* ==========================================
+   ROW
+========================================== */
+
+.leaderboard-row {
+
+    display: grid;
+
+    grid-template-columns:
+        100px
+        1fr
+        120px;
+
+    align-items: center;
+
+    min-height: 58px;
+
+    padding:
+        10px
+        18px;
+
+    margin-top: 8px;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+
+}
+
+
+.leaderboard-row:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 12px
+        rgba(15, 23, 42, 0.06);
+
+}
+
+
+/* ==========================================
+   RANK
+========================================== */
+
+.leaderboard-rank {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #1e3a8a;
+
+    font-weight: 800;
+
+}
+
+
+/* ==========================================
+   NAME
+========================================== */
+
+.leaderboard-name {
+
+    color: #0f172a;
+
+    font-weight: 700;
+
+    word-break: break-word;
+
+}
+
+
+/* ==========================================
+   SCORE
+========================================== */
+
+.leaderboard-score {
+
+    text-align: right;
+
+    color: #16a34a;
+
+    font-weight: 800;
+
+}
+
+
+/* ==========================================
+   YOUR ROW — SKY BLUE
+========================================== */
+
+.leaderboard-row.current-user {
+
+    background: #e0f2fe !important;
+
+    border:
+        2px solid #38bdf8 !important;
+
+    box-shadow:
+        0 4px 12px
+        rgba(14, 165, 233, 0.15);
+
+}
+
+
+.leaderboard-row.current-user
+.leaderboard-rank {
+
+    color: #0369a1;
+
+}
+
+
+.leaderboard-row.current-user
+.leaderboard-name {
+
+    color: #075985;
+
+    font-weight: 800;
+
+}
+
+
+.leaderboard-row.current-user
+.leaderboard-score {
+
+    color: #0369a1;
+
+    font-weight: 800;
+
+}
+
+
+/* ==========================================
+   YOU BADGE
+========================================== */
+
+.you-badge {
+
+    display: inline-block;
+
+    margin-left: 8px;
+
+    padding:
+        3px
+        8px;
+
+    border-radius: 20px;
+
+    background: #0284c7;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+
+    vertical-align: middle;
+
+}
+
+
+/* ==========================================
+   SEPARATOR
+========================================== */
+
+.leaderboard-separator {
+
+    text-align: center;
+
+    padding:
+        8px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 5px;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    #examLeaderboard {
+
+        margin-top: 20px;
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .exam-leaderboard-card {
+
+        padding: 18px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .leaderboard-header {
+
+        margin-bottom: 16px;
+
+    }
+
+
+    .leaderboard-header h2 {
+
+        font-size: 19px;
+
+    }
+
+
+    .leaderboard-header p {
+
+        font-size: 12px;
+
+    }
+
+
+    .leaderboard-toggle {
+
+        width: 38px;
+
+        height: 38px;
+
+        font-size: 13px;
+
+    }
+
+
+    .leaderboard-heading {
+
+        grid-template-columns:
+            65px
+            1fr
+            75px;
+
+        padding:
+            10px;
+
+        font-size: 11px;
+
+    }
+
+
+    .leaderboard-row {
+
+        grid-template-columns:
+            65px
+            1fr
+            75px;
+
+        padding:
+            9px
+            10px;
+
+        min-height: 52px;
+
+    }
+
+
+    .leaderboard-rank {
+
+        font-size: 13px;
+
+    }
+
+
+    .leaderboard-name {
+
+        font-size: 13px;
+
+    }
+
+
+    .leaderboard-score {
+
+        font-size: 13px;
+
+    }
+
+
+    .you-badge {
+
+        display: inline-block;
+
+        margin-left: 5px;
+
+        margin-top: 2px;
+
+        font-size: 8px;
+
+    }
+
+}
