@@ -199,7 +199,15 @@ if (attempt?.user_id) {
 // ==========================================
 
 // ==========================================
-// CURRENT EXAM ATTEMPT RANK
+// EXAM RANK + LEADERBOARD
+// ==========================================
+
+/// ==========================================
+// EXAM RANK + COLLAPSIBLE LEADERBOARD
+// ==========================================
+
+// ==========================================
+// EXAM RANK + COLLAPSIBLE LEADERBOARD
 // ==========================================
 
 async function loadExamRank(attemptId) {
@@ -207,12 +215,12 @@ async function loadExamRank(attemptId) {
     try {
 
         // ==========================================
-        // Get CURRENT attempt ranking
+        // 1. CURRENT ATTEMPT RANK
         // ==========================================
 
         const {
-            data,
-            error
+            data: currentRankData,
+            error: currentRankError
         } = await supabaseClient
             .rpc(
                 "get_current_attempt_rank",
@@ -223,14 +231,14 @@ async function loadExamRank(attemptId) {
 
 
         // ==========================================
-        // Error
+        // CURRENT RANK ERROR
         // ==========================================
 
-        if (error) {
+        if (currentRankError) {
 
             console.error(
                 "Current Rank Load Error:",
-                error
+                currentRankError
             );
 
             setText(
@@ -248,12 +256,100 @@ async function loadExamRank(attemptId) {
                 "--"
             );
 
-            return;
         }
 
 
         // ==========================================
-        // No ranking data
+        // CURRENT ATTEMPT DATA
+        // ==========================================
+
+        let currentAttemptRank = null;
+
+
+        if (
+            currentRankData &&
+            currentRankData.length > 0
+        ) {
+
+            currentAttemptRank =
+                currentRankData[0];
+
+
+            console.log(
+                "CURRENT ATTEMPT RANK:",
+                currentAttemptRank
+            );
+
+
+            // ======================================
+            // CURRENT RANK
+            // ======================================
+
+            setText(
+                "examRank",
+                "#" +
+                currentAttemptRank.rank
+            );
+
+
+            // ======================================
+            // TOTAL CANDIDATES
+            // ======================================
+
+            setText(
+                "rankTotal",
+                currentAttemptRank.total_candidates
+            );
+
+
+            // ======================================
+            // CURRENT ATTEMPT SCORE
+            // ======================================
+
+            setText(
+                "rankScore",
+                Number(
+                    currentAttemptRank.score ?? 0
+                ).toFixed(2)
+            );
+
+        }
+
+
+        // ==========================================
+        // 2. LOAD BEST-PERFORMANCE LEADERBOARD
+        // ==========================================
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .rpc(
+                "get_exam_rank",
+                {
+                    p_attempt_id: attemptId
+                }
+            );
+
+
+        // ==========================================
+        // LEADERBOARD ERROR
+        // ==========================================
+
+        if (error) {
+
+            console.error(
+                "Leaderboard Load Error:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // NO LEADERBOARD DATA
         // ==========================================
 
         if (
@@ -262,85 +358,527 @@ async function loadExamRank(attemptId) {
         ) {
 
             console.warn(
-                "No current ranking data found."
-            );
-
-            setText(
-                "examRank",
-                "--"
-            );
-
-            setText(
-                "rankTotal",
-                "--"
-            );
-
-            setText(
-                "rankScore",
-                "--"
+                "No leaderboard data found."
             );
 
             return;
+
+        }
+
+
+        console.log(
+            "BEST PERFORMANCE LEADERBOARD:",
+            data
+        );
+
+
+        // ==========================================
+        // FIND CURRENT USER
+        // IN BEST-PERFORMANCE LEADERBOARD
+        // ==========================================
+
+        const currentUser =
+            data.find(
+                row =>
+                    row.is_current_user === true
+            );
+
+
+        if (!currentUser) {
+
+            console.warn(
+                "Current user not found in leaderboard."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "CURRENT USER BEST RANK:",
+            currentUser
+        );
+
+
+        // ==========================================
+        // LEADERBOARD CONTAINER
+        // ==========================================
+
+        let leaderboard =
+            document.getElementById(
+                "examLeaderboard"
+            );
+
+
+        if (!leaderboard) {
+
+            leaderboard =
+                document.createElement(
+                    "div"
+                );
+
+
+            leaderboard.id =
+                "examLeaderboard";
+
+
+            const sectionResult =
+                document.getElementById(
+                    "sectionResult"
+                );
+
+
+            if (sectionResult) {
+
+                sectionResult
+                    .parentNode
+                    .insertBefore(
+                        leaderboard,
+                        sectionResult
+                    );
+
+            }
+
+            else {
+
+                document.body.appendChild(
+                    leaderboard
+                );
+
+            }
+
         }
 
 
         // ==========================================
-        // Current attempt ranking
+        // LEADERBOARD RENDER FUNCTION
         // ==========================================
 
-        const ranking =
-            data[0];
+        function renderLeaderboard(
+            expanded = false
+        ) {
+
+            let visibleCandidates;
+
+
+            // ======================================
+            // COLLAPSED MODE
+            // ======================================
+
+            if (!expanded) {
+
+                // Top 5
+
+                visibleCandidates =
+                    data.slice(
+                        0,
+                        5
+                    );
+
+
+                // If current user is outside
+                // top 5, add separator + user
+
+                if (
+                    Number(
+                        currentUser.rank
+                    ) > 5
+                ) {
+
+                    visibleCandidates = [
+
+                        ...visibleCandidates,
+
+                        null,
+
+                        currentUser
+
+                    ];
+
+                }
+
+            }
+
+
+            // ======================================
+            // EXPANDED MODE
+            // ======================================
+
+            else {
+
+                visibleCandidates =
+                    data;
+
+            }
+
+
+            // ======================================
+            // BUILD ROWS
+            // ======================================
+
+            let rows = "";
+
+
+            visibleCandidates.forEach(
+                (
+                    row,
+                    index
+                ) => {
+
+
+                    // --------------------------------
+                    // Separator
+                    // --------------------------------
+
+                    if (!row) {
+
+                        rows += `
+
+                            <div
+                                class="
+                                    leaderboard-separator
+                                "
+                            >
+                                •••
+                            </div>
+
+                        `;
+
+                        return;
+
+                    }
+
+
+                    // --------------------------------
+                    // Rank
+                    // --------------------------------
+
+                    const rank =
+                        Number(
+                            row.rank ??
+                            index + 1
+                        );
+
+
+                    // --------------------------------
+                    // Candidate Name
+                    // --------------------------------
+
+                    let candidateName =
+                        row.candidate_name ??
+                        row.full_name ??
+                        row.name;
+
+
+                    if (!candidateName) {
+
+                        candidateName = [
+
+                            row.first_name,
+
+                            row.middle_name,
+
+                            row.last_name
+
+                        ]
+                            .filter(Boolean)
+                            .join(" ");
+
+                    }
+
+
+                    if (
+                        !candidateName ||
+                        candidateName.trim() === ""
+                    ) {
+
+                        candidateName =
+                            "Candidate";
+
+                    }
+
+
+                    // --------------------------------
+                    // Score
+                    // --------------------------------
+
+                    const score =
+                        Number(
+                            row.score ?? 0
+                        ).toFixed(2);
+
+
+                    // --------------------------------
+                    // Current User
+                    // --------------------------------
+
+                    const isYou =
+                        row.is_current_user === true;
+
+
+                    // --------------------------------
+                    // Medal
+                    // --------------------------------
+
+                    let medal = "";
+
+
+                    if (rank === 1) {
+
+                        medal = "🥇";
+
+                    }
+
+                    else if (rank === 2) {
+
+                        medal = "🥈";
+
+                    }
+
+                    else if (rank === 3) {
+
+                        medal = "🥉";
+
+                    }
+
+
+                    // --------------------------------
+                    // Row
+                    // --------------------------------
+
+                    rows += `
+
+                        <div
+                            class="
+                                leaderboard-row
+                                ${
+                                    isYou
+                                    ? "current-user"
+                                    : ""
+                                }
+                            "
+                        >
+
+                            <div
+                                class="
+                                    leaderboard-rank
+                                "
+                            >
+
+                                ${
+                                    medal
+                                    ? medal
+                                    : ""
+                                }
+
+                                <span>
+                                    #${rank}
+                                </span>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    leaderboard-name
+                                "
+                            >
+
+                                ${escapeHTML(
+                                    candidateName
+                                )}
+
+                                ${
+                                    isYou
+                                    ? `
+                                        <span
+                                            class="
+                                                you-badge
+                                            "
+                                        >
+                                            YOU
+                                        </span>
+                                    `
+                                    : ""
+                                }
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    leaderboard-score
+                                "
+                            >
+
+                                ${score}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            // ======================================
+            // LEADERBOARD HTML
+            // ======================================
+
+            leaderboard.innerHTML = `
+
+                <div
+                    class="
+                        exam-leaderboard-card
+                    "
+                >
+
+                    <div
+                        class="
+                            leaderboard-header
+                        "
+                    >
+
+                        <div>
+
+                            <h2>
+                                🏆 Exam Leaderboard
+                            </h2>
+
+                            <p>
+                                Best performance among
+                                completed candidates
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            id="leaderboardToggle"
+                            class="
+                                leaderboard-toggle
+                            "
+                            aria-expanded="${
+                                expanded
+                            }"
+                            title="${
+                                expanded
+                                ? "Collapse leaderboard"
+                                : "Expand leaderboard"
+                            }"
+                        >
+
+                            <i
+                                class="
+                                    fa-solid
+                                    ${
+                                        expanded
+                                        ? "fa-chevron-up"
+                                        : "fa-chevron-down"
+                                    }
+                                "
+                            ></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="
+                            leaderboard-table
+                        "
+                    >
+
+                        <div
+                            class="
+                                leaderboard-heading
+                            "
+                        >
+
+                            <span>
+                                Rank
+                            </span>
+
+                            <span>
+                                Candidate
+                            </span>
+
+                            <span>
+                                Score
+                            </span>
+
+                        </div>
+
+
+                        ${rows}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            // ======================================
+            // TOGGLE BUTTON
+            // ======================================
+
+            const toggleButton =
+                document.getElementById(
+                    "leaderboardToggle"
+                );
+
+
+            if (toggleButton) {
+
+                toggleButton.addEventListener(
+                    "click",
+                    () => {
+
+                        renderLeaderboard(
+                            !expanded
+                        );
+
+                    }
+                );
+
+            }
+
+        }
 
 
         // ==========================================
-        // CURRENT RANK
+        // INITIAL STATE
         // ==========================================
 
-        setText(
-            "examRank",
-            "#" +
-            ranking.rank
-        );
+        renderLeaderboard(false);
 
 
         // ==========================================
-        // TOTAL CANDIDATES
-        // ==========================================
-
-        setText(
-            "rankTotal",
-            ranking.total_candidates
-        );
-
-
-        // ==========================================
-        // CURRENT ATTEMPT SCORE
-        // ==========================================
-
-        setText(
-            "rankScore",
-            Number(
-                ranking.score ?? 0
-            ).toFixed(2)
-        );
-
-
-        // ==========================================
-        // DEBUG
+        // CONSOLE
         // ==========================================
 
         console.log(
-            "CURRENT ATTEMPT RANKING:",
-            ranking
+            "Current Attempt Rank:",
+            currentAttemptRank
         );
 
+        console.log(
+            "Best Performance Rank:",
+            currentUser.rank
+        );
 
     }
 
     catch (error) {
 
         console.error(
-            "Current Rank Error:",
+            "Exam Rank Error:",
             error
         );
 
