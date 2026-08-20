@@ -198,6 +198,10 @@ if (attempt?.user_id) {
 // EXAM RANK
 // ==========================================
 
+// ==========================================
+// EXAM RANK + LEADERBOARD
+// ==========================================
+
 async function loadExamRank(attemptId) {
 
     try {
@@ -237,7 +241,6 @@ async function loadExamRank(attemptId) {
             );
 
             return;
-
         }
 
 
@@ -266,38 +269,44 @@ async function loadExamRank(attemptId) {
             );
 
             return;
-
         }
 
 
+        console.log(
+            "FULL EXAM RANKING:",
+            data
+        );
+
+
+        // ==========================================
+        // CURRENT USER RANK
+        // ==========================================
+
         const ranking =
-            data[0];
+            data.find(
+                row =>
+                    String(row.attempt_id) ===
+                    String(attemptId)
+            ) || data[0];
 
-
-        // ==============================
-        // Rank
-        // ==============================
 
         setText(
             "examRank",
             "#" +
-            ranking.rank
+            (
+                ranking.rank ??
+                ranking.candidate_rank ??
+                "--"
+            )
         );
 
-
-        // ==============================
-        // Total Candidates
-        // ==============================
 
         setText(
             "rankTotal",
-            ranking.total_candidates
+            ranking.total_candidates ??
+            data.length
         );
 
-
-        // ==============================
-        // Score
-        // ==============================
 
         setText(
             "rankScore",
@@ -307,12 +316,275 @@ async function loadExamRank(attemptId) {
         );
 
 
+        // ==========================================
+        // CREATE LEADERBOARD
+        // ==========================================
+
+        let leaderboard =
+            document.getElementById(
+                "examLeaderboard"
+            );
+
+
+        if (!leaderboard) {
+
+            leaderboard =
+                document.createElement("div");
+
+            leaderboard.id =
+                "examLeaderboard";
+
+
+            // Insert leaderboard before
+            // Section-wise Performance
+
+            const sectionResult =
+                document.getElementById(
+                    "sectionResult"
+                );
+
+
+            if (sectionResult) {
+
+                sectionResult.parentNode.insertBefore(
+                    leaderboard,
+                    sectionResult
+                );
+
+            }
+
+            else {
+
+                document.body.appendChild(
+                    leaderboard
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // CREATE LEADERBOARD ROWS
+        // ==========================================
+
+        let rows = "";
+
+
+        data.forEach(
+            (row, index) => {
+
+                const rank =
+                    row.rank ??
+                    row.candidate_rank ??
+                    index + 1;
+
+
+                // Support multiple possible
+                // name formats
+
+                let candidateName =
+                    row.candidate_name ??
+                    row.full_name ??
+                    row.name;
+
+
+                if (!candidateName) {
+
+                    candidateName = [
+
+                        row.first_name,
+
+                        row.middle_name,
+
+                        row.last_name
+
+                    ]
+                        .filter(Boolean)
+                        .join(" ");
+
+                }
+
+
+                if (
+                    !candidateName ||
+                    candidateName.trim() === ""
+                ) {
+
+                    candidateName =
+                        "Student";
+
+                }
+
+
+                const score =
+                    Number(
+                        row.score ?? 0
+                    ).toFixed(2);
+
+
+                const isCurrentUser =
+                    String(
+                        row.attempt_id
+                    ) ===
+                    String(attemptId);
+
+
+                let medal = "";
+
+
+                if (Number(rank) === 1) {
+
+                    medal = "🥇";
+
+                }
+
+                else if (
+                    Number(rank) === 2
+                ) {
+
+                    medal = "🥈";
+
+                }
+
+                else if (
+                    Number(rank) === 3
+                ) {
+
+                    medal = "🥉";
+
+                }
+
+
+                rows += `
+
+                    <div class="
+                        leaderboard-row
+                        ${isCurrentUser
+                            ? "current-user"
+                            : ""}
+                    ">
+
+                        <div class="leaderboard-rank">
+
+                            ${medal}
+
+                            <span>
+                                #${rank}
+                            </span>
+
+                        </div>
+
+
+                        <div class="
+                            leaderboard-name
+                        ">
+
+                            ${escapeHTML(
+                                candidateName
+                            )}
+
+                            ${
+                                isCurrentUser
+                                ? `
+                                    <span
+                                        class="
+                                        you-badge
+                                        "
+                                    >
+                                        YOU
+                                    </span>
+                                `
+                                : ""
+                            }
+
+                        </div>
+
+
+                        <div class="
+                            leaderboard-score
+                        ">
+
+                            ${score}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        // ==========================================
+        // LEADERBOARD HTML
+        // ==========================================
+
+        leaderboard.innerHTML = `
+
+            <div class="
+                exam-leaderboard-card
+            ">
+
+                <div class="
+                    leaderboard-header
+                ">
+
+                    <div>
+
+                        <h2>
+                            🏆 Exam Leaderboard
+                        </h2>
+
+                        <p>
+                            Ranking among completed candidates
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="
+                    leaderboard-table
+                ">
+
+                    <div class="
+                        leaderboard-heading
+                    ">
+
+                        <span>
+                            Rank
+                        </span>
+
+                        <span>
+                            Candidate
+                        </span>
+
+                        <span>
+                            Score
+                        </span>
+
+                    </div>
+
+
+                    ${rows}
+
+                </div>
+
+            </div>
+
+        `;
+
+
         console.log(
             "Exam Ranking:",
             ranking
         );
 
     }
+
 
     catch (error) {
 
