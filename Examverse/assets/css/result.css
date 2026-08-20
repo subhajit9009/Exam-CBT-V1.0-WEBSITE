@@ -3243,3 +3243,230 @@ body {
     box-sizing: border-box !important;
 
 }
+
+/* ==========================================
+   EXAM RANK CARD
+========================================== */
+
+.rank-card {
+
+    width: 100%;
+
+    margin-top: 24px;
+
+    padding: 24px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 8px 24px
+        rgba(15, 23, 42, 0.06);
+
+}
+
+
+.rank-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.rank-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fef3c7;
+
+    color: #d97706;
+
+    font-size: 22px;
+
+}
+
+
+.rank-header h2 {
+
+    margin: 0;
+
+    color: #172554;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+}
+
+
+.rank-header p {
+
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+
+.rank-content {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 16px;
+
+}
+
+
+.rank-main,
+.rank-score {
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    background: #f8fafc;
+
+    text-align: center;
+
+}
+
+
+.rank-label {
+
+    display: block;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+    letter-spacing: 1px;
+
+}
+
+
+#examRank {
+
+    display: block;
+
+    margin: 5px 0;
+
+    font-size: 36px;
+
+    font-weight: 800;
+
+    color: #2563eb;
+
+}
+
+
+.rank-total {
+
+    font-size: 13px;
+
+    color: #64748b;
+
+}
+
+
+.rank-total b {
+
+    color: #172554;
+
+}
+
+
+.rank-score span {
+
+    display: block;
+
+    font-size: 12px;
+
+    color: #64748b;
+
+}
+
+
+#rankScore {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: #16a34a;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .rank-card {
+
+        padding: 18px;
+
+        margin-top: 18px;
+
+    }
+
+
+    .rank-header h2 {
+
+        font-size: 18px;
+
+    }
+
+
+    .rank-header p {
+
+        font-size: 12px;
+
+    }
+
+
+    .rank-content {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    #examRank {
+
+        font-size: 32px;
+
+    }
+
+}

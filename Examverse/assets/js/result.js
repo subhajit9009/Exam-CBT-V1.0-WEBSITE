@@ -194,6 +194,136 @@ if (attempt?.user_id) {
 
         }
 
+        // ==========================================
+// EXAM RANK
+// ==========================================
+
+async function loadExamRank(attemptId) {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .rpc(
+                "get_exam_rank",
+                {
+                    p_attempt_id: attemptId
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Rank Load Error:",
+                error
+            );
+
+            setText(
+                "examRank",
+                "--"
+            );
+
+            setText(
+                "rankTotal",
+                "--"
+            );
+
+            setText(
+                "rankScore",
+                "--"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            console.warn(
+                "No ranking data found."
+            );
+
+            setText(
+                "examRank",
+                "--"
+            );
+
+            setText(
+                "rankTotal",
+                "--"
+            );
+
+            setText(
+                "rankScore",
+                "--"
+            );
+
+            return;
+
+        }
+
+
+        const ranking =
+            data[0];
+
+
+        // ==============================
+        // Rank
+        // ==============================
+
+        setText(
+            "examRank",
+            "#" +
+            ranking.rank
+        );
+
+
+        // ==============================
+        // Total Candidates
+        // ==============================
+
+        setText(
+            "rankTotal",
+            ranking.total_candidates
+        );
+
+
+        // ==============================
+        // Score
+        // ==============================
+
+        setText(
+            "rankScore",
+            Number(
+                ranking.score ?? 0
+            ).toFixed(2)
+        );
+
+
+        console.log(
+            "Exam Ranking:",
+            ranking
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Exam Rank Error:",
+            error
+        );
+
+    }
+
+}
 
         // ==========================================
         // Get User Answers
@@ -500,6 +630,14 @@ if (attempt?.user_id) {
             "totalMarks",
             exam?.total_marks ?? 0
         );
+
+        // ==========================================
+// Load Exam Rank
+// ==========================================
+
+await loadExamRank(
+    attemptId
+);
 
 
         // ==========================================
