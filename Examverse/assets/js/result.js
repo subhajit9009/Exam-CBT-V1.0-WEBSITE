@@ -202,6 +202,10 @@ if (attempt?.user_id) {
 // EXAM RANK + LEADERBOARD
 // ==========================================
 
+// ==========================================
+// EXAM RANK + LEADERBOARD
+// ==========================================
+
 async function loadExamRank(attemptId) {
 
     try {
@@ -241,6 +245,7 @@ async function loadExamRank(attemptId) {
             );
 
             return;
+
         }
 
 
@@ -253,22 +258,8 @@ async function loadExamRank(attemptId) {
                 "No ranking data found."
             );
 
-            setText(
-                "examRank",
-                "--"
-            );
-
-            setText(
-                "rankTotal",
-                "--"
-            );
-
-            setText(
-                "rankScore",
-                "--"
-            );
-
             return;
+
         }
 
 
@@ -279,45 +270,68 @@ async function loadExamRank(attemptId) {
 
 
         // ==========================================
-        // CURRENT USER RANK
+        // FIND CURRENT USER
         // ==========================================
 
-        const ranking =
+        const currentUser =
             data.find(
                 row =>
-                    String(row.attempt_id) ===
-                    String(attemptId)
-            ) || data[0];
+                    row.is_current_user === true
+            );
 
+
+        if (!currentUser) {
+
+            console.warn(
+                "Current user not found in ranking."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "CURRENT USER RANK:",
+            currentUser
+        );
+
+
+        // ==========================================
+        // YOUR RANK
+        // ==========================================
 
         setText(
             "examRank",
             "#" +
-            (
-                ranking.rank ??
-                ranking.candidate_rank ??
-                "--"
-            )
+            currentUser.rank
         );
 
 
+        // ==========================================
+        // TOTAL CANDIDATES
+        // ==========================================
+
         setText(
             "rankTotal",
-            ranking.total_candidates ??
             data.length
         );
 
 
+        // ==========================================
+        // YOUR SCORE
+        // ==========================================
+
         setText(
             "rankScore",
             Number(
-                ranking.score ?? 0
+                currentUser.score ?? 0
             ).toFixed(2)
         );
 
 
         // ==========================================
-        // CREATE LEADERBOARD
+        // LEADERBOARD CONTAINER
         // ==========================================
 
         let leaderboard =
@@ -329,14 +343,13 @@ async function loadExamRank(attemptId) {
         if (!leaderboard) {
 
             leaderboard =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             leaderboard.id =
                 "examLeaderboard";
 
-
-            // Insert leaderboard before
-            // Section-wise Performance
 
             const sectionResult =
                 document.getElementById(
@@ -346,10 +359,12 @@ async function loadExamRank(attemptId) {
 
             if (sectionResult) {
 
-                sectionResult.parentNode.insertBefore(
-                    leaderboard,
-                    sectionResult
-                );
+                sectionResult
+                    .parentNode
+                    .insertBefore(
+                        leaderboard,
+                        sectionResult
+                    );
 
             }
 
@@ -365,23 +380,91 @@ async function loadExamRank(attemptId) {
 
 
         // ==========================================
-        // CREATE LEADERBOARD ROWS
+        // SHOW TOP 10
+        // ==========================================
+
+        let visibleCandidates =
+            data.slice(
+                0,
+                10
+            );
+
+
+        // ==========================================
+        // IF USER IS OUTSIDE TOP 10
+        // SHOW THEIR POSITION TOO
+        // ==========================================
+
+        if (
+            Number(
+                currentUser.rank
+            ) > 10
+        ) {
+
+            visibleCandidates = [
+
+                ...visibleCandidates,
+
+                null,
+
+                currentUser
+
+            ];
+
+        }
+
+
+        // ==========================================
+        // BUILD ROWS
         // ==========================================
 
         let rows = "";
 
 
-        data.forEach(
-            (row, index) => {
+        visibleCandidates.forEach(
+            (
+                row,
+                index
+            ) => {
+
+
+                // ----------------------------------
+                // Separator
+                // ----------------------------------
+
+                if (!row) {
+
+                    rows += `
+
+                        <div
+                            class="
+                                leaderboard-separator
+                            "
+                        >
+                            •••
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                // ----------------------------------
+                // Rank
+                // ----------------------------------
 
                 const rank =
-                    row.rank ??
-                    row.candidate_rank ??
-                    index + 1;
+                    Number(
+                        row.rank ??
+                        index + 1
+                    );
 
 
-                // Support multiple possible
-                // name formats
+                // ----------------------------------
+                // Name
+                // ----------------------------------
 
                 let candidateName =
                     row.candidate_name ??
@@ -412,10 +495,14 @@ async function loadExamRank(attemptId) {
                 ) {
 
                     candidateName =
-                        "Student";
+                        "Candidate";
 
                 }
 
+
+                // ----------------------------------
+                // Score
+                // ----------------------------------
 
                 const score =
                     Number(
@@ -423,51 +510,68 @@ async function loadExamRank(attemptId) {
                     ).toFixed(2);
 
 
-                const isCurrentUser =
-                    String(
-                        row.attempt_id
-                    ) ===
-                    String(attemptId);
+                // ----------------------------------
+                // Current User
+                // ----------------------------------
 
+                const isYou =
+                    row.is_current_user === true;
+
+
+                // ----------------------------------
+                // Medal
+                // ----------------------------------
 
                 let medal = "";
 
 
-                if (Number(rank) === 1) {
+                if (rank === 1) {
 
                     medal = "🥇";
 
                 }
 
-                else if (
-                    Number(rank) === 2
-                ) {
+                else if (rank === 2) {
 
                     medal = "🥈";
 
                 }
 
-                else if (
-                    Number(rank) === 3
-                ) {
+                else if (rank === 3) {
 
                     medal = "🥉";
 
                 }
 
 
+                // ----------------------------------
+                // Row
+                // ----------------------------------
+
                 rows += `
 
-                    <div class="
-                        leaderboard-row
-                        ${isCurrentUser
-                            ? "current-user"
-                            : ""}
-                    ">
+                    <div
+                        class="
+                            leaderboard-row
+                            ${
+                                isYou
+                                ? "current-user"
+                                : ""
+                            }
+                        "
+                    >
 
-                        <div class="leaderboard-rank">
+                        <div
+                            class="
+                                leaderboard-rank
+                            "
+                        >
 
-                            ${medal}
+                            ${
+                                medal
+                                ? medal
+                                : ""
+                            }
 
                             <span>
                                 #${rank}
@@ -476,20 +580,22 @@ async function loadExamRank(attemptId) {
                         </div>
 
 
-                        <div class="
-                            leaderboard-name
-                        ">
+                        <div
+                            class="
+                                leaderboard-name
+                            "
+                        >
 
                             ${escapeHTML(
                                 candidateName
                             )}
 
                             ${
-                                isCurrentUser
+                                isYou
                                 ? `
                                     <span
                                         class="
-                                        you-badge
+                                            you-badge
                                         "
                                     >
                                         YOU
@@ -501,9 +607,11 @@ async function loadExamRank(attemptId) {
                         </div>
 
 
-                        <div class="
-                            leaderboard-score
-                        ">
+                        <div
+                            class="
+                                leaderboard-score
+                            "
+                        >
 
                             ${score}
 
@@ -523,13 +631,17 @@ async function loadExamRank(attemptId) {
 
         leaderboard.innerHTML = `
 
-            <div class="
-                exam-leaderboard-card
-            ">
+            <div
+                class="
+                    exam-leaderboard-card
+                "
+            >
 
-                <div class="
-                    leaderboard-header
-                ">
+                <div
+                    class="
+                        leaderboard-header
+                    "
+                >
 
                     <div>
 
@@ -538,7 +650,8 @@ async function loadExamRank(attemptId) {
                         </h2>
 
                         <p>
-                            Ranking among completed candidates
+                            Ranking among completed
+                            candidates
                         </p>
 
                     </div>
@@ -546,13 +659,17 @@ async function loadExamRank(attemptId) {
                 </div>
 
 
-                <div class="
-                    leaderboard-table
-                ">
+                <div
+                    class="
+                        leaderboard-table
+                    "
+                >
 
-                    <div class="
-                        leaderboard-heading
-                    ">
+                    <div
+                        class="
+                            leaderboard-heading
+                        "
+                    >
 
                         <span>
                             Rank
@@ -580,11 +697,10 @@ async function loadExamRank(attemptId) {
 
         console.log(
             "Exam Ranking:",
-            ranking
+            currentUser
         );
 
     }
-
 
     catch (error) {
 

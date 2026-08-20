@@ -3619,12 +3619,75 @@ body {
    CURRENT USER
 ========================================== */
 
+/* ==========================================
+   CURRENT USER - SKY BLUE HIGHLIGHT
+========================================== */
+
 .leaderboard-row.current-user {
 
-    background: #eff6ff;
+    background: #e0f2fe !important;
 
     border:
-        2px solid #2563eb;
+        2px solid #38bdf8 !important;
+
+    box-shadow:
+        0 4px 12px
+        rgba(14, 165, 233, 0.15);
+
+}
+
+
+.leaderboard-row.current-user
+.leaderboard-rank {
+
+    color: #0369a1;
+
+}
+
+
+.leaderboard-row.current-user
+.leaderboard-name {
+
+    color: #075985;
+
+    font-weight: 800;
+
+}
+
+
+.leaderboard-row.current-user
+.leaderboard-score {
+
+    color: #0369a1;
+
+    font-weight: 800;
+
+}
+
+
+.you-badge {
+
+    display: inline-block;
+
+    margin-left: 8px;
+
+    padding:
+        3px
+        8px;
+
+    border-radius: 20px;
+
+    background: #0284c7;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+
+    vertical-align: middle;
 
 }
 
