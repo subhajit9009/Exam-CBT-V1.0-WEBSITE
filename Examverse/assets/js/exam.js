@@ -156,27 +156,40 @@ console.log(
 );
 
 
-    const attemptId =
-        sessionStorage.getItem("attemptId");
+    // ==========================================
+// VERIFY ACTIVE EXAM ATTEMPT
+// ==========================================
 
+const attemptId =
+    sessionStorage.getItem("attemptId");
 
-    if (!attemptId) {
+if (!attemptId) {
 
-        alert("No exam attempt found.");
+    console.warn(
+        "⚠️ No active exam attempt. Returning to Exam List."
+    );
 
-        window.location.href =
-            "instructions.html";
+    // DO NOT show an error.
+    // DO NOT go to Instructions.
+    // DO NOT load the CBT.
 
-        return;
+    window.location.replace(
+        "exam-list.html"
+    );
 
-    }
+    return;
+}
 
 
     // ==========================================
     // Check Attempt Status
     // ==========================================
 
-    const {
+   // ==========================================
+// CHECK ATTEMPT STATUS
+// ==========================================
+
+const {
     data: currentAttempt,
     error: attemptError
 } = await supabaseClient
@@ -184,6 +197,9 @@ console.log(
     .from("exam_attempts")
 
     .select(`
+        id,
+        exam_id,
+        user_id,
         status,
         remaining_time_seconds,
         current_question_index,
@@ -197,6 +213,176 @@ console.log(
     .maybeSingle();
 
 
+// ==========================================
+// ATTEMPT ERROR
+// ==========================================
+
+if (attemptError) {
+
+    console.error(
+        "Attempt verification error:",
+        attemptError
+    );
+
+    // Remove stale session data
+    sessionStorage.removeItem(
+        "attemptId"
+    );
+
+    sessionStorage.removeItem(
+        "examStartTime"
+    );
+
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
+    );
+
+    // NEVER go to instructions
+    window.location.replace(
+        "exam-list.html"
+    );
+
+    return;
+}
+
+
+// ==========================================
+// ATTEMPT DOES NOT EXIST
+// ==========================================
+
+if (!currentAttempt) {
+
+    console.warn(
+        "⚠️ Attempt not found. Returning to Exam List."
+    );
+
+    // Clear stale attempt information
+    sessionStorage.removeItem(
+        "attemptId"
+    );
+
+    sessionStorage.removeItem(
+        "examStartTime"
+    );
+
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
+    );
+
+    sessionStorage.removeItem(
+        "currentQuestionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "currentSectionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "examActiveStartedAt"
+    );
+
+    // IMPORTANT:
+    // Do NOT go to instructions.html
+    // Do NOT load the CBT
+
+    window.location.replace(
+        "exam-list.html"
+    );
+
+    return;
+}
+
+
+// ==========================================
+// VERIFY ATTEMPT BELONGS TO THIS EXAM
+// ==========================================
+
+if (
+    String(currentAttempt.exam_id) !==
+    String(selectedExamId)
+) {
+
+    console.warn(
+        "⚠️ Attempt belongs to another exam."
+    );
+
+    sessionStorage.removeItem(
+        "attemptId"
+    );
+
+    sessionStorage.removeItem(
+        "examStartTime"
+    );
+
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
+    );
+
+    sessionStorage.removeItem(
+        "currentQuestionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "currentSectionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "examActiveStartedAt"
+    );
+
+    window.location.replace(
+        "exam-list.html"
+    );
+
+    return;
+}
+
+
+// ==========================================
+// VERIFY ATTEMPT BELONGS TO LOGGED USER
+// ==========================================
+
+if (
+    String(currentAttempt.user_id) !==
+    String(authData.user.id)
+) {
+
+    console.warn(
+        "🚫 Attempt does not belong to logged-in user."
+    );
+
+    sessionStorage.removeItem(
+        "attemptId"
+    );
+
+    sessionStorage.removeItem(
+        "examStartTime"
+    );
+
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
+    );
+
+    sessionStorage.removeItem(
+        "currentQuestionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "currentSectionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "examActiveStartedAt"
+    );
+
+    window.location.replace(
+        "exam-list.html"
+    );
+
+    return;
+}
+
+
     if (attemptError) {
 
         console.error(
@@ -208,21 +394,6 @@ console.log(
 
     }
 
-
-    if (!currentAttempt) {
-
-        alert("Exam attempt not found.");
-
-        sessionStorage.removeItem(
-            "attemptId"
-        );
-
-        window.location.href =
-            "instructions.html";
-
-        return;
-
-    }
 
     // ==========================================
 // PAUSE / RESUME RESTORATION
