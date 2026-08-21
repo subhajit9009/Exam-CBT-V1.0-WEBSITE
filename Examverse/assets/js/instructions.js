@@ -619,13 +619,21 @@ async function startExam() {
 
 
         // ==========================================
-        // Save Exam Start Time
-        // ==========================================
+// NEW ATTEMPT TIMER
+// ==========================================
+// IMPORTANT:
+// Do NOT start the exam timer here.
+//
+// The timer will start in exam.js
+// after questions and CBT interface
+// are fully loaded.
+//
+// This prevents network/loading time
+// from being deducted from the exam.
 
-        sessionStorage.setItem(
-            "examStartTime",
-            new Date().toISOString()
-        );
+sessionStorage.removeItem(
+    "examStartTime"
+);
 
         // ==========================================
 // RESET CBT STATE FOR NEW ATTEMPT

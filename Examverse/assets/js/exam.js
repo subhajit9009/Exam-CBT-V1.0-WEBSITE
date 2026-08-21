@@ -890,6 +890,38 @@ showQuestion(
     currentQuestion
 );
 
+// ==========================================
+// OFFICIAL EXAM START TIME
+// ==========================================
+// For a brand-new attempt, start the timer
+// only after the CBT/questions are ready.
+//
+// For refresh/resume, an existing start time
+// is preserved.
+
+if (
+    !sessionStorage.getItem(
+        "examStartTime"
+    )
+) {
+
+    const officialStartTime =
+        new Date().toISOString();
+
+
+    sessionStorage.setItem(
+        "examStartTime",
+        officialStartTime
+    );
+
+
+    console.log(
+        "🕐 Official exam timer started:",
+        officialStartTime
+    );
+
+}
+
 
 // ==========================================
 // ACTIVE EXAM TIME TRACKING
