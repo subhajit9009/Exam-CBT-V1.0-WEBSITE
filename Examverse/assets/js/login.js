@@ -9,12 +9,46 @@ const loginForm = document.getElementById("loginForm");
 // Already Logged In
 // =====================================
 
-if (Storage.getCurrentUser()) {
+// =====================================
+// CHECK EXISTING SUPABASE SESSION
+// =====================================
 
-    window.location.href = "dashboard.html";
+async function checkExistingSession() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        if (
+            !error &&
+            data?.user
+        ) {
+
+            window.location.replace(
+                "dashboard.html"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Session check error:",
+            error
+        );
+
+    }
 
 }
 
+checkExistingSession();
 // =====================================
 // Login
 // =====================================
