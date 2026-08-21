@@ -30,6 +30,16 @@ let answers = {};
 
 let reviewQuestions = [];
 
+// ==========================================
+// PENDING REVIEW SAVE QUEUE
+// ==========================================
+
+let pendingReviewSaves = JSON.parse(
+    localStorage.getItem(
+        "examVersePendingReviews"
+    ) || "[]"
+);
+
 let visitedQuestions = [];
 
 let timerInterval = null;
@@ -1035,6 +1045,11 @@ document.body.classList.add(
 
 }
 
+// ==========================================
+// RETRY PENDING REVIEW SAVES
+// ==========================================
+
+retryPendingReviewSaves();
 
     document.getElementById(
         "nextBtn"
@@ -3731,6 +3746,126 @@ async function clearResponse() {
 
 }
 
+// ==========================================
+// SAVE PENDING REVIEW
+// ==========================================
+
+async function retryPendingReviewSaves() {
+
+    if (
+        !pendingReviewSaves ||
+        pendingReviewSaves.length === 0
+    ) {
+        return;
+    }
+
+
+    const attemptId =
+        sessionStorage.getItem(
+            "attemptId"
+        );
+
+    if (!attemptId) {
+        return;
+    }
+
+
+    // Make a copy so the array can safely
+    // change while processing.
+
+    const pending =
+        [...pendingReviewSaves];
+
+
+    for (
+        const questionId of pending
+    ) {
+
+        try {
+
+            await saveReviewToDatabase(
+                questionId,
+                true
+            );
+
+
+            // Successfully saved.
+            // Remove from local queue.
+
+            pendingReviewSaves =
+                pendingReviewSaves.filter(
+                    id =>
+                        id !== questionId
+                );
+
+
+            localStorage.setItem(
+                "examVersePendingReviews",
+                JSON.stringify(
+                    pendingReviewSaves
+                )
+            );
+
+
+            console.log(
+                "✅ Pending review saved:",
+                questionId
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "❌ Pending review save failed:",
+                error
+            );
+
+            // Stop here.
+            // It can be retried later.
+
+            break;
+
+        }
+
+    }
+
+}
+
+// ==========================================
+// RETRY WHEN INTERNET RETURNS
+// ==========================================
+
+window.addEventListener(
+    "online",
+    () => {
+
+        retryPendingReviewSaves();
+
+    }
+);
+
+
+// ==========================================
+// RETRY WHEN TAB BECOMES ACTIVE
+// ==========================================
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            retryPendingReviewSaves();
+
+        }
+
+    }
+);
+
 
 // ==========================
 // Mark For Review
@@ -3745,7 +3880,7 @@ async function markForReview() {
 
 
     // ==========================================
-    // MARK CURRENT QUESTION LOCALLY
+    // MARK LOCALLY IMMEDIATELY
     // ==========================================
 
     if (
@@ -3769,49 +3904,64 @@ async function markForReview() {
 
 
     // ==========================================
-    // MOVE TO NEXT QUESTION IMMEDIATELY
+    // ADD TO PENDING SAVE QUEUE
+    // ==========================================
+
+    if (
+        !pendingReviewSaves.includes(
+            question.id
+        )
+    ) {
+
+        pendingReviewSaves.push(
+            question.id
+        );
+
+    }
+
+
+    localStorage.setItem(
+        "examVersePendingReviews",
+        JSON.stringify(
+            pendingReviewSaves
+        )
+    );
+
+
+    // ==========================================
+    // MOVE IMMEDIATELY
     // ==========================================
 
     nextQuestion();
 
 
     // ==========================================
-    // SAVE DATA IN BACKGROUND
+    // SAVE IN BACKGROUND
     // ==========================================
 
     try {
 
-        // Wait for any answer save that was
-        // already in progress.
+        // If the answer selection is still being
+        // saved, wait for that save first.
 
         if (answerSavePromise) {
 
             await answerSavePromise;
 
-            answerSavePromise = null;
+            answerSavePromise =
+                null;
 
         }
 
 
-        // Save review status to Supabase.
-
-        await saveReviewToDatabase(
-            question.id,
-            true
-        );
-
-
-        console.log(
-            "✅ Review status saved:",
-            question.id
-        );
+        await retryPendingReviewSaves();
 
     }
 
     catch (error) {
 
         console.error(
-            "❌ Review save error:",
+            "Review background save error:",
             error
         );
 
