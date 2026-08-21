@@ -414,3 +414,45 @@ grid-template-columns:1fr;
     font-weight: 900 !important;
     opacity: 1 !important;
 }
+
+/* ==========================================
+   RETAKE EXAM BUTTON
+========================================== */
+
+.retakeBtn {
+
+    background: #ef4444 !important;
+
+    color: #ffffff !important;
+
+    border: none;
+
+    box-shadow:
+        0 4px 10px
+        rgba(239, 68, 68, 0.25);
+
+}
+
+
+.retakeBtn:hover {
+
+    background: #dc2626 !important;
+
+    color: #ffffff !important;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 6px 14px
+        rgba(239, 68, 68, 0.30);
+
+}
+
+
+.retakeBtn:active {
+
+    transform:
+        scale(0.97);
+
+}
