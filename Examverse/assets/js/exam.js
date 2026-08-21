@@ -473,14 +473,18 @@ if (isPausedAttempt) {
         savedProgress.sectionRemainingTimes || {};
 
 
-    // --------------------------------------
-    // Restore active-time tracking
-    // --------------------------------------
+   // --------------------------------------
+// Restore active-time tracking
+// --------------------------------------
 
-    sessionStorage.setItem(
-        "examActiveStartedAt",
-        new Date().toISOString()
-    );
+// Do NOT start active-time tracking from
+// the moment the resume page begins loading.
+//
+// It will be started after the CBT is ready.
+
+sessionStorage.removeItem(
+    "examActiveStartedAt"
+);
 
 
     // --------------------------------------
