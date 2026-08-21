@@ -1,114 +1,1015 @@
 /* ==========================================
    ExamVerse Dashboard
+   Supabase Connected
    Created by Subhajit Paul
 ========================================== */
 
-// ======================================
-// Check Login
-// ======================================
 
-const user = Storage.getCurrentUser();
+// ==========================================
+// CHECK SUPABASE LOGIN
+// ==========================================
 
-if (!user) {
+async function loadDashboard() {
 
-    alert("Please login first.");
+    try {
 
-    window.location.href = "login.html";
+        const {
+            data: {
+                user: authUser
+            },
+            error: authError
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        // ==========================================
+        // USER NOT LOGGED IN
+        // ==========================================
+
+        if (
+            authError ||
+            !authUser
+        ) {
+
+            window.location.replace(
+                "login.html"
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "Dashboard Auth User:",
+            authUser
+        );
+
+
+        // ==========================================
+        // LOAD PROFILE
+        // ==========================================
+
+        const {
+            data: profile,
+            error: profileError
+        } =
+        await supabaseClient
+
+            .from("profiles")
+
+            .select(`
+                id,
+                first_name,
+                middle_name,
+                last_name,
+                age,
+                gender,
+                phone,
+                email,
+                exam1,
+                exam2,
+                exam3
+            `)
+
+            .eq(
+                "id",
+                authUser.id
+            )
+
+            .maybeSingle();
+
+
+        if (profileError) {
+
+            console.error(
+                "Profile loading error:",
+                profileError
+            );
+
+        }
+
+
+        if (!profile) {
+
+            console.error(
+                "No profile found for user."
+            );
+
+            alert(
+                "Your profile could not be loaded."
+            );
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // BUILD USER NAME
+        // ==========================================
+
+        const fullName = [
+
+            profile.first_name,
+
+            profile.middle_name,
+
+            profile.last_name
+
+        ]
+
+            .filter(Boolean)
+
+            .join(" ")
+
+            .replace(/\s+/g, " ")
+
+            .trim();
+
+
+        // ==========================================
+        // DISPLAY USER NAME
+        // ==========================================
+
+        document.getElementById(
+            "userName"
+        ).textContent =
+            fullName || "Student";
+
+
+        // ==========================================
+        // PREFERRED EXAMS
+        // ==========================================
+
+        document.getElementById(
+            "exam1"
+        ).textContent =
+            profile.exam1 || "Not Selected";
+
+
+        document.getElementById(
+            "exam2"
+        ).textContent =
+            profile.exam2 || "Not Selected";
+
+
+        document.getElementById(
+            "exam3"
+        ).textContent =
+            profile.exam3 || "Not Selected";
+
+
+        // ==========================================
+        // LOAD COMPLETED ATTEMPTS
+        // ==========================================
+
+        const {
+            data: attempts,
+            error: attemptsError
+        } =
+        await supabaseClient
+
+            .from("exam_attempts")
+
+            .select(`
+                id,
+                exam_id,
+                score,
+                percentage,
+                attempted,
+                correct,
+                wrong,
+                skipped,
+                total_questions,
+                status,
+                submitted_at,
+                time_taken
+            `)
+
+            .eq(
+                "user_id",
+                authUser.id
+            )
+
+            .eq(
+                "status",
+                "Completed"
+            )
+
+            .order(
+                "submitted_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+        if (attemptsError) {
+
+            console.error(
+                "Attempts loading error:",
+                attemptsError
+            );
+
+        }
+
+
+        const completedAttempts =
+            attempts || [];
+
+
+        // ==========================================
+        // NO COMPLETED TESTS
+        // ==========================================
+
+        if (
+            completedAttempts.length === 0
+        ) {
+
+            document.getElementById(
+                "tests"
+            ).textContent = "0";
+
+
+            document.getElementById(
+                "highest"
+            ).textContent = "0%";
+
+
+            document.getElementById(
+                "average"
+            ).textContent = "0%";
+
+
+            document.getElementById(
+                "accuracy"
+            ).textContent = "0%";
+
+
+            document.getElementById(
+                "level"
+            ).textContent = "Beginner";
+
+
+            document.getElementById(
+                "rank"
+            ).textContent = "N/A";
+
+
+            document.getElementById(
+                "history"
+            ).innerHTML = `
+
+                <tr>
+
+                    <td colspan="4">
+
+                        No tests attempted yet.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+        else {
+
+
+            // ==========================================
+            // TOTAL TESTS
+            // ==========================================
+
+            const totalTests =
+                completedAttempts.length;
+
+
+            document.getElementById(
+                "tests"
+            ).textContent =
+                totalTests;
+
+
+            // ==========================================
+            // HIGHEST PERCENTAGE
+            // ==========================================
+
+            const highestPercentage =
+                Math.max(
+
+                    ...completedAttempts.map(
+                        attempt =>
+                            Number(
+                                attempt.percentage
+                            ) || 0
+                    )
+
+                );
+
+
+            document.getElementById(
+                "highest"
+            ).textContent =
+                highestPercentage
+                    .toFixed(2)
+                    .replace(/\.00$/, "") +
+                "%";
+
+
+            // ==========================================
+            // AVERAGE PERCENTAGE
+            // ==========================================
+
+            const totalPercentage =
+                completedAttempts.reduce(
+
+                    (
+                        sum,
+                        attempt
+                    ) => {
+
+                        return sum +
+                            (
+                                Number(
+                                    attempt.percentage
+                                ) || 0
+                            );
+
+                    },
+
+                    0
+
+                );
+
+
+            const averagePercentage =
+                totalPercentage /
+                totalTests;
+
+
+            document.getElementById(
+                "average"
+            ).textContent =
+                averagePercentage
+                    .toFixed(2)
+                    .replace(/\.00$/, "") +
+                "%";
+
+
+            // ==========================================
+            // OVERALL ACCURACY
+            //
+            // Correct answers /
+            // attempted questions
+            // ==========================================
+
+            const totalCorrect =
+                completedAttempts.reduce(
+
+                    (
+                        sum,
+                        attempt
+                    ) => {
+
+                        return sum +
+                            (
+                                Number(
+                                    attempt.correct
+                                ) || 0
+                            );
+
+                    },
+
+                    0
+
+                );
+
+
+            const totalAttempted =
+                completedAttempts.reduce(
+
+                    (
+                        sum,
+                        attempt
+                    ) => {
+
+                        return sum +
+                            (
+                                Number(
+                                    attempt.attempted
+                                ) || 0
+                            );
+
+                    },
+
+                    0
+
+                );
+
+
+            let overallAccuracy = 0;
+
+
+            if (
+                totalAttempted > 0
+            ) {
+
+                overallAccuracy =
+                    (
+                        totalCorrect /
+                        totalAttempted
+                    ) * 100;
+
+            }
+
+
+            document.getElementById(
+                "accuracy"
+            ).textContent =
+                overallAccuracy
+                    .toFixed(2)
+                    .replace(/\.00$/, "") +
+                "%";
+
+
+            // ==========================================
+            // USER LEVEL
+            // ==========================================
+
+            let level =
+                "Beginner";
+
+
+            if (
+                totalTests >= 20 &&
+                averagePercentage >= 80
+            ) {
+
+                level = "Expert";
+
+            }
+
+            else if (
+                totalTests >= 10 &&
+                averagePercentage >= 65
+            ) {
+
+                level = "Advanced";
+
+            }
+
+            else if (
+                totalTests >= 5 &&
+                averagePercentage >= 50
+            ) {
+
+                level = "Intermediate";
+
+            }
+
+
+            document.getElementById(
+                "level"
+            ).textContent =
+                level;
+
+
+            // ==========================================
+            // CURRENT OVERALL RANK
+            //
+            // Rank based on user's BEST
+            // completed percentage across users
+            // ==========================================
+
+            await loadDashboardRank(
+                authUser.id
+            );
+
+
+            // ==========================================
+            // RECENT TESTS
+            // ==========================================
+
+            await loadRecentTests(
+                completedAttempts
+            );
+
+        }
+
+
+        console.log(
+            "✅ Dashboard loaded successfully."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard loading error:",
+            error
+        );
+
+        alert(
+            "Unable to load dashboard data."
+        );
+
+    }
 
 }
 
-// ======================================
-// Load User Information
-// ======================================
 
-document.getElementById("userName").textContent = user.fullName;
+// ==========================================
+// DASHBOARD RANK
+// ==========================================
 
-document.getElementById("level").textContent = user.level;
+async function loadDashboardRank(
+    currentUserId
+) {
 
-document.getElementById("rank").textContent = user.stats.rank;
+    try {
 
-document.getElementById("tests").textContent = user.stats.totalTests;
+        // ------------------------------------------
+        // Load all completed attempts
+        // ------------------------------------------
 
-document.getElementById("highest").textContent =
-user.stats.highestScore + "%";
+        const {
+            data: allAttempts,
+            error
+        } =
+        await supabaseClient
 
-document.getElementById("average").textContent =
-user.stats.averageScore + "%";
+            .from("exam_attempts")
 
-document.getElementById("accuracy").textContent =
-user.stats.accuracy + "%";
+            .select(`
+                user_id,
+                percentage,
+                score,
+                time_taken,
+                submitted_at
+            `)
 
-// ======================================
-// Preferred Exams
-// ======================================
+            .eq(
+                "status",
+                "Completed"
+            );
 
-document.getElementById("exam1").textContent = user.exams[0];
 
-document.getElementById("exam2").textContent = user.exams[1];
+        if (
+            error ||
+            !allAttempts
+        ) {
 
-document.getElementById("exam3").textContent = user.exams[2];
+            document.getElementById(
+                "rank"
+            ).textContent = "N/A";
 
-// ======================================
-// Previous Tests
-// ======================================
+            return;
 
-const history = document.getElementById("history");
+        }
 
-history.innerHTML = "";
 
-if (user.tests.length === 0) {
+        // ------------------------------------------
+        // Best result for every user
+        // ------------------------------------------
 
-    history.innerHTML =
+        const bestByUser =
+            new Map();
 
-    `
-    <tr>
 
-        <td colspan="4">
+        allAttempts.forEach(
+            attempt => {
 
-            No tests attempted yet.
+                const existing =
+                    bestByUser.get(
+                        attempt.user_id
+                    );
 
-        </td>
 
-    </tr>
+                const currentPercentage =
+                    Number(
+                        attempt.percentage
+                    ) || 0;
 
-    `;
+
+                const currentScore =
+                    Number(
+                        attempt.score
+                    ) || 0;
+
+
+                if (
+                    !existing ||
+
+                    currentPercentage >
+                    existing.percentage ||
+
+                    (
+                        currentPercentage ===
+                        existing.percentage &&
+
+                        currentScore >
+                        existing.score
+                    )
+                ) {
+
+                    bestByUser.set(
+
+                        attempt.user_id,
+
+                        {
+
+                            percentage:
+                                currentPercentage,
+
+                            score:
+                                currentScore
+
+                        }
+
+                    );
+
+                }
+
+            }
+        );
+
+
+        // ------------------------------------------
+        // Convert to ranking array
+        // ------------------------------------------
+
+        const ranking =
+            Array.from(
+                bestByUser.entries()
+            )
+
+            .sort(
+
+                (a, b) => {
+
+                    if (
+                        b[1].percentage !==
+                        a[1].percentage
+                    ) {
+
+                        return (
+                            b[1].percentage -
+                            a[1].percentage
+                        );
+
+                    }
+
+
+                    return (
+                        b[1].score -
+                        a[1].score
+                    );
+
+                }
+
+            );
+
+
+        const currentIndex =
+            ranking.findIndex(
+
+                item =>
+                    item[0] ===
+                    currentUserId
+
+            );
+
+
+        if (
+            currentIndex === -1
+        ) {
+
+            document.getElementById(
+                "rank"
+            ).textContent = "N/A";
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "rank"
+        ).textContent =
+            "#" +
+            (
+                currentIndex + 1
+            );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard rank error:",
+            error
+        );
+
+        document.getElementById(
+            "rank"
+        ).textContent = "N/A";
+
+    }
 
 }
 
-else{
 
-    user.tests.forEach(test=>{
+// ==========================================
+// RECENT TESTS
+// ==========================================
 
-        history.innerHTML +=
+async function loadRecentTests(
+    attempts
+) {
 
-        `
-        <tr>
+    const history =
+        document.getElementById(
+            "history"
+        );
 
-            <td>${test.date}</td>
 
-            <td>${test.exam}</td>
+    if (
+        !attempts ||
+        attempts.length === 0
+    ) {
 
-            <td>${test.score}%</td>
+        history.innerHTML = `
 
-            <td>${test.accuracy}%</td>
+            <tr>
 
-        </tr>
+                <td colspan="4">
+
+                    No tests attempted yet.
+
+                </td>
+
+            </tr>
 
         `;
 
-    });
+        return;
+
+    }
+
+
+    // ==========================================
+    // GET EXAM IDS
+    // ==========================================
+
+    const examIds = [
+
+        ...new Set(
+
+            attempts
+
+                .map(
+                    attempt =>
+                        attempt.exam_id
+                )
+
+                .filter(Boolean)
+
+        )
+
+    ];
+
+
+    let examMap =
+        new Map();
+
+
+    if (
+        examIds.length > 0
+    ) {
+
+        const {
+            data: exams,
+            error
+        } =
+        await supabaseClient
+
+            .from("exams")
+
+            .select(
+                "id, exam_name"
+            )
+
+            .in(
+                "id",
+                examIds
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Exam name loading error:",
+                error
+            );
+
+        }
+
+        else {
+
+            (
+                exams || []
+            ).forEach(
+                exam => {
+
+                    examMap.set(
+                        exam.id,
+                        exam.exam_name
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SHOW RECENT TESTS
+    // ==========================================
+
+    history.innerHTML = "";
+
+
+    attempts
+
+        .slice(
+            0,
+            10
+        )
+
+        .forEach(
+            attempt => {
+
+                const examName =
+                    examMap.get(
+                        attempt.exam_id
+                    ) ||
+                    "Unknown Exam";
+
+
+                const percentage =
+                    Number(
+                        attempt.percentage
+                    ) || 0;
+
+
+                const accuracy =
+                    (
+                        Number(
+                            attempt.attempted
+                        ) > 0
+                    )
+
+                    ?
+
+                    (
+                        (
+                            Number(
+                                attempt.correct
+                            ) || 0
+                        ) /
+
+                        Number(
+                            attempt.attempted
+                        )
+                    ) * 100
+
+                    :
+
+                    0;
+
+
+                const date =
+                    attempt.submitted_at
+
+                    ?
+
+                    new Date(
+                        attempt.submitted_at
+                    ).toLocaleDateString(
+                        "en-IN",
+                        {
+                            day:
+                                "2-digit",
+
+                            month:
+                                "short",
+
+                            year:
+                                "numeric"
+                        }
+                    )
+
+                    :
+
+                    "N/A";
+
+
+                history.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            ${date}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                examName
+                            )}
+                        </td>
+
+                        <td>
+                            ${percentage
+                                .toFixed(2)
+                                .replace(
+                                    /\.00$/,
+                                    ""
+                                )
+                            }%
+                        </td>
+
+                        <td>
+                            ${accuracy
+                                .toFixed(2)
+                                .replace(
+                                    /\.00$/,
+                                    ""
+                                )
+                            }%
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
 
 }
 
-// ======================================
-// Logout
-// ======================================
 
-// ======================================
-// Logout
-// ======================================
+// ==========================================
+// SAFE HTML TEXT
+// ==========================================
 
-document.getElementById("logoutBtn")
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+document.getElementById(
+    "logoutBtn"
+)
 
 .addEventListener(
     "click",
@@ -119,22 +1020,24 @@ document.getElementById("logoutBtn")
                 "Logout from ExamVerse?"
             )
         ) {
+
             return;
+
         }
 
 
         try {
 
             // ==================================
-            // SIGN OUT FROM SUPABASE
+            // SUPABASE LOGOUT
             // ==================================
 
             const {
                 error
             } =
-                await supabaseClient
-                    .auth
-                    .signOut();
+            await supabaseClient
+                .auth
+                .signOut();
 
 
             if (error) {
@@ -148,14 +1051,23 @@ document.getElementById("logoutBtn")
 
 
             // ==================================
-            // CLEAR LOCAL EXAMVERSE USER
+            // CLEAR LOCAL USER
             // ==================================
 
-            Storage.logout();
+            if (
+                typeof Storage !==
+                "undefined" &&
+                typeof Storage.logout ===
+                "function"
+            ) {
+
+                Storage.logout();
+
+            }
 
 
             // ==================================
-            // CLEAR EXAM SESSION DATA
+            // CLEAR EXAM SESSION
             // ==================================
 
             sessionStorage.removeItem(
@@ -188,7 +1100,7 @@ document.getElementById("logoutBtn")
 
 
             // ==================================
-            // GO TO LOGIN
+            // LOGIN
             // ==================================
 
             window.location.replace(
@@ -204,9 +1116,6 @@ document.getElementById("logoutBtn")
                 error
             );
 
-
-            // Still leave the protected page
-
             window.location.replace(
                 "login.html"
             );
@@ -216,40 +1125,47 @@ document.getElementById("logoutBtn")
     }
 );
 
-// ======================================
-// Take New Test
-// ======================================
 
-document.getElementById("takeTest")
+// ==========================================
+// TAKE NEW TEST
+// ==========================================
 
-.addEventListener("click",()=>{
+document.getElementById(
+    "takeTest"
+)
 
-    window.location.href="exam-selection.html";
+.addEventListener(
+    "click",
+    () => {
 
-});
+        window.location.href =
+            "exam-selection.html";
 
-document.getElementById("newTestBtn")
+    }
+);
 
-.addEventListener("click",()=>{
 
-    window.location.href="exam-selection.html";
+// ==========================================
+// NEW TEST SIDEBAR
+// ==========================================
 
-});
+document.getElementById(
+    "newTestBtn"
+)
 
-//=========================
-// New Test
-//=========================
+.addEventListener(
+    "click",
+    () => {
 
-const newTestBtn =
-document.getElementById("newTestBtn");
+        window.location.href =
+            "exam-list.html";
 
-if(newTestBtn){
+    }
+);
 
-newTestBtn.addEventListener("click",()=>{
 
-window.location.href =
-"exam-list.html";
+// ==========================================
+// START DASHBOARD
+// ==========================================
 
-});
-
-}
+loadDashboard();
