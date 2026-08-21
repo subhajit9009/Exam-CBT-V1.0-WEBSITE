@@ -612,18 +612,59 @@ if (
     // Prevent Reopening Completed Exam
     // ==========================================
 
-    if (
-        currentAttempt.status ===
-        "Completed"
-    ) {
+    // ==========================================
+// PREVENT REOPENING COMPLETED EXAM
+// ==========================================
 
-        alert(
-            "This examination has already been submitted."
+// If this attempt is already completed,
+// NEVER allow the CBT interface to remain open.
+
+if (
+    currentAttempt.status ===
+    "Completed"
+) {
+
+    console.warn(
+        "🚫 Completed attempt detected."
+    );
+
+    // Stop any timer that may already exist
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
         );
 
-        return;
+        timerInterval = null;
 
     }
+
+
+    if (sectionTimerInterval) {
+
+        clearInterval(
+            sectionTimerInterval
+        );
+
+        sectionTimerInterval = null;
+
+    }
+
+
+    // Hide CBT immediately
+    document.body.style.display =
+        "none";
+
+
+    // Return to the result page
+    // instead of leaving the CBT visible
+
+    window.location.replace(
+        "result.html"
+    );
+
+    return;
+}
 
 
     if (!selectedExam) {
