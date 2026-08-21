@@ -608,16 +608,9 @@ if (
 }
 
 
-    // ==========================================
-    // Prevent Reopening Completed Exam
-    // ==========================================
-
-    // ==========================================
+   // ==========================================
 // PREVENT REOPENING COMPLETED EXAM
 // ==========================================
-
-// If this attempt is already completed,
-// NEVER allow the CBT interface to remain open.
 
 if (
     currentAttempt.status ===
@@ -625,10 +618,14 @@ if (
 ) {
 
     console.warn(
-        "🚫 Completed attempt detected."
+        "🚫 Completed examination attempt."
     );
 
-    // Stop any timer that may already exist
+
+    // ======================================
+    // STOP NORMAL EXAM TIMER
+    // ======================================
+
     if (timerInterval) {
 
         clearInterval(
@@ -639,6 +636,10 @@ if (
 
     }
 
+
+    // ======================================
+    // STOP SECTION TIMER
+    // ======================================
 
     if (sectionTimerInterval) {
 
@@ -651,19 +652,29 @@ if (
     }
 
 
-    // Hide CBT immediately
-    document.body.style.display =
-        "none";
+    // ======================================
+    // KEEP CBT LOCKED
+    // ======================================
+
+    document.body.classList.remove(
+        "exam-ready"
+    );
+
+    document.body.classList.add(
+        "exam-loading"
+    );
 
 
-    // Return to the result page
-    // instead of leaving the CBT visible
+    // ======================================
+    // RETURN TO RESULT PAGE
+    // ======================================
 
     window.location.replace(
         "result.html"
     );
 
     return;
+
 }
 
 
@@ -858,6 +869,19 @@ updateSectionSubmitButton();
 startSectionTimer();
 
 
+// ==========================================
+// EXAM VALIDATED + READY
+// ==========================================
+
+document.body.classList.remove(
+    "exam-loading"
+);
+
+document.body.classList.add(
+    "exam-ready"
+);
+
+
 } else {
 
     console.log(
@@ -996,6 +1020,18 @@ if (
 // ==========================================
 
 startExamTimer();
+
+// ==========================================
+// EXAM VALIDATED + READY
+// ==========================================
+
+document.body.classList.remove(
+    "exam-loading"
+);
+
+document.body.classList.add(
+    "exam-ready"
+);
 
 }
 
