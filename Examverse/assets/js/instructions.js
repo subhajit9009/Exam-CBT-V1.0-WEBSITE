@@ -19,6 +19,8 @@ const startExamBtn =
 
 let selectedExam = null;
 
+let pausedAttempt = null;
+
 
 // ==========================================
 // Load Exam Details
@@ -173,9 +175,100 @@ if (sharedExamId) {
         selectedExam =
             data;
 
+            // ==========================================
+// CHECK EXISTING PAUSED ATTEMPT
+// ==========================================
+
+const {
+    data: authForAttempt
+} =
+await supabaseClient.auth.getUser();
+
+const loggedUser =
+    authForAttempt?.user;
+
+pausedAttempt = null;
+
+if (loggedUser) {
+
+    const {
+        data: existingPausedAttempt,
+        error: pausedAttemptError
+    } =
+    await supabaseClient
+
+        .from("exam_attempts")
+
+        .select(`
+            id,
+            exam_id,
+            status,
+            remaining_time_seconds,
+            current_question_index,
+            current_section_index
+        `)
+
+        .eq(
+            "user_id",
+            loggedUser.id
+        )
+
+        .eq(
+            "exam_id",
+            data.id
+        )
+
+        .eq(
+            "status",
+            "Paused"
+        )
+
+        .order(
+            "paused_at",
+            {
+                ascending: false
+            }
+        )
+
+        .limit(1)
+        .maybeSingle();
+
+
+    if (pausedAttemptError) {
+
+        console.error(
+            "Paused attempt check error:",
+            pausedAttemptError
+        );
+
+    } else {
+
+        pausedAttempt =
+            existingPausedAttempt ||
+            null;
+
+    }
+
+}
+
             await loadSectionPattern(
     data.id
 );
+
+// ==========================================
+// CHANGE BUTTON FOR PAUSED ATTEMPT
+// ==========================================
+
+if (pausedAttempt) {
+
+    startExamBtn.innerHTML =
+        "↻ Resume Exam";
+
+    startExamBtn.classList.add(
+        "resumeBtn"
+    );
+
+}
 
 
         // ==========================================
@@ -482,6 +575,34 @@ async function startExam() {
         return;
 
     }
+
+    // ==========================================
+// RESUME EXISTING PAUSED ATTEMPT
+// ==========================================
+
+if (pausedAttempt) {
+
+    sessionStorage.setItem(
+        "attemptId",
+        pausedAttempt.id
+    );
+
+    sessionStorage.setItem(
+        "selectedExam",
+        selectedExam.id
+    );
+
+    // This is NOT a fresh attempt
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
+    );
+
+    window.location.replace(
+        "exam.html"
+    );
+
+    return;
+}
 
 
     // Prevent double-click
