@@ -531,36 +531,26 @@ async function loadDashboardRank(
 
     try {
 
-        // ------------------------------------------
-        // Load all completed attempts
-        // ------------------------------------------
-
         const {
-            data: allAttempts,
+            data: rank,
             error
         } =
         await supabaseClient
-
-            .from("exam_attempts")
-
-            .select(`
-                user_id,
-                percentage,
-                score,
-                time_taken,
-                submitted_at
-            `)
-
-            .eq(
-                "status",
-                "Completed"
+            .rpc(
+                "get_dashboard_rank",
+                {
+                    p_user_id:
+                        currentUserId
+                }
             );
 
 
-        if (
-            error ||
-            !allAttempts
-        ) {
+        if (error) {
+
+            console.error(
+                "Dashboard rank error:",
+                error
+            );
 
             document.getElementById(
                 "rank"
@@ -571,120 +561,9 @@ async function loadDashboardRank(
         }
 
 
-        // ------------------------------------------
-        // Best result for every user
-        // ------------------------------------------
-
-        const bestByUser =
-            new Map();
-
-
-        allAttempts.forEach(
-            attempt => {
-
-                const existing =
-                    bestByUser.get(
-                        attempt.user_id
-                    );
-
-
-                const currentPercentage =
-                    Number(
-                        attempt.percentage
-                    ) || 0;
-
-
-                const currentScore =
-                    Number(
-                        attempt.score
-                    ) || 0;
-
-
-                if (
-                    !existing ||
-
-                    currentPercentage >
-                    existing.percentage ||
-
-                    (
-                        currentPercentage ===
-                        existing.percentage &&
-
-                        currentScore >
-                        existing.score
-                    )
-                ) {
-
-                    bestByUser.set(
-
-                        attempt.user_id,
-
-                        {
-
-                            percentage:
-                                currentPercentage,
-
-                            score:
-                                currentScore
-
-                        }
-
-                    );
-
-                }
-
-            }
-        );
-
-
-        // ------------------------------------------
-        // Convert to ranking array
-        // ------------------------------------------
-
-        const ranking =
-            Array.from(
-                bestByUser.entries()
-            )
-
-            .sort(
-
-                (a, b) => {
-
-                    if (
-                        b[1].percentage !==
-                        a[1].percentage
-                    ) {
-
-                        return (
-                            b[1].percentage -
-                            a[1].percentage
-                        );
-
-                    }
-
-
-                    return (
-                        b[1].score -
-                        a[1].score
-                    );
-
-                }
-
-            );
-
-
-        const currentIndex =
-            ranking.findIndex(
-
-                item =>
-                    item[0] ===
-                    currentUserId
-
-            );
-
-
         if (
-            currentIndex === -1
+            rank === null ||
+            rank === undefined
         ) {
 
             document.getElementById(
@@ -699,17 +578,20 @@ async function loadDashboardRank(
         document.getElementById(
             "rank"
         ).textContent =
-            "#" +
-            (
-                currentIndex + 1
-            );
+            "#" + rank;
+
+
+        console.log(
+            "Dashboard Global Rank:",
+            rank
+        );
 
     }
 
     catch (error) {
 
         console.error(
-            "Dashboard rank error:",
+            "Dashboard rank exception:",
             error
         );
 
@@ -848,7 +730,7 @@ async function loadRecentTests(
 
         .slice(
             0,
-            10
+            3
         )
 
         .forEach(
@@ -1139,7 +1021,7 @@ document.getElementById(
     () => {
 
         window.location.href =
-            "exam-selection.html";
+    "exam-list.html";
 
     }
 );
