@@ -75,22 +75,93 @@ async function loadExams(search = "") {
     const user = auth?.user;
 
     let pausedAttempts = [];
+let completedAttempts = [];
 
-    if (user) {
+if (user) {
 
-        const { data } = await supabaseClient
-            .from("exam_attempts")
-            .select(`
-                id,
-                exam_id,
-                status,
-                remaining_time_seconds
-            `)
-            .eq("user_id", user.id)
-            .eq("status", "Paused");
+    // ==========================================
+    // PAUSED ATTEMPTS
+    // ==========================================
 
-        pausedAttempts = data || [];
+    const {
+        data: pausedData,
+        error: pausedError
+    } = await supabaseClient
+
+        .from("exam_attempts")
+
+        .select(`
+            id,
+            exam_id,
+            status,
+            remaining_time_seconds
+        `)
+
+        .eq(
+            "user_id",
+            user.id
+        )
+
+        .eq(
+            "status",
+            "Paused"
+        );
+
+
+    if (pausedError) {
+
+        console.error(
+            "Paused attempts error:",
+            pausedError
+        );
+
     }
+
+    pausedAttempts =
+        pausedData || [];
+
+
+    // ==========================================
+    // COMPLETED ATTEMPTS
+    // ==========================================
+
+    const {
+        data: completedData,
+        error: completedError
+    } = await supabaseClient
+
+        .from("exam_attempts")
+
+        .select(`
+            id,
+            exam_id,
+            status
+        `)
+
+        .eq(
+            "user_id",
+            user.id
+        )
+
+        .eq(
+            "status",
+            "Completed"
+        );
+
+
+    if (completedError) {
+
+        console.error(
+            "Completed attempts error:",
+            completedError
+        );
+
+    }
+
+    completedAttempts =
+        completedData || [];
+
+}
 
     examContainer.innerHTML = "";
 
@@ -110,9 +181,14 @@ async function loadExams(search = "") {
     filtered.forEach(exam => {
 
         const paused =
-            pausedAttempts.find(
-                p => p.exam_id === exam.id
-            );
+    pausedAttempts.find(
+        p => p.exam_id === exam.id
+    );
+
+const completed =
+    completedAttempts.find(
+        c => c.exam_id === exam.id
+    );
 
         examContainer.innerHTML += `
 
@@ -159,27 +235,50 @@ async function loadExams(search = "") {
             <div class="exam-card-actions">
 
     ${
-        paused
-        ? `
-        <button
-            class="startBtn resumeBtn"
-            onclick="resumeExam(
-                '${paused.id}',
-                '${exam.id}'
-            )"
-        >
-            ↻ Resume Exam
-        </button>
-        `
-        : `
-        <button
-            class="startBtn"
-            onclick="startExam('${exam.id}')"
-        >
-            ▶ Start Exam
-        </button>
-        `
-    }
+    paused
+
+    ? `
+
+    <button
+        class="startBtn resumeBtn"
+        onclick="resumeExam(
+            '${paused.id}',
+            '${exam.id}'
+        )"
+    >
+        ↻ Resume Exam
+    </button>
+
+    `
+
+    : completed
+
+    ? `
+
+    <button
+        class="startBtn retakeBtn"
+        onclick="retakeExam(
+            '${exam.id}'
+        )"
+    >
+        ↻ Retake Exam
+    </button>
+
+    `
+
+    : `
+
+    <button
+        class="startBtn"
+        onclick="startExam(
+            '${exam.id}'
+        )"
+    >
+        ▶ Start Exam
+    </button>
+
+    `
+}
 
 
 </div>
@@ -203,6 +302,55 @@ function startExam(examId) {
 
     window.location.href =
     "instructions.html";
+
+}
+
+//==========================================
+// RETAKE EXAM
+//==========================================
+
+function retakeExam(examId) {
+
+    // Clear old attempt/session state
+
+    sessionStorage.removeItem(
+        "attemptId"
+    );
+
+    sessionStorage.removeItem(
+        "examStartTime"
+    );
+
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
+    );
+
+    sessionStorage.removeItem(
+        "currentQuestionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "currentSectionIndex"
+    );
+
+    sessionStorage.removeItem(
+        "examActiveStartedAt"
+    );
+
+
+    // Select the exam
+
+    sessionStorage.setItem(
+        "selectedExam",
+        examId
+    );
+
+
+    // Open instructions
+
+    window.location.replace(
+        "instructions.html"
+    );
 
 }
 

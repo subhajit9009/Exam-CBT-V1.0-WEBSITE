@@ -21,6 +21,8 @@ let selectedExam = null;
 
 let pausedAttempt = null;
 
+let completedAttempt = null;
+
 
 // ==========================================
 // Load Exam Details
@@ -256,7 +258,76 @@ if (loggedUser) {
 );
 
 // ==========================================
+// CHECK EXISTING COMPLETED ATTEMPT
+// ==========================================
+
+completedAttempt = null;
+
+if (loggedUser) {
+
+    const {
+        data: existingCompletedAttempt,
+        error: completedAttemptError
+    } =
+    await supabaseClient
+
+        .from("exam_attempts")
+
+        .select(`
+            id,
+            exam_id,
+            status
+        `)
+
+        .eq(
+            "user_id",
+            loggedUser.id
+        )
+
+        .eq(
+            "exam_id",
+            data.id
+        )
+
+        .eq(
+            "status",
+            "Completed"
+        )
+
+        .order(
+            "submitted_at",
+            {
+                ascending: false
+            }
+        )
+
+        .limit(1)
+        .maybeSingle();
+
+
+    if (completedAttemptError) {
+
+        console.error(
+            "Completed attempt check error:",
+            completedAttemptError
+        );
+
+    } else {
+
+        completedAttempt =
+            existingCompletedAttempt ||
+            null;
+
+    }
+
+}
+
+// ==========================================
 // CHANGE BUTTON FOR PAUSED ATTEMPT
+// ==========================================
+
+// ==========================================
+// SET BUTTON ACCORDING TO ATTEMPT STATE
 // ==========================================
 
 if (pausedAttempt) {
@@ -266,6 +337,17 @@ if (pausedAttempt) {
 
     startExamBtn.classList.add(
         "resumeBtn"
+    );
+
+}
+
+else if (completedAttempt) {
+
+    startExamBtn.innerHTML =
+        "↻ Retake Exam";
+
+    startExamBtn.classList.add(
+        "retakeBtn"
     );
 
 }
