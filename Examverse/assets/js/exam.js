@@ -3745,7 +3745,7 @@ async function markForReview() {
 
 
     // ==========================================
-    // MARK CURRENT QUESTION FOR REVIEW
+    // MARK CURRENT QUESTION LOCALLY
     // ==========================================
 
     if (
@@ -3762,40 +3762,60 @@ async function markForReview() {
 
 
     // ==========================================
-    // UPDATE PALETTE
+    // UPDATE PALETTE IMMEDIATELY
     // ==========================================
 
     updatePalette();
 
 
     // ==========================================
-    // WAIT FOR ANSWER SAVE
-    // ==========================================
-
-    if (answerSavePromise) {
-
-        await answerSavePromise;
-
-        answerSavePromise = null;
-
-    }
-
-
-    // ==========================================
-    // SAVE REVIEW STATUS
-    // ==========================================
-
-    await saveReviewToDatabase(
-        question.id,
-        true
-    );
-
-
-    // ==========================================
-    // MOVE TO NEXT QUESTION
+    // MOVE TO NEXT QUESTION IMMEDIATELY
     // ==========================================
 
     nextQuestion();
+
+
+    // ==========================================
+    // SAVE DATA IN BACKGROUND
+    // ==========================================
+
+    try {
+
+        // Wait for any answer save that was
+        // already in progress.
+
+        if (answerSavePromise) {
+
+            await answerSavePromise;
+
+            answerSavePromise = null;
+
+        }
+
+
+        // Save review status to Supabase.
+
+        await saveReviewToDatabase(
+            question.id,
+            true
+        );
+
+
+        console.log(
+            "✅ Review status saved:",
+            question.id
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ Review save error:",
+            error
+        );
+
+    }
 
 }
 
