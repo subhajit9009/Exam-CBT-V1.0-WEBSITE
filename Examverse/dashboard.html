@@ -238,61 +238,335 @@ Current Rank
 
 </section>
 
-<!-- ================= Preferred Exams ================= -->
+<!-- =====================================================
+     PREFERRED EXAMS
+===================================================== -->
 
-<section class="examSection">
+<section class="preferredSection">
 
-<h2>
+    <div class="sectionHeading">
 
-Preferred Exams
+        <div>
+            <span class="sectionEyebrow">
+                YOUR PREPARATION
+            </span>
 
-</h2>
+            <h2>
+                Preferred Exams
+            </h2>
 
-<div class="examCards">
+            <p>
+                Your selected examinations for quick access.
+            </p>
+        </div>
 
-<div class="exam">
+        <span class="preferenceBadge">
+            <i class="fa-solid fa-star"></i>
+            3 Preferences
+        </span>
 
-<h3 id="exam1">
+    </div>
 
-Exam 1
 
-</h3>
+    <div class="preferredExamCards">
 
-</div>
+        <!-- EXAM 1 -->
 
-<div class="exam">
+        <article
+            class="preferredExamCard"
+            data-exam-slot="1"
+        >
 
-<h3 id="exam2">
+            <div class="preferredExamTop">
 
-Exam 2
+                <div class="examNumber">
+                    01
+                </div>
 
-</h3>
+                <div class="examIcon">
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
 
-</div>
+            </div>
 
-<div class="exam">
 
-<h3 id="exam3">
+            <div class="preferredExamContent">
 
-Exam 3
+                <span class="preferredLabel">
+                    PREFERRED EXAM 1
+                </span>
 
-</h3>
+                <h3 id="exam1">
+                    Loading...
+                </h3>
 
-</div>
+                <p>
+                    Your first selected examination
+                </p>
 
-</div>
+            </div>
+
+
+            <button
+                type="button"
+                class="preferredExamBtn"
+                data-exam-slot="1"
+            >
+
+                Start Preparation
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </article>
+
+
+        <!-- EXAM 2 -->
+
+        <article
+            class="preferredExamCard"
+            data-exam-slot="2"
+        >
+
+            <div class="preferredExamTop">
+
+                <div class="examNumber">
+                    02
+                </div>
+
+                <div class="examIcon">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+
+            </div>
+
+
+            <div class="preferredExamContent">
+
+                <span class="preferredLabel">
+                    PREFERRED EXAM 2
+                </span>
+
+                <h3 id="exam2">
+                    Loading...
+                </h3>
+
+                <p>
+                    Your second selected examination
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="preferredExamBtn"
+                data-exam-slot="2"
+            >
+
+                Start Preparation
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </article>
+
+
+        <!-- EXAM 3 -->
+
+        <article
+            class="preferredExamCard"
+            data-exam-slot="3"
+        >
+
+            <div class="preferredExamTop">
+
+                <div class="examNumber">
+                    03
+                </div>
+
+                <div class="examIcon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+
+            </div>
+
+
+            <div class="preferredExamContent">
+
+                <span class="preferredLabel">
+                    PREFERRED EXAM 3
+                </span>
+
+                <h3 id="exam3">
+                    Loading...
+                </h3>
+
+                <p>
+                    Your third selected examination
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="preferredExamBtn"
+                data-exam-slot="3"
+            >
+
+                Start Preparation
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </button>
+
+        </article>
+
+    </div>
+
+</section>
+
+<!-- ================= XP & LEVEL ================= -->
+
+<section class="progressSection">
+
+    <div class="progressHeader">
+
+        <div>
+
+            <span class="progressLabel">
+                YOUR PROGRESS
+            </span>
+
+            <h2 id="xpLevel">
+                Beginner
+            </h2>
+
+        </div>
+
+        <div class="xpBadge">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <span id="xpTotal">
+                0 XP
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="xpProgressInfo">
+
+        <span id="xpCurrentText">
+            0 XP
+        </span>
+
+        <span id="xpNextText">
+            500 XP to next level
+        </span>
+
+    </div>
+
+
+    <div class="xpProgressBar">
+
+        <div
+            id="xpProgressFill"
+            class="xpProgressFill"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MILESTONES ================= -->
+
+<section class="milestoneSection">
+
+    <div
+        class="milestoneHeader milestoneToggle"
+        onclick="toggleMilestones()"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+    >
+
+        <div>
+
+            <span class="progressLabel">
+                ACHIEVEMENTS
+            </span>
+
+            <h2>
+                🏆 Your Milestones
+            </h2>
+
+            <p class="milestoneSummary">
+                Track your ExamVerse achievements and rewards.
+            </p>
+
+        </div>
+
+
+        <div class="milestoneHeaderRight">
+
+            <span
+                id="milestoneCount"
+                class="milestoneCount"
+            >
+                0 Unlocked
+            </span>
+
+
+            <button
+                type="button"
+                id="milestoneToggleBtn"
+                class="milestoneToggleBtn"
+                aria-label="Open milestones"
+            >
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="milestoneContent"
+        class="milestoneContent"
+    >
+
+        <div
+            id="milestoneGrid"
+            class="milestoneGrid"
+        >
+
+            <!-- Generated by dashboard.js -->
+
+        </div>
+
+    </div>
 
 </section>
 
 <!-- ================= Quick Action ================= -->
 
-<section class="quick">
+<section class="quickActionSection">
 
-<button id="takeTest">
+    <button id="takeTest">
 
-🚀 Take New Test 
+        🚀 Take New Test
 
-</button>
+    </button>
 
 </section>
 

@@ -159,6 +159,84 @@ async function loadDashboard() {
         ).textContent =
             profile.exam3 || "Not Selected";
 
+            // =====================================================
+// PREFERRED EXAM QUICK ACTIONS
+// =====================================================
+
+const preferredExamButtons =
+    document.querySelectorAll(
+        ".preferredExamBtn"
+    );
+
+
+preferredExamButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const slot =
+                    button.dataset.examSlot;
+
+                let selectedExamName = "";
+
+
+                if (slot === "1") {
+
+                    selectedExamName =
+                        profile.exam1;
+
+                }
+
+                else if (slot === "2") {
+
+                    selectedExamName =
+                        profile.exam2;
+
+                }
+
+                else if (slot === "3") {
+
+                    selectedExamName =
+                        profile.exam3;
+
+                }
+
+
+                if (
+                    !selectedExamName ||
+                    selectedExamName ===
+                    "Not Selected"
+                ) {
+
+                    alert(
+                        "This preferred exam is not available."
+                    );
+
+                    return;
+
+                }
+
+
+                // Save preferred exam
+                // for the exam-list page.
+
+                sessionStorage.setItem(
+                    "preferredExam",
+                    selectedExamName
+                );
+
+
+                window.location.href =
+                    "exam-list.html";
+
+            }
+        );
+
+    }
+);
+
 
         // ==========================================
         // LOAD COMPLETED ATTEMPTS
@@ -435,45 +513,338 @@ async function loadDashboard() {
 
 
             // ==========================================
-            // USER LEVEL
-            // ==========================================
+// XP + USER LEVEL + MILESTONES
+// ==========================================
 
-            let level =
-                "Beginner";
-
-
-            if (
-                totalTests >= 20 &&
-                averagePercentage >= 80
-            ) {
-
-                level = "Expert";
-
-            }
-
-            else if (
-                totalTests >= 10 &&
-                averagePercentage >= 65
-            ) {
-
-                level = "Advanced";
-
-            }
-
-            else if (
-                totalTests >= 5 &&
-                averagePercentage >= 50
-            ) {
-
-                level = "Intermediate";
-
-            }
+const achievementData =
+    calculateAchievements(
+        completedAttempts
+    );
 
 
-            document.getElementById(
-                "level"
-            ).textContent =
-                level;
+const userXP =
+    achievementData.totalXP;
+
+
+const userLevel =
+    getUserLevel(
+        userXP,
+        completedAttempts.length
+    );
+
+
+document.getElementById(
+    "level"
+).textContent =
+    userLevel.name;
+
+
+// ==========================================
+// XP DISPLAY
+// ==========================================
+
+const xpTotalElement =
+    document.getElementById(
+        "xpTotal"
+    );
+
+if (xpTotalElement) {
+
+    xpTotalElement.textContent =
+        userXP + " XP";
+
+}
+
+
+const xpLevelElement =
+    document.getElementById(
+        "xpLevel"
+    );
+
+if (xpLevelElement) {
+
+    xpLevelElement.textContent =
+        userLevel.name;
+
+}
+
+
+const xpCurrentText =
+    document.getElementById(
+        "xpCurrentText"
+    );
+
+if (xpCurrentText) {
+
+    xpCurrentText.textContent =
+        userXP + " XP";
+
+}
+
+
+const xpNextText =
+    document.getElementById(
+        "xpNextText"
+    );
+
+// ==========================================
+// NEXT LEVEL REQUIREMENT DISPLAY
+// ==========================================
+
+if (xpNextText) {
+
+    // ======================================
+    // MAXIMUM LEVEL
+    // ======================================
+
+    if (
+        userLevel.nextXP === null ||
+        userLevel.nextTests === null
+    ) {
+
+        xpNextText.textContent =
+            "👑 Maximum Level";
+
+    }
+
+    else {
+
+        const remainingXP =
+            Math.max(
+                0,
+                userLevel.nextXP -
+                userXP
+            );
+
+
+        const remainingTests =
+            Math.max(
+                0,
+                userLevel.nextTests -
+                completedAttempts.length
+            );
+
+
+        // ==================================
+        // BOTH REQUIREMENTS REMAIN
+        // ==================================
+
+        if (
+            remainingXP > 0 &&
+            remainingTests > 0
+        ) {
+
+            xpNextText.textContent =
+                remainingXP +
+                " XP • " +
+                remainingTests +
+                " tests to " +
+                userLevel.nextLevelName;
+
+        }
+
+
+        // ==================================
+        // ONLY XP REMAINS
+        // ==================================
+
+        else if (
+            remainingXP > 0 &&
+            remainingTests === 0
+        ) {
+
+            xpNextText.textContent =
+                remainingXP +
+                " XP to " +
+                userLevel.nextLevelName;
+
+        }
+
+
+        // ==================================
+        // ONLY TESTS REMAIN
+        // ==================================
+
+        else if (
+            remainingXP === 0 &&
+            remainingTests > 0
+        ) {
+
+            xpNextText.textContent =
+                remainingTests +
+                " tests to " +
+                userLevel.nextLevelName;
+
+        }
+
+
+        // ==================================
+        // EVERYTHING COMPLETE
+        // ==================================
+
+        else {
+
+            xpNextText.textContent =
+                "Ready for " +
+                userLevel.nextLevelName;
+
+        }
+
+    }
+
+}
+
+// ==========================================
+// XP PROGRESS BAR
+// ==========================================
+
+const xpProgressFill =
+    document.getElementById(
+        "xpProgressFill"
+    );
+
+// ==========================================
+// COMBINED LEVEL PROGRESS
+// XP + COMPLETED TESTS
+// ==========================================
+
+if (xpProgressFill) {
+
+    let progress = 100;
+
+
+    // ======================================
+    // LEGEND = MAXIMUM LEVEL
+    // ======================================
+
+    if (
+        userLevel.nextXP === null ||
+        userLevel.nextTests === null
+    ) {
+
+        progress = 100;
+
+    }
+
+    else {
+
+        // ==================================
+        // XP PROGRESS
+        // ==================================
+
+        const xpRange =
+            userLevel.nextXP -
+            userLevel.currentXP;
+
+
+        const xpEarned =
+            userXP -
+            userLevel.currentXP;
+
+
+        let xpProgress = 100;
+
+
+        if (xpRange > 0) {
+
+            xpProgress =
+                (
+                    xpEarned /
+                    xpRange
+                ) * 100;
+
+        }
+
+
+        xpProgress =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    xpProgress
+                )
+            );
+
+
+        // ==================================
+        // TEST PROGRESS
+        // ==================================
+
+        const testRange =
+            userLevel.nextTests -
+            userLevel.currentTests;
+
+
+        const testsEarned =
+            completedAttempts.length -
+            userLevel.currentTests;
+
+
+        let testProgress = 100;
+
+
+        if (testRange > 0) {
+
+            testProgress =
+                (
+                    testsEarned /
+                    testRange
+                ) * 100;
+
+        }
+
+
+        testProgress =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    testProgress
+                )
+            );
+
+
+        // ==================================
+        // COMBINE
+        //
+        // XP      = 70%
+        // TESTS   = 30%
+        // ==================================
+
+        progress =
+            (
+                xpProgress * 0.70
+            ) +
+            (
+                testProgress * 0.30
+            );
+
+
+        progress =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    progress
+                )
+            );
+
+    }
+
+
+    xpProgressFill.style.width =
+        progress + "%";
+
+}
+
+
+// ==========================================
+// MILESTONE DISPLAY
+// ==========================================
+
+renderMilestones(
+    achievementData.milestones
+);
 
 
             // ==========================================
@@ -883,6 +1254,1502 @@ function escapeHTML(
         );
 
 }
+
+// ==========================================
+// ACHIEVEMENT DEFINITIONS
+// ==========================================
+
+const ACHIEVEMENTS = [
+
+    // ======================================
+    // COMPLETED EXAMS
+    // ======================================
+
+    {
+        id: "tests_1",
+        icon: "📝",
+        title: "First Step",
+        description: "Complete your first exam.",
+        type: "tests",
+        target: 1,
+        xp: 50
+    },
+
+    {
+        id: "tests_5",
+        icon: "📚",
+        title: "Getting Started",
+        description: "Complete 5 exams.",
+        type: "tests",
+        target: 5,
+        xp: 100
+    },
+
+    {
+        id: "tests_10",
+        icon: "🔥",
+        title: "Test Runner",
+        description: "Complete 10 exams.",
+        type: "tests",
+        target: 10,
+        xp: 250
+    },
+
+    {
+        id: "tests_25",
+        icon: "🚀",
+        title: "Dedicated Learner",
+        description: "Complete 25 exams.",
+        type: "tests",
+        target: 25,
+        xp: 500
+    },
+
+    {
+        id: "tests_50",
+        icon: "🏅",
+        title: "Test Warrior",
+        description: "Complete 50 exams.",
+        type: "tests",
+        target: 50,
+        xp: 1000
+    },
+
+    {
+        id: "tests_100",
+        icon: "🏆",
+        title: "Century",
+        description: "Complete 100 exams.",
+        type: "tests",
+        target: 100,
+        xp: 2000
+    },
+
+    {
+        id: "tests_250",
+        icon: "💎",
+        title: "Elite Grinder",
+        description: "Complete 250 exams.",
+        type: "tests",
+        target: 250,
+        xp: 4000
+    },
+
+    {
+        id: "tests_500",
+        icon: "👑",
+        title: "Exam Master",
+        description: "Complete 500 exams.",
+        type: "tests",
+        target: 500,
+        xp: 6000
+    },
+
+    {
+        id: "tests_1000",
+        icon: "🌟",
+        title: "1000 Club",
+        description: "Complete 1,000 exams.",
+        type: "tests",
+        target: 1000,
+        xp: 10000
+    },
+
+    {
+        id: "tests_2500",
+        icon: "🔥",
+        title: "Legendary Grinder",
+        description: "Complete 2,500 exams.",
+        type: "tests",
+        target: 2500,
+        xp: 15000
+    },
+
+    {
+        id: "tests_5000",
+        icon: "💫",
+        title: "Ultimate Grinder",
+        description: "Complete 5,000 exams.",
+        type: "tests",
+        target: 5000,
+        xp: 25000
+    },
+
+    {
+        id: "tests_10000",
+        icon: "👑",
+        title: "ExamVerse Legend",
+        description: "Complete 10,000 exams.",
+        type: "tests",
+        target: 10000,
+        xp: 50000
+    },
+
+
+    // ======================================
+    // PASSES
+    // ======================================
+
+    {
+        id: "passes_1",
+        icon: "🎯",
+        title: "First Pass",
+        description: "Pass your first exam.",
+        type: "passes",
+        target: 1,
+        xp: 100
+    },
+
+    {
+        id: "passes_5",
+        icon: "⭐",
+        title: "Pass Collector",
+        description: "Pass 5 exams.",
+        type: "passes",
+        target: 5,
+        xp: 250
+    },
+
+    {
+        id: "passes_10",
+        icon: "🔥",
+        title: "Pass Champion",
+        description: "Pass 10 exams.",
+        type: "passes",
+        target: 10,
+        xp: 500
+    },
+
+    {
+        id: "passes_25",
+        icon: "🏆",
+        title: "Reliable Performer",
+        description: "Pass 25 exams.",
+        type: "passes",
+        target: 25,
+        xp: 1000
+    },
+
+    {
+        id: "passes_50",
+        icon: "💎",
+        title: "Pass Master",
+        description: "Pass 50 exams.",
+        type: "passes",
+        target: 50,
+        xp: 2500
+    },
+
+    {
+        id: "passes_100",
+        icon: "👑",
+        title: "100 Pass Club",
+        description: "Pass 100 exams.",
+        type: "passes",
+        target: 100,
+        xp: 5000
+    },
+
+    {
+        id: "passes_500",
+        icon: "🌟",
+        title: "Grand Champion",
+        description: "Pass 500 exams.",
+        type: "passes",
+        target: 500,
+        xp: 15000
+    },
+
+    {
+        id: "passes_1000",
+        icon: "👑",
+        title: "Legendary Passer",
+        description: "Pass 1,000 exams.",
+        type: "passes",
+        target: 1000,
+        xp: 30000
+    },
+
+
+    // ======================================
+    // PERFORMANCE
+    // ======================================
+
+    {
+        id: "score_50",
+        icon: "🎯",
+        title: "First Step",
+        description: "Score 50% or higher.",
+        type: "score",
+        target: 50,
+        xp: 50
+    },
+
+    {
+        id: "score_60",
+        icon: "⭐",
+        title: "Good Performer",
+        description: "Score 60% or higher.",
+        type: "score",
+        target: 60,
+        xp: 100
+    },
+
+    {
+        id: "score_70",
+        icon: "🔥",
+        title: "Strong Performer",
+        description: "Score 70% or higher.",
+        type: "score",
+        target: 70,
+        xp: 150
+    },
+
+    {
+        id: "score_80",
+        icon: "💎",
+        title: "Excellent",
+        description: "Score 80% or higher.",
+        type: "score",
+        target: 80,
+        xp: 250
+    },
+
+    {
+        id: "score_90",
+        icon: "🏆",
+        title: "Elite",
+        description: "Score 90% or higher.",
+        type: "score",
+        target: 90,
+        xp: 500
+    },
+
+    {
+        id: "score_95",
+        icon: "👑",
+        title: "Master",
+        description: "Score 95% or higher.",
+        type: "score",
+        target: 95,
+        xp: 1000
+    },
+
+    {
+        id: "score_100",
+        icon: "💯",
+        title: "Perfect Score",
+        description: "Achieve 100%.",
+        type: "score",
+        target: 100,
+        xp: 2000
+    },
+
+
+    // ======================================
+    // IMPROVEMENT
+    // ======================================
+
+    {
+        id: "comeback_1",
+        icon: "🔥",
+        title: "Comeback",
+        description: "Improve your score by 10+ points.",
+        type: "comeback",
+        target: 1,
+        xp: 100
+    },
+
+    {
+        id: "comeback_5",
+        icon: "🚀",
+        title: "Comeback Champion",
+        description: "Achieve 5 major improvements.",
+        type: "comeback",
+        target: 5,
+        xp: 500
+    },
+
+    {
+        id: "comeback_10",
+        icon: "👑",
+        title: "Comeback King",
+        description: "Achieve 10 major improvements.",
+        type: "comeback",
+        target: 10,
+        xp: 1500
+    },
+
+    {
+        id: "perfect_1",
+        icon: "💯",
+        title: "Perfect Beginning",
+        description: "Achieve 100% once.",
+        type: "perfect",
+        target: 1,
+        xp: 200
+    },
+
+    {
+        id: "perfect_5",
+        icon: "💯",
+        title: "Perfect Performer",
+        description: "Achieve 100% five times.",
+        type: "perfect",
+        target: 5,
+        xp: 750
+    },
+
+    {
+        id: "perfect_10",
+        icon: "💎",
+        title: "Perfect Master",
+        description: "Achieve 100% ten times.",
+        type: "perfect",
+        target: 10,
+        xp: 2000
+    },
+
+
+    // ======================================
+    // HIGH SCORE COUNT
+    // ======================================
+
+    {
+        id: "elite_5",
+        icon: "⭐",
+        title: "Elite Five",
+        description: "Score 90%+ in 5 exams.",
+        type: "elite",
+        target: 5,
+        xp: 500
+    },
+
+    {
+        id: "elite_10",
+        icon: "🏆",
+        title: "Elite Ten",
+        description: "Score 90%+ in 10 exams.",
+        type: "elite",
+        target: 10,
+        xp: 1500
+    },
+
+    {
+        id: "elite_25",
+        icon: "👑",
+        title: "Elite Performer",
+        description: "Score 90%+ in 25 exams.",
+        type: "elite",
+        target: 25,
+        xp: 4000
+    },
+
+
+    // ======================================
+    // EXCELLENT SCORE COUNT
+    // ======================================
+
+    {
+        id: "excellent_10",
+        icon: "💎",
+        title: "Excellent Ten",
+        description: "Score 80%+ in 10 exams.",
+        type: "excellent",
+        target: 10,
+        xp: 750
+    },
+
+    {
+        id: "excellent_25",
+        icon: "🔥",
+        title: "Excellent Performer",
+        description: "Score 80%+ in 25 exams.",
+        type: "excellent",
+        target: 25,
+        xp: 2000
+    },
+
+    {
+        id: "excellent_50",
+        icon: "👑",
+        title: "Excellence Master",
+        description: "Score 80%+ in 50 exams.",
+        type: "excellent",
+        target: 50,
+        xp: 5000
+    },
+
+
+    // ======================================
+    // ACCURACY
+    // ======================================
+
+    {
+        id: "accuracy_90",
+        icon: "🎯",
+        title: "Sharp Shooter",
+        description: "Achieve 90% accuracy.",
+        type: "accuracy",
+        target: 90,
+        xp: 500
+    },
+
+    {
+        id: "accuracy_95",
+        icon: "🎯",
+        title: "Precision Expert",
+        description: "Achieve 95% accuracy.",
+        type: "accuracy",
+        target: 95,
+        xp: 1000
+    },
+
+
+    // ======================================
+    // ATTEMPTED QUESTIONS
+    // ======================================
+
+    {
+        id: "questions_100",
+        icon: "📝",
+        title: "Question Explorer",
+        description: "Attempt 100 questions.",
+        type: "questions",
+        target: 100,
+        xp: 100
+    },
+
+    {
+        id: "questions_500",
+        icon: "📚",
+        title: "Question Hunter",
+        description: "Attempt 500 questions.",
+        type: "questions",
+        target: 500,
+        xp: 500
+    },
+
+    {
+        id: "questions_1000",
+        icon: "🔥",
+        title: "Question Warrior",
+        description: "Attempt 1,000 questions.",
+        type: "questions",
+        target: 1000,
+        xp: 1500
+    },
+
+    {
+        id: "questions_5000",
+        icon: "💎",
+        title: "Question Master",
+        description: "Attempt 5,000 questions.",
+        type: "questions",
+        target: 5000,
+        xp: 5000
+    },
+
+    {
+        id: "questions_10000",
+        icon: "👑",
+        title: "Question Legend",
+        description: "Attempt 10,000 questions.",
+        type: "questions",
+        target: 10000,
+        xp: 15000
+    },
+
+
+    // ======================================
+    // CONSISTENCY
+    // ======================================
+
+    {
+        id: "consistent_5",
+        icon: "🔥",
+        title: "Consistent Learner",
+        description: "Complete 5 exams with 60%+.",
+        type: "consistent",
+        target: 5,
+        xp: 250
+    },
+
+    {
+        id: "consistent_10",
+        icon: "🚀",
+        title: "Consistent Performer",
+        description: "Complete 10 exams with 60%+.",
+        type: "consistent",
+        target: 10,
+        xp: 750
+    },
+
+    {
+        id: "consistent_25",
+        icon: "🏆",
+        title: "Consistency Champion",
+        description: "Complete 25 exams with 60%+.",
+        type: "consistent",
+        target: 25,
+        xp: 2500
+    },
+
+];
+
+// ==========================================
+// CALCULATE ACHIEVEMENTS
+// ==========================================
+
+function calculateAchievements(
+    attempts
+) {
+
+    const completed =
+        [...attempts]
+
+            .filter(
+                attempt =>
+                    attempt.status ===
+                    "Completed"
+            )
+
+            .sort(
+                (
+                    a,
+                    b
+                ) =>
+                    new Date(
+                        a.submitted_at || 0
+                    ) -
+                    new Date(
+                        b.submitted_at || 0
+                    )
+            );
+
+
+    const totalTests =
+        completed.length;
+
+
+    // ==========================================
+    // PASS COUNT
+    //
+    // ExamVerse default pass percentage = 40%
+    // ==========================================
+
+    const PASS_PERCENTAGE = 40;
+
+
+    const passes =
+        completed.filter(
+            attempt =>
+                (
+                    Number(
+                        attempt.percentage
+                    ) || 0
+                ) >=
+                PASS_PERCENTAGE
+        ).length;
+
+
+    // ==========================================
+    // BEST SCORE
+    // ==========================================
+
+    const bestScore =
+        completed.length > 0
+
+        ?
+
+        Math.max(
+            ...completed.map(
+                attempt =>
+                    Number(
+                        attempt.percentage
+                    ) || 0
+            )
+        )
+
+        :
+
+        0;
+
+
+    // ==========================================
+    // COMEBACKS
+    // Improvement >= 10 percentage points
+    // ==========================================
+
+    let comebacks = 0;
+
+
+    for (
+        let i = 1;
+        i < completed.length;
+        i++
+    ) {
+
+        const previousScore =
+            Number(
+                completed[
+                    i - 1
+                ].percentage
+            ) || 0;
+
+
+        const currentScore =
+            Number(
+                completed[
+                    i
+                ].percentage
+            ) || 0;
+
+
+        if (
+            currentScore -
+            previousScore >=
+            10
+        ) {
+
+            comebacks++;
+
+        }
+
+    }
+
+
+    // ==========================================
+    // ACHIEVEMENT VALUES
+    // ==========================================
+
+    // ==========================================
+// ADDITIONAL ACHIEVEMENT STATISTICS
+// ==========================================
+
+const perfectScores =
+    completed.filter(
+        attempt =>
+            (
+                Number(
+                    attempt.percentage
+                ) || 0
+            ) >= 100
+    ).length;
+
+
+const eliteScores =
+    completed.filter(
+        attempt =>
+            (
+                Number(
+                    attempt.percentage
+                ) || 0
+            ) >= 90
+    ).length;
+
+
+const excellentScores =
+    completed.filter(
+        attempt =>
+            (
+                Number(
+                    attempt.percentage
+                ) || 0
+            ) >= 80
+    ).length;
+
+
+// ==========================================
+// ACCURACY
+// ==========================================
+
+const totalCorrect =
+    completed.reduce(
+        (
+            total,
+            attempt
+        ) =>
+            total +
+            (
+                Number(
+                    attempt.correct
+                ) || 0
+            ),
+        0
+    );
+
+
+const totalAttempted =
+    completed.reduce(
+        (
+            total,
+            attempt
+        ) =>
+            total +
+            (
+                Number(
+                    attempt.attempted
+                ) || 0
+            ),
+        0
+    );
+
+
+const overallAccuracy =
+    totalAttempted > 0
+
+        ?
+
+        (
+            totalCorrect /
+            totalAttempted
+        ) * 100
+
+        :
+
+        0;
+
+
+// ==========================================
+// ATTEMPTED QUESTIONS
+// ==========================================
+
+const totalQuestionsAttempted =
+    totalAttempted;
+
+
+// ==========================================
+// CONSISTENT PERFORMANCE
+// ==========================================
+
+const consistentExams =
+    completed.filter(
+        attempt =>
+            (
+                Number(
+                    attempt.percentage
+                ) || 0
+            ) >= 60
+    ).length;
+
+
+// ==========================================
+// ACHIEVEMENT VALUES
+// ==========================================
+
+const values = {
+
+    tests:
+        totalTests,
+
+    passes:
+        passes,
+
+    score:
+        bestScore,
+
+    comeback:
+        comebacks,
+
+    perfect:
+        perfectScores,
+
+    elite:
+        eliteScores,
+
+    excellent:
+        excellentScores,
+
+    accuracy:
+        overallAccuracy,
+
+    questions:
+        totalQuestionsAttempted,
+
+    consistent:
+        consistentExams
+
+};
+
+
+    // ==========================================
+    // DETERMINE UNLOCKED
+    // ==========================================
+
+    const milestones =
+        ACHIEVEMENTS.map(
+            achievement => {
+
+                const current =
+                    values[
+                        achievement.type
+                    ] || 0;
+
+
+                const unlocked =
+                    current >=
+                    achievement.target;
+
+
+                const progress =
+                    Math.min(
+                        100,
+
+                        (
+                            current /
+                            achievement.target
+                        ) * 100
+                    );
+
+
+                return {
+
+                    ...achievement,
+
+                    current:
+                        current,
+
+                    unlocked:
+                        unlocked,
+
+                    progress:
+                        progress
+
+                };
+
+            }
+        );
+
+
+    // ==========================================
+    // TOTAL XP
+    // ==========================================
+
+    const totalXP =
+        milestones.reduce(
+
+            (
+                total,
+                milestone
+            ) => {
+
+                return total +
+                    (
+                        milestone.unlocked
+                            ? milestone.xp
+                            : 0
+                    );
+
+            },
+
+            0
+
+        );
+
+
+    return {
+
+        totalXP:
+            totalXP,
+
+        milestones:
+            milestones,
+
+        totalTests:
+            totalTests,
+
+        passes:
+            passes,
+
+        bestScore:
+            bestScore,
+
+        comebacks:
+            comebacks
+
+    };
+
+}
+
+// ==========================================
+// USER LEVEL
+// BASED ON XP + COMPLETED TESTS
+// ==========================================
+
+function getUserLevel(
+    xp,
+    completedTests
+) {
+
+    const levels = [
+
+        {
+            name: "Beginner",
+            minXP: 0,
+            minTests: 0,
+            maxXP: 500,
+            maxTests: 5
+        },
+
+        {
+            name: "Intermediate",
+            minXP: 500,
+            minTests: 5,
+            maxXP: 1500,
+            maxTests: 15
+        },
+
+        {
+            name: "Advanced",
+            minXP: 1500,
+            minTests: 15,
+            maxXP: 4000,
+            maxTests: 40
+        },
+
+        {
+            name: "Expert",
+            minXP: 4000,
+            minTests: 40,
+            maxXP: 8000,
+            maxTests: 100
+        },
+
+        {
+            name: "Master",
+            minXP: 8000,
+            minTests: 100,
+            maxXP: 15000,
+            maxTests: 250
+        },
+
+        {
+            name: "Legend",
+            minXP: 15000,
+            minTests: 250,
+            maxXP: null,
+            maxTests: null
+        }
+
+    ];
+
+
+    let currentLevel =
+        levels[0];
+
+
+    // ======================================
+    // FIND HIGHEST LEVEL WHERE
+    // BOTH REQUIREMENTS ARE MET
+    // ======================================
+
+    for (
+        const level of levels
+    ) {
+
+        const xpRequirementMet =
+            xp >= level.minXP;
+
+
+        const testRequirementMet =
+            completedTests >=
+            level.minTests;
+
+
+        if (
+            xpRequirementMet &&
+            testRequirementMet
+        ) {
+
+            currentLevel =
+                level;
+
+        }
+
+    }
+
+
+    // ======================================
+    // NEXT LEVEL
+    // ======================================
+
+    const currentIndex =
+        levels.indexOf(
+            currentLevel
+        );
+
+
+    const nextLevel =
+        levels[
+            currentIndex + 1
+        ] || null;
+
+
+    return {
+
+        name:
+            currentLevel.name,
+
+        currentXP:
+            currentLevel.minXP,
+
+        currentTests:
+            currentLevel.minTests,
+
+        nextXP:
+            nextLevel
+                ? nextLevel.minXP
+                : null,
+
+        nextTests:
+            nextLevel
+                ? nextLevel.minTests
+                : null,
+
+        nextLevelName:
+            nextLevel
+                ? nextLevel.name
+                : null
+
+    };
+
+}
+
+// ==========================================
+// RENDER ORGANIZED MILESTONES
+// ==========================================
+
+function renderMilestones(
+    milestones
+) {
+
+    const grid =
+        document.getElementById(
+            "milestoneGrid"
+        );
+
+
+    const count =
+        document.getElementById(
+            "milestoneCount"
+        );
+
+
+    if (!grid) return;
+
+
+    // ======================================
+    // UNLOCKED COUNT
+    // ======================================
+
+    const unlockedCount =
+        milestones.filter(
+            milestone =>
+                milestone.unlocked
+        ).length;
+
+
+    if (count) {
+
+        count.textContent =
+            unlockedCount +
+            " Unlocked";
+
+    }
+
+
+    // ======================================
+    // CATEGORY DEFINITIONS
+    // ======================================
+
+    const categories = [
+
+        {
+            key: "tests",
+            icon: "📝",
+            title: "Exam Completion",
+            description:
+                "Complete more examinations to unlock new achievements."
+        },
+
+        {
+            key: "passes",
+            icon: "🎯",
+            title: "Passing",
+            description:
+                "Build your collection of successful examinations."
+        },
+
+        {
+            key: "performance",
+            icon: "💎",
+            title: "Performance",
+            description:
+                "Improve your scores and become an elite performer."
+        },
+
+        {
+            key: "questions",
+            icon: "📚",
+            title: "Question Mastery",
+            description:
+                "Keep practicing and conquer more questions."
+        },
+
+        {
+            key: "improvement",
+            icon: "🔥",
+            title: "Improvement & Consistency",
+            description:
+                "Rewarding progress, comebacks and consistent performance."
+        }
+
+    ];
+
+
+    // ======================================
+    // MAP ACHIEVEMENT TYPES TO CATEGORIES
+    // ======================================
+
+    const categoryMap = {
+
+        tests:
+            "tests",
+
+        passes:
+            "passes",
+
+        score:
+            "performance",
+
+        perfect:
+            "performance",
+
+        elite:
+            "performance",
+
+        excellent:
+            "performance",
+
+        accuracy:
+            "performance",
+
+        questions:
+            "questions",
+
+        comeback:
+            "improvement",
+
+        consistent:
+            "improvement"
+
+    };
+
+
+    // ======================================
+    // BUILD HTML
+    // ======================================
+
+    let html = "";
+
+
+    categories.forEach(
+        category => {
+
+            const categoryMilestones =
+                milestones.filter(
+                    milestone =>
+                        categoryMap[
+                            milestone.type
+                        ] ===
+                        category.key
+                );
+
+
+            // No achievements in this category
+            if (
+                categoryMilestones.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            const categoryUnlocked =
+                categoryMilestones.filter(
+                    milestone =>
+                        milestone.unlocked
+                ).length;
+
+
+            html += `
+
+                <div
+                    class="milestoneCategory"
+                >
+
+                    <div
+                        class="milestoneCategoryHeader"
+                    >
+
+                        <div
+                            class="milestoneCategoryTitle"
+                        >
+
+                            <span
+                                class="milestoneCategoryIcon"
+                            >
+                                ${
+                                    category.icon
+                                }
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    ${
+                                        category.title
+                                    }
+                                </h3>
+
+                                <p>
+                                    ${
+                                        category.description
+                                    }
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="milestoneCategoryCount"
+                        >
+                            ${
+                                categoryUnlocked
+                            } /
+                            ${
+                                categoryMilestones.length
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="milestoneCategoryGrid"
+                    >
+
+            `;
+
+
+            categoryMilestones.forEach(
+                milestone => {
+
+                    const progress =
+                        Math.min(
+                            100,
+                            Math.max(
+                                0,
+                                milestone.progress
+                            )
+                        );
+
+
+                    const current =
+                        Math.min(
+                            milestone.current,
+                            milestone.target
+                        );
+
+
+                    html += `
+
+                        <div
+                            class="
+                                milestoneCard
+                                ${
+                                    milestone.unlocked
+                                        ? "unlocked"
+                                        : "locked"
+                                }
+                            "
+                        >
+
+                            <div
+                                class="milestoneIcon"
+                            >
+                                ${
+                                    milestone.unlocked
+                                        ? milestone.icon
+                                        : "🔒"
+                                }
+                            </div>
+
+
+                            <div
+                                class="milestoneTitle"
+                            >
+                                ${
+                                    escapeHTML(
+                                        milestone.title
+                                    )
+                                }
+                            </div>
+
+
+                            <div
+                                class="milestoneDescription"
+                            >
+                                ${
+                                    escapeHTML(
+                                        milestone.description
+                                    )
+                                }
+                            </div>
+
+
+                            <div
+                                class="milestoneProgressText"
+                            >
+
+                                ${
+                                    current
+                                }
+                                /
+                                ${
+                                    milestone.target
+                                }
+
+                            </div>
+
+
+                            <div
+                                class="milestoneMiniBar"
+                            >
+
+                                <div
+                                    class="milestoneMiniFill"
+                                    style="
+                                        width:
+                                        ${progress}%;
+                                    "
+                                ></div>
+
+                            </div>
+
+
+                            <div
+                                class="milestoneXP"
+                            >
+
+                                ${
+                                    milestone.unlocked
+
+                                        ? "✓ Unlocked"
+
+                                        : "+" +
+                                          milestone.xp +
+                                          " XP"
+
+                                }
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            html += `
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    grid.innerHTML =
+        html;
+
+}
+
+// ==========================================
+// TOGGLE MILESTONES
+// ==========================================
+
+function toggleMilestones() {
+
+    const section =
+        document.querySelector(
+            ".milestoneSection"
+        );
+
+
+    const toggle =
+        document.querySelector(
+            ".milestoneToggle"
+        );
+
+
+    if (!section) return;
+
+
+    const expanded =
+        section.classList.toggle(
+            "expanded"
+        );
+
+
+    if (toggle) {
+
+        toggle.setAttribute(
+            "aria-expanded",
+            expanded
+                ? "true"
+                : "false"
+        );
+
+    }
+
+}
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        const toggle =
+            event.target.closest(
+                ".milestoneToggle"
+            );
+
+
+        if (!toggle) return;
+
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+
+            event.preventDefault();
+
+            toggleMilestones();
+
+        }
+
+    }
+);
 
 
 // ==========================================
