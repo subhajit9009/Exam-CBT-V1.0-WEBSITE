@@ -21,30 +21,82 @@ async function loadResult() {
 
 
         // ==========================================
-        // Get Attempt ID
-        // ==========================================
+// GET RESULT ATTEMPT ID
+// ==========================================
 
-        const attemptId =
-            sessionStorage.getItem(
-                "attemptId"
-            );
-
-
-        if (!attemptId) {
-
-            alert(
-                "Result attempt not found."
-            );
+// First check the normal attempt key
+let attemptId =
+    sessionStorage.getItem(
+        "attemptId"
+    );
 
 
-            window.location.replace(
-                "exam-list.html"
-            );
+// If it is not available,
+// check the dedicated result key
+if (!attemptId) {
+
+    attemptId =
+        sessionStorage.getItem(
+            "resultAttemptId"
+        );
+
+}
 
 
-            return;
+// Final fallback:
+// persistent browser storage
+if (!attemptId) {
 
-        }
+    attemptId =
+        localStorage.getItem(
+            "examVerseResultAttemptId"
+        );
+
+}
+
+
+// ==========================================
+// NO RESULT ATTEMPT
+// ==========================================
+
+if (!attemptId) {
+
+    console.warn(
+        "No result attempt found."
+    );
+
+
+    alert(
+        "Result attempt not found."
+    );
+
+
+    // Go back to Dashboard,
+    // not Exam List.
+    window.location.replace(
+        "dashboard.html"
+    );
+
+
+    return;
+
+}
+
+
+// ==========================================
+// SAVE RESULT ATTEMPT
+// ==========================================
+
+sessionStorage.setItem(
+    "resultAttemptId",
+    String(attemptId)
+);
+
+
+localStorage.setItem(
+    "examVerseResultAttemptId",
+    String(attemptId)
+);
 
 
         // ==========================================
@@ -1306,50 +1358,61 @@ renderQuestionAnalysis(
 
 
         // ==========================================
-        // Dashboard Button
-        // ==========================================
+// Dashboard Button
+// ==========================================
 
-        const dashboardBtn =
-            document.getElementById(
-                "dashboardBtn"
+const dashboardBtn =
+    document.getElementById("dashboardBtn");
+
+if (dashboardBtn) {
+
+    dashboardBtn.addEventListener(
+        "click",
+        function () {
+
+            // ======================================
+            // CLEAR ONLY ACTIVE EXAM STATE
+            // ======================================
+
+            sessionStorage.removeItem(
+                "attemptId"
             );
 
-
-        if (dashboardBtn) {
-
-            dashboardBtn.addEventListener(
-                "click",
-                () => {
-
-
-                    sessionStorage.removeItem(
-                        "attemptId"
-                    );
-
-
-                    sessionStorage.removeItem(
-                        "examStartTime"
-                    );
-
-
-                    sessionStorage.removeItem(
-                        "examSubmitted"
-                    );
-
-
-                    sessionStorage.removeItem(
-                        "examResult"
-                    );
-
-
-                    window.location.replace(
-                        "dashboard.html"
-                    );
-
-                }
+            sessionStorage.removeItem(
+                "examStartTime"
             );
+
+            sessionStorage.removeItem(
+                "examSubmitted"
+            );
+
+            sessionStorage.removeItem(
+                "examResult"
+            );
+
+            // ======================================
+            // KEEP RESULT HISTORY
+            // ======================================
+            //
+            // DO NOT REMOVE:
+            //
+            // resultAttemptId
+            // examVerseResultAttemptId
+            //
+            // These identify the completed result.
+            //
+
+            // ======================================
+            // OPEN DASHBOARD
+            // ======================================
+
+            window.location.href =
+                "dashboard.html";
 
         }
+    );
+
+}
 
 // ==========================================
 // Setup Result Page Controls

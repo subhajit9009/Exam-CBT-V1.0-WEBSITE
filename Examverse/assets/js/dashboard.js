@@ -1226,48 +1226,113 @@ async function loadRecentTests(
 
                 history.innerHTML += `
 
-                    <tr>
+    <tr
+        class="recentTestRow"
+        data-attempt-id="${attempt.id}"
+        title="View Result"
+    >
 
-                        <td>
-                            ${date}
-                        </td>
+        <td>
+            ${date}
+        </td>
 
-                        <td>
-                            ${escapeHTML(
-                                examName
-                            )}
-                        </td>
+        <td>
+            ${escapeHTML(
+                examName
+            )}
+        </td>
 
-                                                <td>
-                            ${actualScore
-                                .toFixed(2)
-                                .replace(
-                                    /\.00$/,
-                                    ""
-                                )
-                            }
-                            /
-                            ${totalMarks}
-                        </td>
+        <td>
+            ${actualScore
+                .toFixed(2)
+                .replace(
+                    /\.00$/,
+                    ""
+                )
+            }
+            /
+            ${totalMarks}
+        </td>
 
-                        <td>
-                            ${accuracy
-                                .toFixed(2)
-                                .replace(
-                                    /\.00$/,
-                                    ""
-                                )
-                            }%
-                        </td>
+        <td>
+            ${accuracy
+                .toFixed(2)
+                .replace(
+                    /\.00$/,
+                    ""
+                )
+            }%
+        </td>
 
-                    </tr>
+    </tr>
 
-                `;
-
+`;
             }
         );
 
 }
+
+// ==========================================
+// OPEN RECENT TEST RESULT
+// ==========================================
+
+document
+    .getElementById("history")
+    .addEventListener(
+        "click",
+        function (event) {
+
+            const row =
+                event.target.closest(
+                    ".recentTestRow"
+                );
+
+
+            if (!row) {
+                return;
+            }
+
+
+            const attemptId =
+                row.dataset.attemptId;
+
+
+            if (!attemptId) {
+
+                console.warn(
+                    "No attempt ID found for result."
+                );
+
+                return;
+
+            }
+
+
+            // ======================================
+            // SAVE RESULT ATTEMPT
+            // ======================================
+
+            sessionStorage.setItem(
+                "resultAttemptId",
+                String(attemptId)
+            );
+
+
+            localStorage.setItem(
+                "examVerseResultAttemptId",
+                String(attemptId)
+            );
+
+
+            // ======================================
+            // OPEN RESULT PAGE
+            // ======================================
+
+            window.location.href =
+                "result.html";
+
+        }
+    );
 
 
 // ==========================================
