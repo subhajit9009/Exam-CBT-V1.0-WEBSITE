@@ -1056,7 +1056,7 @@ async function loadRecentTests(
         examIds.length > 0
     ) {
 
-        const {
+                const {
             data: exams,
             error
         } =
@@ -1065,14 +1065,13 @@ async function loadRecentTests(
             .from("exams")
 
             .select(
-                "id, exam_name"
+                "id, exam_name, total_marks"
             )
 
             .in(
                 "id",
                 examIds
             );
-
 
         if (error) {
 
@@ -1083,7 +1082,7 @@ async function loadRecentTests(
 
         }
 
-        else {
+                else {
 
             (
                 exams || []
@@ -1092,7 +1091,15 @@ async function loadRecentTests(
 
                     examMap.set(
                         exam.id,
-                        exam.exam_name
+                        {
+                            name:
+                                exam.exam_name,
+
+                            totalMarks:
+                                Number(
+                                    exam.total_marks
+                                ) || 0
+                        }
                     );
 
                 }
@@ -1120,38 +1127,70 @@ async function loadRecentTests(
         .forEach(
             attempt => {
 
-                const examName =
+                                // ==========================================
+                // EXAM INFORMATION
+                // ==========================================
+
+                const examInfo =
                     examMap.get(
                         attempt.exam_id
-                    ) ||
-                    "Unknown Exam";
+                    ) || {
+
+                        name:
+                            "Unknown Exam",
+
+                        totalMarks:
+                            0
+                    };
 
 
-                const percentage =
+                const examName =
+                    examInfo.name;
+
+
+                // ==========================================
+                // ACTUAL SCORE
+                // ==========================================
+
+                const actualScore =
                     Number(
-                        attempt.percentage
+                        attempt.score
+                    ) || 0;
+
+
+                const totalMarks =
+                    Number(
+                        examInfo.totalMarks
+                    ) || 0;
+
+
+                // ==========================================
+                // OVERALL ACCURACY
+                //
+                // Correct answers /
+                // Total attempted questions
+                // ==========================================
+
+                const attemptedQuestions =
+                    Number(
+                        attempt.attempted
+                    ) || 0;
+
+
+                const correctAnswers =
+                    Number(
+                        attempt.correct
                     ) || 0;
 
 
                 const accuracy =
-                    (
-                        Number(
-                            attempt.attempted
-                        ) > 0
-                    )
+                    attemptedQuestions > 0
 
                     ?
 
                     (
-                        (
-                            Number(
-                                attempt.correct
-                            ) || 0
-                        ) /
-
-                        Number(
-                            attempt.attempted
-                        )
+                        correctAnswers /
+                        attemptedQuestions
                     ) * 100
 
                     :
@@ -1199,14 +1238,16 @@ async function loadRecentTests(
                             )}
                         </td>
 
-                        <td>
-                            ${percentage
+                                                <td>
+                            ${actualScore
                                 .toFixed(2)
                                 .replace(
                                     /\.00$/,
                                     ""
                                 )
-                            }%
+                            }
+                            /
+                            ${totalMarks}
                         </td>
 
                         <td>
