@@ -79,14 +79,12 @@ if (error) {
 }
 
 // ==========================================
-// PREFERRED EXAMS
+// SELECTED PREFERRED EXAM
 // ==========================================
 
-const preferredExams =
-    JSON.parse(
-        sessionStorage.getItem(
-            "preferredExams"
-        ) || "[]"
+const selectedPreferredExam =
+    sessionStorage.getItem(
+        "selectedPreferredExam"
     );
 
     if (error) {
@@ -207,61 +205,69 @@ let filtered =
 
 
 // ==========================================
-// PREFERRED EXAMS PRIORITY
+// FILTER BY SELECTED PREFERRED EXAM
 // ==========================================
 
 if (
-    preferredExams.length > 0 &&
+    selectedPreferredExam &&
     search.trim() === ""
 ) {
 
-    const preferredMatches = [];
-
-    const otherExams = [];
-
-
-    filtered.forEach(
-        exam => {
-
-            const isPreferred =
-                preferredExams.some(
-                    preferred =>
-                        exam.exam_name
-                            .trim()
-                            .toLowerCase() ===
-                        preferred
-                            .trim()
-                            .toLowerCase()
-                );
+    const preferredName =
+        selectedPreferredExam
+            .trim()
+            .toLowerCase();
 
 
-            if (isPreferred) {
+    filtered =
+        filtered.filter(
+            exam => {
 
-                preferredMatches.push(
-                    exam
-                );
+                const examName =
+                    exam.exam_name
+                        .trim()
+                        .toLowerCase();
+
+
+                // ==================================
+                // EXACT MATCH
+                // ==================================
+
+                if (
+                    examName ===
+                    preferredName
+                ) {
+
+                    return true;
+
+                }
+
+
+                // ==================================
+                // RELATED EXAM MATCH
+                //
+                // Example:
+                // SSC CGL
+                // SSC CGL (01)
+                // SSC CGL (02)
+                // SSC CGL Mock Test
+                // ==================================
+
+                if (
+                    examName.startsWith(
+                        preferredName
+                    )
+                ) {
+
+                    return true;
+
+                }
+
+
+                return false;
 
             }
-
-            else {
-
-                otherExams.push(
-                    exam
-                );
-
-            }
-
-        }
-    );
-
-
-    filtered = [
-
-        ...preferredMatches,
-
-        ...otherExams
-
-    ];
+        );
 
 }
 
@@ -304,15 +310,15 @@ const completed =
     ${exam.exam_name}
 
     ${
-    preferredExams.some(
-        preferred =>
-            exam.exam_name
-                .trim()
-                .toLowerCase() ===
-            preferred
+    selectedPreferredExam &&
+    exam.exam_name
+        .trim()
+        .toLowerCase()
+        .startsWith(
+            selectedPreferredExam
                 .trim()
                 .toLowerCase()
-    )
+        )
 
     ? `
         <span class="preferredBadge">

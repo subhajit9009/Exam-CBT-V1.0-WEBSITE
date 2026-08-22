@@ -179,8 +179,13 @@ preferredExamButtons.forEach(
                 const slot =
                     button.dataset.examSlot;
 
+
                 let selectedExamName = "";
 
+
+                // ======================================
+                // GET THE CLICKED PREFERENCE
+                // ======================================
 
                 if (slot === "1") {
 
@@ -204,6 +209,10 @@ preferredExamButtons.forEach(
                 }
 
 
+                // ======================================
+                // CHECK WHETHER IT IS SELECTED
+                // ======================================
+
                 if (
                     !selectedExamName ||
                     selectedExamName ===
@@ -219,31 +228,19 @@ preferredExamButtons.forEach(
                 }
 
 
-                // Save preferred exam
-                // for the exam-list page.
+                // ======================================
+                // SAVE ONLY THE CLICKED PREFERENCE
+                // ======================================
 
-                const preferredExams = [
-
-    profile.exam1,
-
-    profile.exam2,
-
-    profile.exam3
-
-].filter(
-    exam =>
-        exam &&
-        exam !== "Not Selected"
-);
+                sessionStorage.setItem(
+                    "selectedPreferredExam",
+                    selectedExamName
+                );
 
 
-sessionStorage.setItem(
-    "preferredExams",
-    JSON.stringify(
-        preferredExams
-    )
-);
-
+                // ======================================
+                // OPEN EXAM LIST
+                // ======================================
 
                 window.location.href =
                     "exam-list.html";
@@ -253,7 +250,6 @@ sessionStorage.setItem(
 
     }
 );
-
 
         // ==========================================
         // LOAD COMPLETED ATTEMPTS
@@ -2904,8 +2900,21 @@ document.getElementById(
     "click",
     () => {
 
+        // ======================================
+        // NORMAL EXAM BROWSING
+        // Remove temporary preferred-exam
+        // priority.
+        // ======================================
+
+        sessionStorage.removeItem(
+    "selectedPreferredExam"
+);
+
+
+        // Open complete exam list
+
         window.location.href =
-    "exam-list.html";
+            "exam-list.html";
 
     }
 );
@@ -2922,6 +2931,11 @@ document.getElementById(
 .addEventListener(
     "click",
     () => {
+
+        sessionStorage.removeItem(
+    "selectedPreferredExam"
+);
+
 
         window.location.href =
             "exam-list.html";
