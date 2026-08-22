@@ -86,21 +86,20 @@
 
         </li>
 
-        <li>
+        <li
+    onclick="window.location.href='previous-tests.html'"
+>
 
-            <i class="fa-solid fa-clock-rotate-left"></i>
+    <i class="fa-solid fa-clock-rotate-left"></i>
 
-            Previous Tests
+    Previous Tests
 
-        </li>
+</li>
 
-        <li>
-
-            <i class="fa-solid fa-chart-column"></i>
-
-            Performance
-
-        </li>
+        <li onclick="window.location='performance.html'">
+    <i class="fa-solid fa-chart-column"></i>
+    Performance
+</li>
 
         <li>
 
@@ -571,11 +570,27 @@ Current Rank
 
 <section class="previous">
 
-<h2>
+    <div class="previousHeader">
 
-Recent Tests
+        <h2>
+            Recent Tests
+        </h2>
 
-</h2>
+        <button
+            type="button"
+            id="viewMoreTests"
+            class="viewMoreTests"
+        >
+
+            View More
+
+            <i
+                class="fa-solid fa-arrow-right"
+            ></i>
+
+        </button>
+
+    </div>
 
 <table>
 

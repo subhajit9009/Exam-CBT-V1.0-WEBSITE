@@ -274,6 +274,7 @@ preferredExamButtons.forEach(
                 skipped,
                 total_questions,
                 status,
+                result,
                 submitted_at,
                 time_taken
             `)
@@ -3095,3 +3096,27 @@ document.getElementById(
 // ==========================================
 
 loadDashboard();
+
+// ==========================================
+// VIEW MORE PREVIOUS TESTS
+// ==========================================
+
+const viewMoreTests =
+    document.getElementById(
+        "viewMoreTests"
+    );
+
+
+if (viewMoreTests) {
+
+    viewMoreTests.addEventListener(
+        "click",
+        function () {
+
+            window.location.href =
+                "previous-tests.html";
+
+        }
+    );
+
+}

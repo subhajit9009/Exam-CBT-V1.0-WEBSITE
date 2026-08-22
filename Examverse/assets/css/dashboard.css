@@ -2058,3 +2058,151 @@ transform:translateY(0);
     }
 
 }
+
+/* ==========================================
+   RECENT TESTS - CLICKABLE ROW
+   ========================================== */
+
+.recentTestRow {
+    cursor: pointer;
+    transition:
+        background-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.recentTestRow:hover {
+    background-color: #f8fafc;
+}
+
+.recentTestRow:active {
+    transform: scale(0.995);
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+
+    .recentTestRow {
+        cursor: pointer;
+    }
+
+    .recentTestRow:active {
+        background-color: #f1f5f9;
+        transform: none;
+    }
+
+}
+
+/* ==========================================
+   RECENT TESTS HEADER
+========================================== */
+
+.previousHeader {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    margin-bottom:
+        20px;
+
+}
+
+
+/* ==========================================
+   VIEW MORE BUTTON
+========================================== */
+
+.viewMoreTests {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    border:
+        none;
+
+    background:
+        #eff6ff;
+
+    color:
+        #2563eb;
+
+    padding:
+        7px 12px;
+
+    border-radius:
+        7px;
+
+    font-family:
+        'Poppins',
+        sans-serif;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+
+}
+
+
+.viewMoreTests:hover {
+
+    background:
+        #2563eb;
+
+    color:
+        white;
+
+    transform:
+        translateX(2px);
+
+}
+
+
+.viewMoreTests i {
+
+    font-size:
+        10px;
+
+}
+
+@media(max-width:500px){
+
+    .previousHeader {
+
+        align-items:
+            center;
+
+    }
+
+    .viewMoreTests {
+
+        padding:
+            6px 10px;
+
+        font-size:
+            11px;
+
+    }
+
+}

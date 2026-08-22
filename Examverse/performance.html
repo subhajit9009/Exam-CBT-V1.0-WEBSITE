@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>ExamVerse | Performance Analytics</title>
+
+<link
+    rel="stylesheet"
+    href="assets/css/performance.css"
+>
+
+<link rel="stylesheet" href="assets/css/loader.css">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <img
+            src="assets/images/logo.png"
+            alt="ExamVerse"
+        >
+
+        <h1>ExamVerse</h1>
+
+        <p>CBT Portal</p>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="exam-list.html">
+
+            <i class="fa-solid fa-file-circle-plus"></i>
+
+            <span>New Test</span>
+
+        </a>
+
+
+        <a href="previous-tests.html">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            <span>Previous Tests</span>
+
+        </a>
+
+
+        <a
+            href="performance.html"
+            class="active"
+        >
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>Performance</span>
+
+        </a>
+
+
+        <a href="bookmarks.html">
+
+            <i class="fa-solid fa-bookmark"></i>
+
+            <span>Bookmarks</span>
+
+        </a>
+
+
+        <a href="settings.html">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>Settings</span>
+
+        </a>
+
+
+        <a href="#" id="logoutBtn">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>Logout</span>
+
+        </a>
+
+    </nav>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main-content">
+
+
+    <!-- HEADER -->
+
+    <section class="page-header">
+
+        <div>
+
+            <div class="eyebrow">
+                PERFORMANCE ANALYTICS
+            </div>
+
+            <h2>
+                Your Performance
+            </h2>
+
+            <p>
+                Detailed analysis of your preparation, accuracy,
+                speed and progress.
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                id="refreshBtn"
+                class="header-btn"
+            >
+
+                <i class="fa-solid fa-rotate"></i>
+
+                Refresh
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FILTER BAR
+    ================================================== -->
+
+    <section class="filter-card">
+
+        <div class="filter-heading">
+
+            <i class="fa-solid fa-sliders"></i>
+
+            <div>
+
+                <strong>
+                    Analytics Filters
+                </strong>
+
+                <small>
+                    Change the data shown below
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="filter-controls">
+
+
+            <div class="filter-group">
+
+                <label>
+                    Examination
+                </label>
+
+                <select id="examFilter">
+
+                    <option value="all">
+                        All Exams
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>
+                    Time Period
+                </label>
+
+                <select id="periodFilter">
+
+                    <option value="all">
+                        All Time
+                    </option>
+
+                    <option value="7">
+                        Last 7 Days
+                    </option>
+
+                    <option value="30">
+                        Last 30 Days
+                    </option>
+
+                    <option value="90">
+                        Last 90 Days
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                id="resetFilters"
+                class="reset-btn"
+            >
+
+                <i class="fa-solid fa-rotate-left"></i>
+
+                Reset
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         HERO PERFORMANCE
+    ================================================== -->
+
+    <section class="performance-hero">
+
+
+        <div class="hero-main">
+
+            <div class="hero-label">
+                OVERALL PERFORMANCE
+            </div>
+
+            <div class="hero-score">
+
+                <strong id="overallPerformance">
+                    0%
+                </strong>
+
+                <span>
+                    overall
+                </span>
+
+            </div>
+
+
+            <div
+                class="hero-progress"
+            >
+
+                <div
+                    id="heroProgress"
+                    class="hero-progress-fill"
+                ></div>
+
+            </div>
+
+
+            <p id="performanceMessage">
+                Complete more tests to build your performance profile.
+            </p>
+
+        </div>
+
+
+        <div class="hero-details">
+
+
+            <div>
+
+                <span>
+                    Current Average
+                </span>
+
+                <strong id="heroAverage">
+                    0%
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Personal Best
+                </span>
+
+                <strong id="heroBest">
+                    0%
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Recent Change
+                </span>
+
+                <strong id="heroChange">
+                    —
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Consistency
+                </span>
+
+                <strong id="heroConsistency">
+                    —
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         PRIMARY KPI
+    ================================================== -->
+
+    <section class="kpi-grid">
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-icon blue">
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Tests Completed
+                </span>
+
+                <strong id="totalTests">
+                    0
+                </strong>
+
+                <small>
+                    Completed attempts
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-icon purple">
+
+                <i class="fa-solid fa-chart-column"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Average Score
+                </span>
+
+                <strong id="averageScore">
+                    0
+                </strong>
+
+                <small>
+                    Per test
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-icon green">
+
+                <i class="fa-solid fa-bullseye"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Accuracy
+                </span>
+
+                <strong id="overallAccuracy">
+                    0%
+                </strong>
+
+                <small>
+                    Correct / attempted
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-icon orange">
+
+                <i class="fa-solid fa-trophy"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Highest Percentage
+                </span>
+
+                <strong id="highestPercentage">
+                    0%
+                </strong>
+
+                <small>
+                    Personal best
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-icon cyan">
+
+                <i class="fa-solid fa-gauge-high"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Attempt Rate
+                </span>
+
+                <strong id="attemptRate">
+                    0%
+                </strong>
+
+                <small>
+                    Questions attempted
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-icon red">
+
+                <i class="fa-solid fa-circle-xmark"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Skip Rate
+                </span>
+
+                <strong id="skipRate">
+                    0%
+                </strong>
+
+                <small>
+                    Questions skipped
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         QUESTION STATISTICS
+    ================================================== -->
+
+    <section class="question-stats">
+
+
+        <div class="question-stat">
+
+            <span>
+                Questions Attempted
+            </span>
+
+            <strong id="totalAttempted">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat correct">
+
+            <span>
+                Correct
+            </span>
+
+            <strong id="totalCorrect">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat wrong">
+
+            <span>
+                Wrong
+            </span>
+
+            <strong id="totalWrong">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat skipped">
+
+            <span>
+                Skipped
+            </span>
+
+            <strong id="totalSkipped">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat">
+
+            <span>
+                Avg. Time / Test
+            </span>
+
+            <strong id="averageTime">
+                00:00
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat">
+
+            <span>
+                Avg. Time / Question
+            </span>
+
+            <strong id="averageQuestionTime">
+                00:00
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat">
+
+            <span>
+                Questions / Minute
+            </span>
+
+            <strong id="questionsPerMinute">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="question-stat">
+
+            <span>
+                Pass Rate
+            </span>
+
+            <strong id="passRate">
+                0%
+            </strong>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         TREND CHARTS
+    ================================================== -->
+
+    <section class="chart-grid">
+
+
+        <div class="panel large-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-label">
+                        PROGRESS
+                    </span>
+
+                    <h3>
+                        Performance Trend
+                    </h3>
+
+                </div>
+
+                <span class="panel-note">
+                    Percentage over completed tests
+                </span>
+
+            </div>
+
+
+            <div class="chart-box">
+
+                <canvas
+                    id="performanceChart"
+                ></canvas>
+
+                <div
+                    id="trendEmpty"
+                    class="chart-empty"
+                >
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <p>
+                        Complete tests to generate your trend.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-label">
+                        ACCURACY
+                    </span>
+
+                    <h3>
+                        Accuracy Trend
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-box small-chart">
+
+                <canvas
+                    id="accuracyChart"
+                ></canvas>
+
+                <div
+                    id="accuracyEmpty"
+                    class="chart-empty"
+                >
+
+                    <i class="fa-solid fa-bullseye"></i>
+
+                    <p>
+                        No accuracy data yet.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         PASS FAIL + INSIGHTS
+    ================================================== -->
+
+    <section class="two-column">
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-label">
+                        RESULT DISTRIBUTION
+                    </span>
+
+                    <h3>
+                        Pass / Fail Analysis
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="distribution">
+
+
+                <div class="donut-wrap">
+
+                    <div
+                        id="resultDonut"
+                        class="donut"
+                    >
+
+                        <div class="donut-center">
+
+                            <strong id="resultTotal">
+                                0
+                            </strong>
+
+                            <span>
+                                Tests
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="distribution-list">
+
+
+                    <div class="distribution-item">
+
+                        <span class="dot green"></span>
+
+                        <span>
+                            Passed
+                        </span>
+
+                        <strong id="passedTests">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="distribution-item">
+
+                        <span class="dot red"></span>
+
+                        <span>
+                            Failed
+                        </span>
+
+                        <strong id="failedTests">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="distribution-item">
+
+                        <span class="dot gray"></span>
+
+                        <span>
+                            Completed
+                        </span>
+
+                        <strong id="otherTests">
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-label">
+                        SMART INSIGHTS
+                    </span>
+
+                    <h3>
+                        Performance Insights
+                    </h3>
+
+                </div>
+
+                <i class="fa-solid fa-lightbulb insight-icon"></i>
+
+            </div>
+
+
+            <div
+                id="insights"
+                class="insights"
+            >
+
+                <div class="insight-loading">
+
+                    Calculating your performance...
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         STRENGTH / WEAKNESS
+    ================================================== -->
+
+    <section class="two-column">
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-label strength-label">
+                        STRENGTHS
+                    </span>
+
+                    <h3>
+                        Strong Areas
+                    </h3>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-trend-up strength-icon"></i>
+
+            </div>
+
+
+            <div
+                id="strengths"
+                class="area-list"
+            >
+
+                <div class="empty-message">
+                    Complete tests to identify strengths.
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-label weakness-label">
+                        WEAK AREAS
+                    </span>
+
+                    <h3>
+                        Areas to Improve
+                    </h3>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-trend-down weakness-icon"></i>
+
+            </div>
+
+
+            <div
+                id="weaknesses"
+                class="area-list"
+            >
+
+                <div class="empty-message">
+                    Complete tests to identify weak areas.
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         EXAM WISE
+    ================================================== -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <span class="panel-label">
+                    EXAM ANALYSIS
+                </span>
+
+                <h3>
+                    Examination-wise Performance
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Examination
+                        </th>
+
+                        <th>
+                            Tests
+                        </th>
+
+                        <th>
+                            Avg %
+                        </th>
+
+                        <th>
+                            Best %
+                        </th>
+
+                        <th>
+                            Accuracy
+                        </th>
+
+                        <th>
+                            Attempt Rate
+                        </th>
+
+                        <th>
+                            Result
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="examWiseBody">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="table-empty"
+                        >
+                            Loading...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SECTION WISE
+    ================================================== -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <span class="panel-label">
+                    SECTION ANALYSIS
+                </span>
+
+                <h3>
+                    Section-wise Performance
+                </h3>
+
+            </div>
+
+            <span class="panel-note">
+                Calculated from question-level answers
+            </span>
+
+        </div>
+
+
+        <div
+            id="sectionList"
+            class="section-list"
+        >
+
+            <div class="empty-message">
+                Section analysis will appear when question data is available.
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         RECENT TESTS
+    ================================================== -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <span class="panel-label">
+                    TEST HISTORY
+                </span>
+
+                <h3>
+                    Recent Tests
+                </h3>
+
+            </div>
+
+
+            <a
+                href="previous-tests.html"
+                class="view-all"
+            >
+
+                View All
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Examination
+                        </th>
+
+                        <th>
+                            Score
+                        </th>
+
+                        <th>
+                            %
+                        </th>
+
+                        <th>
+                            Correct
+                        </th>
+
+                        <th>
+                            Wrong
+                        </th>
+
+                        <th>
+                            Skipped
+                        </th>
+
+                        <th>
+                            Accuracy
+                        </th>
+
+                        <th>
+                            Time
+                        </th>
+
+                        <th>
+                            Result
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="recentTests">
+
+                    <tr>
+
+                        <td
+                            colspan="10"
+                            class="table-empty"
+                        >
+                            Loading...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/auth.js"></script>
+
+<script src="assets/js/performance.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+</body>
+
+</html>

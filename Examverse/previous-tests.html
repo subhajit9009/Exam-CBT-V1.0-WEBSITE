@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ExamVerse | Previous Tests</title>
+
+    <!-- Favicon -->
+    <link
+        rel="icon"
+        type="image/png"
+        href="assets/images/favicon.png"
+    >
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <!-- Previous Tests CSS -->
+    <link
+        rel="stylesheet"
+        href="assets/css/previous-tests.css"
+    >
+
+    <!-- Loader -->
+    <link
+        rel="stylesheet"
+        href="assets/css/loader.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     LOADER
+========================================== -->
+
+<div id="loader">
+
+    <img
+        src="assets/images/logo.png"
+        class="loader-logo"
+        alt="ExamVerse Logo"
+    >
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+        Loading...
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     MAIN CONTAINER
+========================================== -->
+
+<div class="container">
+
+
+    <!-- ======================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <img
+                src="assets/images/logo.png"
+                alt="ExamVerse Logo"
+                class="sidebar-logo"
+            >
+
+            <h2>
+                ExamVerse
+            </h2>
+
+            <p>
+                CBT Portal
+            </p>
+
+        </div>
+
+
+        <ul>
+
+            <!-- Dashboard -->
+
+            <li
+                onclick="window.location.href='dashboard.html'"
+            >
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </li>
+
+
+            <!-- New Test -->
+
+            <li id="newTestBtn">
+
+                <i class="fa-solid fa-file-circle-plus"></i>
+
+                New Test
+
+            </li>
+
+
+            <!-- Previous Tests -->
+
+            <li class="active">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                Previous Tests
+
+            </li>
+
+
+            <!-- Performance -->
+
+            <li>
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                Performance
+
+            </li>
+
+
+            <!-- Bookmarks -->
+
+            <li>
+
+                <i class="fa-solid fa-bookmark"></i>
+
+                Bookmarks
+
+            </li>
+
+
+            <!-- Settings -->
+
+            <li
+                onclick="window.location='settings.html'"
+            >
+
+                <i class="fa-solid fa-gear"></i>
+
+                Settings
+
+            </li>
+
+
+            <!-- Logout -->
+
+            <li id="logoutBtn">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Logout
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+
+    <!-- ======================================
+         MAIN
+    ====================================== -->
+
+    <main class="main">
+
+
+        <!-- ==================================
+             HEADER
+        ================================== -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    📚 Previous Tests
+                </h1>
+
+                <p>
+                    View and review all your completed examinations.
+                </p>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==================================
+             PAGE CONTROLS
+        ================================== -->
+
+        <section class="historySection">
+
+
+            <div class="historyHeader">
+
+                <div>
+
+                    <span class="sectionEyebrow">
+                        TEST HISTORY
+                    </span>
+
+                    <h2>
+                        Your Previous Tests
+                    </h2>
+
+                    <p>
+                        Select any completed examination
+                        to view its detailed result.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="totalHistory"
+                    class="historyCount"
+                >
+                    0 Tests
+                </div>
+
+            </div>
+
+
+
+            <!-- ==================================
+                 SEARCH + FILTER
+            ================================== -->
+
+            <div class="historyControls">
+
+
+                <div class="searchBox">
+
+                    <i
+                        class="fa-solid fa-magnifying-glass"
+                    ></i>
+
+                    <input
+                        type="text"
+                        id="searchTests"
+                        placeholder="Search examinations..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+
+                <div class="filterButtons">
+
+                    <button
+                        type="button"
+                        class="filterBtn active"
+                        data-filter="all"
+                    >
+                        All
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filterBtn"
+                        data-filter="passed"
+                    >
+                        Passed
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filterBtn"
+                        data-filter="failed"
+                    >
+                        Failed
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==================================
+                 TABLE
+            ================================== -->
+
+            <div class="tableWrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Examination
+                            </th>
+
+                            <th>
+                                Score
+                            </th>
+
+                            <th>
+                                Percentage
+                            </th>
+
+                            <th>
+                                Accuracy
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="historyTable">
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="loadingRow"
+                            >
+                                Loading tests...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- ==================================
+                 EMPTY STATE
+            ================================== -->
+
+            <div
+                id="emptyState"
+                class="emptyState"
+                hidden
+            >
+
+                <div class="emptyIcon">
+
+                    <i
+                        class="fa-solid fa-file-circle-xmark"
+                    ></i>
+
+                </div>
+
+                <h3>
+                    No Tests Found
+                </h3>
+
+                <p>
+                    No completed examinations match
+                    your current search or filter.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ==========================================
+     SCRIPTS
+========================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/storage.js"></script>
+
+<script src="assets/js/previous-tests.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+
+</body>
+
+</html>
