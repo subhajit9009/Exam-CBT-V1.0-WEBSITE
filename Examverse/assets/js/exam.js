@@ -482,18 +482,62 @@ if (isPausedAttempt) {
     resumeSectionRemainingTimes =
         savedProgress.sectionRemainingTimes || {};
 
+        // ==========================================
+// RESTORE VISITED QUESTIONS
+// ==========================================
+//
+// This is important for questions that were
+// visited but left unanswered.
+//
+// Example:
+// Q1 answered
+// Q2 marked for review
+// Q3 skipped / visited
+//
+// Q3 has no user_answers row, so its red
+// visited state must come from progress_state.
+//
+
+if (
+    Array.isArray(
+        savedProgress.visitedQuestions
+    )
+) {
+
+    visitedQuestions =
+        [
+            ...savedProgress.visitedQuestions
+        ];
+
+
+    sessionStorage.setItem(
+        "visitedQuestions_" + attemptId,
+        JSON.stringify(
+            visitedQuestions
+        )
+    );
+
+}
+
 
    // --------------------------------------
 // Restore active-time tracking
 // --------------------------------------
-
-// Do NOT start active-time tracking from
-// the moment the resume page begins loading.
 //
-// It will be started after the CBT is ready.
+// IMPORTANT:
+//
+// examStartTime is used for the exam
+// countdown timer.
+//
+// It must NOT be used as the start of
+// the NEW active session after resume.
+//
+// The new active session begins NOW.
+//
 
-sessionStorage.removeItem(
-    "examActiveStartedAt"
+sessionStorage.setItem(
+    "examActiveStartedAt",
+    new Date().toISOString()
 );
 
 
