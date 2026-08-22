@@ -222,10 +222,27 @@ preferredExamButtons.forEach(
                 // Save preferred exam
                 // for the exam-list page.
 
-                sessionStorage.setItem(
-                    "preferredExam",
-                    selectedExamName
-                );
+                const preferredExams = [
+
+    profile.exam1,
+
+    profile.exam2,
+
+    profile.exam3
+
+].filter(
+    exam =>
+        exam &&
+        exam !== "Not Selected"
+);
+
+
+sessionStorage.setItem(
+    "preferredExams",
+    JSON.stringify(
+        preferredExams
+    )
+);
 
 
                 window.location.href =

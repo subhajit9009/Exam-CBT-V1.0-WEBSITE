@@ -456,3 +456,33 @@ grid-template-columns:1fr;
         scale(0.97);
 
 }
+
+/* ==========================================
+   PREFERRED EXAM BADGE
+========================================== */
+
+.preferredBadge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    margin-left: 8px;
+
+    padding: 4px 9px;
+
+    border-radius: 999px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    vertical-align: middle;
+
+    white-space: nowrap;
+
+}

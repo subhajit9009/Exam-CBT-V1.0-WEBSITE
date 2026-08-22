@@ -54,13 +54,40 @@ async function loadExams(search = "") {
         `<div class="loading">Loading Exams...</div>`;
 
     const {
-        data: exams,
+    data: exams,
+    error
+} = await supabaseClient
+    .from("exams")
+    .select("*")
+    .eq("status", "Live")
+    .order("exam_name");
+
+
+if (error) {
+
+    console.error(
+        "Exam loading error:",
         error
-    } = await supabaseClient
-        .from("exams")
-        .select("*")
-        .eq("status", "Live")
-        .order("exam_name");
+    );
+
+    examContainer.innerHTML =
+        `<div class="loading">
+            Failed to load exams.
+        </div>`;
+
+    return;
+}
+
+// ==========================================
+// PREFERRED EXAMS
+// ==========================================
+
+const preferredExams =
+    JSON.parse(
+        sessionStorage.getItem(
+            "preferredExams"
+        ) || "[]"
+    );
 
     if (error) {
         examContainer.innerHTML =
@@ -165,12 +192,78 @@ if (user) {
 
     examContainer.innerHTML = "";
 
-    const filtered =
-        exams.filter(exam =>
-            exam.exam_name
-                .toLowerCase()
-                .includes(search.toLowerCase())
-        );
+    // ==========================================
+// FILTER EXAMS
+// ==========================================
+
+let filtered =
+    exams.filter(exam =>
+        exam.exam_name
+            .toLowerCase()
+            .includes(
+                search.toLowerCase()
+            )
+    );
+
+
+// ==========================================
+// PREFERRED EXAMS PRIORITY
+// ==========================================
+
+if (
+    preferredExams.length > 0 &&
+    search.trim() === ""
+) {
+
+    const preferredMatches = [];
+
+    const otherExams = [];
+
+
+    filtered.forEach(
+        exam => {
+
+            const isPreferred =
+                preferredExams.some(
+                    preferred =>
+                        exam.exam_name
+                            .trim()
+                            .toLowerCase() ===
+                        preferred
+                            .trim()
+                            .toLowerCase()
+                );
+
+
+            if (isPreferred) {
+
+                preferredMatches.push(
+                    exam
+                );
+
+            }
+
+            else {
+
+                otherExams.push(
+                    exam
+                );
+
+            }
+
+        }
+    );
+
+
+    filtered = [
+
+        ...preferredMatches,
+
+        ...otherExams
+
+    ];
+
+}
 
     if (filtered.length === 0) {
         examContainer.innerHTML =
@@ -206,7 +299,31 @@ const completed =
     </button>
 
 
-    <h2>${exam.exam_name}</h2>
+    <h2>
+
+    ${exam.exam_name}
+
+    ${
+    preferredExams.some(
+        preferred =>
+            exam.exam_name
+                .trim()
+                .toLowerCase() ===
+            preferred
+                .trim()
+                .toLowerCase()
+    )
+
+    ? `
+        <span class="preferredBadge">
+            ⭐ Preferred
+        </span>
+      `
+
+    : ""
+}
+
+</h2>
 
             <p class="examInfo">
                 📂 Category :
