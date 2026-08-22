@@ -2383,7 +2383,7 @@ function renderMilestones(
             icon: "📝",
             title: "Exam Completion",
             description:
-                "Complete more examinations to unlock new achievements."
+                "Complete exams and build your journey."
         },
 
         {
@@ -2391,7 +2391,7 @@ function renderMilestones(
             icon: "🎯",
             title: "Passing",
             description:
-                "Build your collection of successful examinations."
+                "Keep collecting successful exams."
         },
 
         {
@@ -2399,7 +2399,7 @@ function renderMilestones(
             icon: "💎",
             title: "Performance",
             description:
-                "Improve your scores and become an elite performer."
+                "Push your scores toward excellence."
         },
 
         {
@@ -2407,7 +2407,7 @@ function renderMilestones(
             icon: "📚",
             title: "Question Mastery",
             description:
-                "Keep practicing and conquer more questions."
+                "Answer more questions and sharpen your skills."
         },
 
         {
@@ -2415,14 +2415,14 @@ function renderMilestones(
             icon: "🔥",
             title: "Improvement & Consistency",
             description:
-                "Rewarding progress, comebacks and consistent performance."
+                "Reward progress, comebacks and consistency."
         }
 
     ];
 
 
     // ======================================
-    // MAP ACHIEVEMENT TYPES TO CATEGORIES
+    // MAP TYPES TO CATEGORIES
     // ======================================
 
     const categoryMap = {
@@ -2480,7 +2480,6 @@ function renderMilestones(
                 );
 
 
-            // No achievements in this category
             if (
                 categoryMilestones.length === 0
             ) {
@@ -2499,7 +2498,7 @@ function renderMilestones(
 
             html += `
 
-                <div
+                <section
                     class="milestoneCategory"
                 >
 
@@ -2543,7 +2542,8 @@ function renderMilestones(
                         >
                             ${
                                 categoryUnlocked
-                            } /
+                            }
+                            /
                             ${
                                 categoryMilestones.length
                             }
@@ -2562,33 +2562,53 @@ function renderMilestones(
             categoryMilestones.forEach(
                 milestone => {
 
+                    // ==================================
+                    // SAFE PROGRESS
+                    // ==================================
+
                     const progress =
                         Math.min(
                             100,
                             Math.max(
                                 0,
-                                milestone.progress
+                                Number(
+                                    milestone.progress
+                                ) || 0
                             )
                         );
 
 
                     const current =
                         Math.min(
-                            milestone.current,
-                            milestone.target
+                            Number(
+                                milestone.current
+                            ) || 0,
+                            Number(
+                                milestone.target
+                            ) || 0
                         );
 
 
+                    // ==================================
+                    // COMPLETED / LOCKED CLASS
+                    // ==================================
+
+                    const stateClass =
+                        milestone.unlocked
+                            ? "unlocked"
+                            : "locked";
+
+
+                    // ==================================
+                    // CARD
+                    // ==================================
+
                     html += `
 
-                        <div
+                        <article
                             class="
                                 milestoneCard
-                                ${
-                                    milestone.unlocked
-                                        ? "unlocked"
-                                        : "locked"
-                                }
+                                ${stateClass}
                             "
                         >
 
@@ -2604,75 +2624,95 @@ function renderMilestones(
 
 
                             <div
-                                class="milestoneTitle"
-                            >
-                                ${
-                                    escapeHTML(
-                                        milestone.title
-                                    )
-                                }
-                            </div>
-
-
-                            <div
-                                class="milestoneDescription"
-                            >
-                                ${
-                                    escapeHTML(
-                                        milestone.description
-                                    )
-                                }
-                            </div>
-
-
-                            <div
-                                class="milestoneProgressText"
-                            >
-
-                                ${
-                                    current
-                                }
-                                /
-                                ${
-                                    milestone.target
-                                }
-
-                            </div>
-
-
-                            <div
-                                class="milestoneMiniBar"
+                                class="milestoneCardContent"
                             >
 
                                 <div
-                                    class="milestoneMiniFill"
-                                    style="
-                                        width:
-                                        ${progress}%;
-                                    "
-                                ></div>
+                                    class="milestoneTitle"
+                                >
+                                    ${
+                                        escapeHTML(
+                                            milestone.title
+                                        )
+                                    }
+                                </div>
+
+
+                                <div
+                                    class="milestoneDescription"
+                                >
+                                    ${
+                                        escapeHTML(
+                                            milestone.description
+                                        )
+                                    }
+                                </div>
+
+
+                                <div
+                                    class="milestoneProgressRow"
+                                >
+
+                                    <span
+                                        class="milestoneProgressText"
+                                    >
+                                        ${
+                                            current
+                                        }
+                                        /
+                                        ${
+                                            milestone.target
+                                        }
+                                    </span>
+
+
+                                    <span
+                                        class="milestoneProgressPercent"
+                                    >
+                                        ${
+                                            Math.round(
+                                                progress
+                                            )
+                                        }%
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="milestoneMiniBar"
+                                >
+
+                                    <div
+                                        class="milestoneMiniFill"
+                                        style="
+                                            width:
+                                            ${progress}%;
+                                        "
+                                    ></div>
+
+                                </div>
+
+
+                                <div
+                                    class="milestoneXP"
+                                >
+
+                                    ${
+                                        milestone.unlocked
+
+                                            ? "✓ Completed"
+
+                                            : "+" +
+                                              milestone.xp +
+                                              " XP"
+                                    }
+
+                                </div>
 
                             </div>
 
-
-                            <div
-                                class="milestoneXP"
-                            >
-
-                                ${
-                                    milestone.unlocked
-
-                                        ? "✓ Unlocked"
-
-                                        : "+" +
-                                          milestone.xp +
-                                          " XP"
-
-                                }
-
-                            </div>
-
-                        </div>
+                        </article>
 
                     `;
 
@@ -2684,7 +2724,7 @@ function renderMilestones(
 
                     </div>
 
-                </div>
+                </section>
 
             `;
 
@@ -2709,9 +2749,9 @@ function toggleMilestones() {
         );
 
 
-    const toggle =
+    const button =
         document.querySelector(
-            ".milestoneToggle"
+            ".milestoneToggleBtn"
         );
 
 
@@ -2724,9 +2764,9 @@ function toggleMilestones() {
         );
 
 
-    if (toggle) {
+    if (button) {
 
-        toggle.setAttribute(
+        button.setAttribute(
             "aria-expanded",
             expanded
                 ? "true"
@@ -2743,7 +2783,7 @@ document.addEventListener(
 
         const toggle =
             event.target.closest(
-                ".milestoneToggle"
+                ".milestoneToggleBtn"
             );
 
 

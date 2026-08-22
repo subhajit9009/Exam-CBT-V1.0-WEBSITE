@@ -491,10 +491,6 @@ Current Rank
 
     <div
         class="milestoneHeader milestoneToggle"
-        onclick="toggleMilestones()"
-        role="button"
-        tabindex="0"
-        aria-expanded="false"
     >
 
         <div>
@@ -525,11 +521,12 @@ Current Rank
 
 
             <button
-                type="button"
-                id="milestoneToggleBtn"
-                class="milestoneToggleBtn"
-                aria-label="Open milestones"
-            >
+    type="button"
+    id="milestoneToggleBtn"
+    class="milestoneToggleBtn"
+    onclick="toggleMilestones()"
+    aria-label="Open milestones"
+>
 
                 <i class="fa-solid fa-chevron-down"></i>
 
