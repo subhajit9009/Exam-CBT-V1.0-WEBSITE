@@ -3581,39 +3581,332 @@ tbody tr:hover {
 
 }
 
-@media (max-width: 380px) {
+/* =========================================================
+   EXAMVERSE MOBILE NAVIGATION
+   PROFESSIONAL SLIDE-IN SIDEBAR
+========================================================= */
+
+
+/* =========================================================
+   MOBILE MENU BUTTON
+   Hidden on desktop
+========================================================= */
+
+.mobile-menu-btn {
+
+    display: none;
+
+    position: fixed;
+
+    top: 15px;
+    left: 15px;
+
+    width: 46px;
+    height: 46px;
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,255,255,0.78);
+
+    color: #173b82;
+
+    font-size: 20px;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    z-index: 2001;
+
+    box-shadow:
+        0 8px 25px rgba(15,23,42,0.14),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+
+    backdrop-filter: blur(16px);
+
+    -webkit-backdrop-filter: blur(16px);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+
+}
+
+
+.mobile-menu-btn:hover {
+
+    transform: scale(1.04);
+
+    background:
+        rgba(255,255,255,0.92);
+
+}
+
+
+.mobile-menu-btn:active {
+
+    transform: scale(0.95);
+
+}
+
+
+/* =========================================================
+   SIDEBAR OVERLAY
+   Hidden by default
+========================================================= */
+
+.mobile-sidebar-overlay {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(7,18,52,0.48);
+
+    backdrop-filter:
+        blur(3px);
+
+    -webkit-backdrop-filter:
+        blur(3px);
+
+    z-index: 1998;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.28s ease;
+
+}
+
+
+/* =========================================================
+   MOBILE SIDEBAR
+========================================================= */
+
+@media (max-width: 700px) {
+
+
+    /* ---------------------------------------------
+       MENU BUTTON
+    --------------------------------------------- */
+
+    .mobile-menu-btn {
+
+        display: flex;
+
+    }
+
+
+    /* ---------------------------------------------
+       OVERLAY
+    --------------------------------------------- */
+
+    .mobile-sidebar-overlay {
+
+        display: block;
+
+        pointer-events: none;
+
+    }
+
+
+    .mobile-sidebar-overlay.active {
+
+        opacity: 1;
+
+        pointer-events: auto;
+
+    }
+
+
+    /* ---------------------------------------------
+       SIDEBAR
+    --------------------------------------------- */
+
+    .sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+
+        left: 0 !important;
+
+        width: 270px !important;
+
+        height: 100vh !important;
+
+        max-height: 100vh !important;
+
+        margin: 0 !important;
+
+        transform:
+            translateX(-105%);
+
+        transition:
+            transform 0.30s cubic-bezier(
+                0.4,
+                0,
+                0.2,
+                1
+            );
+
+        z-index: 2000;
+
+        overflow-y: auto;
+
+        overflow-x: hidden;
+
+        box-shadow:
+            12px 0 40px
+            rgba(15,23,42,0.25);
+
+    }
+
+
+    /* ---------------------------------------------
+       OPEN SIDEBAR
+    --------------------------------------------- */
+
+    .sidebar.mobile-open {
+
+        transform:
+            translateX(0);
+
+    }
+
+
+    /* ---------------------------------------------
+       SIDEBAR BRAND
+    --------------------------------------------- */
+
+    .sidebar .logo {
+
+        flex-shrink: 0;
+
+    }
+
+
+    /* ---------------------------------------------
+       SIDEBAR NAVIGATION
+    --------------------------------------------- */
+
+    .sidebar ul {
+
+        width: 100%;
+
+    }
+
+
+    .sidebar ul li {
+
+        width: 100%;
+
+        flex-shrink: 0;
+
+    }
+
+
+    /* ---------------------------------------------
+       MAIN CONTENT
+    --------------------------------------------- */
 
     .main {
 
-        width: calc(100% - 70px);
+        width: 100% !important;
 
-        margin-left: 70px;
+        margin-left: 0 !important;
 
-        padding: 10px;
+        padding:
+            75px 15px 20px !important;
+
+        box-sizing: border-box;
 
     }
 
+
+    /* ---------------------------------------------
+       TOPBAR
+    --------------------------------------------- */
 
     .topbar {
 
-        padding: 15px;
+        width: 100%;
+
+        box-sizing: border-box;
 
     }
 
 
-    .preferredSection,
-    .progressSection,
-    .milestoneSection,
-    .previous {
+    /* ---------------------------------------------
+       PREVENT HORIZONTAL OVERFLOW
+    --------------------------------------------- */
 
-        padding: 14px;
+    .container {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: hidden;
 
     }
 
 
-    .preferredExamCard {
+    body {
 
-        padding: 15px;
+        overflow-x: hidden;
+
+    }
+
+
+    html {
+
+        overflow-x: hidden;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .mobile-menu-btn {
+
+        width: 43px;
+
+        height: 43px;
+
+        top: 12px;
+
+        left: 12px;
+
+        border-radius: 13px;
+
+    }
+
+
+    .sidebar {
+
+        width: 255px !important;
+
+    }
+
+
+    .main {
+
+        padding:
+            70px 12px 18px !important;
 
     }
 
