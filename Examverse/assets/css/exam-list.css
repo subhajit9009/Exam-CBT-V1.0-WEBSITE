@@ -613,3 +613,208 @@ grid-template-columns:1fr;
     transform: none;
 
 }
+
+
+/* =========================================================
+   LONG EXAM NAMES
+   ========================================================= */
+
+.examCard h2 {
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    line-height: 1.35;
+
+    max-height: calc(1.35em * 2);
+
+    overflow-wrap: anywhere;
+
+}
+
+/* =========================================================
+   MOBILE LONG EXAM NAMES
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .examCard h2 {
+
+        font-size: 17px;
+
+        line-height: 1.3;
+
+        display: -webkit-box;
+
+        -webkit-box-orient: vertical;
+
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        max-height: calc(1.3em * 2);
+
+        overflow-wrap: anywhere;
+
+    }
+
+}
+
+/* =========================================================
+   FULL EXAM NAME TOOLTIP
+========================================================= */
+
+.exam-title-wrapper::after {
+
+    content: attr(data-full-title);
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: calc(100% + 10px);
+
+    width: max-content;
+
+    max-width: 360px;
+
+    padding: 10px 14px;
+
+    background: #79cff1;
+
+    color: #000000;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    white-space: normal;
+
+    word-break: normal;
+
+    overflow-wrap: break-word;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.20);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translateY(5px);
+
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+}
+
+
+/* Small tooltip arrow */
+
+.exam-title-wrapper::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 20px;
+
+    bottom: calc(100% + 4px);
+
+    width: 10px;
+
+    height: 10px;
+
+    background: #6371ec;
+
+    transform: rotate(45deg);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 0.18s ease;
+
+    z-index: 9998;
+
+}
+
+
+/* Show tooltip */
+
+.exam-title-wrapper:hover::after {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(0);
+
+}
+
+
+.exam-title-wrapper:hover::before {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+/* =========================================================
+   MOBILE EXAM TITLE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .exam-title-wrapper {
+
+        min-height: 66px;
+
+        max-height: 66px;
+
+    }
+
+
+    .exam-title-wrapper h2 {
+
+        -webkit-line-clamp: 3;
+
+        line-clamp: 3;
+
+        max-height: 66px;
+
+    }
+
+
+    .exam-title-wrapper::after,
+    .exam-title-wrapper::before {
+
+        display: none;
+
+    }
+
+}

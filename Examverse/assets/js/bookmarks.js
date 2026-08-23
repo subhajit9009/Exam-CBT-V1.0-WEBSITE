@@ -1883,19 +1883,22 @@ function setupSidebar() {
 
 
     document
-        .getElementById(
-            "sidebarNewTest"
-        )
-        ?.addEventListener(
-            "click",
-            function () {
+    .getElementById(
+        "sidebarNewTest"
+    )
+    ?.addEventListener(
+        "click",
+        function () {
 
-                window.location.href =
-                    "exam-list.html";
+            sessionStorage.removeItem(
+                "selectedPreferredExam"
+            );
 
-            }
-        );
+            window.location.href =
+                "exam-list.html";
 
+        }
+    );
 
     document
         .getElementById(

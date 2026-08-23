@@ -388,31 +388,42 @@ const completed =
     </button>
 
 
+    <div
+    class="exam-title-wrapper"
+    data-full-title="${String(exam.exam_name)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")}"
+>
+
     <h2>
 
-    ${exam.exam_name}
+        ${exam.exam_name}
 
-    ${
-    selectedPreferredExam &&
-    exam.exam_name
-        .trim()
-        .toLowerCase()
-        .startsWith(
-            selectedPreferredExam
+        ${
+            selectedPreferredExam &&
+            exam.exam_name
                 .trim()
                 .toLowerCase()
-        )
+                .startsWith(
+                    selectedPreferredExam
+                        .trim()
+                        .toLowerCase()
+                )
 
-    ? `
-        <span class="preferredBadge">
-            ⭐ Preferred
-        </span>
-      `
+        ? `
+            <span class="preferredBadge">
+                ⭐ Preferred
+            </span>
+          `
 
-    : ""
-}
+        : ""
+        }
 
-</h2>
+    </h2>
+
+</div>
 
             <p class="examInfo">
                 📂 Category :
