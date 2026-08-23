@@ -3573,11 +3573,6 @@ tbody tr:hover {
     }
 
 
-    table {
-
-        min-width: 600px;
-
-    }
 
 }
 
@@ -3907,6 +3902,184 @@ tbody tr:hover {
 
         padding:
             70px 12px 18px !important;
+
+    }
+
+}
+
+/* =========================================================
+   MOBILE — FINAL WIDTH / RECENT TEST FIX
+========================================================= */
+
+@media (max-width: 700px) {
+
+    /* ---------------------------------------------
+       PREVENT PAGE-WIDE HORIZONTAL OVERFLOW
+    --------------------------------------------- */
+
+    html,
+    body {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: hidden;
+
+    }
+
+
+    .container {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        margin: 0;
+
+        padding: 0;
+
+        overflow-x: hidden;
+
+    }
+
+
+    .main {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+
+        box-sizing: border-box;
+
+        overflow-x: hidden;
+
+    }
+
+
+    /* ---------------------------------------------
+       ALL MAIN SECTIONS
+    --------------------------------------------- */
+
+    .main > section,
+    .main > header {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        box-sizing: border-box;
+
+    }
+
+
+    /* ---------------------------------------------
+       RECENT TESTS
+    --------------------------------------------- */
+
+    .previous {
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        box-sizing: border-box;
+
+        overflow: hidden;
+
+    }
+
+
+    /* ---------------------------------------------
+       TABLE WRAPPER
+       Allows table to scroll internally if needed
+    --------------------------------------------- */
+
+    .previous table {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        box-sizing: border-box;
+
+    }
+
+
+    /* ---------------------------------------------
+       TABLE CELLS
+    --------------------------------------------- */
+
+    .previous th,
+    .previous td {
+
+        box-sizing: border-box;
+
+    }
+
+
+    /* ---------------------------------------------
+       MOBILE MENU BUTTON
+       ALWAYS STAYS WITH VIEWPORT
+    --------------------------------------------- */
+
+    .mobile-menu-btn {
+
+        position: fixed !important;
+
+        top: 15px !important;
+
+        left: 15px !important;
+
+        z-index: 3000 !important;
+
+    }
+
+
+    /* ---------------------------------------------
+       OVERLAY
+    --------------------------------------------- */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        z-index: 2998 !important;
+
+    }
+
+
+    /* ---------------------------------------------
+       SIDEBAR ABOVE OVERLAY
+    --------------------------------------------- */
+
+    .sidebar {
+
+        z-index: 2999 !important;
+
+    }
+
+}
+
+/* =========================================================
+   MOBILE SIDEBAR — PREVENT BACKGROUND SCROLL
+========================================================= */
+
+@media (max-width: 700px) {
+
+    body.mobile-sidebar-active {
+
+        overflow: hidden !important;
+
+        touch-action: none;
 
     }
 

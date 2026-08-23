@@ -268,3 +268,254 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+
+/* =========================================================
+   EXAMVERSE MOBILE SIDEBAR
+   STEP 3 — MOBILE MENU CONTROLLER
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const mobileMenuBtn =
+        document.getElementById("mobileMenuBtn");
+
+    const mobileSidebarOverlay =
+        document.getElementById("mobileSidebarOverlay");
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+
+    /* ---------------------------------------------
+       SAFETY CHECK
+    --------------------------------------------- */
+
+    if (
+        !mobileMenuBtn ||
+        !mobileSidebarOverlay ||
+        !sidebar
+    ) {
+
+        console.warn(
+            "ExamVerse mobile sidebar elements not found."
+        );
+
+        return;
+
+    }
+
+
+    /* ---------------------------------------------
+       OPEN SIDEBAR
+    --------------------------------------------- */
+
+    function openMobileSidebar() {
+
+        sidebar.classList.add("mobile-open");
+
+        mobileSidebarOverlay.classList.add("active");
+
+        mobileMenuBtn.classList.add("menu-open");
+
+        mobileMenuBtn.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        mobileMenuBtn.setAttribute(
+            "aria-label",
+            "Close navigation"
+        );
+
+
+        /* Change hamburger → X */
+
+        const icon =
+            mobileMenuBtn.querySelector("i");
+
+        if (icon) {
+
+            icon.classList.remove(
+                "fa-bars"
+            );
+
+            icon.classList.add(
+                "fa-xmark"
+            );
+
+        }
+
+
+        /* Prevent background scrolling */
+
+        document.body.classList.add(
+            "mobile-sidebar-active"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       CLOSE SIDEBAR
+    --------------------------------------------- */
+
+    function closeMobileSidebar() {
+
+        sidebar.classList.remove("mobile-open");
+
+        mobileSidebarOverlay.classList.remove(
+            "active"
+        );
+
+        mobileMenuBtn.classList.remove(
+            "menu-open"
+        );
+
+        mobileMenuBtn.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        mobileMenuBtn.setAttribute(
+            "aria-label",
+            "Open navigation"
+        );
+
+
+        /* Change X → hamburger */
+
+        const icon =
+            mobileMenuBtn.querySelector("i");
+
+        if (icon) {
+
+            icon.classList.remove(
+                "fa-xmark"
+            );
+
+            icon.classList.add(
+                "fa-bars"
+            );
+
+        }
+
+
+        /* Restore background scrolling */
+
+        document.body.classList.remove(
+            "mobile-sidebar-active"
+        );
+
+    }
+
+
+    /* ---------------------------------------------
+       HAMBURGER BUTTON
+    --------------------------------------------- */
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        function () {
+
+            if (
+                sidebar.classList.contains(
+                    "mobile-open"
+                )
+            ) {
+
+                closeMobileSidebar();
+
+            } else {
+
+                openMobileSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* ---------------------------------------------
+       CLICK OUTSIDE SIDEBAR
+    --------------------------------------------- */
+
+    mobileSidebarOverlay.addEventListener(
+        "click",
+        function () {
+
+            closeMobileSidebar();
+
+        }
+    );
+
+
+    /* ---------------------------------------------
+       CLOSE AFTER NAVIGATION CLICK
+    --------------------------------------------- */
+
+    const sidebarLinks =
+        sidebar.querySelectorAll("a");
+
+    sidebarLinks.forEach(function (link) {
+
+        link.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    window.innerWidth <= 700
+                ) {
+
+                    closeMobileSidebar();
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* ---------------------------------------------
+       ESCAPE KEY
+    --------------------------------------------- */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                sidebar.classList.contains(
+                    "mobile-open"
+                )
+            ) {
+
+                closeMobileSidebar();
+
+            }
+
+        }
+    );
+
+
+    /* ---------------------------------------------
+       RESET WHEN RETURNING TO DESKTOP
+    --------------------------------------------- */
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            if (
+                window.innerWidth > 700
+            ) {
+
+                closeMobileSidebar();
+
+            }
+
+        }
+    );
+
+});
