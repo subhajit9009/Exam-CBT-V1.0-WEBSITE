@@ -290,9 +290,13 @@ async function loadSavedAttempts() {
 
 async function loadSavedExams() {
 
+    // ==========================================
+    // GET SAVED EXAM RECORDS
+    // ==========================================
+
     const {
-        data,
-        error
+        data: savedData,
+        error: savedError
     } =
         await supabaseClient
 
@@ -301,18 +305,7 @@ async function loadSavedExams() {
             .select(`
                 id,
                 exam_id,
-                saved_at,
-
-                exams (
-                    id,
-                    exam_name,
-                    total_marks,
-                    total_questions,
-                    duration,
-                    duration_minutes,
-                    passing_marks,
-                    status
-                )
+                saved_at
             `)
 
             .eq(
@@ -328,11 +321,11 @@ async function loadSavedExams() {
             );
 
 
-    if (error) {
+    if (savedError) {
 
         console.error(
             "Saved exams error:",
-            error
+            savedError
         );
 
         savedExams = [];
@@ -342,8 +335,176 @@ async function loadSavedExams() {
     }
 
 
+    // ==========================================
+    // NOTHING SAVED
+    // ==========================================
+
+    if (
+        !savedData ||
+        savedData.length === 0
+    ) {
+
+        savedExams = [];
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // GET EXAM IDs
+    // ==========================================
+
+    const examIds = [
+        ...new Set(
+
+            savedData
+
+                .map(
+                    item =>
+                        item.exam_id
+                )
+
+                .filter(Boolean)
+
+        )
+    ];
+
+
+    if (
+        examIds.length === 0
+    ) {
+
+        savedExams = [];
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // GET REAL EXAM INFORMATION
+    // ==========================================
+
+    const {
+        data: exams,
+        error: examError
+    } =
+        await supabaseClient
+
+            .from("exams")
+
+            .select(`
+                id,
+                exam_name,
+                total_marks,
+                total_questions,
+                duration,
+                passing_marks,
+                status
+            `)
+
+            .in(
+                "id",
+                examIds
+            );
+
+
+    if (examError) {
+
+        console.error(
+            "Saved exam details error:",
+            examError
+        );
+
+        savedExams = [];
+
+        return;
+
+    }
+
+
+    // ==========================================
+    // COMBINE SAVED RECORD + EXAM INFORMATION
+    // ==========================================
+
+    const examMap =
+        new Map();
+
+
+    (exams || []).forEach(
+        exam => {
+
+            examMap.set(
+                String(exam.id),
+                exam
+            );
+
+        }
+    );
+
+
     savedExams =
-        data || [];
+        savedData
+
+            .map(
+                item => {
+
+                    const exam =
+                        examMap.get(
+                            String(
+                                item.exam_id
+                            )
+                        );
+
+
+                    if (!exam) {
+
+                        return null;
+
+                    }
+
+
+                    return {
+
+                        id:
+                            item.id,
+
+                        exam_id:
+                            item.exam_id,
+
+                        saved_at:
+                            item.saved_at,
+
+                        exams:
+                            exam
+
+                    };
+
+                }
+            )
+
+            .filter(Boolean);
+
+
+    console.log(
+        "Saved exams loaded:",
+        savedExams
+    );
+
+    console.log(
+    "SAVED EXAMS COUNT:",
+    savedExams.length
+);
+
+console.log(
+    "SAVED EXAMS DATA:",
+    JSON.stringify(
+        savedExams,
+        null,
+        2
+    )
+);
 
 }
 

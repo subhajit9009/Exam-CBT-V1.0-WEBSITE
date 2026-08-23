@@ -505,9 +505,7 @@ grid-template-columns:1fr;
 
     border-radius: 50%;
 
-    background: #dfefcc;
-
-    color: #64748b;
+    background: #ffffff;
 
     display: flex;
 
@@ -517,62 +515,94 @@ grid-template-columns:1fr;
 
     cursor: pointer;
 
-    font-size: 17px;
-
     padding: 0;
 
     box-shadow:
-        0 4px 10px rgba(0, 0, 0, 0.10);
+        0 4px 12px rgba(0, 0, 0, 0.12);
 
     transition:
-        all 0.2s ease;
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 
     z-index: 10;
 }
 
 
-/* Hover */
+/* ==========================================
+   BOOKMARK EMOJI
+========================================== */
+
+.examBookmarkBtn .bookmarkIcon {
+
+    display: block;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    pointer-events: none;
+
+}
+
+
+/* ==========================================
+   HOVER - NOT SAVED
+========================================== */
 
 .examBookmarkBtn:hover {
 
     transform: translateY(-2px);
 
-    background: #dff0af;
-
-    color: #cbf18e;
+    background: #f1f5f9;
 
     box-shadow:
-        0 6px 14px rgba(37, 99, 235, 0.20);
+        0 6px 15px rgba(0, 0, 0, 0.16);
 
 }
 
 
-/* Saved state */
+/* ==========================================
+   SAVED
+========================================== */
 
 .examBookmarkBtn.saved {
 
-    background: #ebbe57;
-
-    color: #ffffff;
+    background: #c6f382;
 
     box-shadow:
-        0 5px 12px rgba(11, 68, 40, 0.25);
+        0 5px 14px rgba(37, 99, 235, 0.30);
 
 }
 
 
-/* Saved hover */
+/* ==========================================
+   SAVED HOVER
+========================================== */
 
 .examBookmarkBtn.saved:hover {
 
-    background: #ac9d2a;
+    background: #d5f47f;
 
-    color: #ffffff;
+    transform: translateY(-2px);
 
 }
 
 
-/* Disabled */
+/* ==========================================
+   CLICK
+========================================== */
+
+.examBookmarkBtn:active {
+
+    transform: scale(0.92);
+
+}
+
+
+/* ==========================================
+   DISABLED
+========================================== */
 
 .examBookmarkBtn:disabled {
 
@@ -581,26 +611,5 @@ grid-template-columns:1fr;
     cursor: wait;
 
     transform: none;
-
-}
-
-
-/* Icon */
-
-.examBookmarkBtn i {
-
-    pointer-events: none;
-
-}
-
-.bookmarkIcon {
-
-    display: block;
-
-    font-size: 19px;
-
-    line-height: 1;
-
-    pointer-events: none;
 
 }

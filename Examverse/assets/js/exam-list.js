@@ -13,6 +13,12 @@ document.getElementById("examContainer");
 const searchExam =
 document.getElementById("searchExam");
 
+// ==========================================
+// SAVED EXAM STATE
+// ==========================================
+
+let savedExamIds = new Set();
+
 //==========================================
 // CLEAR STALE EXAM PAGE SESSION
 //==========================================
@@ -106,7 +112,7 @@ let completedAttempts = [];
 // SAVED EXAMS
 // ==========================================
 
-let savedExamIds = new Set();
+savedExamIds = new Set();
 
 if (user) {
 
@@ -704,6 +710,10 @@ loadExams();
 // SAVE / REMOVE
 //==========================================
 
+//==========================================
+// SAVE / REMOVE EXAM BOOKMARK
+//==========================================
+
 async function toggleExamBookmark(
     examId,
     button
@@ -719,8 +729,14 @@ async function toggleExamBookmark(
     }
 
 
+    console.log(
+        "Processing bookmark:",
+        examId
+    );
+
+
     // ======================================
-    // GET CURRENT USER
+    // GET USER
     // ======================================
 
     const {
@@ -738,6 +754,11 @@ async function toggleExamBookmark(
         !authData.user
     ) {
 
+        console.error(
+            "User error:",
+            authError
+        );
+
         alert(
             "Please login again."
         );
@@ -747,8 +768,8 @@ async function toggleExamBookmark(
     }
 
 
-    const user =
-        authData.user;
+    const userId =
+        authData.user.id;
 
 
     button.disabled =
@@ -758,7 +779,7 @@ async function toggleExamBookmark(
     try {
 
         // ==================================
-        // CHECK IF ALREADY SAVED
+        // CHECK CURRENT BOOKMARK
         // ==================================
 
         const {
@@ -773,7 +794,7 @@ async function toggleExamBookmark(
 
                 .eq(
                     "user_id",
-                    user.id
+                    userId
                 )
 
                 .eq(
@@ -787,12 +808,12 @@ async function toggleExamBookmark(
         if (checkError) {
 
             console.error(
-                "Bookmark check error:",
+                "Bookmark check failed:",
                 checkError
             );
 
             alert(
-                "Unable to check bookmark."
+                "Unable to check saved exam."
             );
 
             return;
@@ -801,13 +822,19 @@ async function toggleExamBookmark(
 
 
         // ==================================
-        // REMOVE BOOKMARK
+        // ALREADY SAVED → REMOVE
         // ==================================
 
         if (existing) {
 
+            console.log(
+                "Removing bookmark:",
+                existing.id
+            );
+
+
             const {
-                error
+                error: deleteError
             } =
                 await supabaseClient
 
@@ -822,15 +849,15 @@ async function toggleExamBookmark(
 
                     .eq(
                         "user_id",
-                        user.id
+                        userId
                     );
 
 
-            if (error) {
+            if (deleteError) {
 
                 console.error(
-                    "Remove bookmark error:",
-                    error
+                    "Bookmark delete failed:",
+                    deleteError
                 );
 
                 alert(
@@ -842,6 +869,8 @@ async function toggleExamBookmark(
             }
 
 
+            // Update local state
+
             savedExamIds.delete(
                 String(
                     examId
@@ -849,9 +878,16 @@ async function toggleExamBookmark(
             );
 
 
+            // Update button immediately
+
             updateExamBookmarkButton(
                 button,
                 false
+            );
+
+
+            console.log(
+                "Bookmark removed successfully."
             );
 
 
@@ -861,10 +897,17 @@ async function toggleExamBookmark(
 
 
         // ==================================
-        // SAVE BOOKMARK
+        // NOT SAVED → SAVE
         // ==================================
 
+        console.log(
+            "Saving exam:",
+            examId
+        );
+
+
         const {
+            data: inserted,
             error: insertError
         } =
             await supabaseClient
@@ -874,54 +917,43 @@ async function toggleExamBookmark(
                 .insert({
 
                     user_id:
-                        user.id,
+                        userId,
 
                     exam_id:
                         examId
 
-                });
+                })
+
+                .select()
+                .single();
 
 
         if (insertError) {
 
             console.error(
-                "Save bookmark error:",
+                "Bookmark insert failed:",
                 insertError
             );
 
-
-            // Already saved
-            if (
-                insertError.code ===
-                "23505"
-            ) {
-
-                savedExamIds.add(
-                    String(
-                        examId
-                    )
-                );
-
-
-                updateExamBookmarkButton(
-                    button,
-                    true
-                );
-
-
-                return;
-
-            }
-
-
             alert(
-                "Unable to save exam."
+                "Unable to save exam.\n\n" +
+                insertError.message
             );
 
             return;
 
         }
 
+
+        console.log(
+            "Bookmark saved:",
+            inserted
+        );
+
+
+        // ==================================
+        // UPDATE LOCAL STATE
+        // ==================================
 
         savedExamIds.add(
             String(
@@ -930,12 +962,38 @@ async function toggleExamBookmark(
         );
 
 
+        // ==================================
+        // UPDATE BUTTON IMMEDIATELY
+        // ==================================
+
         updateExamBookmarkButton(
             button,
             true
         );
 
+
+        console.log(
+            "Bookmark button updated."
+        );
+
     }
+
+    catch (error) {
+
+    console.error(
+        "Bookmark system error:",
+        error
+    );
+
+    alert(
+        "Bookmark operation failed.\n\n" +
+        (
+            error?.message ||
+            String(error)
+        )
+    );
+
+}
 
     finally {
 
@@ -947,7 +1005,7 @@ async function toggleExamBookmark(
 }
 
 //==========================================
-// UPDATE BOOKMARK ICON
+// UPDATE BOOKMARK BUTTON
 //==========================================
 
 function updateExamBookmarkButton(
@@ -971,19 +1029,15 @@ function updateExamBookmarkButton(
 
         button.innerHTML = `
 
-    <span class="bookmarkIcon">
-        🔖
-    </span>
+            <span class="bookmarkIcon">
+                🔖
+            </span>
 
-`;
+        `;
+
 
         button.title =
             "Remove from Bookmarks";
-
-        button.setAttribute(
-            "aria-label",
-            "Remove from Bookmarks"
-        );
 
     }
 
@@ -994,29 +1048,24 @@ function updateExamBookmarkButton(
         );
 
 
-       button.innerHTML = `
+        button.innerHTML = `
 
-    <span class="bookmarkIcon">
-        🔖
-    </span>
+            <span class="bookmarkIcon">
+                🔖
+            </span>
 
-`;
+        `;
 
 
         button.title =
             "Save to Bookmarks";
-
-        button.setAttribute(
-            "aria-label",
-            "Save to Bookmarks"
-        );
 
     }
 
 }
 
 //==========================================
-// BOOKMARK CLICK HANDLER
+// EXAM BOOKMARK CLICK HANDLER
 //==========================================
 
 document.addEventListener(
@@ -1029,6 +1078,7 @@ document.addEventListener(
             );
 
 
+        // Not a bookmark click
         if (!button) {
 
             return;
@@ -1036,10 +1086,8 @@ document.addEventListener(
         }
 
 
-        // ==================================
-        // VERY IMPORTANT
-        // Don't trigger other card actions
-        // ==================================
+        // Stop the click from affecting
+        // the exam card or other buttons
 
         event.preventDefault();
 
@@ -1047,8 +1095,26 @@ document.addEventListener(
 
 
         const examId =
-            button.dataset
-                .examBookmark;
+            button.getAttribute(
+                "data-exam-bookmark"
+            );
+
+
+        if (!examId) {
+
+            console.error(
+                "Exam bookmark: exam ID missing."
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "Exam bookmark clicked:",
+            examId
+        );
 
 
         await toggleExamBookmark(
