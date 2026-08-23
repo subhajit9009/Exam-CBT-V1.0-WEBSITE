@@ -143,7 +143,7 @@ body{
 
 .login-card p{
 
-    color:#64748b;
+    color:#ebe8e9;
 
     margin-bottom:30px;
 
@@ -165,7 +165,7 @@ body{
 
     font-weight:600;
 
-    color:#334155;
+    color:#dfe3e9;
 
 }
 
@@ -338,5 +338,553 @@ font-size:30px;
     display:block;
 
     margin:0 auto 15px;
+
+}
+
+/* =========================================================
+   EXAMVERSE BUBBLE GLASSMORPHISM
+   LOGIN PAGE — VERSION 1.0
+
+   VISUAL DESIGN ONLY
+   DO NOT MODIFY HTML / JS / FUNCTIONALITY
+========================================================= */
+
+
+/* =========================================================
+   MAIN BACKGROUND
+========================================================= */
+
+body {
+
+    background:
+        radial-gradient(
+            circle at 12% 18%,
+            rgba(96,165,250,0.30),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 88% 78%,
+            rgba(167,139,250,0.30),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 70% 12%,
+            rgba(59,130,246,0.18),
+            transparent 24%
+        ),
+        linear-gradient(
+            135deg,
+            #0f2f75 0%,
+            #2563eb 45%,
+            #5b21b6 100%
+        );
+
+    position: relative;
+
+    overflow-x: hidden;
+
+}
+
+
+/* =========================================================
+   FLOATING BUBBLE — 1
+========================================================= */
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    width: 330px;
+    height: 330px;
+
+    top: -90px;
+    left: -90px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 30% 28%,
+            rgba(255,255,255,0.42),
+            rgba(147,197,253,0.20) 32%,
+            rgba(96,165,250,0.08) 60%,
+            transparent 72%
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.20);
+
+    box-shadow:
+        inset -15px -20px 35px
+        rgba(30,64,175,0.15),
+        inset 12px 12px 30px
+        rgba(255,255,255,0.14),
+        0 20px 70px
+        rgba(15,23,42,0.14);
+
+    filter:
+        blur(1px);
+
+    pointer-events: none;
+
+    z-index: 0;
+
+}
+
+
+/* =========================================================
+   FLOATING BUBBLE — 2
+========================================================= */
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    width: 240px;
+    height: 240px;
+
+    right: -55px;
+    bottom: -55px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 32% 28%,
+            rgba(255,255,255,0.36),
+            rgba(196,181,253,0.18) 35%,
+            rgba(139,92,246,0.08) 62%,
+            transparent 74%
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.18);
+
+    box-shadow:
+        inset -12px -15px 30px
+        rgba(76,29,149,0.12),
+        inset 10px 10px 25px
+        rgba(255,255,255,0.12),
+        0 20px 60px
+        rgba(15,23,42,0.14);
+
+    filter:
+        blur(1px);
+
+    pointer-events: none;
+
+    z-index: 0;
+
+}
+
+
+/* =========================================================
+   MAIN LOGIN GLASS
+========================================================= */
+
+.login-container {
+
+    position: relative;
+
+    z-index: 2;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.22),
+            rgba(255,255,255,0.10)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.30);
+
+    box-shadow:
+        0 30px 90px
+        rgba(7,18,52,0.32),
+        inset 0 1px 0
+        rgba(255,255,255,0.32);
+
+    backdrop-filter:
+        blur(28px);
+
+    -webkit-backdrop-filter:
+        blur(28px);
+
+}
+
+
+/* =========================================================
+   LEFT BRANDING PANEL
+========================================================= */
+
+.left-panel {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(37,99,235,0.72),
+            rgba(29,78,216,0.54)
+        );
+
+    border-right:
+        1px solid
+        rgba(255,255,255,0.20);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+}
+
+
+/* =========================================================
+   BRANDING TEXT
+========================================================= */
+
+.left-panel h1,
+.left-panel h2,
+.left-panel p {
+
+    text-shadow:
+        0 2px 15px
+        rgba(15,23,42,0.16);
+
+}
+
+
+/* =========================================================
+   CREATOR GLASS
+========================================================= */
+
+.creator {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.20),
+            rgba(255,255,255,0.08)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.24);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.18),
+        0 12px 30px
+        rgba(15,23,42,0.10);
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+}
+
+
+/* =========================================================
+   RIGHT FORM AREA
+========================================================= */
+
+.right-panel {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.17),
+            rgba(255,255,255,0.07)
+        );
+
+    backdrop-filter:
+        blur(22px);
+
+    -webkit-backdrop-filter:
+        blur(22px);
+
+}
+
+
+/* =========================================================
+   FORM INPUTS
+========================================================= */
+
+.input-box input {
+
+    background:
+        rgba(255,255,255,0.18);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.30);
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.12);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+}
+
+
+/* Placeholder */
+
+.input-box input::placeholder {
+
+    color:
+        rgba(255,255,255,0.70);
+
+}
+
+
+/* Focus */
+
+.input-box input:focus {
+
+    background:
+        rgba(255,255,255,0.25);
+
+    border-color:
+        rgba(255,255,255,0.60);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(147,197,253,0.15),
+        0 8px 25px
+        rgba(37,99,235,0.14);
+
+}
+
+
+/* =========================================================
+   INPUT LABELS
+========================================================= */
+
+.input-box label {
+
+    color:
+        rgba(255,255,255,0.90);
+
+}
+
+
+/* =========================================================
+   REMEMBER ME
+========================================================= */
+
+.remember-row {
+
+    color:
+        rgba(255,255,255,0.85);
+
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(219, 14, 48, 0.95),
+            rgba(236, 201, 96, 0.95)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.25);
+
+    box-shadow:
+        0 12px 30px
+        rgba(37,99,235,0.28),
+        inset 0 1px 0
+        rgba(255,255,255,0.25);
+
+}
+
+
+/* Hover */
+
+.login-btn:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgb(243, 43, 43),
+            rgb(240, 155, 227)
+        );
+
+    box-shadow:
+        0 16px 38px
+        rgba(37,99,235,0.34),
+        inset 0 1px 0
+        rgba(255,255,255,0.30);
+
+}
+
+
+/* =========================================================
+   AUTH LINKS
+========================================================= */
+
+.login-link a {
+
+    color:
+        #dbeafe;
+
+}
+
+
+.login-link a:hover {
+
+    color:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   SUBTLE GLASS HIGHLIGHT
+========================================================= */
+
+.login-container {
+
+    overflow: hidden;
+
+}
+
+
+.login-container::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    top: -170px;
+    right: -120px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,0.16),
+            transparent 68%
+        );
+
+    pointer-events: none;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    body::before {
+
+        width: 220px;
+        height: 220px;
+
+        top: -80px;
+        left: -80px;
+
+    }
+
+
+    body::after {
+
+        width: 170px;
+        height: 170px;
+
+        right: -65px;
+        bottom: -65px;
+
+    }
+
+
+    .login-container {
+
+        backdrop-filter:
+            blur(22px);
+
+        -webkit-backdrop-filter:
+            blur(22px);
+
+    }
+
+}
+
+/* =========================================================
+   LOGIN PAGE TEXT COLORS
+========================================================= */
+
+/* "Sign into your account." */
+.login-card > p {
+
+    color: #334155 !important;
+
+    font-weight: 500;
+
+}
+
+
+/* "Forgot Password?" */
+.links a:first-of-type {
+
+    color: #e20808 !important;
+
+    font-weight: 700 !important;
+
+}
+
+
+/* "Register Here" */
+.links a:last-of-type {
+
+    color: #19ecb1 !important;
+
+    font-weight: 700 !important;
+
+}
+
+
+/* Hover — Forgot Password */
+.links a:first-of-type:hover {
+
+    color: #991b1b !important;
+
+}
+
+
+/* Hover — Register Here */
+.links a:last-of-type:hover {
+
+    color: #e70f1a !important;
 
 }
