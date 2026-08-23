@@ -1113,16 +1113,18 @@ async function downloadMyData() {
 async function clearTestHistory() {
 
     if (!currentUser) {
+
+        alert("User not logged in.");
+
         return;
     }
 
 
-    const confirmed =
-        confirm(
-            "Clear your test history?\n\n" +
-            "This will permanently remove your completed test attempts from Previous Tests.\n\n" +
-            "Bookmarked attempts will NOT be deleted."
-        );
+    const confirmed = confirm(
+        "Clear your test history?\n\n" +
+        "Completed tests will be removed from Previous Tests.\n\n" +
+        "Bookmarked attempts will NOT be removed."
+    );
 
 
     if (!confirmed) {
@@ -1132,11 +1134,15 @@ async function clearTestHistory() {
 
     try {
 
-        /*
-         * ==========================================
-         * GET BOOKMARKED ATTEMPT IDS
-         * ==========================================
-         */
+        console.log(
+            "Clearing history for user:",
+            currentUser.id
+        );
+
+
+        // ==========================================
+        // 1. GET BOOKMARKED ATTEMPT IDS
+        // ==========================================
 
         const {
             data: savedAttempts,
@@ -1146,9 +1152,7 @@ async function clearTestHistory() {
 
             .from("saved_attempts")
 
-            .select(
-                "attempt_id"
-            )
+            .select("attempt_id")
 
             .eq(
                 "user_id",
@@ -1157,14 +1161,14 @@ async function clearTestHistory() {
 
 
         if (savedError) {
+
             throw savedError;
+
         }
 
 
-        const bookmarkedAttemptIds =
-            (
-                savedAttempts || []
-            )
+        const bookmarkedIds =
+            (savedAttempts || [])
                 .map(
                     item =>
                         item.attempt_id
@@ -1172,15 +1176,19 @@ async function clearTestHistory() {
                 .filter(Boolean);
 
 
-        /*
-         * ==========================================
-         * LOAD ALL COMPLETED ATTEMPTS
-         * ==========================================
-         */
+        console.log(
+            "Bookmarked attempt IDs:",
+            bookmarkedIds
+        );
+
+
+        // ==========================================
+        // 2. GET ALL COMPLETED ATTEMPTS
+        // ==========================================
 
         const {
             data: completedAttempts,
-            error: attemptsError
+            error: completedError
         } =
         await supabaseClient
 
@@ -1199,16 +1207,22 @@ async function clearTestHistory() {
             );
 
 
-        if (attemptsError) {
-            throw attemptsError;
+        if (completedError) {
+
+            throw completedError;
+
         }
 
 
-        /*
-         * ==========================================
-         * REMOVE ONLY NON-BOOKMARKED ATTEMPTS
-         * ==========================================
-         */
+        console.log(
+            "Completed attempts:",
+            completedAttempts
+        );
+
+
+        // ==========================================
+        // 3. FIND ONLY NON-BOOKMARKED ATTEMPTS
+        // ==========================================
 
         const idsToDelete =
             (completedAttempts || [])
@@ -1218,31 +1232,40 @@ async function clearTestHistory() {
                 )
                 .filter(
                     id =>
-                        !bookmarkedAttemptIds.includes(
-                            id
-                        )
+                        !bookmarkedIds.includes(id)
                 );
 
+
+        console.log(
+            "Attempts to delete:",
+            idsToDelete
+        );
+
+
+        // ==========================================
+        // 4. NOTHING TO DELETE
+        // ==========================================
 
         if (
             idsToDelete.length === 0
         ) {
 
             alert(
-                "There are no removable tests in your history. Your bookmarked attempts have been preserved."
+                completedAttempts?.length
+                    ? "All your completed tests are bookmarked, so nothing was removed."
+                    : "There is no test history to clear."
             );
 
             return;
         }
 
 
-        /*
-         * ==========================================
-         * DELETE IN BATCH
-         * ==========================================
-         */
+        // ==========================================
+        // 5. DELETE NON-BOOKMARKED ATTEMPTS
+        // ==========================================
 
         const {
+            data: deletedAttempts,
             error: deleteError
         } =
         await supabaseClient
@@ -1259,28 +1282,42 @@ async function clearTestHistory() {
             .in(
                 "id",
                 idsToDelete
-            );
+            )
+
+            .select("id");
 
 
         if (deleteError) {
+
             throw deleteError;
+
         }
 
 
-        /*
-         * ==========================================
-         * DONE
-         * ==========================================
-         */
+        console.log(
+            "Actually deleted:",
+            deletedAttempts
+        );
+
+
+        // ==========================================
+        // 6. SUCCESS
+        // ==========================================
 
         alert(
-            `${idsToDelete.length} test history record${
-                idsToDelete.length === 1
+            `${deletedAttempts.length} test${
+                deletedAttempts.length === 1
                     ? ""
                     : "s"
             } cleared successfully.`
         );
 
+
+        // ==========================================
+        // 7. REFRESH
+        // ==========================================
+
+        window.location.reload();
 
     }
 
@@ -1293,8 +1330,8 @@ async function clearTestHistory() {
 
 
         alert(
-            error.message ||
-            "Unable to clear test history."
+            "Unable to clear test history.\n\n" +
+            error.message
         );
 
     }
@@ -1563,3 +1600,178 @@ async function checkDeletionStatus() {
     }
 
 }
+
+async function deleteAccount() {
+
+    if (!currentUser) {
+
+        alert("User not logged in.");
+
+        return;
+    }
+
+
+    const firstConfirm = confirm(
+        "Delete your ExamVerse account?\n\n" +
+        "Your account will enter a 30-day recovery period.\n\n" +
+        "You can recover your account by logging in again during those 30 days.\n\n" +
+        "After 30 days, the account will be permanently deleted."
+    );
+
+
+    if (!firstConfirm) {
+
+        return;
+    }
+
+
+    const secondConfirm = confirm(
+        "FINAL CONFIRMATION\n\n" +
+        "Are you sure you want to schedule your account for deletion?"
+    );
+
+
+    if (!secondConfirm) {
+
+        return;
+    }
+
+
+    try {
+
+        const deletionDate =
+            new Date(
+                Date.now() +
+                (30 * 24 * 60 * 60 * 1000)
+            );
+
+
+        console.log(
+            "Account deletion scheduled:",
+            deletionDate.toISOString()
+        );
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+
+            .from("profiles")
+
+            .update({
+
+                deletion_scheduled_at:
+                    deletionDate.toISOString()
+
+            })
+
+            .eq(
+                "id",
+                currentUser.id
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Account deletion scheduling error:",
+                error
+            );
+
+            alert(
+                "Unable to schedule account deletion.\n\n" +
+                error.message
+            );
+
+            return;
+        }
+
+
+        /*
+         * ==========================================
+         * LOG OUT
+         * ==========================================
+         */
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        /*
+         * Clear local ExamVerse data.
+         */
+
+        if (
+            typeof Storage !== "undefined" &&
+            typeof Storage.logout === "function"
+        ) {
+
+            Storage.logout();
+
+        }
+
+
+        /*
+         * Clear examination session.
+         */
+
+        sessionStorage.removeItem(
+            "selectedExam"
+        );
+
+        sessionStorage.removeItem(
+            "attemptId"
+        );
+
+        sessionStorage.removeItem(
+            "attemptStartedFresh"
+        );
+
+        sessionStorage.removeItem(
+            "examStartTime"
+        );
+
+        sessionStorage.removeItem(
+            "examActiveStartedAt"
+        );
+
+        sessionStorage.removeItem(
+            "currentQuestionIndex"
+        );
+
+        sessionStorage.removeItem(
+            "currentSectionIndex"
+        );
+
+
+        alert(
+            "Your account has been scheduled for deletion.\n\n" +
+            "You have 30 days to recover it.\n\n" +
+            "Simply log in again with your email and password during this period."
+        );
+
+
+        window.location.replace(
+            "login.html"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Delete Account Error:",
+            error
+        );
+
+        alert(
+            "Unable to process account deletion.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
