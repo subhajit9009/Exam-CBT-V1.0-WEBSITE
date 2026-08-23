@@ -1036,3 +1036,92 @@ td {
 
     border-bottom: 1px solid rgba(255,255,255,0.14);
 }
+
+/* =====================================================
+   BOOKMARK ACTION
+===================================================== */
+
+.bookmarkAction {
+
+    border: 1px solid #dbe4f2;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    padding: 8px 11px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    transition:
+        .2s ease;
+
+}
+
+
+.bookmarkAction:hover {
+
+    border-color: #2563eb;
+
+    color: #2563eb;
+
+    background: #f5f8ff;
+
+}
+
+
+.bookmarkAction.saved {
+
+    background: #eaf1ff;
+
+    border-color: #2563eb;
+
+    color: #2563eb;
+
+}
+
+
+.bookmarkAction.saved:hover {
+
+    background: #fff0f0;
+
+    border-color: #dc2626;
+
+    color: #dc2626;
+
+}
+
+
+.bookmarkAction.saved:hover .bookmarkText {
+
+    display: none;
+
+}
+
+
+.bookmarkAction.saved:hover::after {
+
+    content: "Remove";
+
+}
+
+
+.bookmarkAction i {
+
+    font-size: 13px;
+
+}

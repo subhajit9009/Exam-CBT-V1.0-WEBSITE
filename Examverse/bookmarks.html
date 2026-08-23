@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>ExamVerse | Bookmarks</title>
+
+
+<!-- =====================================================
+     GOOGLE FONT
+===================================================== -->
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+
+<!-- =====================================================
+     FONT AWESOME
+===================================================== -->
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+>
+
+
+<!-- =====================================================
+     BOOKMARK CSS
+===================================================== -->
+
+<link
+    rel="stylesheet"
+    href="assets/css/bookmarks.css"
+>
+
+
+<!-- =====================================================
+     LOADER CSS
+===================================================== -->
+
+<link
+    rel="stylesheet"
+    href="assets/css/loader.css"
+>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     PAGE LOADER
+===================================================== -->
+
+<div id="loader">
+
+    <img
+        src="assets/images/logo.png"
+        class="loader-logo"
+        alt="ExamVerse Logo"
+    >
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+        Loading...
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+
+    <div class="logo">
+
+        <img
+            src="assets/images/logo.png"
+            alt="ExamVerse Logo"
+            class="sidebar-logo"
+        >
+
+        <h2>
+            ExamVerse
+        </h2>
+
+        <p>
+            CBT Portal
+        </p>
+
+    </div>
+
+
+
+    <ul>
+
+
+        <li id="sidebarDashboard">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>
+                Dashboard
+            </span>
+
+        </li>
+
+
+
+        <li id="sidebarNewTest">
+
+            <i class="fa-solid fa-file-circle-plus"></i>
+
+            <span>
+                New Test
+            </span>
+
+        </li>
+
+
+
+        <li id="sidebarPreviousTests">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            <span>
+                Previous Tests
+            </span>
+
+        </li>
+
+
+
+        <li id="sidebarPerformance">
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            <span>
+                Performance
+            </span>
+
+        </li>
+
+
+
+        <li
+            id="sidebarBookmarks"
+            class="active"
+        >
+
+            <i class="fa-solid fa-bookmark"></i>
+
+            <span>
+                Bookmarks
+            </span>
+
+        </li>
+
+
+
+        <li id="sidebarSettings">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>
+                Settings
+            </span>
+
+        </li>
+
+
+
+        <li id="sidebarLogout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>
+                Logout
+            </span>
+
+        </li>
+
+
+    </ul>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main-content">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <section class="page-header">
+
+
+        <div>
+
+            <div class="eyebrow">
+
+                BOOKMARKS
+
+            </div>
+
+
+            <h1>
+
+                My Bookmarks
+
+            </h1>
+
+
+            <p>
+
+                Save important tests and exams
+                for quick access later.
+
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                id="refreshBtn"
+                class="header-btn"
+            >
+
+                <i class="fa-solid fa-rotate"></i>
+
+                Refresh
+
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         SUMMARY CARDS
+    ================================================== -->
+
+    <section class="summary-grid">
+
+
+        <!-- SAVED ATTEMPTS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+            </div>
+
+
+            <div class="summary-content">
+
+                <span>
+                    Saved Attempts
+                </span>
+
+                <strong id="savedAttemptsCount">
+                    0
+                </strong>
+
+                <small>
+                    Completed tests
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SAVED EXAMS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon purple">
+
+                <i class="fa-solid fa-book-open"></i>
+
+            </div>
+
+
+            <div class="summary-content">
+
+                <span>
+                    Saved Exams
+                </span>
+
+                <strong id="savedExamsCount">
+                    0
+                </strong>
+
+                <small>
+                    Tests saved for later
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TOTAL -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon orange">
+
+                <i class="fa-solid fa-bookmark"></i>
+
+            </div>
+
+
+            <div class="summary-content">
+
+                <span>
+                    Total Saved
+                </span>
+
+                <strong id="totalSavedCount">
+                    0
+                </strong>
+
+                <small>
+                    Attempts + exams
+                </small>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         SAVED ATTEMPTS
+    ================================================== -->
+
+    <section class="bookmark-section">
+
+
+        <div class="section-header">
+
+
+            <div>
+
+                <div class="section-eyebrow">
+                    COMPLETED TESTS
+                </div>
+
+                <h2>
+                    Saved Attempts
+                </h2>
+
+                <p>
+                    Tests you've completed and saved
+                    for quick review.
+                </p>
+
+            </div>
+
+
+            <span
+                id="attemptBadge"
+                class="count-badge"
+            >
+                0
+            </span>
+
+
+        </div>
+
+
+
+        <!-- SEARCH -->
+
+        <div class="filter-bar">
+
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    id="attemptSearch"
+                    placeholder="Search saved attempts..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <select id="attemptFilter">
+
+                <option value="">
+                    All Results
+                </option>
+
+                <option value="Pass">
+                    Passed
+                </option>
+
+                <option value="Fail">
+                    Failed
+                </option>
+
+            </select>
+
+
+        </div>
+
+
+
+        <!-- ATTEMPTS -->
+
+        <div
+            id="savedAttemptsContainer"
+            class="bookmark-list"
+        >
+
+            <div class="loading-state">
+
+                <div class="mini-spinner"></div>
+
+                Loading saved attempts...
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         SAVED EXAMS
+    ================================================== -->
+
+    <section class="bookmark-section">
+
+
+        <div class="section-header">
+
+
+            <div>
+
+                <div class="section-eyebrow">
+                    TAKE LATER
+                </div>
+
+                <h2>
+                    Saved Exams
+                </h2>
+
+                <p>
+                    Exams you've saved so you don't
+                    have to search for them again.
+                </p>
+
+            </div>
+
+
+            <span
+                id="examBadge"
+                class="count-badge"
+            >
+                0
+            </span>
+
+
+        </div>
+
+
+
+        <!-- SEARCH -->
+
+        <div class="filter-bar">
+
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    id="examSearch"
+                    placeholder="Search saved exams..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- EXAMS -->
+
+        <div
+            id="savedExamsContainer"
+            class="bookmark-list"
+        >
+
+            <div class="loading-state">
+
+                <div class="mini-spinner"></div>
+
+                Loading saved exams...
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<!-- =====================================================
+     YOUR SUPABASE CONFIG
+===================================================== -->
+
+<script src="assets/js/supabase.js"></script>
+
+
+<!-- =====================================================
+     GLOBAL LOADER
+===================================================== -->
+
+<script src="assets/js/loader.js"></script>
+
+
+<!-- =====================================================
+     BOOKMARK JS
+===================================================== -->
+
+<script src="assets/js/bookmarks.js"></script>
+
+
+</body>
+
+</html>

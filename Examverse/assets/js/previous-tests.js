@@ -800,15 +800,37 @@ function renderTests() {
 
                     <td>
 
-                        <span
-                            class="statusBadge ${statusClass}"
-                        >
+    <span
+        class="statusBadge ${statusClass}"
+    >
 
-                            ${statusText}
+        ${statusText}
 
-                        </span>
+    </span>
 
-                    </td>
+</td>
+
+<td>
+
+    <button
+        type="button"
+        class="bookmarkAction"
+        data-attempt-bookmark="${escapeHTML(
+            String(
+                attempt.id
+            )
+        )}"
+    >
+
+        <i class="fa-regular fa-bookmark"></i>
+
+        <span class="bookmarkText">
+            Save
+        </span>
+
+    </button>
+
+</td>
 
                 </tr>
 
@@ -965,6 +987,25 @@ historyTable.addEventListener(
     "click",
     function (event) {
 
+        // ======================================
+        // IGNORE BOOKMARK BUTTON
+        // ======================================
+
+        if (
+            event.target.closest(
+                "[data-attempt-bookmark]"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        // ======================================
+        // FIND TEST ROW
+        // ======================================
+
         const row =
             event.target.closest(
                 ".historyRow"
@@ -978,6 +1019,10 @@ historyTable.addEventListener(
         }
 
 
+        // ======================================
+        // GET ATTEMPT ID
+        // ======================================
+
         const attemptId =
             row.dataset.attemptId;
 
@@ -988,6 +1033,10 @@ historyTable.addEventListener(
 
         }
 
+
+        // ======================================
+        // SAVE RESULT ATTEMPT ID
+        // ======================================
 
         sessionStorage.setItem(
             "resultAttemptId",
@@ -1005,12 +1054,15 @@ historyTable.addEventListener(
         );
 
 
+        // ======================================
+        // OPEN RESULT PAGE
+        // ======================================
+
         window.location.href =
             "result.html";
 
     }
 );
-
 
 // ==========================================
 // SAFE HTML
@@ -1142,3 +1194,475 @@ if (logoutBtn) {
 // ==========================================
 
 loadPreviousTests();
+
+/* =====================================================
+   EXAMVERSE
+   SAVED ATTEMPTS / BOOKMARK SYSTEM
+===================================================== */
+
+
+/* =====================================================
+   SAVE ATTEMPT
+===================================================== */
+
+async function saveAttemptBookmark(
+    attemptId,
+    button
+) {
+
+    if (!attemptId) {
+
+        console.error(
+            "Missing attempt ID."
+        );
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       GET CURRENT USER
+    ----------------------------------------- */
+
+    const {
+        data: authData,
+        error: authError
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        authError ||
+        !authData ||
+        !authData.user
+    ) {
+
+        alert(
+            "Please login again."
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        authData.user;
+
+
+    /* -----------------------------------------
+       CHECK WHETHER ALREADY SAVED
+    ----------------------------------------- */
+
+    const {
+        data: existing,
+        error: checkError
+    } =
+        await supabaseClient
+
+            .from(
+                "saved_attempts"
+            )
+
+            .select("id")
+
+            .eq(
+                "user_id",
+                user.id
+            )
+
+            .eq(
+                "attempt_id",
+                attemptId
+            )
+
+            .maybeSingle();
+
+
+    if (checkError) {
+
+        console.error(
+            "Bookmark check error:",
+            checkError
+        );
+
+        alert(
+            "Unable to check bookmark."
+        );
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       REMOVE IF ALREADY SAVED
+    ----------------------------------------- */
+
+    if (existing) {
+
+        const confirmed =
+            confirm(
+                "Remove this test from Bookmarks?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+
+                .from(
+                    "saved_attempts"
+                )
+
+                .delete()
+
+                .eq(
+                    "id",
+                    existing.id
+                )
+
+                .eq(
+                    "user_id",
+                    user.id
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Remove bookmark error:",
+                error
+            );
+
+            alert(
+                "Unable to remove bookmark."
+            );
+
+            return;
+
+        }
+
+
+        updateAttemptBookmarkButton(
+            button,
+            false
+        );
+
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       SAVE
+    ----------------------------------------- */
+
+    const {
+        error: insertError
+    } =
+        await supabaseClient
+
+            .from(
+                "saved_attempts"
+            )
+
+            .insert({
+
+                user_id:
+                    user.id,
+
+                attempt_id:
+                    attemptId
+
+            });
+
+
+    if (insertError) {
+
+        console.error(
+            "Save bookmark error:",
+            insertError
+        );
+
+
+        if (
+            insertError.code ===
+            "23505"
+        ) {
+
+            updateAttemptBookmarkButton(
+                button,
+                true
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Unable to save bookmark."
+        );
+
+        return;
+
+    }
+
+
+    updateAttemptBookmarkButton(
+        button,
+        true
+    );
+
+}
+
+
+
+/* =====================================================
+   UPDATE BUTTON
+===================================================== */
+
+function updateAttemptBookmarkButton(
+    button,
+    saved
+) {
+
+    if (!button) {
+
+        return;
+
+    }
+
+
+    if (saved) {
+
+        button.classList.add(
+            "saved"
+        );
+
+
+        button.innerHTML = `
+
+            <i class="fa-solid fa-bookmark"></i>
+
+            <span class="bookmarkText">
+                Saved
+            </span>
+
+        `;
+
+    }
+
+    else {
+
+        button.classList.remove(
+            "saved"
+        );
+
+
+        button.innerHTML = `
+
+            <i class="fa-regular fa-bookmark"></i>
+
+            <span class="bookmarkText">
+                Save
+            </span>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   CHECK ALL SAVED ATTEMPTS
+===================================================== */
+
+async function loadSavedAttemptIds() {
+
+    const {
+        data: authData,
+        error: authError
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        authError ||
+        !authData ||
+        !authData.user
+    ) {
+
+        return new Set();
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+
+            .from(
+                "saved_attempts"
+            )
+
+            .select(
+                "attempt_id"
+            )
+
+            .eq(
+                "user_id",
+                authData.user.id
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Saved attempts loading error:",
+            error
+        );
+
+        return new Set();
+
+    }
+
+
+    return new Set(
+
+        (data || [])
+            .map(
+                item =>
+                    String(
+                        item.attempt_id
+                    )
+            )
+
+    );
+
+}
+
+
+
+/* =====================================================
+   APPLY BOOKMARK STATUS
+===================================================== */
+
+async function applyAttemptBookmarkStatus() {
+
+    const savedIds =
+        await loadSavedAttemptIds();
+
+
+    document
+        .querySelectorAll(
+            "[data-attempt-bookmark]"
+        )
+        .forEach(
+            button => {
+
+                const attemptId =
+                    String(
+                        button.dataset
+                            .attemptBookmark
+                    );
+
+
+                updateAttemptBookmarkButton(
+
+                    button,
+
+                    savedIds.has(
+                        attemptId
+                    )
+
+                );
+
+            }
+        );
+
+}
+
+
+
+/* =====================================================
+   CLICK HANDLER
+===================================================== */
+
+document.addEventListener(
+    "click",
+    async function (event) {
+
+        const button =
+            event.target.closest(
+                "[data-attempt-bookmark]"
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        /*
+         * VERY IMPORTANT:
+         *
+         * Bookmark button must NOT
+         * trigger the table-row
+         * "View Result" click.
+         */
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        const attemptId =
+            button.dataset
+                .attemptBookmark;
+
+
+        button.disabled =
+            true;
+
+
+        try {
+
+            await saveAttemptBookmark(
+                attemptId,
+                button
+            );
+
+        }
+
+        finally {
+
+            button.disabled =
+                false;
+
+        }
+
+    }
+
+);
