@@ -2304,55 +2304,72 @@ function getUserLevel(
 
     const levels = [
 
-        {
-            name: "Beginner",
-            minXP: 0,
-            minTests: 0,
-            maxXP: 500,
-            maxTests: 5
-        },
+    {
+        name: "Beginner",
 
-        {
-            name: "Intermediate",
-            minXP: 500,
-            minTests: 5,
-            maxXP: 1500,
-            maxTests: 15
-        },
+        minXP: 0,
+        minTests: 0,
 
-        {
-            name: "Advanced",
-            minXP: 1500,
-            minTests: 15,
-            maxXP: 4000,
-            maxTests: 40
-        },
+        maxXP: 2500,
+        maxTests: 50
+    },
 
-        {
-            name: "Expert",
-            minXP: 4000,
-            minTests: 40,
-            maxXP: 8000,
-            maxTests: 100
-        },
 
-        {
-            name: "Master",
-            minXP: 8000,
-            minTests: 100,
-            maxXP: 15000,
-            maxTests: 250
-        },
+    {
+        name: "Intermediate",
 
-        {
-            name: "Legend",
-            minXP: 15000,
-            minTests: 250,
-            maxXP: null,
-            maxTests: null
-        }
+        minXP: 2500,
+        minTests: 50,
 
-    ];
+        maxXP: 6000,
+        maxTests: 100
+    },
+
+
+    {
+        name: "Advanced",
+
+        minXP: 6000,
+        minTests: 100,
+
+        maxXP: 13000,
+        maxTests: 200
+    },
+
+
+    {
+        name: "Expert",
+
+        minXP: 13000,
+        minTests: 200,
+
+        maxXP: 25000,
+        maxTests: 500
+    },
+
+
+    {
+        name: "Master",
+
+        minXP: 25000,
+        minTests: 500,
+
+        maxXP: 50000,
+        maxTests: 1000
+    },
+
+
+    {
+        name: "Legend",
+
+        minXP: 50000,
+        minTests: 1000,
+
+        maxXP: null,
+        maxTests: null
+    }
+
+];
 
 
     let currentLevel =
@@ -2916,13 +2933,15 @@ document.addEventListener(
 // LOGOUT
 // ==========================================
 
-document.getElementById(
+const logoutBtn = document.getElementById(
     "logoutBtn"
-)
+);
 
-.addEventListener(
-    "click",
-    async () => {
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        async () => {
 
         if (
             !confirm(
@@ -3034,6 +3053,8 @@ document.getElementById(
     }
 );
 
+}
+
 
 // ==========================================
 // TAKE NEW TEST
@@ -3066,29 +3087,32 @@ document.getElementById(
     }
 );
 
-
 // ==========================================
 // NEW TEST SIDEBAR
 // ==========================================
 
-document.getElementById(
-    "newTestBtn"
-)
+const newTestBtn =
+    document.getElementById(
+        "newTestBtn"
+    );
 
-.addEventListener(
-    "click",
-    () => {
+if (newTestBtn) {
 
-        sessionStorage.removeItem(
-    "selectedPreferredExam"
-);
+    newTestBtn.addEventListener(
+        "click",
+        () => {
 
+            sessionStorage.removeItem(
+                "selectedPreferredExam"
+            );
 
-        window.location.href =
-            "exam-list.html";
+            window.location.href =
+                "exam-list.html";
 
-    }
-);
+        }
+    );
+
+}
 
 
 // ==========================================
