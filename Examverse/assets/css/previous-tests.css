@@ -52,140 +52,133 @@ body {
     position: fixed;
 
     left: 0;
-
     top: 0;
 
-    width: 270px;
-
+    width: 260px;
     height: 100vh;
 
-    background:
-        #23449b;
+    background: #1e3a8a;
 
     color: white;
 
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
     z-index: 1000;
 
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.45) transparent;
 }
 
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.45);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,.7);
+}
 
 .logo {
 
     text-align: center;
-
-    padding: 28px 15px;
+    padding: 30px;
+    flex-shrink: 0;
 
 }
-
 
 .sidebar-logo {
 
     width: 80px;
-
     height: 80px;
 
     object-fit: contain;
-
     display: block;
 
-    margin:
-        0 auto 12px;
+    margin: 0 auto 12px;
 
 }
-
 
 .logo h2 {
 
-    font-size: 25px;
-
-    margin-bottom: 5px;
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
 
 }
-
 
 .logo p {
 
-    color:
-        #dbe7ff;
-
-    font-size: 14px;
+    margin-top: 8px;
+    font-size: 16px;
+    color: #e6e6e6;
+    opacity: .8;
 
 }
-
 
 .sidebar ul {
 
     list-style: none;
-
-    margin-top: 20px;
+    padding: 20px;
+    margin: 0;
+    flex: 1;
 
 }
-
 
 .sidebar ul li {
 
     display: flex;
-
     align-items: center;
+    gap: 12px;
 
-    gap: 15px;
+    padding: 15px 18px;
+    margin-bottom: 12px;
 
-    padding:
-        17px 25px;
-
-    margin:
-        5px 15px;
-
-    border-radius: 8px;
+    border-radius: 10px;
 
     cursor: pointer;
 
-    transition:
-        0.2s ease;
+    transition: background .25s ease, transform .2s ease;
 
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
 
 }
-
 
 .sidebar ul li i {
 
-    width: 20px;
-
+    width: 22px;
+    min-width: 22px;
     text-align: center;
+    font-size: 17px;
 
 }
-
 
 .sidebar ul li:hover {
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.10
-        );
+    background: rgba(255,255,255,.15);
 
 }
-
 
 .sidebar ul li.active {
 
-    background:
-        #2f6df6;
-
-    box-shadow:
-        0 6px 15px
-        rgba(
-            0,
-            0,
-            0,
-            0.10
-        );
+    background: #2563eb;
+    color: white;
 
 }
-
 
 /* ==========================================
    MAIN
@@ -193,11 +186,11 @@ body {
 
 .main {
 
-    margin-left: 270px;
+    margin-left: 260px;
 
     width:
         calc(
-            100% - 270px
+            100% - 260px
         );
 
     min-height: 100vh;
@@ -1036,4 +1029,10 @@ td {
 
     }
 
+}
+
+.logo {
+    text-align: center;
+
+    border-bottom: 1px solid rgba(255,255,255,0.14);
 }

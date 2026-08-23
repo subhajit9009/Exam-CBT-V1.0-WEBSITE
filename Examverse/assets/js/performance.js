@@ -702,11 +702,11 @@ function renderHero() {
 
 
     setText(
-        "heroAverage",
-        percent(
-            average
-        )
-    );
+    "heroAverage",
+    percent(
+        recent
+    )
+);
 
 
     setText(

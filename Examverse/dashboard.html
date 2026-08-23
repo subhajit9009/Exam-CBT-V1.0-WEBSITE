@@ -70,62 +70,48 @@
 
     <ul>
 
-        <li class="active">
+    <li id="sidebarDashboard" class="active">
+        <i class="fa-solid fa-house"></i>
+        Dashboard
+    </li>
 
-            <i class="fa-solid fa-house"></i>
 
-            Dashboard
+    <li id="sidebarNewTest">
+        <i class="fa-solid fa-file-circle-plus"></i>
+        New Test
+    </li>
 
-        </li>
 
-        <li id="newTestBtn">
+    <li id="sidebarPreviousTests">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Previous Tests
+    </li>
 
-            <i class="fa-solid fa-file-circle-plus"></i>
 
-            New Test
+    <li id="sidebarPerformance">
+        <i class="fa-solid fa-chart-column"></i>
+        Performance
+    </li>
 
-        </li>
 
-        <li
-    onclick="window.location.href='previous-tests.html'"
->
+    <li id="sidebarBookmarks">
+        <i class="fa-solid fa-bookmark"></i>
+        Bookmarks
+    </li>
 
-    <i class="fa-solid fa-clock-rotate-left"></i>
 
-    Previous Tests
+    <li id="sidebarSettings">
+        <i class="fa-solid fa-gear"></i>
+        Settings
+    </li>
 
-</li>
 
-        <li onclick="window.location='performance.html'">
-    <i class="fa-solid fa-chart-column"></i>
-    Performance
-</li>
+    <li id="sidebarLogout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+    </li>
 
-        <li>
-
-            <i class="fa-solid fa-bookmark"></i>
-
-            Bookmarks
-
-        </li>
-
-        <li onclick="window.location='settings.html'">
-
-            <i class="fa-solid fa-gear"></i>
-
-            Settings
-
-        </li>
-
-        <li id="logoutBtn">
-
-            <i class="fa-solid fa-right-from-bracket"></i>
-
-            Logout
-
-        </li>
-
-    </ul>
+</ul>
 
 </aside>
 
@@ -641,6 +627,8 @@ No tests attempted yet.
 <script src="assets/js/dashboard.js"></script>
 
 <script src="assets/js/loader.js"></script>
+
+<script src="assets/js/sidebar.js"></script>
 
 </body>
 

@@ -36,6 +36,26 @@
 
 <body>
 
+    <!-- ==========================================
+     EXAMVERSE PAGE LOADER
+========================================== -->
+
+<div id="loader">
+
+    <img
+        src="assets/images/logo.png"
+        class="loader-logo"
+        alt="ExamVerse Logo"
+    >
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+        Loading...
+    </div>
+
+</div>
+
 
 <!-- =====================================================
      SIDEBAR
@@ -43,91 +63,91 @@
 
 <aside class="sidebar">
 
-    <div class="brand">
+    <div class="logo">
 
         <img
             src="assets/images/logo.png"
-            alt="ExamVerse"
+            alt="ExamVerse Logo"
+            class="sidebar-logo"
         >
 
-        <h1>ExamVerse</h1>
+        <h2>ExamVerse</h2>
 
         <p>CBT Portal</p>
 
     </div>
 
 
-    <nav class="sidebar-nav">
+    <ul>
 
-        <a href="dashboard.html">
+        <li id="sidebarDashboard">
 
             <i class="fa-solid fa-house"></i>
 
-            <span>Dashboard</span>
+            Dashboard
 
-        </a>
+        </li>
 
 
-        <a href="exam-list.html">
+        <li id="sidebarNewTest">
 
             <i class="fa-solid fa-file-circle-plus"></i>
 
-            <span>New Test</span>
+            New Test
 
-        </a>
+        </li>
 
 
-        <a href="previous-tests.html">
+        <li id="sidebarPreviousTests">
 
             <i class="fa-solid fa-clock-rotate-left"></i>
 
-            <span>Previous Tests</span>
+            Previous Tests
 
-        </a>
+        </li>
 
 
-        <a
-            href="performance.html"
+        <li
+            id="sidebarPerformance"
             class="active"
         >
 
-            <i class="fa-solid fa-chart-line"></i>
+            <i class="fa-solid fa-chart-column"></i>
 
-            <span>Performance</span>
+            Performance
 
-        </a>
+        </li>
 
 
-        <a href="bookmarks.html">
+        <li id="sidebarBookmarks">
 
             <i class="fa-solid fa-bookmark"></i>
 
-            <span>Bookmarks</span>
+            Bookmarks
 
-        </a>
+        </li>
 
 
-        <a href="settings.html">
+        <li id="sidebarSettings">
 
             <i class="fa-solid fa-gear"></i>
 
-            <span>Settings</span>
+            Settings
 
-        </a>
+        </li>
 
 
-        <a href="#" id="logoutBtn">
+        <li id="sidebarLogout">
 
             <i class="fa-solid fa-right-from-bracket"></i>
 
-            <span>Logout</span>
+            Logout
 
-        </a>
+        </li>
 
-    </nav>
+    </ul>
 
 </aside>
-
 
 
 <!-- =====================================================
@@ -320,7 +340,7 @@
             <div>
 
                 <span>
-                    Current Average
+                    Latest
                 </span>
 
                 <strong id="heroAverage">
@@ -1245,6 +1265,8 @@
 <script src="assets/js/performance.js"></script>
 
 <script src="assets/js/loader.js"></script>
+
+<script src="assets/js/sidebar.js"></script>
 
 </body>
 

@@ -1702,3 +1702,291 @@ td {
     }
 
 }
+
+/* ==========================================
+   SIDEBAR LOGO FIX
+========================================== */
+
+.sidebar .sidebar-logo {
+
+    width: 70px;
+
+    height: 70px;
+
+    object-fit: contain;
+
+    display: block;
+
+    margin: 0 auto 10px auto;
+
+}
+
+/* =====================================================
+   EXAMVERSE SIDEBAR
+   Same style as Dashboard / Previous Tests
+===================================================== */
+
+.sidebar {
+
+    width: 260px;
+
+    background: #1e3a8a;
+
+    color: white;
+
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
+    height: 100vh;
+
+    overflow-y: auto;
+
+    box-shadow: 5px 0 15px rgba(0,0,0,.15);
+
+    z-index: 1000;
+
+}
+
+
+/* =========================
+   SIDEBAR BRAND
+========================= */
+
+.sidebar .logo {
+
+    padding: 30px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.15);
+
+}
+
+
+/* =========================
+   SIDEBAR LOGO IMAGE
+========================= */
+
+.sidebar .sidebar-logo {
+
+    width: 80px;
+
+    height: 80px;
+
+    object-fit: contain;
+
+    display: block;
+
+    margin: 0 auto 12px;
+
+}
+
+
+/* =========================
+   BRAND TITLE
+========================= */
+
+.sidebar .logo h2 {
+
+    margin: 0;
+
+    font-size: 30px;
+
+    font-weight: 600;
+
+    color: white;
+
+}
+
+
+/* =========================
+   BRAND SUBTITLE
+========================= */
+
+.sidebar .logo p {
+
+    margin-top: 8px;
+
+    font-size: 16px;
+
+    color: #e6e6e6;
+
+    opacity: .8;
+
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.sidebar ul {
+
+    list-style: none;
+
+    padding: 20px;
+
+    margin: 0;
+
+}
+
+
+/* =========================
+   MENU ITEM
+========================= */
+
+.sidebar ul li {
+
+    padding: 15px 18px;
+
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        background .3s ease,
+        transform .2s ease;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 16px;
+
+    font-weight: 400;
+
+    color: white;
+
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.sidebar ul li i {
+
+    width: 22px;
+
+    min-width: 22px;
+
+    text-align: center;
+
+    font-size: 17px;
+
+}
+
+
+/* =========================
+   HOVER
+========================= */
+
+.sidebar ul li:hover {
+
+    background:
+        rgba(255,255,255,.15);
+
+}
+
+
+/* =========================
+   ACTIVE PAGE
+========================= */
+
+.sidebar ul li.active {
+
+    background: #2563eb;
+
+    color: white;
+
+}
+
+
+/* =========================
+   ACTIVE ICON
+========================= */
+
+.sidebar ul li.active i {
+
+    color: white;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE SIDEBAR
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+
+        width: 80px;
+
+    }
+
+
+    .sidebar .logo {
+
+        padding: 20px 10px;
+
+    }
+
+
+    .sidebar .logo h2,
+    .sidebar .logo p {
+
+        display: none;
+
+    }
+
+
+    .sidebar .sidebar-logo {
+
+        width: 55px;
+
+        height: 55px;
+
+        margin:
+            0 auto;
+
+    }
+
+
+    .sidebar ul {
+
+        padding: 15px 10px;
+
+    }
+
+
+    .sidebar ul li {
+
+        justify-content: center;
+
+        padding: 15px 10px;
+
+        font-size: 0;
+
+    }
+
+
+    .sidebar ul li i {
+
+        font-size: 20px;
+
+        width: 22px;
+
+        margin: 0;
+
+    }
+
+}
