@@ -102,7 +102,58 @@ const selectedPreferredExam =
     let pausedAttempts = [];
 let completedAttempts = [];
 
+// ==========================================
+// SAVED EXAMS
+// ==========================================
+
+let savedExamIds = new Set();
+
 if (user) {
+
+    // ==========================================
+    // SAVED EXAMS
+    // ==========================================
+
+    const {
+        data: savedExamData,
+        error: savedExamError
+    } = await supabaseClient
+
+        .from("saved_exams")
+
+        .select("exam_id")
+
+        .eq(
+            "user_id",
+            user.id
+        );
+
+
+    if (savedExamError) {
+
+        console.error(
+            "Saved exams loading error:",
+            savedExamError
+        );
+
+    }
+    else {
+
+        savedExamIds =
+            new Set(
+
+                (savedExamData || [])
+                    .map(
+                        item =>
+                            String(
+                                item.exam_id
+                            )
+                    )
+
+            );
+
+    }
+
 
     // ==========================================
     // PAUSED ATTEMPTS
@@ -292,6 +343,32 @@ const completed =
         examContainer.innerHTML += `
 
         <div class="examCard">
+
+            <!-- BOOKMARK EXAM -->
+
+    <button
+        type="button"
+        class="examBookmarkBtn ${
+            savedExamIds.has(
+                String(exam.id)
+            )
+                ? "saved"
+                : ""
+        }"
+        data-exam-bookmark="${exam.id}"
+        title="${
+            savedExamIds.has(
+                String(exam.id)
+            )
+                ? "Remove from Bookmarks"
+                : "Save to Bookmarks"
+        }"
+        aria-label="Save examination"
+    >
+
+        <span class="bookmarkIcon">🔖</span>
+
+    </button>
 
     <!-- SHARE EXAM -->
     <button
@@ -621,3 +698,363 @@ loadExams(e.target.value);
 //==========================================
 
 loadExams();
+
+//==========================================
+// EXAM BOOKMARK
+// SAVE / REMOVE
+//==========================================
+
+async function toggleExamBookmark(
+    examId,
+    button
+) {
+
+    if (
+        !examId ||
+        !button
+    ) {
+
+        return;
+
+    }
+
+
+    // ======================================
+    // GET CURRENT USER
+    // ======================================
+
+    const {
+        data: authData,
+        error: authError
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (
+        authError ||
+        !authData ||
+        !authData.user
+    ) {
+
+        alert(
+            "Please login again."
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        authData.user;
+
+
+    button.disabled =
+        true;
+
+
+    try {
+
+        // ==================================
+        // CHECK IF ALREADY SAVED
+        // ==================================
+
+        const {
+            data: existing,
+            error: checkError
+        } =
+            await supabaseClient
+
+                .from("saved_exams")
+
+                .select("id")
+
+                .eq(
+                    "user_id",
+                    user.id
+                )
+
+                .eq(
+                    "exam_id",
+                    examId
+                )
+
+                .maybeSingle();
+
+
+        if (checkError) {
+
+            console.error(
+                "Bookmark check error:",
+                checkError
+            );
+
+            alert(
+                "Unable to check bookmark."
+            );
+
+            return;
+
+        }
+
+
+        // ==================================
+        // REMOVE BOOKMARK
+        // ==================================
+
+        if (existing) {
+
+            const {
+                error
+            } =
+                await supabaseClient
+
+                    .from("saved_exams")
+
+                    .delete()
+
+                    .eq(
+                        "id",
+                        existing.id
+                    )
+
+                    .eq(
+                        "user_id",
+                        user.id
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    "Remove bookmark error:",
+                    error
+                );
+
+                alert(
+                    "Unable to remove bookmark."
+                );
+
+                return;
+
+            }
+
+
+            savedExamIds.delete(
+                String(
+                    examId
+                )
+            );
+
+
+            updateExamBookmarkButton(
+                button,
+                false
+            );
+
+
+            return;
+
+        }
+
+
+        // ==================================
+        // SAVE BOOKMARK
+        // ==================================
+
+        const {
+            error: insertError
+        } =
+            await supabaseClient
+
+                .from("saved_exams")
+
+                .insert({
+
+                    user_id:
+                        user.id,
+
+                    exam_id:
+                        examId
+
+                });
+
+
+        if (insertError) {
+
+            console.error(
+                "Save bookmark error:",
+                insertError
+            );
+
+
+            // Already saved
+            if (
+                insertError.code ===
+                "23505"
+            ) {
+
+                savedExamIds.add(
+                    String(
+                        examId
+                    )
+                );
+
+
+                updateExamBookmarkButton(
+                    button,
+                    true
+                );
+
+
+                return;
+
+            }
+
+
+            alert(
+                "Unable to save exam."
+            );
+
+            return;
+
+        }
+
+
+        savedExamIds.add(
+            String(
+                examId
+            )
+        );
+
+
+        updateExamBookmarkButton(
+            button,
+            true
+        );
+
+    }
+
+    finally {
+
+        button.disabled =
+            false;
+
+    }
+
+}
+
+//==========================================
+// UPDATE BOOKMARK ICON
+//==========================================
+
+function updateExamBookmarkButton(
+    button,
+    saved
+) {
+
+    if (!button) {
+
+        return;
+
+    }
+
+
+    if (saved) {
+
+        button.classList.add(
+            "saved"
+        );
+
+
+        button.innerHTML = `
+
+    <span class="bookmarkIcon">
+        🔖
+    </span>
+
+`;
+
+        button.title =
+            "Remove from Bookmarks";
+
+        button.setAttribute(
+            "aria-label",
+            "Remove from Bookmarks"
+        );
+
+    }
+
+    else {
+
+        button.classList.remove(
+            "saved"
+        );
+
+
+       button.innerHTML = `
+
+    <span class="bookmarkIcon">
+        🔖
+    </span>
+
+`;
+
+
+        button.title =
+            "Save to Bookmarks";
+
+        button.setAttribute(
+            "aria-label",
+            "Save to Bookmarks"
+        );
+
+    }
+
+}
+
+//==========================================
+// BOOKMARK CLICK HANDLER
+//==========================================
+
+document.addEventListener(
+    "click",
+    async function (event) {
+
+        const button =
+            event.target.closest(
+                "[data-exam-bookmark]"
+            );
+
+
+        if (!button) {
+
+            return;
+
+        }
+
+
+        // ==================================
+        // VERY IMPORTANT
+        // Don't trigger other card actions
+        // ==================================
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        const examId =
+            button.dataset
+                .examBookmark;
+
+
+        await toggleExamBookmark(
+            examId,
+            button
+        );
+
+    }
+);

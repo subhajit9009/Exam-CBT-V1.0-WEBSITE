@@ -486,3 +486,121 @@ grid-template-columns:1fr;
     white-space: nowrap;
 
 }
+
+/* ==========================================
+   EXAM BOOKMARK BUTTON
+========================================== */
+
+.examBookmarkBtn {
+
+    position: absolute;
+
+    top: 64px;
+    right: 15px;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #dfefcc;
+
+    color: #64748b;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    padding: 0;
+
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.10);
+
+    transition:
+        all 0.2s ease;
+
+    z-index: 10;
+}
+
+
+/* Hover */
+
+.examBookmarkBtn:hover {
+
+    transform: translateY(-2px);
+
+    background: #dff0af;
+
+    color: #cbf18e;
+
+    box-shadow:
+        0 6px 14px rgba(37, 99, 235, 0.20);
+
+}
+
+
+/* Saved state */
+
+.examBookmarkBtn.saved {
+
+    background: #ebbe57;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 12px rgba(11, 68, 40, 0.25);
+
+}
+
+
+/* Saved hover */
+
+.examBookmarkBtn.saved:hover {
+
+    background: #ac9d2a;
+
+    color: #ffffff;
+
+}
+
+
+/* Disabled */
+
+.examBookmarkBtn:disabled {
+
+    opacity: 0.6;
+
+    cursor: wait;
+
+    transform: none;
+
+}
+
+
+/* Icon */
+
+.examBookmarkBtn i {
+
+    pointer-events: none;
+
+}
+
+.bookmarkIcon {
+
+    display: block;
+
+    font-size: 19px;
+
+    line-height: 1;
+
+    pointer-events: none;
+
+}

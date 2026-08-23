@@ -302,10 +302,17 @@ async function loadPreviousTests() {
 
 
         // ======================================
-        // RENDER
-        // ======================================
+// RENDER
+// ======================================
 
-        renderTests();
+renderTests();
+
+
+// ======================================
+// RESTORE SAVED BOOKMARK STATUS
+// ======================================
+
+await applyAttemptBookmarkStatus();
 
     }
 
@@ -838,6 +845,12 @@ function renderTests() {
 
         }
     );
+
+        // ======================================
+    // RESTORE SAVED BOOKMARK STATUS
+    // ======================================
+
+    applyAttemptBookmarkStatus();
 
 }
 

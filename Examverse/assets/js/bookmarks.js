@@ -17,8 +17,7 @@ let savedAttempts = [];
 
 let savedExams = [];
 
-let allExams = [];
-
+let savedAttemptExamMap = new Map();
 
 
 /* =====================================================
@@ -31,12 +30,15 @@ document.addEventListener(
 );
 
 
-
 async function initBookmarks() {
 
     try {
 
         await getCurrentUser();
+
+        if (!currentUser) {
+            return;
+        }
 
         await loadBookmarks();
 
@@ -60,7 +62,6 @@ async function initBookmarks() {
     }
 
 }
-
 
 
 /* =====================================================
@@ -99,9 +100,8 @@ async function getCurrentUser() {
 }
 
 
-
 /* =====================================================
-   LOAD BOOKMARKS
+   LOAD ALL BOOKMARKS
 ===================================================== */
 
 async function loadBookmarks() {
@@ -109,13 +109,9 @@ async function loadBookmarks() {
     showLoading();
 
     await Promise.all([
-
         loadSavedAttempts(),
-
         loadSavedExams()
-
     ]);
-
 
     updateSummary();
 
@@ -124,7 +120,6 @@ async function loadBookmarks() {
     renderSavedExams();
 
 }
-
 
 
 /* =====================================================
@@ -139,14 +134,13 @@ async function loadSavedAttempts() {
     } =
         await supabaseClient
 
-            .from(
-                "saved_attempts"
-            )
+            .from("saved_attempts")
 
             .select(`
                 id,
                 attempt_id,
                 saved_at,
+
                 exam_attempts (
                     id,
                     exam_id,
@@ -194,8 +188,100 @@ async function loadSavedAttempts() {
     savedAttempts =
         data || [];
 
-}
 
+    /* =================================================
+       IMPORTANT
+
+       Load the exam information separately.
+
+       A saved attempt is NOT the same thing as
+       a saved exam.
+
+       Therefore we MUST NOT depend on saved_exams
+       to get the exam name.
+    ================================================= */
+
+    savedAttemptExamMap =
+        new Map();
+
+
+    const examIds = [
+        ...new Set(
+
+            savedAttempts
+
+                .map(
+                    item =>
+                        item
+                            .exam_attempts
+                            ?.exam_id
+                )
+
+                .filter(Boolean)
+
+        )
+    ];
+
+
+    if (
+        examIds.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const {
+        data: exams,
+        error: examError
+    } =
+        await supabaseClient
+
+            .from("exams")
+
+            .select(`
+                id,
+                exam_name,
+                total_marks,
+                passing_marks
+            `)
+
+            .in(
+                "id",
+                examIds
+            );
+
+
+    if (examError) {
+
+        console.error(
+            "Saved attempt exam information error:",
+            examError
+        );
+
+        return;
+
+    }
+
+
+    (exams || []).forEach(
+        exam => {
+
+            savedAttemptExamMap.set(
+
+                String(
+                    exam.id
+                ),
+
+                exam
+
+            );
+
+        }
+    );
+
+}
 
 
 /* =====================================================
@@ -210,14 +296,13 @@ async function loadSavedExams() {
     } =
         await supabaseClient
 
-            .from(
-                "saved_exams"
-            )
+            .from("saved_exams")
 
             .select(`
                 id,
                 exam_id,
                 saved_at,
+
                 exams (
                     id,
                     exam_name,
@@ -263,7 +348,6 @@ async function loadSavedExams() {
 }
 
 
-
 /* =====================================================
    SUMMARY
 ===================================================== */
@@ -273,41 +357,81 @@ function updateSummary() {
     const attempts =
         savedAttempts.length;
 
+
     const exams =
         savedExams.length;
 
 
-    document.getElementById(
-        "savedAttemptsCount"
-    ).textContent =
-        attempts;
+    const attemptsCount =
+        document.getElementById(
+            "savedAttemptsCount"
+        );
 
 
-    document.getElementById(
-        "savedExamsCount"
-    ).textContent =
-        exams;
+    const examsCount =
+        document.getElementById(
+            "savedExamsCount"
+        );
 
 
-    document.getElementById(
-        "totalSavedCount"
-    ).textContent =
-        attempts + exams;
+    const totalCount =
+        document.getElementById(
+            "totalSavedCount"
+        );
 
 
-    document.getElementById(
-        "attemptBadge"
-    ).textContent =
-        attempts;
+    const attemptBadge =
+        document.getElementById(
+            "attemptBadge"
+        );
 
 
-    document.getElementById(
-        "examBadge"
-    ).textContent =
-        exams;
+    const examBadge =
+        document.getElementById(
+            "examBadge"
+        );
+
+
+    if (attemptsCount) {
+
+        attemptsCount.textContent =
+            attempts;
+
+    }
+
+
+    if (examsCount) {
+
+        examsCount.textContent =
+            exams;
+
+    }
+
+
+    if (totalCount) {
+
+        totalCount.textContent =
+            attempts + exams;
+
+    }
+
+
+    if (attemptBadge) {
+
+        attemptBadge.textContent =
+            attempts;
+
+    }
+
+
+    if (examBadge) {
+
+        examBadge.textContent =
+            exams;
+
+    }
 
 }
-
 
 
 /* =====================================================
@@ -322,14 +446,19 @@ function renderSavedAttempts() {
         );
 
 
+    if (!container) {
+        return;
+    }
+
+
     const search =
         (
             document.getElementById(
                 "attemptSearch"
             )?.value || ""
         )
-        .trim()
-        .toLowerCase();
+            .trim()
+            .toLowerCase();
 
 
     const filter =
@@ -342,7 +471,9 @@ function renderSavedAttempts() {
         [...savedAttempts];
 
 
-    /* SEARCH */
+    /* =================================================
+       SEARCH
+    ================================================= */
 
     if (search) {
 
@@ -352,6 +483,7 @@ function renderSavedAttempts() {
 
                     const attempt =
                         item.exam_attempts;
+
 
                     const examName =
                         getExamName(
@@ -372,9 +504,9 @@ function renderSavedAttempts() {
                         String(
                             attempt?.score ?? ""
                         )
-                        .includes(
-                            search
-                        )
+                            .includes(
+                                search
+                            )
 
                     );
 
@@ -384,7 +516,9 @@ function renderSavedAttempts() {
     }
 
 
-    /* RESULT FILTER */
+    /* =================================================
+       RESULT FILTER
+    ================================================= */
 
     if (filter) {
 
@@ -398,12 +532,14 @@ function renderSavedAttempts() {
                                 .exam_attempts
                                 ?.result || ""
                         )
-                        .toLowerCase();
+                            .trim()
+                            .toLowerCase();
 
 
                     return (
                         result ===
-                        filter.toLowerCase()
+                        filter
+                            .toLowerCase()
                     );
 
                 }
@@ -411,6 +547,10 @@ function renderSavedAttempts() {
 
     }
 
+
+    /* =================================================
+       EMPTY
+    ================================================= */
 
     if (
         items.length === 0
@@ -427,31 +567,42 @@ function renderSavedAttempts() {
                 </div>
 
                 <h3>
+
                     ${
                         savedAttempts.length
                             ? "No Matching Attempts"
                             : "No Saved Attempts Yet"
                     }
+
                 </h3>
 
                 <p>
+
                     ${
                         savedAttempts.length
+
                             ? "Try changing your search or filter."
+
                             : "Save a completed test from Previous Tests to access it quickly here."
                     }
+
                 </p>
+
 
                 ${
                     savedAttempts.length
+
                         ? ""
+
                         : `
+
                             <a
                                 href="previous-tests.html"
                                 class="empty-action"
                             >
                                 View Previous Tests
                             </a>
+
                         `
                 }
 
@@ -464,6 +615,10 @@ function renderSavedAttempts() {
     }
 
 
+    /* =================================================
+       RENDER
+    ================================================= */
+
     container.innerHTML =
         items
             .map(
@@ -474,9 +629,8 @@ function renderSavedAttempts() {
 }
 
 
-
 /* =====================================================
-   CREATE ATTEMPT CARD
+   CREATE SAVED ATTEMPT CARD
 ===================================================== */
 
 function createAttemptCard(
@@ -493,6 +647,10 @@ function createAttemptCard(
 
     }
 
+
+    /* =================================================
+       GET REAL EXAM NAME
+    ================================================= */
 
     const examName =
         getExamName(
@@ -516,12 +674,13 @@ function createAttemptCard(
         String(
             attempt.result ||
             "Completed"
-        );
+        )
+            .trim();
 
 
     const isPassed =
-        result.toLowerCase()
-            === "pass";
+        result.toLowerCase() ===
+        "pass";
 
 
     const statusClass =
@@ -583,6 +742,7 @@ function createAttemptCard(
 
                         </h3>
 
+
                         <p>
 
                             Completed
@@ -616,6 +776,7 @@ function createAttemptCard(
                         "
                     ></i>
 
+
                     ${
                         isPassed
                             ? "Passed"
@@ -638,9 +799,11 @@ function createAttemptCard(
                     Score
 
                     <strong>
+
                         ${formatNumber(
                             attempt.score
                         )}
+
                     </strong>
 
                 </span>
@@ -653,9 +816,11 @@ function createAttemptCard(
                     Percentage
 
                     <strong>
+
                         ${formatPercent(
                             percentage
                         )}
+
                     </strong>
 
                 </span>
@@ -668,9 +833,11 @@ function createAttemptCard(
                     Accuracy
 
                     <strong>
+
                         ${formatPercent(
                             accuracy
                         )}
+
                     </strong>
 
                 </span>
@@ -683,11 +850,13 @@ function createAttemptCard(
                     Attempted
 
                     <strong>
+
                         ${
                             Number(
                                 attempt.attempted
                             ) || 0
                         }
+
                     </strong>
 
                 </span>
@@ -700,7 +869,9 @@ function createAttemptCard(
                     Time
 
                     <strong>
+
                         ${time}
+
                     </strong>
 
                 </span>
@@ -713,13 +884,16 @@ function createAttemptCard(
             >
 
                 <button
+                    type="button"
                     class="
                         saved-btn
                         view-btn
                     "
-                    data-view-attempt="
-                        ${attempt.id}
-                    "
+                    data-view-attempt="${escapeHTML(
+                        String(
+                            attempt.id
+                        )
+                    )}"
                 >
 
                     <i
@@ -732,13 +906,16 @@ function createAttemptCard(
 
 
                 <button
+                    type="button"
                     class="
                         saved-btn
                         remove-btn
                     "
-                    data-remove-attempt="
-                        ${item.id}
-                    "
+                    data-remove-attempt="${escapeHTML(
+                        String(
+                            item.id
+                        )
+                    )}"
                 >
 
                     <i
@@ -758,7 +935,6 @@ function createAttemptCard(
 }
 
 
-
 /* =====================================================
    RENDER SAVED EXAMS
 ===================================================== */
@@ -771,14 +947,19 @@ function renderSavedExams() {
         );
 
 
+    if (!container) {
+        return;
+    }
+
+
     const search =
         (
             document.getElementById(
                 "examSearch"
             )?.value || ""
         )
-        .trim()
-        .toLowerCase();
+            .trim()
+            .toLowerCase();
 
 
     let items =
@@ -794,15 +975,19 @@ function renderSavedExams() {
                     const exam =
                         item.exams;
 
+
                     return (
+
                         exam &&
+
                         String(
                             exam.exam_name
                         )
-                        .toLowerCase()
-                        .includes(
-                            search
-                        )
+                            .toLowerCase()
+                            .includes(
+                                search
+                            )
+
                     );
 
                 }
@@ -825,6 +1010,7 @@ function renderSavedExams() {
 
                 </div>
 
+
                 <h3>
 
                     ${
@@ -834,6 +1020,7 @@ function renderSavedExams() {
                     }
 
                 </h3>
+
 
                 <p>
 
@@ -849,13 +1036,16 @@ function renderSavedExams() {
                 ${
                     savedExams.length
                         ? ""
+
                         : `
+
                             <a
                                 href="exam-list.html"
                                 class="empty-action"
                             >
                                 Browse Exams
                             </a>
+
                         `
                 }
 
@@ -878,9 +1068,8 @@ function renderSavedExams() {
 }
 
 
-
 /* =====================================================
-   CREATE EXAM CARD
+   CREATE SAVED EXAM CARD
 ===================================================== */
 
 function createExamCard(
@@ -953,6 +1142,7 @@ function createExamCard(
 
                         </h3>
 
+
                         <p>
 
                             Saved
@@ -986,7 +1176,9 @@ function createExamCard(
 
                 ${
                     totalQuestions
+
                         ? `
+
                             <span
                                 class="stat-pill"
                             >
@@ -998,14 +1190,18 @@ function createExamCard(
                                 </strong>
 
                             </span>
+
                         `
+
                         : ""
                 }
 
 
                 ${
                     duration
+
                         ? `
+
                             <span
                                 class="stat-pill"
                             >
@@ -1017,17 +1213,19 @@ function createExamCard(
                                 </strong>
 
                             </span>
+
                         `
+
                         : ""
                 }
 
 
                 ${
-                    exam.total_marks !==
-                    null &&
-                    exam.total_marks !==
-                    undefined
+                    exam.total_marks !== null &&
+                    exam.total_marks !== undefined
+
                         ? `
+
                             <span
                                 class="stat-pill"
                             >
@@ -1035,21 +1233,25 @@ function createExamCard(
                                 Total Marks
 
                                 <strong>
-                                    ${exam.total_marks}
+                                    ${escapeHTML(
+                                        exam.total_marks
+                                    )}
                                 </strong>
 
                             </span>
+
                         `
+
                         : ""
                 }
 
 
                 ${
-                    exam.passing_marks !==
-                    null &&
-                    exam.passing_marks !==
-                    undefined
+                    exam.passing_marks !== null &&
+                    exam.passing_marks !== undefined
+
                         ? `
+
                             <span
                                 class="stat-pill"
                             >
@@ -1057,11 +1259,15 @@ function createExamCard(
                                 Pass Marks
 
                                 <strong>
-                                    ${exam.passing_marks}
+                                    ${escapeHTML(
+                                        exam.passing_marks
+                                    )}
                                 </strong>
 
                             </span>
+
                         `
+
                         : ""
                 }
 
@@ -1073,13 +1279,16 @@ function createExamCard(
             >
 
                 <button
+                    type="button"
                     class="
                         saved-btn
                         start-btn
                     "
-                    data-start-exam="
-                        ${exam.id}
-                    "
+                    data-start-exam="${escapeHTML(
+                        String(
+                            exam.id
+                        )
+                    )}"
                 >
 
                     <i
@@ -1092,13 +1301,16 @@ function createExamCard(
 
 
                 <button
+                    type="button"
                     class="
                         saved-btn
                         remove-btn
                     "
-                    data-remove-exam="
-                        ${item.id}
-                    "
+                    data-remove-exam="${escapeHTML(
+                        String(
+                            item.id
+                        )
+                    )}"
                 >
 
                     <i
@@ -1118,9 +1330,8 @@ function createExamCard(
 }
 
 
-
 /* =====================================================
-   EVENTS
+   CONTROLS
 ===================================================== */
 
 function setupControls() {
@@ -1162,7 +1373,7 @@ function setupControls() {
         )
         ?.addEventListener(
             "click",
-            async () => {
+            async function () {
 
                 await loadBookmarks();
 
@@ -1178,7 +1389,6 @@ function setupControls() {
 }
 
 
-
 /* =====================================================
    ACTION HANDLER
 ===================================================== */
@@ -1187,6 +1397,10 @@ async function handleBookmarkActions(
     event
 ) {
 
+
+    /* =================================================
+       VIEW SAVED ATTEMPT RESULT
+    ================================================= */
 
     const viewAttempt =
         event.target.closest(
@@ -1201,9 +1415,39 @@ async function handleBookmarkActions(
                 .viewAttempt;
 
 
+        if (!attemptId) {
+            return;
+        }
+
+
+        /*
+         * result.js primarily reads attemptId.
+         *
+         * Previous Tests also uses resultAttemptId.
+         * Store all three for compatibility.
+         */
+
         sessionStorage.setItem(
             "attemptId",
-            attemptId
+            String(
+                attemptId
+            )
+        );
+
+
+        sessionStorage.setItem(
+            "resultAttemptId",
+            String(
+                attemptId
+            )
+        );
+
+
+        localStorage.setItem(
+            "examVerseResultAttemptId",
+            String(
+                attemptId
+            )
         );
 
 
@@ -1216,6 +1460,9 @@ async function handleBookmarkActions(
     }
 
 
+    /* =================================================
+       REMOVE SAVED ATTEMPT
+    ================================================= */
 
     const removeAttempt =
         event.target.closest(
@@ -1235,6 +1482,9 @@ async function handleBookmarkActions(
     }
 
 
+    /* =================================================
+       START SAVED EXAM
+    ================================================= */
 
     const startExam =
         event.target.closest(
@@ -1254,6 +1504,9 @@ async function handleBookmarkActions(
     }
 
 
+    /* =================================================
+       REMOVE SAVED EXAM
+    ================================================= */
 
     const removeExam =
         event.target.closest(
@@ -1273,7 +1526,6 @@ async function handleBookmarkActions(
     }
 
 }
-
 
 
 /* =====================================================
@@ -1319,7 +1571,10 @@ async function removeSavedAttempt(
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "Remove saved attempt error:",
+            error
+        );
 
         alert(
             "Unable to remove bookmark."
@@ -1333,7 +1588,6 @@ async function removeSavedAttempt(
     await loadBookmarks();
 
 }
-
 
 
 /* =====================================================
@@ -1379,7 +1633,10 @@ async function removeSavedExam(
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "Remove saved exam error:",
+            error
+        );
 
         alert(
             "Unable to remove saved exam."
@@ -1395,7 +1652,6 @@ async function removeSavedExam(
 }
 
 
-
 /* =====================================================
    START SAVED EXAM
 ===================================================== */
@@ -1404,18 +1660,36 @@ function startSavedExam(
     examId
 ) {
 
+    if (!examId) {
+        return;
+    }
+
+
+    /*
+     * A saved exam is starting a NEW attempt.
+     * Do not reuse the previous attempt ID.
+     */
+
     sessionStorage.removeItem(
         "attemptId"
     );
 
+
     sessionStorage.removeItem(
-        "selectedPreferredExam"
+        "resultAttemptId"
+    );
+
+
+    sessionStorage.removeItem(
+        "attemptStartedFresh"
     );
 
 
     sessionStorage.setItem(
         "selectedExam",
-        examId
+        String(
+            examId
+        )
     );
 
 
@@ -1423,7 +1697,6 @@ function startSavedExam(
         "instructions.html";
 
 }
-
 
 
 /* =====================================================
@@ -1439,9 +1712,12 @@ function setupSidebar() {
         )
         ?.addEventListener(
             "click",
-            () =>
+            function () {
+
                 window.location.href =
-                    "dashboard.html"
+                    "dashboard.html";
+
+            }
         );
 
 
@@ -1451,9 +1727,12 @@ function setupSidebar() {
         )
         ?.addEventListener(
             "click",
-            () =>
+            function () {
+
                 window.location.href =
-                    "exam-list.html"
+                    "exam-list.html";
+
+            }
         );
 
 
@@ -1463,9 +1742,12 @@ function setupSidebar() {
         )
         ?.addEventListener(
             "click",
-            () =>
+            function () {
+
                 window.location.href =
-                    "previous-tests.html"
+                    "previous-tests.html";
+
+            }
         );
 
 
@@ -1475,9 +1757,12 @@ function setupSidebar() {
         )
         ?.addEventListener(
             "click",
-            () =>
+            function () {
+
                 window.location.href =
-                    "performance.html"
+                    "performance.html";
+
+            }
         );
 
 
@@ -1487,9 +1772,12 @@ function setupSidebar() {
         )
         ?.addEventListener(
             "click",
-            () =>
+            function () {
+
                 window.location.href =
-                    "bookmarks.html"
+                    "bookmarks.html";
+
+            }
         );
 
 
@@ -1499,9 +1787,12 @@ function setupSidebar() {
         )
         ?.addEventListener(
             "click",
-            () =>
+            function () {
+
                 window.location.href =
-                    "settings.html"
+                    "settings.html";
+
+            }
         );
 
 
@@ -1515,7 +1806,6 @@ function setupSidebar() {
         );
 
 }
-
 
 
 /* =====================================================
@@ -1581,16 +1871,58 @@ async function logoutUser() {
 }
 
 
-
 /* =====================================================
-   HELPERS
+   GET REAL EXAM NAME
 ===================================================== */
 
 function getExamName(
     examId
 ) {
 
-    const saved =
+    if (!examId) {
+
+        return "Unknown Examination";
+
+    }
+
+
+    /*
+     * PRIMARY SOURCE
+     *
+     * Exam information loaded directly from
+     * the exams table using exam_attempts.exam_id.
+     *
+     * This is the important fix.
+     */
+
+    const attemptExam =
+        savedAttemptExamMap.get(
+            String(
+                examId
+            )
+        );
+
+
+    if (
+        attemptExam &&
+        attemptExam.exam_name
+    ) {
+
+        return String(
+            attemptExam.exam_name
+        );
+
+    }
+
+
+    /*
+     * SECONDARY FALLBACK
+     *
+     * The exam might also be present in
+     * saved_exams.
+     */
+
+    const savedExam =
         savedExams.find(
             item =>
                 String(
@@ -1603,20 +1935,26 @@ function getExamName(
 
 
     if (
-        saved &&
-        saved.exams
+        savedExam &&
+        savedExam.exams &&
+        savedExam.exams.exam_name
     ) {
 
-        return saved.exams.exam_name;
+        return String(
+            savedExam.exams.exam_name
+        );
 
     }
 
 
-    return "Saved Examination";
+    return "Unknown Examination";
 
 }
 
 
+/* =====================================================
+   ACCURACY
+===================================================== */
 
 function calculateAccuracy(
     attempt
@@ -1624,13 +1962,13 @@ function calculateAccuracy(
 
     const attempted =
         Number(
-            attempt.attempted
+            attempt?.attempted
         ) || 0;
 
 
     const correct =
         Number(
-            attempt.correct
+            attempt?.correct
         ) || 0;
 
 
@@ -1651,13 +1989,18 @@ function calculateAccuracy(
 }
 
 
+/* =====================================================
+   FORMAT PERCENT
+===================================================== */
 
 function formatPercent(
     value
 ) {
 
     const number =
-        Number(value) || 0;
+        Number(
+            value
+        ) || 0;
 
 
     return (
@@ -1672,17 +2015,24 @@ function formatPercent(
 }
 
 
+/* =====================================================
+   FORMAT NUMBER
+===================================================== */
 
 function formatNumber(
     value
 ) {
 
     const number =
-        Number(value);
+        Number(
+            value
+        );
 
 
     if (
-        Number.isNaN(number)
+        Number.isNaN(
+            number
+        )
     ) {
 
         return "0";
@@ -1700,13 +2050,18 @@ function formatNumber(
 }
 
 
+/* =====================================================
+   FORMAT TIME
+===================================================== */
 
 function formatTime(
     value
 ) {
 
     const seconds =
-        Number(value) || 0;
+        Number(
+            value
+        ) || 0;
 
 
     if (
@@ -1738,33 +2093,85 @@ function formatTime(
         );
 
 
-    if (hours > 0) {
+    if (
+        hours > 0
+    ) {
 
         return (
-            String(hours)
-                .padStart(2, "0")
-            + ":" +
-            String(minutes)
-                .padStart(2, "0")
-            + ":" +
-            String(secs)
-                .padStart(2, "0")
+
+            String(
+                hours
+            )
+                .padStart(
+                    2,
+                    "0"
+                )
+
+            +
+
+            ":"
+
+            +
+
+            String(
+                minutes
+            )
+                .padStart(
+                    2,
+                    "0"
+                )
+
+            +
+
+            ":"
+
+            +
+
+            String(
+                secs
+            )
+                .padStart(
+                    2,
+                    "0"
+                )
+
         );
 
     }
 
 
     return (
-        String(minutes)
-            .padStart(2, "0")
-        + ":" +
-        String(secs)
-            .padStart(2, "0")
+
+        String(
+            minutes
+        )
+            .padStart(
+                2,
+                "0"
+            )
+
+        +
+
+        ":"
+
+        +
+
+        String(
+            secs
+        )
+            .padStart(
+                2,
+                "0"
+            )
+
     );
 
 }
 
 
+/* =====================================================
+   FORMAT DATE
+===================================================== */
 
 function formatDate(
     value
@@ -1778,7 +2185,9 @@ function formatDate(
 
 
     const date =
-        new Date(value);
+        new Date(
+            value
+        );
 
 
     if (
@@ -1804,6 +2213,9 @@ function formatDate(
 }
 
 
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
 
 function escapeHTML(
     value
@@ -1841,48 +2253,62 @@ function escapeHTML(
 }
 
 
-
 /* =====================================================
    LOADING
 ===================================================== */
 
 function showLoading() {
 
-    document.getElementById(
-        "savedAttemptsContainer"
-    ).innerHTML = `
-
-        <div class="loading-state">
-
-            <div class="mini-spinner"></div>
-
-            Loading saved attempts...
-
-        </div>
-
-    `;
+    const attemptsContainer =
+        document.getElementById(
+            "savedAttemptsContainer"
+        );
 
 
-    document.getElementById(
-        "savedExamsContainer"
-    ).innerHTML = `
+    const examsContainer =
+        document.getElementById(
+            "savedExamsContainer"
+        );
 
-        <div class="loading-state">
 
-            <div class="mini-spinner"></div>
+    if (attemptsContainer) {
 
-            Loading saved exams...
+        attemptsContainer.innerHTML = `
 
-        </div>
+            <div class="loading-state">
 
-    `;
+                <div class="mini-spinner"></div>
+
+                Loading saved attempts...
+
+            </div>
+
+        `;
+
+    }
+
+
+    if (examsContainer) {
+
+        examsContainer.innerHTML = `
+
+            <div class="loading-state">
+
+                <div class="mini-spinner"></div>
+
+                Loading saved exams...
+
+            </div>
+
+        `;
+
+    }
 
 }
 
 
-
 /* =====================================================
-   ERROR
+   GLOBAL ERROR
 ===================================================== */
 
 function showGlobalError(
@@ -1895,34 +2321,39 @@ function showGlobalError(
         );
 
 
-    if (container) {
+    if (!container) {
+        return;
+    }
 
-        container.innerHTML = `
 
-            <div class="empty-state">
+    container.innerHTML = `
 
-                <div class="empty-icon">
+        <div class="empty-state">
 
-                    <i
-                        class="fa-solid fa-triangle-exclamation"
-                    ></i>
+            <div class="empty-icon">
 
-                </div>
-
-                <h3>
-                    Something went wrong
-                </h3>
-
-                <p>
-                    ${escapeHTML(
-                        message
-                    )}
-                </p>
+                <i
+                    class="fa-solid fa-triangle-exclamation"
+                ></i>
 
             </div>
 
-        `;
 
-    }
+            <h3>
+                Something went wrong
+            </h3>
+
+
+            <p>
+
+                ${escapeHTML(
+                    message
+                )}
+
+            </p>
+
+        </div>
+
+    `;
 
 }
