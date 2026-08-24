@@ -842,49 +842,157 @@ td {
 }
 
 
-/* ==========================================
-   RESPONSIVE
-========================================== */
+/* =========================================================
+   EXAMVERSE MOBILE — DASHBOARD STYLE
+   Desktop design above remains completely unchanged.
+========================================================= */
 
-@media (
-    max-width: 900px
-) {
+@media (max-width: 900px) {
+
+    /* -----------------------------------------
+       BODY
+    ----------------------------------------- */
+
+    body {
+        overflow-x: hidden;
+
+        background:
+            radial-gradient(
+                circle at 10% 15%,
+                rgba(37, 99, 235, 0.10),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at 90% 85%,
+                rgba(124, 58, 237, 0.10),
+                transparent 35%
+            ),
+            #f4f7fb;
+    }
+
+
+    /* -----------------------------------------
+       SIDEBAR
+       Mobile = overlay, NOT permanent column
+    ----------------------------------------- */
 
     .sidebar {
+
+        position: fixed;
+
+        left: 0;
+        top: 0;
+
+        width: 270px;
+        height: 100vh;
+
+        margin: 0;
+
+        background:
+            rgba(30, 58, 138, 0.88);
+
+        -webkit-backdrop-filter:
+            blur(22px) saturate(150%);
+
+        backdrop-filter:
+            blur(22px) saturate(150%);
+
+        border-right:
+            1px solid rgba(255,255,255,0.18);
+
+        box-shadow:
+            12px 0 40px rgba(15,23,42,0.20);
+
+        z-index: 5000;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        transform:
+            translateX(-105%);
+
+        transition:
+            transform 0.28s ease;
+
+        border-radius:
+            0 20px 20px 0;
+    }
+
+
+    /*
+       IMPORTANT:
+
+       Your sidebar.js should add the
+       "open" class when hamburger is tapped.
+    */
+
+    .sidebar.open {
+
+        transform:
+            translateX(0);
+    }
+
+
+    /* -----------------------------------------
+       SIDEBAR LOGO
+    ----------------------------------------- */
+
+    .sidebar .logo {
+
+        padding:
+            28px 20px 24px;
+
+        flex-shrink: 0;
+    }
+
+
+    .sidebar .sidebar-logo {
 
         width:
             80px;
 
+        height:
+            80px;
+
+        margin:
+            0 auto 12px;
     }
 
 
-    .logo h2,
-    .logo p {
+    .sidebar .logo h2 {
 
         display:
-            none;
+            block;
 
+        font-size:
+            28px;
+
+        color:
+            #ffffff;
     }
 
 
-    .sidebar ul li {
+    .sidebar .logo p {
 
-        justify-content:
-            center;
+        display:
+            block;
+
+        color:
+            rgba(255,255,255,0.82);
 
         font-size:
-            0;
+            15px;
+    }
+
+
+    /* -----------------------------------------
+       SIDEBAR MENU
+    ----------------------------------------- */
+
+    .sidebar ul {
 
         padding:
-            17px 10px;
-
-    }
-
-
-    .sidebar ul li i {
-
-        font-size:
-            20px;
+            18px 16px;
 
         margin:
             0;
@@ -892,38 +1000,174 @@ td {
     }
 
 
+    .sidebar ul li {
+
+        display:
+            flex;
+
+        justify-content:
+            flex-start;
+
+        align-items:
+            center;
+
+        gap:
+            13px;
+
+        width:
+            100%;
+
+        min-height:
+            52px;
+
+        padding:
+            14px 16px;
+
+        margin-bottom:
+            8px;
+
+        border-radius:
+            14px;
+
+        font-size:
+            16px;
+
+        font-weight:
+            500;
+
+        color:
+            #ffffff;
+
+        background:
+            transparent;
+
+        border:
+            1px solid transparent;
+
+        transition:
+            background .22s ease,
+            border-color .22s ease,
+            transform .18s ease;
+    }
+
+
+    .sidebar ul li i {
+
+        width:
+            23px;
+
+        min-width:
+            23px;
+
+        font-size:
+            18px;
+
+        text-align:
+            center;
+    }
+
+
+    /*
+       Glass appears ONLY when
+       hovering / active.
+    */
+
+    .sidebar ul li:hover {
+
+        background:
+            rgba(255,255,255,0.13);
+
+        border-color:
+            rgba(255,255,255,0.18);
+
+        -webkit-backdrop-filter:
+            blur(14px);
+
+        backdrop-filter:
+            blur(14px);
+
+        box-shadow:
+            0 8px 24px rgba(15,23,42,0.10);
+    }
+
+
+    .sidebar ul li.active {
+
+        background:
+            rgba(255,255,255,0.13);
+
+        border-color:
+            rgba(255,255,255,0.18);
+
+        -webkit-backdrop-filter:
+            blur(14px);
+
+        backdrop-filter:
+            blur(14px);
+    }
+
+
+    .sidebar ul li:active {
+
+        transform:
+            scale(0.97);
+    }
+
+
+    /* -----------------------------------------
+       MAIN CONTENT
+       FULL MOBILE WIDTH
+    ----------------------------------------- */
+
     .main {
 
         margin-left:
-            80px;
+            0 !important;
 
         width:
-            calc(
-                100% - 80px
-            );
+            100% !important;
 
-    }
-
-}
-
-
-@media (
-    max-width: 700px
-) {
-
-    .main {
+        min-height:
+            100vh;
 
         padding:
-            18px;
-
+            72px 16px 24px !important;
     }
 
+
+    /* -----------------------------------------
+       TOPBAR
+    ----------------------------------------- */
 
     .topbar {
 
-        padding:
-            22px;
+        width:
+            100%;
 
+        padding:
+            20px;
+
+        margin-bottom:
+            16px;
+
+        border-radius:
+            18px;
+
+        background:
+            rgba(255,255,255,0.70);
+
+        border:
+            1px solid rgba(255,255,255,0.75);
+
+        -webkit-backdrop-filter:
+            blur(18px) saturate(145%);
+
+        backdrop-filter:
+            blur(18px) saturate(145%);
+
+        box-shadow:
+            0 12px 30px rgba(15,23,42,0.07),
+            inset 0 1px 0 rgba(255,255,255,0.80);
     }
 
 
@@ -932,16 +1176,63 @@ td {
         font-size:
             24px;
 
+        line-height:
+            1.25;
+
+        color:
+            #172554;
     }
 
 
+    .topbar p {
+
+        font-size:
+            13px;
+
+        line-height:
+            1.5;
+
+        color:
+            #64748b;
+    }
+
+
+    /* -----------------------------------------
+       HISTORY CARD
+    ----------------------------------------- */
+
     .historySection {
+
+        width:
+            100%;
 
         padding:
             20px;
 
+        border-radius:
+            20px;
+
+        background:
+            rgba(255,255,255,0.70);
+
+        border:
+            1px solid rgba(255,255,255,0.78);
+
+        -webkit-backdrop-filter:
+            blur(18px) saturate(145%);
+
+        backdrop-filter:
+            blur(18px) saturate(145%);
+
+        box-shadow:
+            0 14px 35px rgba(15,23,42,0.07),
+            inset 0 1px 0 rgba(255,255,255,0.80);
     }
 
+
+    /* -----------------------------------------
+       HEADER
+    ----------------------------------------- */
 
     .historyHeader {
 
@@ -951,8 +1242,62 @@ td {
         align-items:
             flex-start;
 
+        gap:
+            12px;
+
+        margin-bottom:
+            20px;
     }
 
+
+    .historyHeader h2 {
+
+        font-size:
+            22px;
+
+        line-height:
+            1.3;
+    }
+
+
+    .historyHeader p {
+
+        font-size:
+            13px;
+
+        line-height:
+            1.5;
+    }
+
+
+    .historyCount {
+
+        align-self:
+            flex-start;
+
+        padding:
+            9px 15px;
+
+        font-size:
+            12px;
+
+        background:
+            rgba(232,240,255,0.78);
+
+        border:
+            1px solid rgba(37,99,235,0.10);
+
+        -webkit-backdrop-filter:
+            blur(10px);
+
+        backdrop-filter:
+            blur(10px);
+    }
+
+
+    /* -----------------------------------------
+       SEARCH + FILTERS
+    ----------------------------------------- */
 
     .historyControls {
 
@@ -962,63 +1307,211 @@ td {
         align-items:
             stretch;
 
+        gap:
+            12px;
+
+        margin-bottom:
+            20px;
     }
 
 
     .searchBox {
 
+        width:
+            100%;
+
         max-width:
             none;
+    }
 
+
+    .searchBox input {
+
+        width:
+            100%;
+
+        height:
+            48px;
+
+        background:
+            rgba(248,250,252,0.70);
+
+        border:
+            1px solid rgba(148,163,184,0.28);
+
+        border-radius:
+            13px;
+
+        -webkit-backdrop-filter:
+            blur(10px);
+
+        backdrop-filter:
+            blur(10px);
     }
 
 
     .filterButtons {
 
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
         width:
             100%;
 
+        gap:
+            8px;
     }
 
 
     .filterBtn {
 
-        flex:
-            1;
+        width:
+            100%;
 
+        min-height:
+            42px;
+
+        padding:
+            8px 5px;
+
+        border-radius:
+            11px;
+
+        background:
+            rgba(255,255,255,0.65);
+
+        border:
+            1px solid rgba(148,163,184,0.28);
+
+        -webkit-backdrop-filter:
+            blur(10px);
+
+        backdrop-filter:
+            blur(10px);
+
+        color:
+            #475569;
     }
 
+
+    .filterBtn.active {
+
+        background:
+            #2563eb;
+
+        border-color:
+            #2563eb;
+
+        color:
+            #ffffff;
+
+        box-shadow:
+            0 7px 18px rgba(37,99,235,0.18);
+    }
+
+
+    /* -----------------------------------------
+       TABLE
+    ----------------------------------------- */
+
+    .tableWrapper {
+
+        width:
+            100%;
+
+        max-width:
+            100%;
+
+        overflow-x:
+            auto;
+
+        overflow-y:
+            hidden;
+
+        border-radius:
+            14px;
+
+        -webkit-overflow-scrolling:
+            touch;
+
+        scrollbar-width:
+            thin;
+    }
+
+
+    table {
+
+        min-width:
+            850px;
+
+        width:
+            100%;
+    }
+
+
+    th,
+    td {
+
+        white-space:
+            nowrap;
+    }
+
+
+    th {
+
+        padding:
+            14px 12px;
+
+        font-size:
+            12px;
+    }
+
+
+    td {
+
+        padding:
+            15px 12px;
+
+        font-size:
+            12px;
+    }
+
+
+    /* -----------------------------------------
+       EMPTY STATE
+    ----------------------------------------- */
+
+    .emptyState {
+
+        padding:
+            45px 12px;
+    }
 }
 
 
-@media (
-    max-width: 500px
-) {
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 500px) {
 
     .main {
 
         padding:
-            12px;
-
-    }
-
-
-    .historySection {
-
-        padding:
-            16px;
-
-        border-radius:
-            15px;
-
+            68px 10px 20px !important;
     }
 
 
     .topbar {
 
-        border-radius:
-            15px;
+        padding:
+            17px;
 
+        border-radius:
+            16px;
     }
 
 
@@ -1026,19 +1519,90 @@ td {
 
         font-size:
             21px;
-
     }
 
-}
 
-.logo {
-    text-align: center;
+    .topbar p {
 
-    border-bottom: 1px solid rgba(255,255,255,0.14);
+        font-size:
+            12px;
+    }
+
+
+    .historySection {
+
+        padding:
+            15px;
+
+        border-radius:
+            17px;
+    }
+
+
+    .historyHeader h2 {
+
+        font-size:
+            20px;
+    }
+
+
+    .historyHeader p {
+
+        font-size:
+            12px;
+    }
+
+
+    .historyCount {
+
+        font-size:
+            11px;
+
+        padding:
+            8px 13px;
+    }
+
+
+    .filterButtons {
+
+        gap:
+            6px;
+    }
+
+
+    .filterBtn {
+
+        min-height:
+            40px;
+
+        font-size:
+            11px;
+
+        padding:
+            7px 3px;
+    }
+
+
+    .tableWrapper {
+
+        width:
+            100%;
+
+        margin:
+            0;
+    }
+
+
+    table {
+
+        min-width:
+            850px;
+    }
 }
 
 /* =====================================================
    BOOKMARK ACTION
+   Restore original bookmark button styling
 ===================================================== */
 
 .bookmarkAction {
@@ -1069,9 +1633,10 @@ td {
 
     transition:
         .2s ease;
-
 }
 
+
+/* Normal hover */
 
 .bookmarkAction:hover {
 
@@ -1080,9 +1645,10 @@ td {
     color: #2563eb;
 
     background: #f5f8ff;
-
 }
 
+
+/* Saved */
 
 .bookmarkAction.saved {
 
@@ -1091,9 +1657,10 @@ td {
     border-color: #2563eb;
 
     color: #2563eb;
-
 }
 
+
+/* Saved hover = Remove */
 
 .bookmarkAction.saved:hover {
 
@@ -1102,278 +1669,98 @@ td {
     border-color: #dc2626;
 
     color: #dc2626;
-
 }
 
+
+/* Hide Saved text when hovering */
 
 .bookmarkAction.saved:hover .bookmarkText {
 
     display: none;
-
 }
 
+
+/* Show Remove */
 
 .bookmarkAction.saved:hover::after {
 
     content: "Remove";
-
 }
 
+
+/* Bookmark icon */
 
 .bookmarkAction i {
 
     font-size: 13px;
-
 }
 
-/* =========================================================
-   EXAMVERSE MOBILE GLASSMORPHISM
-   Desktop styles above are intentionally untouched.
-========================================================= */
+
+/* =====================================================
+   MOBILE BOOKMARK
+   Keep original appearance, only make it touch friendly
+===================================================== */
 
 @media (max-width: 900px) {
-    .sidebar {
-        background: rgba(30, 58, 138, 0.72);
-        -webkit-backdrop-filter: blur(18px) saturate(150%);
-        backdrop-filter: blur(18px) saturate(150%);
-        border-right: 1px solid rgba(255,255,255,0.18);
-        box-shadow: 8px 0 30px rgba(15,23,42,0.12);
-    }
 
-    .sidebar ul li {
-        border: 1px solid transparent;
-        transition: background .22s ease, border-color .22s ease,
-                    transform .18s ease, box-shadow .22s ease;
-    }
-
-    .sidebar ul li:hover,
-    .sidebar ul li.active {
-        background: rgba(255,255,255,0.14);
-        border-color: rgba(255,255,255,0.18);
-        -webkit-backdrop-filter: blur(12px);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 8px 20px rgba(15,23,42,0.10);
-    }
-
-    .sidebar ul li:active {
-        transform: scale(.96);
-    }
-
-    body {
-        background:
-            radial-gradient(circle at 15% 10%, rgba(37,99,235,0.10), transparent 32%),
-            radial-gradient(circle at 90% 85%, rgba(124,58,237,0.09), transparent 34%),
-            #f4f7fb;
-    }
-
-    .topbar,
-    .historySection {
-        background: rgba(255,255,255,0.66);
-        border: 1px solid rgba(255,255,255,0.72);
-        -webkit-backdrop-filter: blur(18px) saturate(145%);
-        backdrop-filter: blur(18px) saturate(145%);
-        box-shadow: 0 14px 35px rgba(15,23,42,0.07),
-                    inset 0 1px 0 rgba(255,255,255,0.75);
-    }
-
-    .historyCount {
-        background: rgba(232,240,255,0.72);
-        border: 1px solid rgba(37,99,235,0.10);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-    }
-
-    .searchBox input {
-        background: rgba(248,250,252,0.68);
-        border-color: rgba(148,163,184,0.30);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-    }
-
-    .searchBox input:focus {
-        background: rgba(255,255,255,0.82);
-        box-shadow: 0 0 0 3px rgba(37,99,235,0.08),
-                    0 8px 22px rgba(37,99,235,0.07);
-    }
-
-    .filterBtn,
     .bookmarkAction {
-        background: rgba(255,255,255,0.60);
-        border-color: rgba(148,163,184,0.28);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
+
+        min-height: 38px;
+
+        padding: 8px 11px;
+
+        background: #ffffff;
+
+        border: 1px solid #dbe4f2;
+
+        color: #64748b;
+
+        -webkit-backdrop-filter: none;
+
+        backdrop-filter: none;
+
+        box-shadow: none;
+
         -webkit-tap-highlight-color: transparent;
+
         touch-action: manipulation;
     }
 
-    .filterBtn.active {
-        background: rgba(37,99,235,0.84);
-        border-color: rgba(37,99,235,0.55);
-        box-shadow: 0 7px 18px rgba(37,99,235,0.18);
+
+    .bookmarkAction:hover {
+
+        background: #f5f8ff;
+
+        border-color: #2563eb;
+
+        color: #2563eb;
+
+        box-shadow: none;
     }
 
-    .bookmarkAction {
-        min-height: 38px;
+
+    .bookmarkAction.saved {
+
+        background: #eaf1ff;
+
+        border-color: #2563eb;
+
+        color: #2563eb;
     }
 
-    .bookmarkAction:active,
-    .filterBtn:active {
+
+    .bookmarkAction.saved:hover {
+
+        background: #fff0f0;
+
+        border-color: #dc2626;
+
+        color: #dc2626;
+    }
+
+
+    .bookmarkAction:active {
+
         transform: scale(.96);
-    }
-
-    .tableWrapper {
-        border-radius: 14px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-
-    .tableWrapper::-webkit-scrollbar {
-        height: 5px;
-    }
-}
-
-@media (max-width: 700px) {
-    .main {
-        padding: 14px;
-    }
-
-    .topbar {
-        padding: 20px;
-    }
-
-    .topbar h1 {
-        line-height: 1.25;
-    }
-
-    .historySection {
-        padding: 18px;
-    }
-
-    .historyHeader {
-        gap: 12px;
-    }
-
-    .historyCount {
-        align-self: flex-start;
-    }
-
-    .historyControls {
-        gap: 12px;
-    }
-
-    .filterButtons {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 7px;
-    }
-
-    .filterBtn {
-        min-height: 42px;
-        padding: 8px 6px;
-    }
-
-    .searchBox input {
-        height: 46px;
-    }
-
-    .tableWrapper {
-        margin-left: -2px;
-        width: calc(100% + 4px);
-    }
-
-    table {
-        min-width: 780px;
-    }
-
-    th,
-    td {
-        white-space: nowrap;
-    }
-}
-
-@media (max-width: 500px) {
-    .main {
-        padding: 10px;
-    }
-
-    .topbar {
-        padding: 17px;
-        border-radius: 16px;
-        margin-bottom: 14px;
-    }
-
-    .topbar h1 {
-        font-size: 21px;
-    }
-
-    .topbar p {
-        font-size: 12px;
-        line-height: 1.5;
-    }
-
-    .historySection {
-        padding: 14px;
-        border-radius: 16px;
-    }
-
-    .historyHeader h2 {
-        font-size: 20px;
-    }
-
-    .historyHeader p {
-        font-size: 12px;
-        line-height: 1.45;
-    }
-
-    .historyCount {
-        padding: 8px 13px;
-        font-size: 12px;
-    }
-
-    .filterButtons {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    .filterBtn {
-        font-size: 11px;
-        min-height: 40px;
-        padding: 7px 4px;
-        border-radius: 10px;
-    }
-
-    .emptyState {
-        padding: 45px 12px;
-    }
-
-    .emptyIcon {
-        width: 62px;
-        height: 62px;
-        font-size: 24px;
-    }
-
-    .sidebar {
-        width: 68px;
-        background: rgba(30,58,138,0.76);
-        border-radius: 0 18px 18px 0;
-    }
-
-    .sidebar ul {
-        padding: 14px 9px;
-    }
-
-    .sidebar ul li {
-        min-height: 46px;
-        margin-bottom: 8px;
-        padding: 12px 8px;
-        border-radius: 13px;
-    }
-
-    .sidebar ul li i {
-        font-size: 18px;
-    }
-
-    .main {
-        margin-left: 68px;
-        width: calc(100% - 68px);
     }
 }

@@ -818,3 +818,259 @@ grid-template-columns:1fr;
     }
 
 }
+
+/* =========================================================
+   ExamVerse GLASSMORPHISM DESIGN
+   VISUAL ONLY
+   DO NOT CHANGE SIZE / POSITION / CONTENT / FUNCTION
+========================================================= */
+
+/* Main page glass atmosphere */
+body {
+    background:
+        radial-gradient(circle at 10% 15%, rgba(37, 99, 235, 0.16), transparent 30%),
+        radial-gradient(circle at 90% 85%, rgba(124, 58, 237, 0.14), transparent 30%),
+        linear-gradient(135deg, #eef4ff, #f6f2ff);
+}
+
+
+/* =========================================================
+   HEADER — GLASS
+========================================================= */
+
+.header {
+    background: rgba(255, 255, 255, 0.38) !important;
+
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    box-shadow:
+        0 8px 30px rgba(31, 38, 135, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.70);
+}
+
+
+/* =========================================================
+   SEARCH BOX — GLASS
+========================================================= */
+
+.searchBox input {
+    background: rgba(255, 255, 255, 0.42) !important;
+
+    backdrop-filter: blur(14px) saturate(135%);
+    -webkit-backdrop-filter: blur(14px) saturate(135%);
+
+    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+
+    box-shadow:
+        0 8px 25px rgba(31, 38, 135, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+    color: #222;
+}
+
+
+/* =========================================================
+   EXAM CARDS — BUBBLE GLASS
+========================================================= */
+
+.examCard {
+    background: rgba(255, 255, 255, 0.42) !important;
+
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+
+    border: 1px solid rgba(255, 255, 255, 0.62);
+
+    box-shadow:
+        0 12px 35px rgba(31, 38, 135, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.20);
+}
+
+
+/* =========================================================
+   EXAM CARD HOVER
+   Only visual effect — existing movement remains
+========================================================= */
+
+.examCard:hover {
+    box-shadow:
+        0 18px 42px rgba(31, 38, 135, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================================================
+   STATUS BADGE — GLASS
+========================================================= */
+
+.status {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        0 4px 12px rgba(22, 101, 52, 0.08);
+}
+
+
+/* =========================================================
+   PREFERRED BADGE — GLASS
+========================================================= */
+
+.preferredBadge {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.70),
+        0 3px 10px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   BOOKMARK BUTTON — GLASS
+   Existing saved/unsaved colors remain untouched
+========================================================= */
+
+.examBookmarkBtn {
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+
+    box-shadow:
+        0 6px 18px rgba(31, 38, 135, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+
+/* =========================================================
+   SHARE BUTTON — GLASS EFFECT ONLY
+   Existing color remains unchanged
+========================================================= */
+
+.shareExamBtn {
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    box-shadow:
+        0 6px 18px rgba(31, 38, 135, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+
+/* =========================================================
+   START / RESUME BUTTON — GLASS HIGHLIGHT
+   Existing background/color remains unchanged
+========================================================= */
+
+.startBtn {
+    box-shadow:
+        0 8px 22px rgba(37, 99, 235, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+
+/* =========================================================
+   RETAKE BUTTON — GLASS HIGHLIGHT
+   Existing red/orange color remains unchanged
+========================================================= */
+
+.retakeBtn {
+    box-shadow:
+        0 8px 22px rgba(239, 68, 68, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30);
+}
+
+
+/* =========================================================
+   INPUT FOCUS — GLASS GLOW
+========================================================= */
+
+.searchBox input:focus {
+    background: rgba(255, 255, 255, 0.50) !important;
+
+    box-shadow:
+        0 8px 25px rgba(37, 99, 235, 0.12),
+        0 0 0 3px rgba(37, 99, 235, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.80);
+}
+
+
+/* =========================================================
+   LOADING AREA — GLASS
+========================================================= */
+
+.loading {
+    background: rgba(255, 255, 255, 0.30);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255, 255, 255, 0.50);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 8px 25px rgba(31, 38, 135, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+
+/* =========================================================
+   MOBILE — GLASS ONLY
+   Existing mobile dimensions/layout remain untouched
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .header {
+        background: rgba(255, 255, 255, 0.40) !important;
+
+        backdrop-filter: blur(18px) saturate(145%);
+        -webkit-backdrop-filter: blur(18px) saturate(145%);
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.60);
+
+        box-shadow:
+            0 8px 25px rgba(31, 38, 135, 0.10),
+            inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .searchBox input {
+        background: rgba(255, 255, 255, 0.44) !important;
+
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+
+        box-shadow:
+            0 8px 24px rgba(31, 38, 135, 0.09),
+            inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .examCard {
+        background: rgba(255, 255, 255, 0.44) !important;
+
+        backdrop-filter: blur(18px) saturate(145%);
+        -webkit-backdrop-filter: blur(18px) saturate(145%);
+
+        border: 1px solid rgba(255, 255, 255, 0.65);
+
+        box-shadow:
+            0 12px 30px rgba(31, 38, 135, 0.10),
+            inset 0 1px 0 rgba(255, 255, 255, 0.78),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.20);
+    }
+
+}
