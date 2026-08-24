@@ -1,0 +1,3183 @@
+/* =========================================================
+   EXAMVERSE — PURE BLACK DARK MODE
+   =========================================================
+   Activated by:
+       html.dark-mode
+
+   DESIGN:
+   - Pure / near-black background
+   - Near-black cards
+   - NO grey glass cards
+   - NO frosted grey appearance
+   - NO light card backgrounds
+   - White text
+   - Blue accents
+   - Existing layout untouched
+   - Existing sizes untouched
+   - Existing spacing untouched
+   - Existing mobile layout untouched
+========================================================= */
+
+
+/* =========================================================
+   01. PAGE BACKGROUND
+========================================================= */
+
+html.dark-mode body {
+
+    background:
+        #000000 !important;
+
+    color:
+        #f5f5f5 !important;
+}
+
+
+/* =========================================================
+   02. MAIN CONTENT
+========================================================= */
+
+html.dark-mode .main,
+html.dark-mode .main-content {
+
+    background:
+        #000000 !important;
+
+    color:
+        #f5f5f5 !important;
+}
+
+
+/* =========================================================
+   03. GLOBAL TEXT
+========================================================= */
+
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode h5,
+html.dark-mode h6 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode p {
+
+    color:
+        #d4d4d4 !important;
+}
+
+
+html.dark-mode label {
+
+    color:
+        #d4d4d4 !important;
+}
+
+
+/* =========================================================
+   04. SIDEBAR
+   Keep ExamVerse blue
+========================================================= */
+
+html.dark-mode .sidebar {
+
+    background:
+        #071b45 !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .sidebar h1,
+html.dark-mode .sidebar h2,
+html.dark-mode .sidebar h3,
+html.dark-mode .sidebar p,
+html.dark-mode .sidebar span,
+html.dark-mode .sidebar li,
+html.dark-mode .sidebar li i {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .sidebar li:hover {
+
+    background:
+        #102d68 !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .sidebar li.active {
+
+    background:
+        #2563eb !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+/* =========================================================
+   05. PAGE HEADERS
+========================================================= */
+
+html.dark-mode .page-header,
+html.dark-mode .performance-header,
+html.dark-mode .performance-heading,
+html.dark-mode .header-card {
+
+    background:
+        #000000 !important;
+
+    border:
+        none !important;
+
+    box-shadow:
+        none !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .page-header h1,
+html.dark-mode .performance-header h1,
+html.dark-mode .performance-heading h1,
+html.dark-mode .header-card h1 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .page-header p,
+html.dark-mode .performance-header p,
+html.dark-mode .performance-heading p,
+html.dark-mode .header-card p {
+
+    color:
+        #a3a3a3 !important;
+}
+
+
+/* =========================================================
+   06. ALL COMMON CARDS
+   TRUE BLACK
+========================================================= */
+
+html.dark-mode .card,
+html.dark-mode .glass-card,
+html.dark-mode .content-card,
+html.dark-mode .stat-card,
+html.dark-mode .test-card,
+html.dark-mode .exam-card,
+html.dark-mode .performance-card,
+html.dark-mode .bookmark-card,
+html.dark-mode .history-card,
+html.dark-mode .settings-card,
+html.dark-mode .instruction-card,
+html.dark-mode .instructions-card,
+html.dark-mode .section-card,
+html.dark-mode .question-card,
+html.dark-mode .question-container,
+html.dark-mode .chart-card,
+html.dark-mode .graph-card,
+html.dark-mode .metric-card,
+html.dark-mode .mini-card,
+html.dark-mode .summary-card,
+html.dark-mode .filter-card,
+html.dark-mode .analytics-filter,
+html.dark-mode .filter-container,
+html.dark-mode .test-history,
+html.dark-mode .history-table,
+html.dark-mode .previous-tests,
+html.dark-mode .historySection,
+html.dark-mode .bookmark-item,
+html.dark-mode .danger-card {
+
+    background:
+        #0a0a0a !important;
+
+    background-image:
+        none !important;
+
+    border:
+        1px solid #202020 !important;
+
+    color:
+        #f5f5f5 !important;
+
+    box-shadow:
+        none !important;
+
+    backdrop-filter:
+        none !important;
+
+    -webkit-backdrop-filter:
+        none !important;
+}
+
+
+/* =========================================================
+   07. CATCH ALL CARD CLASSES
+========================================================= */
+
+html.dark-mode .main [class*="card"],
+html.dark-mode .main-content [class*="card"] {
+
+    background:
+        #0a0a0a !important;
+
+    background-image:
+        none !important;
+
+    border-color:
+        #202020 !important;
+
+    color:
+        #f5f5f5 !important;
+
+    box-shadow:
+        none !important;
+
+    backdrop-filter:
+        none !important;
+
+    -webkit-backdrop-filter:
+        none !important;
+}
+
+
+/* =========================================================
+   08. REMOVE ALL GLASS / PSEUDO OVERLAYS
+========================================================= */
+
+html.dark-mode .card::before,
+html.dark-mode .card::after,
+html.dark-mode .glass-card::before,
+html.dark-mode .glass-card::after,
+html.dark-mode .content-card::before,
+html.dark-mode .content-card::after,
+html.dark-mode .stat-card::before,
+html.dark-mode .stat-card::after,
+html.dark-mode .test-card::before,
+html.dark-mode .test-card::after,
+html.dark-mode .exam-card::before,
+html.dark-mode .exam-card::after,
+html.dark-mode .performance-card::before,
+html.dark-mode .performance-card::after,
+html.dark-mode .bookmark-card::before,
+html.dark-mode .bookmark-card::after,
+html.dark-mode .history-card::before,
+html.dark-mode .history-card::after,
+html.dark-mode .chart-card::before,
+html.dark-mode .chart-card::after,
+html.dark-mode .graph-card::before,
+html.dark-mode .graph-card::after {
+
+    display:
+        none !important;
+
+    background:
+        transparent !important;
+
+    opacity:
+        0 !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+/* =========================================================
+   09. CARD HEADINGS
+========================================================= */
+
+html.dark-mode .card h1,
+html.dark-mode .card h2,
+html.dark-mode .card h3,
+html.dark-mode .card h4,
+html.dark-mode .card h5,
+html.dark-mode .card h6,
+
+html.dark-mode .glass-card h1,
+html.dark-mode .glass-card h2,
+html.dark-mode .glass-card h3,
+html.dark-mode .glass-card h4,
+html.dark-mode .glass-card h5,
+html.dark-mode .glass-card h6,
+
+html.dark-mode .content-card h1,
+html.dark-mode .content-card h2,
+html.dark-mode .content-card h3,
+html.dark-mode .content-card h4,
+html.dark-mode .content-card h5,
+html.dark-mode .content-card h6,
+
+html.dark-mode .stat-card h1,
+html.dark-mode .stat-card h2,
+html.dark-mode .stat-card h3,
+html.dark-mode .stat-card h4,
+html.dark-mode .stat-card h5,
+html.dark-mode .stat-card h6,
+
+html.dark-mode .test-card h1,
+html.dark-mode .test-card h2,
+html.dark-mode .test-card h3,
+html.dark-mode .test-card h4,
+html.dark-mode .test-card h5,
+html.dark-mode .test-card h6,
+
+html.dark-mode .exam-card h1,
+html.dark-mode .exam-card h2,
+html.dark-mode .exam-card h3,
+html.dark-mode .exam-card h4,
+html.dark-mode .exam-card h5,
+html.dark-mode .exam-card h6,
+
+html.dark-mode .performance-card h1,
+html.dark-mode .performance-card h2,
+html.dark-mode .performance-card h3,
+html.dark-mode .performance-card h4,
+html.dark-mode .performance-card h5,
+html.dark-mode .performance-card h6 {
+
+    color:
+        #ffffff !important;
+}
+
+
+/* =========================================================
+   10. CARD PARAGRAPHS
+========================================================= */
+
+html.dark-mode .card p,
+html.dark-mode .glass-card p,
+html.dark-mode .content-card p,
+html.dark-mode .stat-card p,
+html.dark-mode .test-card p,
+html.dark-mode .exam-card p,
+html.dark-mode .performance-card p,
+html.dark-mode .bookmark-card p,
+html.dark-mode .history-card p,
+html.dark-mode .settings-card p,
+html.dark-mode .instruction-card p,
+html.dark-mode .instructions-card p,
+html.dark-mode .section-card p,
+html.dark-mode .question-card p,
+html.dark-mode .chart-card p,
+html.dark-mode .graph-card p {
+
+    color:
+        #bdbdbd !important;
+}
+
+
+/* =========================================================
+   11. CARD SPANS
+========================================================= */
+
+html.dark-mode .card span,
+html.dark-mode .glass-card span,
+html.dark-mode .content-card span,
+html.dark-mode .stat-card span,
+html.dark-mode .test-card span,
+html.dark-mode .exam-card span,
+html.dark-mode .performance-card span,
+html.dark-mode .bookmark-card span,
+html.dark-mode .history-card span,
+html.dark-mode .chart-card span,
+html.dark-mode .graph-card span {
+
+    color:
+        #c7c7c7 !important;
+}
+
+
+/* =========================================================
+   12. SMALL TEXT
+========================================================= */
+
+html.dark-mode .card small,
+html.dark-mode .glass-card small,
+html.dark-mode .content-card small,
+html.dark-mode .stat-card small,
+html.dark-mode .test-card small,
+html.dark-mode .exam-card small,
+html.dark-mode .performance-card small,
+html.dark-mode .bookmark-card small,
+html.dark-mode .history-card small {
+
+    color:
+        #858585 !important;
+}
+
+
+/* =========================================================
+   13. IMPORTANT NUMBERS
+========================================================= */
+
+html.dark-mode .stat-card strong,
+html.dark-mode .stat-card b,
+html.dark-mode .stat-card .value,
+html.dark-mode .stat-card .stat-value,
+html.dark-mode .performance-card strong,
+html.dark-mode .performance-card b,
+html.dark-mode .performance-card .value,
+html.dark-mode .performance-card .stat-value {
+
+    color:
+        #60a5fa !important;
+}
+
+
+/* =========================================================
+   14. STAT CARD ACCENT COLORS
+========================================================= */
+
+html.dark-mode .stat-card:nth-child(1) strong,
+html.dark-mode .stat-card:nth-child(1) b {
+
+    color:
+        #60a5fa !important;
+}
+
+
+html.dark-mode .stat-card:nth-child(2) strong,
+html.dark-mode .stat-card:nth-child(2) b {
+
+    color:
+        #a78bfa !important;
+}
+
+
+html.dark-mode .stat-card:nth-child(3) strong,
+html.dark-mode .stat-card:nth-child(3) b {
+
+    color:
+        #22c55e !important;
+}
+
+
+html.dark-mode .stat-card:nth-child(4) strong,
+html.dark-mode .stat-card:nth-child(4) b {
+
+    color:
+        #f59e0b !important;
+}
+
+
+html.dark-mode .stat-card:nth-child(5) strong,
+html.dark-mode .stat-card:nth-child(5) b {
+
+    color:
+        #22d3ee !important;
+}
+
+
+html.dark-mode .stat-card:nth-child(6) strong,
+html.dark-mode .stat-card:nth-child(6) b {
+
+    color:
+        #f43f5e !important;
+}
+
+
+/* =========================================================
+   15. ICON BOXES
+========================================================= */
+
+html.dark-mode .icon-box {
+
+    background:
+        #101010 !important;
+
+    border:
+        1px solid #252525 !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .icon-box i {
+
+    color:
+        #60a5fa !important;
+}
+
+
+/* =========================================================
+   16. SEARCH
+========================================================= */
+
+html.dark-mode .search-box,
+html.dark-mode .search-input,
+html.dark-mode .search-container {
+
+    background:
+        #080808 !important;
+
+    border:
+        1px solid #252525 !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        none !important;
+
+    backdrop-filter:
+        none !important;
+}
+
+
+html.dark-mode .search-box input,
+html.dark-mode .search-input input {
+
+    background:
+        transparent !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+/* =========================================================
+   17. INPUTS
+========================================================= */
+
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+
+    background:
+        #050505 !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        1px solid #292929 !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder {
+
+    color:
+        #666666 !important;
+}
+
+
+html.dark-mode input:focus,
+html.dark-mode textarea:focus,
+html.dark-mode select:focus {
+
+    border-color:
+        #2563eb !important;
+
+    box-shadow:
+        0 0 0 2px rgba(37,99,235,.18) !important;
+
+    outline:
+        none !important;
+}
+
+
+/* =========================================================
+   18. BUTTONS
+========================================================= */
+
+html.dark-mode .action-btn,
+html.dark-mode .secondary-btn {
+
+    background:
+        #111111 !important;
+
+    color:
+        #dbeafe !important;
+
+    border:
+        1px solid #303030 !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .action-btn:hover,
+html.dark-mode .secondary-btn:hover {
+
+    background:
+        #171717 !important;
+
+    border-color:
+        #2563eb !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+/* Primary */
+
+html.dark-mode .primary-btn {
+
+    background:
+        #2563eb !important;
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        #2563eb !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+/* Delete */
+
+html.dark-mode .delete-btn {
+
+    background:
+        #b91c1c !important;
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        #dc2626 !important;
+}
+
+
+/* =========================================================
+   19. TABLES
+========================================================= */
+
+html.dark-mode table {
+
+    background:
+        #050505 !important;
+
+    color:
+        #eeeeee !important;
+
+    border-color:
+        #252525 !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode th {
+
+    background:
+        #101f42 !important;
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        #25365c !important;
+}
+
+
+html.dark-mode td {
+
+    background:
+        #080808 !important;
+
+    color:
+        #d7d7d7 !important;
+
+    border-color:
+        #1f1f1f !important;
+}
+
+
+html.dark-mode tr:hover td {
+
+    background:
+        #101010 !important;
+}
+
+
+/* =========================================================
+   20. QUESTION AREA
+========================================================= */
+
+html.dark-mode .question-text {
+
+    color:
+        #ffffff !important;
+}
+
+
+/* =========================================================
+   21. ANSWER OPTIONS
+========================================================= */
+
+html.dark-mode .option,
+html.dark-mode .option-card,
+html.dark-mode .answer-option {
+
+    background:
+        #050505 !important;
+
+    border:
+        1px solid #292929 !important;
+
+    color:
+        #dddddd !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .option:hover,
+html.dark-mode .option-card:hover,
+html.dark-mode .answer-option:hover {
+
+    background:
+        #0d1b35 !important;
+
+    border-color:
+        #2563eb !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .option.selected,
+html.dark-mode .option-card.selected,
+html.dark-mode .answer-option.selected {
+
+    background:
+        #0d2b61 !important;
+
+    border-color:
+        #3b82f6 !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+/* =========================================================
+   22. QUESTION PALETTE
+========================================================= */
+
+html.dark-mode .question-number,
+html.dark-mode .palette-item {
+
+    background:
+        #0a0a0a !important;
+
+    color:
+        #cfcfcf !important;
+
+    border:
+        1px solid #292929 !important;
+}
+
+
+html.dark-mode .question-number.active,
+html.dark-mode .palette-item.active {
+
+    background:
+        #2563eb !important;
+
+    color:
+        #ffffff !important;
+
+    border-color:
+        #2563eb !important;
+}
+
+
+/* =========================================================
+   23. TIMER
+========================================================= */
+
+html.dark-mode .timer,
+html.dark-mode .exam-timer {
+
+    background:
+        #090909 !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        1px solid #292929 !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+/* =========================================================
+   24. PERFORMANCE HERO
+   Keep it BLUE, not black
+========================================================= */
+
+html.dark-mode .performance-hero,
+html.dark-mode .overall-performance,
+html.dark-mode .performance-summary {
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #4338ca
+        ) !important;
+
+    border:
+        1px solid #3158dc !important;
+
+    box-shadow:
+        none !important;
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .performance-hero *,
+html.dark-mode .overall-performance *,
+html.dark-mode .performance-summary * {
+
+    color:
+        #ffffff !important;
+}
+
+
+/* =========================================================
+   25. FILTER CARDS
+========================================================= */
+
+html.dark-mode .filter-card,
+html.dark-mode .analytics-filter,
+html.dark-mode .filters,
+html.dark-mode .filter-container {
+
+    background:
+        #080808 !important;
+
+    border:
+        1px solid #202020 !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .filter-card h1,
+html.dark-mode .filter-card h2,
+html.dark-mode .filter-card h3,
+html.dark-mode .analytics-filter h1,
+html.dark-mode .analytics-filter h2,
+html.dark-mode .analytics-filter h3 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .filter-card p,
+html.dark-mode .filter-card span,
+html.dark-mode .analytics-filter p,
+html.dark-mode .analytics-filter span {
+
+    color:
+        #999999 !important;
+}
+
+
+/* =========================================================
+   26. CHART / GRAPH
+========================================================= */
+
+html.dark-mode .chart-card,
+html.dark-mode .graph-card {
+
+    background:
+        #080808 !important;
+
+    border:
+        1px solid #202020 !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .chart-card h1,
+html.dark-mode .chart-card h2,
+html.dark-mode .chart-card h3,
+html.dark-mode .graph-card h1,
+html.dark-mode .graph-card h2,
+html.dark-mode .graph-card h3 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .chart-card p,
+html.dark-mode .graph-card p {
+
+    color:
+        #999999 !important;
+}
+
+
+html.dark-mode canvas {
+
+    filter:
+        none !important;
+}
+
+
+/* =========================================================
+   27. SETTINGS
+========================================================= */
+
+html.dark-mode .settings-card-header {
+
+    border-color:
+        #202020 !important;
+}
+
+
+html.dark-mode .settings-card-header h2,
+html.dark-mode .setting-info h3 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .settings-card-header p,
+html.dark-mode .setting-info p {
+
+    color:
+        #a3a3a3 !important;
+}
+
+
+html.dark-mode .setting-row {
+
+    color:
+        #eeeeee !important;
+
+    border-color:
+        #202020 !important;
+}
+
+
+/* =========================================================
+   28. BOOKMARKS
+========================================================= */
+
+html.dark-mode .bookmark-card,
+html.dark-mode .bookmark-item {
+
+    background:
+        #080808 !important;
+
+    border:
+        1px solid #202020 !important;
+
+    color:
+        #eeeeee !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .bookmark-card p,
+html.dark-mode .bookmark-item p {
+
+    color:
+        #b5b5b5 !important;
+}
+
+
+html.dark-mode .bookmarkAction {
+
+    background:
+        #050505 !important;
+
+    color:
+        #60a5fa !important;
+
+    border:
+        1px solid #292929 !important;
+}
+
+
+html.dark-mode .bookmarkAction:hover {
+
+    background:
+        #0c1d3b !important;
+
+    color:
+        #93c5fd !important;
+
+    border-color:
+        #2563eb !important;
+}
+
+
+html.dark-mode .bookmarkAction.saved {
+
+    background:
+        #0d2b61 !important;
+
+    color:
+        #60a5fa !important;
+
+    border-color:
+        #2563eb !important;
+}
+
+
+/* =========================================================
+   29. INSTRUCTIONS
+========================================================= */
+
+html.dark-mode .instruction-card,
+html.dark-mode .instructions-card,
+html.dark-mode .section-card {
+
+    background:
+        #080808 !important;
+
+    border:
+        1px solid #202020 !important;
+
+    color:
+        #eeeeee !important;
+
+    box-shadow:
+        none !important;
+}
+
+
+html.dark-mode .instruction-card h1,
+html.dark-mode .instruction-card h2,
+html.dark-mode .instruction-card h3,
+html.dark-mode .instructions-card h1,
+html.dark-mode .instructions-card h2,
+html.dark-mode .instructions-card h3 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .instruction-card p,
+html.dark-mode .instructions-card p {
+
+    color:
+        #bdbdbd !important;
+}
+
+
+/* =========================================================
+   30. MODALS
+========================================================= */
+
+html.dark-mode .modal {
+
+    background:
+        #080808 !important;
+
+    border:
+        1px solid #292929 !important;
+
+    color:
+        #eeeeee !important;
+
+    border-radius:
+        20px !important;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.75) !important;
+
+    backdrop-filter:
+        none !important;
+}
+
+
+html.dark-mode .modal h1,
+html.dark-mode .modal h2,
+html.dark-mode .modal h3 {
+
+    color:
+        #ffffff !important;
+}
+
+
+html.dark-mode .modal p {
+
+    color:
+        #c2c2c2 !important;
+}
+
+
+html.dark-mode .modal-close {
+
+    background:
+        #101010 !important;
+
+    color:
+        #ffffff !important;
+
+    border:
+        1px solid #292929 !important;
+}
+
+
+html.dark-mode .modal-overlay {
+
+    background:
+        rgba(0,0,0,.85) !important;
+
+    backdrop-filter:
+        blur(3px);
+}
+
+
+/* =========================================================
+   31. STATUS
+========================================================= */
+
+html.dark-mode .status-passed,
+html.dark-mode .status-pass {
+
+    background:
+        #062d18 !important;
+
+    color:
+        #4ade80 !important;
+
+    border:
+        1px solid #14532d !important;
+}
+
+
+html.dark-mode .status-failed,
+html.dark-mode .status-fail {
+
+    background:
+        #320b0b !important;
+
+    color:
+        #fb7185 !important;
+
+    border:
+        1px solid #7f1d1d !important;
+}
+
+
+/* =========================================================
+   32. WARNING
+========================================================= */
+
+html.dark-mode .warning-box {
+
+    background:
+        #211805 !important;
+
+    border:
+        1px solid #59400b !important;
+}
+
+
+html.dark-mode .warning-box strong {
+
+    color:
+        #fbbf24 !important;
+}
+
+
+html.dark-mode .warning-box span {
+
+    color:
+        #d4d4d4 !important;
+}
+
+
+/* =========================================================
+   33. DANGER
+========================================================= */
+
+html.dark-mode .danger-card {
+
+    background:
+        #180707 !important;
+
+    border:
+        1px solid #4a1616 !important;
+}
+
+
+html.dark-mode .delete-row {
+
+    background:
+        #101010 !important;
+
+    color:
+        #eeeeee !important;
+}
+
+
+/* =========================================================
+   34. DIVIDERS
+========================================================= */
+
+html.dark-mode hr {
+
+    border-color:
+        #202020 !important;
+}
+
+
+/* =========================================================
+   35. FOOTER
+========================================================= */
+
+html.dark-mode footer {
+
+    color:
+        #777777 !important;
+}
+
+
+/* =========================================================
+   36. LINKS
+========================================================= */
+
+html.dark-mode a {
+
+    color:
+        #60a5fa;
+}
+
+
+html.dark-mode a:hover {
+
+    color:
+        #93c5fd;
+}
+
+
+/* =========================================================
+   37. SCROLLBAR
+========================================================= */
+
+html.dark-mode ::-webkit-scrollbar {
+
+    width:
+        8px;
+}
+
+
+html.dark-mode ::-webkit-scrollbar-track {
+
+    background:
+        #000000 !important;
+}
+
+
+html.dark-mode ::-webkit-scrollbar-thumb {
+
+    background:
+        #252525 !important;
+
+    border-radius:
+        999px;
+}
+
+
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #3b3b3b !important;
+}
+
+
+/* =========================================================
+   38. REMOVE GENERIC GLASS EFFECTS
+========================================================= */
+
+html.dark-mode [style*="backdrop-filter"],
+html.dark-mode [style*="background: rgba(255"],
+html.dark-mode [style*="background:rgba(255"] {
+
+    backdrop-filter:
+        none !important;
+}
+
+
+/* =========================================================
+   39. MOBILE
+   COLORS ONLY — NO LAYOUT CHANGES
+========================================================= */
+
+@media (max-width:700px) {
+
+    html.dark-mode body {
+
+        background:
+            #000000 !important;
+
+        color:
+            #f5f5f5 !important;
+    }
+
+
+    html.dark-mode .main,
+    html.dark-mode .main-content {
+
+        background:
+            #000000 !important;
+    }
+
+
+    html.dark-mode .card,
+    html.dark-mode .glass-card,
+    html.dark-mode .content-card,
+    html.dark-mode .stat-card,
+    html.dark-mode .test-card,
+    html.dark-mode .exam-card,
+    html.dark-mode .performance-card,
+    html.dark-mode .bookmark-card,
+    html.dark-mode .history-card,
+    html.dark-mode .settings-card,
+    html.dark-mode .instruction-card,
+    html.dark-mode .instructions-card,
+    html.dark-mode .section-card,
+    html.dark-mode .question-card,
+    html.dark-mode .question-container,
+    html.dark-mode .chart-card,
+    html.dark-mode .graph-card {
+
+        background:
+            #0a0a0a !important;
+
+        background-image:
+            none !important;
+
+        border-color:
+            #202020 !important;
+
+        box-shadow:
+            none !important;
+    }
+
+}
+
+/* =========================================================
+   EXAMVERSE — GLOBAL BLACK CONTAINER OVERRIDE
+   ========================================================= */
+
+html.dark-mode .main-content * {
+
+    border-color: #202020 !important;
+}
+
+
+/* Force common structural containers black */
+
+html.dark-mode .main-content > div,
+html.dark-mode .main-content > section,
+html.dark-mode .main-content > article,
+html.dark-mode .main-content .container,
+html.dark-mode .main-content .section,
+html.dark-mode .main-content .panel,
+html.dark-mode .main-content .box,
+html.dark-mode .main-content .tile,
+html.dark-mode .main-content .item,
+html.dark-mode .main-content .summary,
+html.dark-mode .main-content .stats,
+html.dark-mode .main-content .stat,
+html.dark-mode .main-content .overview,
+html.dark-mode .main-content .dashboard-card,
+html.dark-mode .main-content .dashboard-section {
+
+    background-color: #0a0a0a !important;
+    background-image: none !important;
+
+    border-color: #202020 !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+
+/* Force direct dashboard sections */
+
+html.dark-mode .main-content > div,
+html.dark-mode .main-content > section {
+
+    color: #f5f5f5 !important;
+}
+
+
+/* Remove white/grey backgrounds coming from inline styling */
+
+html.dark-mode .main-content [style*="background"] {
+
+    background-color: #0a0a0a !important;
+    background-image: none !important;
+}
+
+
+/* Keep blue elements blue */
+
+html.dark-mode .main-content .primary-btn,
+html.dark-mode .main-content .btn-primary,
+html.dark-mode .main-content .active,
+html.dark-mode .main-content .active-card {
+
+    background-color: #2563eb !important;
+    background-image: none !important;
+
+    color: #ffffff !important;
+}
+
+
+/* Keep performance hero blue */
+
+html.dark-mode .performance-hero,
+html.dark-mode .overall-performance,
+html.dark-mode .performance-summary {
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #4338ca
+        ) !important;
+
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   EXAMVERSE — FINAL V1.0 DARK-MODE REPAIR PATCH
+   ---------------------------------------------------------
+   This section is intentionally LAST in the file so it wins
+   over page-specific CSS and the later glass-design blocks.
+
+   Goals:
+   - Remove remaining white / grey cards
+   - Remove remaining frosted/glass surfaces
+   - Keep black + deep-blue theme
+   - Preserve layout, dimensions and spacing
+   - Round the CBT question header correctly
+========================================================= */
+
+/* ---------------------------------------------------------
+   A. GLOBAL SURFACE RESET
+--------------------------------------------------------- */
+html.dark-mode body,
+html.dark-mode .main,
+html.dark-mode .main-content,
+html.dark-mode .container,
+html.dark-mode .exam-container,
+html.dark-mode .exam-body,
+html.dark-mode .question-area,
+html.dark-mode .background {
+    background: #000000 !important;
+    background-image: none !important;
+    color: #f8fafc !important;
+}
+
+/* ---------------------------------------------------------
+   B. DASHBOARD — ACTUAL V1.0 CLASSES
+--------------------------------------------------------- */
+html.dark-mode .topbar,
+html.dark-mode .card,
+html.dark-mode .profile,
+html.dark-mode .previous,
+html.dark-mode .progressSection,
+html.dark-mode .milestoneSection,
+html.dark-mode .preferredSection,
+html.dark-mode .preferredExamCard {
+    background: #080b10 !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .topbar h1,
+html.dark-mode .card h1,
+html.dark-mode .card h3,
+html.dark-mode .profile h2,
+html.dark-mode .previous h2,
+html.dark-mode .sectionHeading h2,
+html.dark-mode .preferredExamContent h3,
+html.dark-mode .milestoneHeader h2,
+html.dark-mode .progressHeader h2 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .topbar p,
+html.dark-mode .card p,
+html.dark-mode .profile p,
+html.dark-mode .preferredExamContent p,
+html.dark-mode .milestoneSection p,
+html.dark-mode .progressSection p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .preferredExamCard:hover,
+html.dark-mode .card:hover {
+    background: #0b1018 !important;
+    border-color: #29436b !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .viewMoreTests,
+html.dark-mode .preferredExamBtn {
+    background: #10244a !important;
+    color: #93c5fd !important;
+    border-color: #244b9b !important;
+}
+
+/* Dashboard tables */
+html.dark-mode .previous table,
+html.dark-mode .previous thead,
+html.dark-mode .previous tbody,
+html.dark-mode .previous tr,
+html.dark-mode .previous td {
+    background: #080b10 !important;
+    color: #dbe5f2 !important;
+    border-color: #202b3a !important;
+}
+
+html.dark-mode .previous th {
+    background: #10244a !important;
+    color: #ffffff !important;
+    border-color: #244b9b !important;
+}
+
+/* ---------------------------------------------------------
+   C. PERFORMANCE — ACTUAL V1.0 CLASSES
+--------------------------------------------------------- */
+html.dark-mode .filter-card,
+html.dark-mode .kpi-card,
+html.dark-mode .question-stat,
+html.dark-mode .panel,
+html.dark-mode .large-panel,
+html.dark-mode .chart-box,
+html.dark-mode .insights,
+html.dark-mode .area-list,
+html.dark-mode .table-wrapper,
+html.dark-mode .distribution,
+html.dark-mode .section-list {
+    background: #080b10 !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .kpi-card span,
+html.dark-mode .kpi-card small,
+html.dark-mode .question-stat span,
+html.dark-mode .question-stat small,
+html.dark-mode .panel-note,
+html.dark-mode .filter-card p,
+html.dark-mode .filter-card span,
+html.dark-mode .chart-empty,
+html.dark-mode .distribution-item,
+html.dark-mode .panel-label {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .kpi-card strong,
+html.dark-mode .question-stat strong,
+html.dark-mode .panel h2,
+html.dark-mode .panel h3,
+html.dark-mode .panel-header h2,
+html.dark-mode .filter-heading h2 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .insight {
+    background: #0c1119 !important;
+    border-color: #202b3a !important;
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .insight * {
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .performance-hero,
+html.dark-mode .overall-performance,
+html.dark-mode .performance-summary {
+    background: linear-gradient(135deg, #1746c7, #4338ca) !important;
+    background-image: linear-gradient(135deg, #1746c7, #4338ca) !important;
+    border-color: #315bd8 !important;
+    color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   D. BOOKMARKS — FIX THE GREY SAVED/ATTEMPT CARDS
+--------------------------------------------------------- */
+html.dark-mode .summary-card,
+html.dark-mode .bookmark-section,
+html.dark-mode .saved-card,
+html.dark-mode .loading-state,
+html.dark-mode .empty-state {
+    background: #080b10 !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .saved-card:hover {
+    background: #0c121c !important;
+    border-color: #2b4f88 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .summary-content span,
+html.dark-mode .summary-content small,
+html.dark-mode .saved-title p,
+html.dark-mode .saved-date,
+html.dark-mode .section-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .summary-content strong,
+html.dark-mode .saved-title h3 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .saved-title-icon {
+    background: #10244a !important;
+    color: #60a5fa !important;
+    border-color: #244b9b !important;
+}
+
+html.dark-mode .stat-pill {
+    background: #0d1420 !important;
+    border-color: #26364d !important;
+    color: #aebbd0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .stat-pill strong {
+    color: #ffffff !important;
+}
+
+html.dark-mode .status-pass {
+    background: #06351f !important;
+    color: #4ade80 !important;
+    border-color: #14532d !important;
+}
+
+html.dark-mode .status-fail {
+    background: #3a0b12 !important;
+    color: #fb7185 !important;
+    border-color: #7f1d1d !important;
+}
+
+html.dark-mode .remove-btn {
+    background: #351015 !important;
+    color: #fb7185 !important;
+    border: 1px solid #7f1d1d !important;
+}
+
+html.dark-mode .start-btn {
+    background: #10244a !important;
+    color: #60a5fa !important;
+    border: 1px solid #244b9b !important;
+}
+
+html.dark-mode .view-btn {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .header-btn {
+    background: #0d1420 !important;
+    color: #93c5fd !important;
+    border: 1px solid #293b55 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* ---------------------------------------------------------
+   E. INSTRUCTIONS — REMOVE REMAINING GREY/WHITE TILES
+--------------------------------------------------------- */
+html.dark-mode .glassHeader,
+html.dark-mode .glassCard,
+html.dark-mode .heroCard,
+html.dark-mode .importantCard,
+html.dark-mode .startCard,
+html.dark-mode .paletteExample,
+html.dark-mode .instructionItem,
+html.dark-mode .checkList div,
+html.dark-mode .instruction-section-row,
+html.dark-mode .info-box {
+    background: #080b10 !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .instructionItem:hover {
+    background: #0c121c !important;
+    border-color: #2b4f88 !important;
+}
+
+html.dark-mode .instructionItem h3,
+html.dark-mode .instructionItem p,
+html.dark-mode .checkList div,
+html.dark-mode .section-main strong,
+html.dark-mode .section-main span,
+html.dark-mode .info-box span,
+html.dark-mode .info-box strong,
+html.dark-mode .exampleTitle,
+html.dark-mode .paletteText h3,
+html.dark-mode .paletteText p,
+html.dark-mode .agreeBox,
+html.dark-mode .importantCard h2,
+html.dark-mode .importantCard p,
+html.dark-mode .startCard h2,
+html.dark-mode .startCard p {
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .section-main strong,
+html.dark-mode .instructionItem h3,
+html.dark-mode .importantCard h2,
+html.dark-mode .startCard h2,
+html.dark-mode .paletteText h3,
+html.dark-mode .exampleTitle {
+    color: #ffffff !important;
+}
+
+html.dark-mode .section-main span,
+html.dark-mode .instructionItem p,
+html.dark-mode .importantCard p,
+html.dark-mode .startCard p,
+html.dark-mode .paletteText p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .customCheck {
+    background: #05070b !important;
+    border-color: #475569 !important;
+}
+
+html.dark-mode .agreeBox input:checked + .customCheck {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    box-shadow: inset 0 0 0 4px #ffffff !important;
+}
+
+html.dark-mode .section-number {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .cbtBox.notVisited {
+    background: #111827 !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+
+/* ---------------------------------------------------------
+   F. EXAM CBT — FIX WHITE PALETTE + QUESTION SURFACES
+--------------------------------------------------------- */
+html.dark-mode .exam-header,
+html.dark-mode .question-area,
+html.dark-mode .palette {
+    background: #05070b !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .exam-header h2,
+html.dark-mode .exam-header p {
+    color: #ffffff !important;
+}
+
+html.dark-mode .exam-header p {
+    color: #cbd5e1 !important;
+}
+
+/* The question counter was being turned into a square dark-blue bar.
+   Keep its full-width behavior, but give the corners a proper curve. */
+html.dark-mode .question-number {
+    background: #10244a !important;
+    color: #60a5fa !important;
+    border: 1px solid #244b9b !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .question-number #currentQuestion {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .question-box {
+    background: #080b10 !important;
+    background-image: none !important;
+    border: 1px solid #202b3a !important;
+    border-left: 6px solid #2563eb !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .question-box p {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .options label {
+    background: #080b10 !important;
+    border-color: #293b55 !important;
+    border-radius: 12px !important;
+    color: #dbe5f2 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .options label:hover {
+    background: #0d1b35 !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .options label:has(input[type="radio"]:checked) {
+    background: #0d2b61 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+/* Palette section tabs */
+html.dark-mode .section-tab {
+    background: #0b1018 !important;
+    border-color: #293b55 !important;
+    border-radius: 10px !important;
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .section-tab.active {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+/* Palette question buttons */
+html.dark-mode .paletteBtn {
+    background: #0d1420 !important;
+    color: #dbe5f2 !important;
+    border-color: #334155 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .paletteBtn:hover {
+    background: #10244a !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+}
+
+html.dark-mode .paletteBtn.current {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+}
+
+html.dark-mode .paletteBtn.answered {
+    background: #15803d !important;
+    color: #ffffff !important;
+    border-color: #22c55e !important;
+}
+
+html.dark-mode .paletteBtn.review {
+    background: #b45309 !important;
+    color: #ffffff !important;
+    border-color: #f59e0b !important;
+}
+
+html.dark-mode .paletteBtn.notAnswered {
+    background: #b91c1c !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+}
+
+html.dark-mode .paletteBtn.notVisited {
+    background: #111827 !important;
+    color: #cbd5e1 !important;
+    border-color: #334155 !important;
+}
+
+html.dark-mode .reviewAnsweredDot {
+    border-color: #05070b !important;
+}
+
+/* ---------------------------------------------------------
+   G. RESULT PAGE — RANK, SECTION CARDS, ANALYSIS CARDS
+--------------------------------------------------------- */
+html.dark-mode .score-card,
+html.dark-mode .details-card,
+html.dark-mode .question-analysis-card,
+html.dark-mode .section-result-card,
+html.dark-mode .rank-card,
+html.dark-mode .exam-leaderboard-card {
+    background: #080b10 !important;
+    background-image: none !important;
+    border: 1px solid #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .rank-header h2,
+html.dark-mode .leaderboard-header h2,
+html.dark-mode .section-result-header h2,
+html.dark-mode .details-card h2,
+html.dark-mode .analysis-header h2,
+html.dark-mode .score-card h2 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .rank-header p,
+html.dark-mode .leaderboard-header p,
+html.dark-mode .section-result-header p,
+html.dark-mode .rank-label,
+html.dark-mode .rank-total,
+html.dark-mode .rank-score span {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .rank-main,
+html.dark-mode .rank-score {
+    background: #0c121c !important;
+    color: #ffffff !important;
+    border: 1px solid #202b3a !important;
+}
+
+html.dark-mode .rank-total b,
+html.dark-mode #examRank,
+html.dark-mode #rankScore {
+    color: #60a5fa !important;
+}
+
+/* Leaderboard — this was the large WHITE block in result.html */
+html.dark-mode .leaderboard-heading {
+    background: #10244a !important;
+    color: #cbd5e1 !important;
+    border-color: #244b9b !important;
+    border-radius: 12px !important;
+}
+
+html.dark-mode .leaderboard-row {
+    background: #0b1018 !important;
+    border-color: #293b55 !important;
+    border-radius: 12px !important;
+    color: #dbe5f2 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .leaderboard-row:hover {
+    background: #0e1725 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .leaderboard-rank,
+html.dark-mode .leaderboard-name {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .leaderboard-score {
+    color: #4ade80 !important;
+}
+
+html.dark-mode .leaderboard-row.current-user {
+    background: #0d2b61 !important;
+    border-color: #38bdf8 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .leaderboard-row.current-user .leaderboard-rank,
+html.dark-mode .leaderboard-row.current-user .leaderboard-name,
+html.dark-mode .leaderboard-row.current-user .leaderboard-score {
+    color: #ffffff !important;
+}
+
+html.dark-mode .leaderboard-toggle {
+    background: #10244a !important;
+    color: #60a5fa !important;
+}
+
+html.dark-mode .leaderboard-toggle:hover {
+    background: #17356b !important;
+}
+
+html.dark-mode .rank-icon {
+    background: #2d2107 !important;
+    color: #fbbf24 !important;
+}
+
+/* Result section cards */
+html.dark-mode .section-result-header {
+    background: #0c121c !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+}
+
+html.dark-mode .section-result-list,
+html.dark-mode .question-analysis-list {
+    background: #080b10 !important;
+}
+
+html.dark-mode .question-result-card {
+    background: #080b10 !important;
+    border-color: #202b3a !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .question-result-header {
+    background: #0c121c !important;
+    border-color: #202b3a !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+html.dark-mode .question-result-header .question-number {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    color: #60a5fa !important;
+}
+
+/* ---------------------------------------------------------
+   H. PREVIOUS TESTS
+--------------------------------------------------------- */
+html.dark-mode .historySection,
+html.dark-mode .test-history,
+html.dark-mode .history-table {
+    background: #080b10 !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .filterBtn,
+html.dark-mode .searchBox input,
+html.dark-mode .search-box input {
+    background: #05070b !important;
+    color: #ffffff !important;
+    border-color: #293b55 !important;
+}
+
+html.dark-mode .filterBtn.active,
+html.dark-mode .filterBtn:hover {
+    background: #10244a !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+}
+
+/* ---------------------------------------------------------
+   I. SETTINGS / FORMS / MODALS
+--------------------------------------------------------- */
+html.dark-mode .settings-card,
+html.dark-mode .danger-card,
+html.dark-mode .delete-row,
+html.dark-mode .modal {
+    background: #080b10 !important;
+    background-image: none !important;
+    border-color: #202b3a !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .danger-card {
+    background: #16090d !important;
+    border-color: #5a1b2a !important;
+}
+
+html.dark-mode .setting-row,
+html.dark-mode .settings-card-header {
+    border-color: #202b3a !important;
+}
+
+html.dark-mode .setting-info h3,
+html.dark-mode .settings-card-header h2,
+html.dark-mode .delete-row h3,
+html.dark-mode .modal h2,
+html.dark-mode .modal h3 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .setting-info p,
+html.dark-mode .settings-card-header p,
+html.dark-mode .delete-row p,
+html.dark-mode .modal p {
+    color: #94a3b8 !important;
+}
+
+/* ---------------------------------------------------------
+   J. REMOVE GLASS FROM ANY REMAINING NAMED SURFACE
+--------------------------------------------------------- */
+html.dark-mode .glassHeader,
+html.dark-mode .glassCard,
+html.dark-mode .preferredSection,
+html.dark-mode .progressSection,
+html.dark-mode .milestoneSection,
+html.dark-mode .summary-card,
+html.dark-mode .bookmark-section,
+html.dark-mode .saved-card,
+html.dark-mode .score-card,
+html.dark-mode .details-card,
+html.dark-mode .rank-card,
+html.dark-mode .question-analysis-card,
+html.dark-mode .section-result-card,
+html.dark-mode .exam-leaderboard-card,
+html.dark-mode .exam-leaderboard-card::before,
+html.dark-mode .exam-leaderboard-card::after,
+html.dark-mode .glassCard::before,
+html.dark-mode .glassCard::after,
+html.dark-mode .glassHeader::before,
+html.dark-mode .glassHeader::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* ---------------------------------------------------------
+   K. GLOBAL BORDER/RADIUS FOR THE CBT WHITE-LINE ELEMENTS
+   No dimensions or spacing are changed here.
+--------------------------------------------------------- */
+html.dark-mode .question-number,
+html.dark-mode .question-box,
+html.dark-mode .options label,
+html.dark-mode .section-tab,
+html.dark-mode .paletteBtn,
+html.dark-mode .instructionItem,
+html.dark-mode .checkList div,
+html.dark-mode .instruction-section-row,
+html.dark-mode .saved-card,
+html.dark-mode .stat-pill,
+html.dark-mode .leaderboard-heading,
+html.dark-mode .leaderboard-row,
+html.dark-mode .question-result-card {
+    border-radius: 10px !important;
+}
+
+/* Keep intentionally circular elements circular. */
+html.dark-mode .section-number,
+html.dark-mode .rank-icon,
+html.dark-mode .leaderboard-toggle,
+html.dark-mode .reviewAnsweredDot,
+html.dark-mode .dot,
+html.dark-mode .empty-icon,
+html.dark-mode .summary-icon {
+    border-radius: 50% !important;
+}
+
+/* ---------------------------------------------------------
+   L. FINAL INPUT RESET
+--------------------------------------------------------- */
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+    background: #05070b !important;
+    background-image: none !important;
+    color: #f8fafc !important;
+    border-color: #293b55 !important;
+}
+
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder {
+    color: #64748b !important;
+}
+
+
+
+/* ================================================================
+   EXAMVERSE DARK MODE V2 — RECONSTRUCTED VISUAL SYSTEM
+   ---------------------------------------------------------------
+   Purpose:
+   - Match the visual hierarchy of the light theme, but in dark form
+   - Stop the "everything is pure black" appearance
+   - Use layered navy/charcoal surfaces instead of grey/white cards
+   - Preserve existing layout, dimensions, spacing and JS behaviour
+   - Keep blue as the primary ExamVerse accent
+   - Preserve semantic green/red/amber states
+   ================================================================ */
+
+/* ---------- 01. COLOR SYSTEM / PAGE SURFACES ---------- */
+
+html.dark-mode {
+    --ev-bg: #050914;
+    --ev-bg-soft: #080e1a;
+    --ev-surface: #0b1220;
+    --ev-surface-2: #0f1828;
+    --ev-surface-3: #121e31;
+    --ev-surface-hover: #14233a;
+
+    --ev-border: #1d2b40;
+    --ev-border-strong: #2a3e5b;
+
+    --ev-text: #f5f8ff;
+    --ev-text-2: #c6d0df;
+    --ev-text-3: #8e9bb0;
+    --ev-text-muted: #6f7d91;
+
+    --ev-blue: #3b82f6;
+    --ev-blue-2: #60a5fa;
+    --ev-blue-soft: #102957;
+    --ev-blue-border: #2857a8;
+
+    --ev-green: #22c55e;
+    --ev-green-soft: #0a2a1c;
+    --ev-green-border: #17683a;
+
+    --ev-red: #ef4444;
+    --ev-red-soft: #301116;
+    --ev-red-border: #7f2630;
+
+    --ev-amber: #f59e0b;
+    --ev-amber-soft: #2c210b;
+    --ev-amber-border: #76540e;
+
+    --ev-purple: #8b5cf6;
+    --ev-purple-soft: #21173d;
+
+    --ev-shadow: 0 14px 35px rgba(0,0,0,.22);
+    --ev-shadow-lg: 0 22px 55px rgba(0,0,0,.30);
+}
+
+html.dark-mode body {
+    background:
+        radial-gradient(circle at 12% 0%, rgba(37,99,235,.08), transparent 30%),
+        radial-gradient(circle at 92% 8%, rgba(99,102,241,.06), transparent 28%),
+        var(--ev-bg) !important;
+    color: var(--ev-text) !important;
+}
+
+html.dark-mode .main,
+html.dark-mode .main-content {
+    background: transparent !important;
+    color: var(--ev-text) !important;
+}
+
+/* ---------- 02. SIDEBAR — KEEP BRAND BLUE, MAKE IT RICHER ---------- */
+
+html.dark-mode .sidebar {
+    background:
+        linear-gradient(180deg, #0a2354 0%, #081b40 52%, #071631 100%) !important;
+    border-right: 1px solid rgba(96,165,250,.15) !important;
+    box-shadow: 10px 0 35px rgba(0,0,0,.18) !important;
+}
+
+html.dark-mode .sidebar li {
+    color: #dbeafe !important;
+}
+
+html.dark-mode .sidebar li:hover {
+    background: rgba(59,130,246,.12) !important;
+}
+
+html.dark-mode .sidebar li.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    box-shadow: 0 8px 22px rgba(37,99,235,.22) !important;
+}
+
+/* ---------- 03. PAGE HEADERS ---------- */
+
+html.dark-mode .page-header,
+html.dark-mode .performance-header,
+html.dark-mode .performance-heading,
+html.dark-mode .header-card {
+    background:
+        linear-gradient(135deg, #0a1831 0%, #0b1220 62%, #10152d 100%) !important;
+    border: 1px solid var(--ev-border) !important;
+    box-shadow: var(--ev-shadow) !important;
+    color: var(--ev-text) !important;
+}
+
+html.dark-mode .page-header h1,
+html.dark-mode .performance-header h1,
+html.dark-mode .performance-heading h1,
+html.dark-mode .header-card h1 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .page-header p,
+html.dark-mode .performance-header p,
+html.dark-mode .performance-heading p,
+html.dark-mode .header-card p {
+    color: var(--ev-text-2) !important;
+}
+
+/* ---------- 04. COMMON CARD HIERARCHY ---------- */
+/* Do NOT make every surface the same black. */
+
+html.dark-mode .card,
+html.dark-mode .glass-card,
+html.dark-mode .content-card,
+html.dark-mode .stat-card,
+html.dark-mode .test-card,
+html.dark-mode .exam-card,
+html.dark-mode .performance-card,
+html.dark-mode .bookmark-card,
+html.dark-mode .history-card,
+html.dark-mode .settings-card,
+html.dark-mode .instruction-card,
+html.dark-mode .instructions-card,
+html.dark-mode .section-card,
+html.dark-mode .question-card,
+html.dark-mode .question-container,
+html.dark-mode .chart-card,
+html.dark-mode .graph-card,
+html.dark-mode .metric-card,
+html.dark-mode .mini-card,
+html.dark-mode .summary-card,
+html.dark-mode .filter-card,
+html.dark-mode .analytics-filter,
+html.dark-mode .filter-container,
+html.dark-mode .test-history,
+html.dark-mode .history-table,
+html.dark-mode .previous-tests,
+html.dark-mode .bookmark-item,
+html.dark-mode .danger-card,
+html.dark-mode .panel,
+html.dark-mode .large-panel,
+html.dark-mode .chart-box,
+html.dark-mode .insights,
+html.dark-mode .area-list,
+html.dark-mode .table-wrapper,
+html.dark-mode .distribution,
+html.dark-mode .section-list,
+html.dark-mode .kpi-card,
+html.dark-mode .question-stat {
+    background: var(--ev-surface) !important;
+    background-image: none !important;
+    border: 1px solid var(--ev-border) !important;
+    color: var(--ev-text) !important;
+    box-shadow: var(--ev-shadow) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Second-level surfaces */
+
+html.dark-mode .stat-card,
+html.dark-mode .kpi-card,
+html.dark-mode .question-stat,
+html.dark-mode .metric-card,
+html.dark-mode .mini-card,
+html.dark-mode .filter-card,
+html.dark-mode .analytics-filter {
+    background: var(--ev-surface-2) !important;
+}
+
+html.dark-mode .stat-card:hover,
+html.dark-mode .test-card:hover,
+html.dark-mode .exam-card:hover,
+html.dark-mode .bookmark-card:hover,
+html.dark-mode .saved-card:hover,
+html.dark-mode .card:hover {
+    background: var(--ev-surface-hover) !important;
+    border-color: var(--ev-border-strong) !important;
+    box-shadow: 0 16px 38px rgba(0,0,0,.27) !important;
+}
+
+/* Remove only decorative glass overlays, not actual content. */
+
+html.dark-mode .card::before,
+html.dark-mode .card::after,
+html.dark-mode .glass-card::before,
+html.dark-mode .glass-card::after,
+html.dark-mode .content-card::before,
+html.dark-mode .content-card::after,
+html.dark-mode .stat-card::before,
+html.dark-mode .stat-card::after,
+html.dark-mode .test-card::before,
+html.dark-mode .test-card::after,
+html.dark-mode .exam-card::before,
+html.dark-mode .exam-card::after {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ---------- 05. TYPOGRAPHY ---------- */
+
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode h5,
+html.dark-mode h6 {
+    color: var(--ev-text) !important;
+}
+
+html.dark-mode p,
+html.dark-mode label {
+    color: var(--ev-text-2) !important;
+}
+
+html.dark-mode small {
+    color: var(--ev-text-3) !important;
+}
+
+html.dark-mode .card p,
+html.dark-mode .glass-card p,
+html.dark-mode .content-card p,
+html.dark-mode .stat-card p,
+html.dark-mode .test-card p,
+html.dark-mode .exam-card p,
+html.dark-mode .performance-card p,
+html.dark-mode .bookmark-card p,
+html.dark-mode .history-card p,
+html.dark-mode .settings-card p,
+html.dark-mode .instruction-card p,
+html.dark-mode .instructions-card p,
+html.dark-mode .section-card p,
+html.dark-mode .question-card p {
+    color: var(--ev-text-2) !important;
+}
+
+html.dark-mode .card span,
+html.dark-mode .glass-card span,
+html.dark-mode .content-card span,
+html.dark-mode .stat-card span,
+html.dark-mode .test-card span,
+html.dark-mode .exam-card span,
+html.dark-mode .performance-card span,
+html.dark-mode .bookmark-card span,
+html.dark-mode .history-card span {
+    color: var(--ev-text-2) !important;
+}
+
+/* ---------- 06. BUTTONS ---------- */
+
+html.dark-mode .action-btn,
+html.dark-mode .secondary-btn,
+html.dark-mode .header-btn,
+html.dark-mode .start-btn,
+html.dark-mode .viewMoreTests,
+html.dark-mode .preferredExamBtn,
+html.dark-mode .filterBtn {
+    background: var(--ev-surface-2) !important;
+    color: #dbeafe !important;
+    border: 1px solid var(--ev-border-strong) !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .action-btn:hover,
+html.dark-mode .secondary-btn:hover,
+html.dark-mode .header-btn:hover,
+html.dark-mode .start-btn:hover,
+html.dark-mode .viewMoreTests:hover,
+html.dark-mode .preferredExamBtn:hover,
+html.dark-mode .filterBtn:hover {
+    background: var(--ev-blue-soft) !important;
+    color: #ffffff !important;
+    border-color: var(--ev-blue) !important;
+}
+
+html.dark-mode .primary-btn,
+html.dark-mode .view-btn,
+html.dark-mode .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 8px 22px rgba(37,99,235,.18) !important;
+}
+
+html.dark-mode .primary-btn:hover,
+html.dark-mode .view-btn:hover,
+html.dark-mode .btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb) !important;
+}
+
+/* Keep destructive actions semantic, not neon */
+
+html.dark-mode .delete-btn,
+html.dark-mode .remove-btn {
+    background: var(--ev-red-soft) !important;
+    color: #fca5a5 !important;
+    border-color: var(--ev-red-border) !important;
+}
+
+html.dark-mode .delete-btn:hover,
+html.dark-mode .remove-btn:hover {
+    background: #48141c !important;
+    color: #fecaca !important;
+    border-color: #b93a48 !important;
+}
+
+/* ---------- 07. INPUTS / SEARCH ---------- */
+
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select,
+html.dark-mode .search-box,
+html.dark-mode .search-input,
+html.dark-mode .search-container {
+    background: #070d17 !important;
+    color: #f8fafc !important;
+    border: 1px solid var(--ev-border-strong) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.02) !important;
+}
+
+html.dark-mode .search-box input,
+html.dark-mode .search-input input,
+html.dark-mode .searchBox input {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 0 !important;
+}
+
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder {
+    color: #66758b !important;
+}
+
+html.dark-mode input:focus,
+html.dark-mode textarea:focus,
+html.dark-mode select:focus {
+    border-color: var(--ev-blue) !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,.14) !important;
+}
+
+/* ---------- 08. AVAILABLE EXAMS ---------- */
+
+html.dark-mode .exam-card {
+    background:
+        linear-gradient(145deg, #0d1523 0%, #0a111d 100%) !important;
+    border-color: #21324a !important;
+}
+
+html.dark-mode .exam-card h2,
+html.dark-mode .exam-card h3,
+html.dark-mode .test-card h2,
+html.dark-mode .test-card h3 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .exam-card .meta,
+html.dark-mode .exam-card .exam-meta,
+html.dark-mode .test-card .meta,
+html.dark-mode .test-card .exam-meta {
+    color: var(--ev-text-2) !important;
+}
+
+html.dark-mode .exam-card .live,
+html.dark-mode .test-card .live {
+    background: var(--ev-green-soft) !important;
+    color: #4ade80 !important;
+    border-color: var(--ev-green-border) !important;
+}
+
+/* ---------- 09. PERFORMANCE PAGE ---------- */
+
+html.dark-mode .performance-hero,
+html.dark-mode .overall-performance,
+html.dark-mode .performance-summary {
+    background:
+        linear-gradient(135deg, #214bd3 0%, #4338ca 100%) !important;
+    border: 1px solid #4567df !important;
+    box-shadow: 0 18px 42px rgba(30,64,175,.20) !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .performance-hero *,
+html.dark-mode .overall-performance *,
+html.dark-mode .performance-summary * {
+    color: #ffffff !important;
+}
+
+html.dark-mode .filter-card,
+html.dark-mode .analytics-filter,
+html.dark-mode .filters,
+html.dark-mode .filter-container {
+    background: #0c1523 !important;
+    border-color: #233650 !important;
+}
+
+html.dark-mode .filter-card p,
+html.dark-mode .filter-card span,
+html.dark-mode .analytics-filter p,
+html.dark-mode .analytics-filter span {
+    color: var(--ev-text-3) !important;
+}
+
+html.dark-mode .filter-card select,
+html.dark-mode .analytics-filter select {
+    background: #08101c !important;
+    color: #eef4ff !important;
+    border-color: #29405f !important;
+}
+
+html.dark-mode .kpi-card,
+html.dark-mode .question-stat {
+    background: #0d1624 !important;
+    border-color: #21334b !important;
+}
+
+html.dark-mode .kpi-card span,
+html.dark-mode .kpi-card small,
+html.dark-mode .question-stat span,
+html.dark-mode .question-stat small,
+html.dark-mode .panel-note,
+html.dark-mode .panel-label {
+    color: var(--ev-text-3) !important;
+}
+
+html.dark-mode .kpi-card strong,
+html.dark-mode .question-stat strong {
+    color: #f8fafc !important;
+}
+
+/* ---------- 10. BOOKMARKS / HISTORY ---------- */
+
+html.dark-mode .summary-card,
+html.dark-mode .bookmark-section,
+html.dark-mode .saved-card,
+html.dark-mode .loading-state,
+html.dark-mode .empty-state,
+html.dark-mode .historySection,
+html.dark-mode .test-history,
+html.dark-mode .history-table {
+    background: var(--ev-surface) !important;
+    border-color: var(--ev-border) !important;
+}
+
+html.dark-mode .stat-pill {
+    background: #111b2a !important;
+    color: var(--ev-text-2) !important;
+    border-color: #2a3c55 !important;
+}
+
+html.dark-mode .status-pass,
+html.dark-mode .status-passed {
+    background: var(--ev-green-soft) !important;
+    color: #4ade80 !important;
+    border-color: var(--ev-green-border) !important;
+}
+
+html.dark-mode .status-fail,
+html.dark-mode .status-failed {
+    background: var(--ev-red-soft) !important;
+    color: #fb7185 !important;
+    border-color: var(--ev-red-border) !important;
+}
+
+/* ---------- 11. INSTRUCTIONS PAGE ---------- */
+
+html.dark-mode .glassHeader,
+html.dark-mode .glassCard,
+html.dark-mode .heroCard,
+html.dark-mode .importantCard,
+html.dark-mode .startCard {
+    background:
+        linear-gradient(145deg, #0d1727, #0a111d) !important;
+    border-color: #243752 !important;
+    box-shadow: var(--ev-shadow) !important;
+}
+
+html.dark-mode .instructionItem,
+html.dark-mode .checkList div,
+html.dark-mode .instruction-section-row,
+html.dark-mode .info-box {
+    background: #0d1726 !important;
+    border: 1px solid #243752 !important;
+    color: var(--ev-text) !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .instructionItem:hover,
+html.dark-mode .instruction-section-row:hover {
+    background: #112039 !important;
+    border-color: #315486 !important;
+}
+
+html.dark-mode .instructionItem h3,
+html.dark-mode .importantCard h2,
+html.dark-mode .startCard h2,
+html.dark-mode .section-main strong,
+html.dark-mode .info-box strong {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .instructionItem p,
+html.dark-mode .importantCard p,
+html.dark-mode .startCard p,
+html.dark-mode .section-main span,
+html.dark-mode .info-box span {
+    color: var(--ev-text-3) !important;
+}
+
+html.dark-mode .section-number {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 14px rgba(37,99,235,.20) !important;
+}
+
+html.dark-mode .section-time {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .customCheck {
+    background: #080f1a !important;
+    border-color: #50627a !important;
+}
+
+html.dark-mode .agreeBox input:checked + .customCheck {
+    background: #2563eb !important;
+    border-color: #3b82f6 !important;
+    box-shadow: inset 0 0 0 4px #ffffff !important;
+}
+
+/* ---------- 12. CBT EXAM PAGE ---------- */
+
+html.dark-mode .exam-header,
+html.dark-mode .question-area,
+html.dark-mode .palette {
+    background: #070d17 !important;
+    border-color: #1e2d43 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .question-number {
+    background: linear-gradient(135deg, #0e2347, #122b57) !important;
+    color: #8ec5ff !important;
+    border: 1px solid #2a5ba8 !important;
+    border-radius: 10px !important;
+}
+
+html.dark-mode .question-box {
+    background: #0b1421 !important;
+    border: 1px solid #253952 !important;
+    border-left: 5px solid #3b82f6 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,.18) !important;
+}
+
+html.dark-mode .question-box p,
+html.dark-mode .question-text {
+    color: #f7faff !important;
+}
+
+html.dark-mode .options label {
+    background: #0b1421 !important;
+    border: 1px solid #2a3e59 !important;
+    color: #dce6f5 !important;
+    border-radius: 12px !important;
+}
+
+html.dark-mode .options label:hover {
+    background: #0e1d32 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .options label:has(input[type="radio"]:checked) {
+    background: #102d60 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .paletteBtn {
+    background: #0d1726 !important;
+    color: #cbd5e1 !important;
+    border-color: #2b405b !important;
+}
+
+html.dark-mode .paletteBtn:hover {
+    background: #122544 !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+html.dark-mode .paletteBtn.current {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+html.dark-mode .paletteBtn.answered {
+    background: #126b3c !important;
+    color: #ffffff !important;
+    border-color: #22c55e !important;
+}
+
+html.dark-mode .paletteBtn.review {
+    background: #80540a !important;
+    color: #ffffff !important;
+    border-color: #f59e0b !important;
+}
+
+html.dark-mode .paletteBtn.notAnswered {
+    background: #7f1d1d !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+}
+
+html.dark-mode .paletteBtn.notVisited {
+    background: #101925 !important;
+    color: #aebbd0 !important;
+    border-color: #33465f !important;
+}
+
+html.dark-mode .section-tab {
+    background: #0c1624 !important;
+    color: #cbd5e1 !important;
+    border-color: #2a405c !important;
+}
+
+html.dark-mode .section-tab.active {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+/* Timer */
+
+html.dark-mode .timer,
+html.dark-mode .exam-timer {
+    background: linear-gradient(135deg, #0c1626, #111d30) !important;
+    color: #ffffff !important;
+    border: 1px solid #2b405d !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,.22) !important;
+}
+
+/* ---------- 13. RESULT PAGE — MAJOR VISUAL REBUILD ---------- */
+
+html.dark-mode .score-card,
+html.dark-mode .details-card,
+html.dark-mode .question-analysis-card,
+html.dark-mode .section-result-card,
+html.dark-mode .rank-card,
+html.dark-mode .exam-leaderboard-card {
+    background: #0b1421 !important;
+    border: 1px solid #22354e !important;
+    box-shadow: var(--ev-shadow) !important;
+}
+
+html.dark-mode .score-card,
+html.dark-mode .details-card {
+    color: var(--ev-text) !important;
+}
+
+html.dark-mode .rank-main,
+html.dark-mode .rank-score {
+    background: #101b2b !important;
+    border: 1px solid #263b57 !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+html.dark-mode #examRank,
+html.dark-mode #rankScore {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .leaderboard-heading {
+    background: #111e31 !important;
+    color: #cbd5e1 !important;
+    border-color: #2b405c !important;
+}
+
+html.dark-mode .leaderboard-row {
+    background: #0d1725 !important;
+    border-color: #253a55 !important;
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .leaderboard-row:hover {
+    background: #12223a !important;
+}
+
+html.dark-mode .leaderboard-row.current-user {
+    background: linear-gradient(90deg, #102e61, #12366f) !important;
+    border-color: #2da9ff !important;
+}
+
+html.dark-mode .leaderboard-rank,
+html.dark-mode .leaderboard-name {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .leaderboard-score {
+    color: #4ade80 !important;
+}
+
+html.dark-mode .leaderboard-toggle {
+    background: #102957 !important;
+    color: #60a5fa !important;
+}
+
+html.dark-mode .rank-icon {
+    background: var(--ev-amber-soft) !important;
+    color: #fbbf24 !important;
+}
+
+/* Section-wise result */
+
+html.dark-mode .section-result-header {
+    background: #0d1827 !important;
+    border-color: #22364f !important;
+}
+
+html.dark-mode .section-result-list,
+html.dark-mode .question-analysis-list {
+    background: transparent !important;
+}
+
+html.dark-mode .question-result-card {
+    background: #0c1624 !important;
+    border: 1px solid #263a55 !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .question-result-header {
+    background: #101c2d !important;
+    border-color: #263a55 !important;
+}
+
+html.dark-mode .question-result-header .question-number {
+    background: transparent !important;
+    color: #60a5fa !important;
+}
+
+/* Result metric tiles */
+
+html.dark-mode .section-result-card .stat-box,
+html.dark-mode .section-result-card .metric,
+html.dark-mode .section-result-card .stat,
+html.dark-mode .section-result-card .performance-stat {
+    background: #101b2a !important;
+    border-color: #293d57 !important;
+    color: #f8fafc !important;
+}
+
+/* Semantic result answer boxes */
+
+html.dark-mode .answer-box {
+    background: #101b29 !important;
+    border-color: #2a405b !important;
+    color: #e8eef8 !important;
+}
+
+html.dark-mode .answer-box.correct,
+html.dark-mode .correct-answer,
+html.dark-mode .answer-box.correct-answer {
+    background: #0d2a1d !important;
+    border-color: #21683e !important;
+    color: #d1fae5 !important;
+}
+
+html.dark-mode .answer-box.wrong,
+html.dark-mode .wrong-answer,
+html.dark-mode .answer-box.wrong-answer {
+    background: #301319 !important;
+    border-color: #7f2934 !important;
+    color: #fecdd3 !important;
+}
+
+html.dark-mode .answer-box.skipped,
+html.dark-mode .skipped-answer {
+    background: #2b210d !important;
+    border-color: #705311 !important;
+    color: #fde68a !important;
+}
+
+html.dark-mode .marks,
+html.dark-mode .marks-badge {
+    background: #111d2c !important;
+    border-color: #2b405b !important;
+    color: #cbd5e1 !important;
+}
+
+/* ---------- 14. TABLES ---------- */
+
+html.dark-mode table,
+html.dark-mode tbody,
+html.dark-mode thead {
+    background: #0b1421 !important;
+    color: var(--ev-text) !important;
+}
+
+html.dark-mode th {
+    background: #12213a !important;
+    color: #f8fafc !important;
+    border-color: #2a4162 !important;
+}
+
+html.dark-mode td {
+    background: #0b1421 !important;
+    color: #cbd5e1 !important;
+    border-color: #1f3046 !important;
+}
+
+html.dark-mode tr:hover td {
+    background: #101e31 !important;
+}
+
+/* ---------- 15. SETTINGS / MODALS ---------- */
+
+html.dark-mode .settings-card,
+html.dark-mode .danger-card,
+html.dark-mode .delete-row,
+html.dark-mode .modal {
+    background: #0b1421 !important;
+    border-color: #243851 !important;
+    color: #f8fafc !important;
+    box-shadow: var(--ev-shadow-lg) !important;
+}
+
+html.dark-mode .danger-card {
+    background: #1b0b11 !important;
+    border-color: #5c1f2d !important;
+}
+
+html.dark-mode .setting-row,
+html.dark-mode .settings-card-header {
+    border-color: #24364d !important;
+}
+
+html.dark-mode .setting-info h3,
+html.dark-mode .settings-card-header h2,
+html.dark-mode .delete-row h3,
+html.dark-mode .modal h2,
+html.dark-mode .modal h3 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .setting-info p,
+html.dark-mode .settings-card-header p,
+html.dark-mode .delete-row p,
+html.dark-mode .modal p {
+    color: var(--ev-text-3) !important;
+}
+
+html.dark-mode .modal-overlay {
+    background: rgba(1,4,10,.78) !important;
+}
+
+/* ---------- 16. LINKS / DIVIDERS / SCROLLBAR ---------- */
+
+html.dark-mode a {
+    color: #60a5fa !important;
+}
+
+html.dark-mode a:hover {
+    color: #93c5fd !important;
+}
+
+html.dark-mode hr {
+    border-color: #1d2b40 !important;
+}
+
+html.dark-mode ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+html.dark-mode ::-webkit-scrollbar-track {
+    background: #050914 !important;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb {
+    background: #26364c !important;
+    border-radius: 999px;
+    border: 2px solid #050914;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #38516f !important;
+}
+
+/* ---------- 17. MOBILE: COLORS ONLY ---------- */
+
+@media (max-width:700px) {
+    html.dark-mode body {
+        background: var(--ev-bg) !important;
+    }
+
+    html.dark-mode .card,
+    html.dark-mode .glass-card,
+    html.dark-mode .content-card,
+    html.dark-mode .stat-card,
+    html.dark-mode .test-card,
+    html.dark-mode .exam-card,
+    html.dark-mode .performance-card,
+    html.dark-mode .bookmark-card,
+    html.dark-mode .history-card,
+    html.dark-mode .settings-card,
+    html.dark-mode .instruction-card,
+    html.dark-mode .instructions-card,
+    html.dark-mode .section-card,
+    html.dark-mode .question-card,
+    html.dark-mode .question-container {
+        background: var(--ev-surface) !important;
+        border-color: var(--ev-border) !important;
+        box-shadow: none !important;
+    }
+}
+
+/* ================================================================
+   END DARK MODE V2
+   ================================================================ */
