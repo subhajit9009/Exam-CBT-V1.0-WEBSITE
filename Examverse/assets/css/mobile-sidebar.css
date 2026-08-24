@@ -1,0 +1,468 @@
+/* =========================================================
+   EXAMVERSE
+   GLOBAL MOBILE SIDEBAR
+   Applies to all user-facing pages
+========================================================= */
+
+
+/* =========================================================
+   MOBILE ONLY
+========================================================= */
+
+@media (max-width: 700px) {
+
+
+    /* =====================================================
+       PAGE BASE
+    ===================================================== */
+
+    html,
+    body {
+
+        width: 100%;
+
+        max-width: 100%;
+
+        overflow-x: hidden;
+
+    }
+
+
+    /* =====================================================
+       MOBILE MENU BUTTON
+    ===================================================== */
+
+    .mobile-menu-btn {
+
+        display: flex !important;
+
+        position: fixed !important;
+
+        top: 15px !important;
+
+        left: 15px !important;
+
+        width: 46px !important;
+
+        height: 46px !important;
+
+        align-items: center !important;
+
+        justify-content: center !important;
+
+        z-index: 3001 !important;
+
+        border: none !important;
+
+        border-radius: 14px !important;
+
+        cursor: pointer;
+
+    }
+
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+
+        position: fixed !important;
+
+        top: 0 !important;
+
+        left: 0 !important;
+
+        width: 270px !important;
+
+        height: 100vh !important;
+
+        max-height: 100vh !important;
+
+        margin: 0 !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        align-items: stretch !important;
+
+        box-sizing: border-box !important;
+
+        transform:
+            translateX(-110%) !important;
+
+        transition:
+            transform 0.30s
+            cubic-bezier(
+                0.4,
+                0,
+                0.2,
+                1
+            ) !important;
+
+        overflow-x: hidden !important;
+
+        overflow-y: auto !important;
+
+        z-index: 2999 !important;
+
+    }
+
+
+    /* =====================================================
+       OPEN SIDEBAR
+    ===================================================== */
+
+    .sidebar.mobile-open {
+
+        transform:
+            translateX(0) !important;
+
+    }
+
+
+    /* =====================================================
+       BRAND / LOGO
+    ===================================================== */
+
+    .sidebar .logo {
+
+        display: flex !important;
+
+        width: 100% !important;
+
+        height: 246px !important;
+
+        min-height: 246px !important;
+
+        padding:
+            46px 20px 0 !important;
+
+        flex-direction: column !important;
+
+        align-items: center !important;
+
+        justify-content: flex-start !important;
+
+        box-sizing: border-box !important;
+
+        flex-shrink: 0 !important;
+
+    }
+
+
+    .sidebar .logo .sidebar-logo {
+
+        display: block !important;
+
+        width: 88px !important;
+
+        height: 48px !important;
+
+        margin:
+            0 0 38px !important;
+
+        object-fit: contain;
+
+    }
+
+
+    .sidebar .logo h2 {
+
+        display: block !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        width: auto !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+
+        font-size: 30px !important;
+
+        line-height: 1.2 !important;
+
+        color: #ffffff !important;
+
+        white-space: nowrap !important;
+
+    }
+
+
+    .sidebar .logo p {
+
+        display: block !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        width: auto !important;
+
+        height: auto !important;
+
+        margin: 10px 0 0 !important;
+
+        font-size: 17px !important;
+
+        line-height: 1.2 !important;
+
+        color: #ffffff !important;
+
+        white-space: nowrap !important;
+
+    }
+
+
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
+
+    .sidebar ul {
+
+        display: block !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        margin: 0 !important;
+
+        padding:
+            17px 16px 22px !important;
+
+        box-sizing: border-box !important;
+
+        list-style: none !important;
+
+    }
+
+
+    .sidebar ul li {
+
+        display: flex !important;
+
+        width: 100% !important;
+
+        height: 57px !important;
+
+        min-height: 57px !important;
+
+        max-height: 57px !important;
+
+        margin:
+            0 0 7px !important;
+
+        padding:
+            0 22px !important;
+
+        box-sizing: border-box !important;
+
+        align-items: center !important;
+
+        justify-content: flex-start !important;
+
+        gap: 16px !important;
+
+        font-size: 17px !important;
+
+        line-height: 1 !important;
+
+        font-weight: 500 !important;
+
+        color: #ffffff !important;
+
+        white-space: nowrap !important;
+
+        overflow: visible !important;
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+    }
+
+
+    .sidebar ul li i {
+
+        display: inline-flex !important;
+
+        width: 20px !important;
+
+        min-width: 20px !important;
+
+        margin: 0 !important;
+
+        font-size: 19px !important;
+
+        color: #ffffff !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+
+        flex-shrink: 0 !important;
+
+    }
+
+
+    /* =====================================================
+       ACTIVE PAGE
+    ===================================================== */
+
+    .sidebar ul li.active {
+
+        color: #ffffff !important;
+
+        background: #2f6df6 !important;
+
+        border-radius: 12px !important;
+
+    }
+
+
+    .sidebar ul li.active i {
+
+        color: #ffffff !important;
+
+    }
+
+
+    /* =====================================================
+       OVERLAY
+    ===================================================== */
+
+    .mobile-sidebar-overlay {
+
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        display: block !important;
+
+        width: 100vw !important;
+
+        height: 100vh !important;
+
+        background:
+            rgba(
+                15,
+                23,
+                42,
+                0.42
+            ) !important;
+
+        backdrop-filter:
+            blur(3px);
+
+        -webkit-backdrop-filter:
+            blur(3px);
+
+        opacity: 0;
+
+        pointer-events: none;
+
+        transition:
+            opacity 0.25s ease;
+
+        z-index: 2998 !important;
+
+    }
+
+
+    .mobile-sidebar-overlay.active {
+
+        opacity: 1 !important;
+
+        pointer-events: auto !important;
+
+    }
+
+
+    /* =====================================================
+       PREVENT BACKGROUND SCROLL
+       ONLY WHILE SIDEBAR IS OPEN
+    ===================================================== */
+
+    body.mobile-sidebar-active {
+
+        overflow: hidden !important;
+
+        touch-action: none;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .sidebar {
+
+        width: 255px !important;
+
+    }
+
+
+    .sidebar .logo {
+
+        height: 230px !important;
+
+        min-height: 230px !important;
+
+        padding-top: 38px !important;
+
+    }
+
+
+    .sidebar .logo .sidebar-logo {
+
+        margin-bottom: 30px !important;
+
+    }
+
+
+    .sidebar .logo h2 {
+
+        font-size: 28px !important;
+
+    }
+
+
+    .sidebar .logo p {
+
+        font-size: 16px !important;
+
+    }
+
+
+    .sidebar ul li {
+
+        height: 54px !important;
+
+        min-height: 54px !important;
+
+    }
+
+
+    .mobile-menu-btn {
+
+        top: 12px !important;
+
+        left: 12px !important;
+
+        width: 43px !important;
+
+        height: 43px !important;
+
+    }
+
+}

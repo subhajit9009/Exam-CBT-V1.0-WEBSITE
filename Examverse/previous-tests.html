@@ -54,10 +54,27 @@
         href="assets/css/loader.css"
     >
 
+    <link rel="stylesheet" href="assets/css/mobile-sidebar.css">
+
 </head>
 
 
 <body>
+
+    <!-- =====================================================
+     MOBILE SIDEBAR BUTTON
+===================================================== -->
+
+<button
+    type="button"
+    class="mobile-menu-btn"
+    id="mobileMenuBtn"
+    aria-label="Open navigation"
+    aria-controls="mainSidebar"
+    aria-expanded="false"
+>
+    <i class="fa-solid fa-bars"></i>
+</button>
 
 
 <!-- ==========================================
@@ -92,7 +109,10 @@
          SIDEBAR
     ====================================== -->
 
-    <aside class="sidebar">
+    <aside
+    class="sidebar"
+    id="mainSidebar"
+>
 
         <div class="logo">
 
@@ -159,6 +179,16 @@
 </ul>
 
     </aside>
+
+    <!-- =====================================================
+     MOBILE SIDEBAR OVERLAY
+===================================================== -->
+
+<div
+    class="mobile-sidebar-overlay"
+    id="mobileSidebarOverlay"
+    aria-hidden="true"
+></div>
 
 
 
