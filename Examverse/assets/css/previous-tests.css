@@ -1125,3 +1125,255 @@ td {
     font-size: 13px;
 
 }
+
+/* =========================================================
+   EXAMVERSE MOBILE GLASSMORPHISM
+   Desktop styles above are intentionally untouched.
+========================================================= */
+
+@media (max-width: 900px) {
+    .sidebar {
+        background: rgba(30, 58, 138, 0.72);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
+        backdrop-filter: blur(18px) saturate(150%);
+        border-right: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 8px 0 30px rgba(15,23,42,0.12);
+    }
+
+    .sidebar ul li {
+        border: 1px solid transparent;
+        transition: background .22s ease, border-color .22s ease,
+                    transform .18s ease, box-shadow .22s ease;
+    }
+
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+        background: rgba(255,255,255,0.14);
+        border-color: rgba(255,255,255,0.18);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 20px rgba(15,23,42,0.10);
+    }
+
+    .sidebar ul li:active {
+        transform: scale(.96);
+    }
+
+    body {
+        background:
+            radial-gradient(circle at 15% 10%, rgba(37,99,235,0.10), transparent 32%),
+            radial-gradient(circle at 90% 85%, rgba(124,58,237,0.09), transparent 34%),
+            #f4f7fb;
+    }
+
+    .topbar,
+    .historySection {
+        background: rgba(255,255,255,0.66);
+        border: 1px solid rgba(255,255,255,0.72);
+        -webkit-backdrop-filter: blur(18px) saturate(145%);
+        backdrop-filter: blur(18px) saturate(145%);
+        box-shadow: 0 14px 35px rgba(15,23,42,0.07),
+                    inset 0 1px 0 rgba(255,255,255,0.75);
+    }
+
+    .historyCount {
+        background: rgba(232,240,255,0.72);
+        border: 1px solid rgba(37,99,235,0.10);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    .searchBox input {
+        background: rgba(248,250,252,0.68);
+        border-color: rgba(148,163,184,0.30);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    .searchBox input:focus {
+        background: rgba(255,255,255,0.82);
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.08),
+                    0 8px 22px rgba(37,99,235,0.07);
+    }
+
+    .filterBtn,
+    .bookmarkAction {
+        background: rgba(255,255,255,0.60);
+        border-color: rgba(148,163,184,0.28);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .filterBtn.active {
+        background: rgba(37,99,235,0.84);
+        border-color: rgba(37,99,235,0.55);
+        box-shadow: 0 7px 18px rgba(37,99,235,0.18);
+    }
+
+    .bookmarkAction {
+        min-height: 38px;
+    }
+
+    .bookmarkAction:active,
+    .filterBtn:active {
+        transform: scale(.96);
+    }
+
+    .tableWrapper {
+        border-radius: 14px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .tableWrapper::-webkit-scrollbar {
+        height: 5px;
+    }
+}
+
+@media (max-width: 700px) {
+    .main {
+        padding: 14px;
+    }
+
+    .topbar {
+        padding: 20px;
+    }
+
+    .topbar h1 {
+        line-height: 1.25;
+    }
+
+    .historySection {
+        padding: 18px;
+    }
+
+    .historyHeader {
+        gap: 12px;
+    }
+
+    .historyCount {
+        align-self: flex-start;
+    }
+
+    .historyControls {
+        gap: 12px;
+    }
+
+    .filterButtons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+    }
+
+    .filterBtn {
+        min-height: 42px;
+        padding: 8px 6px;
+    }
+
+    .searchBox input {
+        height: 46px;
+    }
+
+    .tableWrapper {
+        margin-left: -2px;
+        width: calc(100% + 4px);
+    }
+
+    table {
+        min-width: 780px;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 500px) {
+    .main {
+        padding: 10px;
+    }
+
+    .topbar {
+        padding: 17px;
+        border-radius: 16px;
+        margin-bottom: 14px;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+    .topbar p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .historySection {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .historyHeader h2 {
+        font-size: 20px;
+    }
+
+    .historyHeader p {
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .historyCount {
+        padding: 8px 13px;
+        font-size: 12px;
+    }
+
+    .filterButtons {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .filterBtn {
+        font-size: 11px;
+        min-height: 40px;
+        padding: 7px 4px;
+        border-radius: 10px;
+    }
+
+    .emptyState {
+        padding: 45px 12px;
+    }
+
+    .emptyIcon {
+        width: 62px;
+        height: 62px;
+        font-size: 24px;
+    }
+
+    .sidebar {
+        width: 68px;
+        background: rgba(30,58,138,0.76);
+        border-radius: 0 18px 18px 0;
+    }
+
+    .sidebar ul {
+        padding: 14px 9px;
+    }
+
+    .sidebar ul li {
+        min-height: 46px;
+        margin-bottom: 8px;
+        padding: 12px 8px;
+        border-radius: 13px;
+    }
+
+    .sidebar ul li i {
+        font-size: 18px;
+    }
+
+    .main {
+        margin-left: 68px;
+        width: calc(100% - 68px);
+    }
+}

@@ -1960,14 +1960,6 @@ function setupSidebar() {
         );
 
 
-    document
-        .getElementById(
-            "sidebarLogout"
-        )
-        ?.addEventListener(
-            "click",
-            logoutUser
-        );
 
 }
 

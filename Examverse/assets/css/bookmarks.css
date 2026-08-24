@@ -1828,3 +1828,520 @@ select {
     }
 
 }
+
+/* =========================================================
+   EXAMVERSE BOOKMARKS
+   MOBILE GLASSMORPHISM LAYER
+   Desktop rules above are intentionally untouched.
+========================================================= */
+
+@media (max-width: 900px) {
+
+    body {
+        background:
+            radial-gradient(circle at 12% 8%, rgba(45,108,255,.10), transparent 32%),
+            radial-gradient(circle at 90% 88%, rgba(114,87,232,.10), transparent 34%),
+            #f4f7fb;
+        overflow-x: hidden;
+    }
+
+    /* Glass sidebar */
+    .sidebar {
+        background: rgba(28,62,141,.78);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
+        backdrop-filter: blur(18px) saturate(150%);
+        border-right: 1px solid rgba(255,255,255,.18);
+        box-shadow: 8px 0 30px rgba(15,23,42,.14);
+    }
+
+    .sidebar ul li {
+        border: 1px solid transparent;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        transition: background .22s ease, border-color .22s ease,
+                    transform .18s ease, box-shadow .22s ease;
+    }
+
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+        background: rgba(255,255,255,.14);
+        border-color: rgba(255,255,255,.18);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 20px rgba(15,23,42,.10);
+    }
+
+    .sidebar ul li:active {
+        transform: scale(.96);
+    }
+
+    /* Main glass header */
+    .page-header {
+        background: rgba(255,255,255,.64);
+        border: 1px solid rgba(255,255,255,.76);
+        border-radius: 18px;
+        padding: 18px 20px;
+        -webkit-backdrop-filter: blur(18px) saturate(145%);
+        backdrop-filter: blur(18px) saturate(145%);
+        box-shadow:
+            0 12px 32px rgba(15,23,42,.07),
+            inset 0 1px 0 rgba(255,255,255,.78);
+    }
+
+    .header-btn {
+        background: rgba(255,255,255,.64);
+        border: 1px solid rgba(148,163,184,.24);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    /* Summary glass cards */
+    .summary-card {
+        background: rgba(255,255,255,.64);
+        border: 1px solid rgba(255,255,255,.76);
+        -webkit-backdrop-filter: blur(18px) saturate(145%);
+        backdrop-filter: blur(18px) saturate(145%);
+        box-shadow:
+            0 12px 32px rgba(15,23,42,.07),
+            inset 0 1px 0 rgba(255,255,255,.78);
+    }
+
+    .summary-icon,
+    .count-badge,
+    .empty-icon {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    .summary-icon.blue,
+    .count-badge,
+    .empty-icon {
+        background: rgba(237,243,255,.72);
+    }
+
+    .summary-icon.purple {
+        background: rgba(241,237,255,.72);
+    }
+
+    .summary-icon.orange {
+        background: rgba(255,244,228,.72);
+    }
+
+    /* Main bookmark glass panel */
+    .bookmark-section {
+        background: rgba(255,255,255,.64);
+        border: 1px solid rgba(255,255,255,.76);
+        -webkit-backdrop-filter: blur(18px) saturate(145%);
+        backdrop-filter: blur(18px) saturate(145%);
+        box-shadow:
+            0 14px 35px rgba(15,23,42,.07),
+            inset 0 1px 0 rgba(255,255,255,.78);
+    }
+
+    /* Glass search/filter */
+    .search-box input,
+    .filter-bar select {
+        background: rgba(255,255,255,.62);
+        border-color: rgba(148,163,184,.28);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    .search-box input:focus,
+    .filter-bar select:focus {
+        background: rgba(255,255,255,.80);
+        box-shadow:
+            0 0 0 3px rgba(45,108,255,.08),
+            0 8px 22px rgba(45,108,255,.07);
+    }
+
+    /* Saved bookmark glass cards */
+    .saved-card {
+        background: rgba(255,255,255,.50);
+        border-color: rgba(148,163,184,.22);
+        -webkit-backdrop-filter: blur(14px) saturate(140%);
+        backdrop-filter: blur(14px) saturate(140%);
+        box-shadow:
+            0 10px 28px rgba(15,23,42,.05),
+            inset 0 1px 0 rgba(255,255,255,.72);
+    }
+
+    .saved-card:hover {
+        background: rgba(255,255,255,.66);
+        border-color: rgba(45,108,255,.22);
+        box-shadow: 0 12px 30px rgba(37,73,150,.09);
+    }
+
+    .saved-title-icon,
+    .stat-pill,
+    .status-badge {
+        -webkit-backdrop-filter: blur(9px);
+        backdrop-filter: blur(9px);
+    }
+
+    .saved-title-icon {
+        background: rgba(237,243,255,.72);
+    }
+
+    .stat-pill {
+        background: rgba(247,249,253,.62);
+        border-color: rgba(148,163,184,.20);
+    }
+
+    .status-pass {
+        background: rgba(233,249,240,.72);
+    }
+
+    .status-fail {
+        background: rgba(255,240,240,.72);
+    }
+
+    /* Glass action buttons */
+    .saved-btn {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
+    }
+
+    .saved-btn:active {
+        transform: scale(.95);
+    }
+
+    .view-btn {
+        box-shadow: 0 7px 18px rgba(45,108,255,.16);
+    }
+
+    .remove-btn {
+        background: rgba(255,240,240,.72);
+    }
+
+    .start-btn {
+        background: rgba(237,243,255,.72);
+    }
+
+    /* Empty state */
+    .empty-state {
+        background: rgba(255,255,255,.38);
+        border-color: rgba(148,163,184,.28);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+    }
+
+    /* Loading state */
+    .loading-state {
+        background: rgba(255,255,255,.25);
+        border-radius: 14px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    /* Never use the old full-width mobile sidebar */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 68px;
+        height: 100vh;
+        border-radius: 0 18px 18px 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 1000;
+    }
+
+    .sidebar .logo {
+        height: auto;
+        min-height: 96px;
+        padding: 16px 7px 14px;
+    }
+
+    .sidebar .sidebar-logo {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto;
+    }
+
+    .sidebar .logo h2,
+    .sidebar .logo p,
+    .sidebar .brand h1,
+    .sidebar .brand p {
+        display: none;
+    }
+
+    .sidebar ul,
+    .sidebar .sidebar-nav {
+        padding: 12px 8px 18px;
+    }
+
+    .sidebar ul li,
+    .sidebar .sidebar-nav a {
+        width: 100%;
+        min-height: 46px;
+        height: 46px;
+        margin-bottom: 8px;
+        padding: 10px 7px;
+        justify-content: center;
+        border-radius: 13px;
+        gap: 0;
+    }
+
+    .sidebar ul li span,
+.sidebar .sidebar-nav span {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #ffffff !important;
+    font-size: 17px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+    .sidebar ul li i,
+    .sidebar .sidebar-nav a i {
+        width: 20px;
+        min-width: 20px;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    /* Main content leaves room for the fixed mobile rail */
+    .main-content {
+        margin-left: 68px;
+        width: calc(100% - 68px);
+        min-height: 100vh;
+        padding: 14px;
+        overflow-x: hidden;
+    }
+
+    .page-header {
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+        line-height: 1.25;
+    }
+
+    .page-header p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .header-btn {
+        min-height: 42px;
+        padding: 10px 14px;
+        border-radius: 11px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 11px;
+        margin-bottom: 18px;
+    }
+
+    .summary-card {
+        padding: 17px;
+        border-radius: 16px;
+        gap: 14px;
+    }
+
+    .summary-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        flex-shrink: 0;
+    }
+
+    .summary-content strong {
+        font-size: 24px;
+    }
+
+    .bookmark-section {
+        padding: 17px;
+        margin-bottom: 18px;
+        border-radius: 17px;
+    }
+
+    .section-header {
+        gap: 12px;
+        margin-bottom: 17px;
+    }
+
+    .section-header h2 {
+        font-size: 21px;
+        line-height: 1.25;
+    }
+
+    .section-header p {
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .count-badge {
+        min-width: 42px;
+        height: 34px;
+        padding: 0 12px;
+        flex-shrink: 0;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 17px;
+    }
+
+    .search-box input,
+    .filter-bar select {
+        height: 46px;
+        font-size: 13px;
+        border-radius: 11px;
+    }
+
+    .filter-bar select {
+        width: 100%;
+    }
+
+    .bookmark-list {
+        gap: 11px;
+    }
+
+    .saved-card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .saved-card-top {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .saved-title {
+        gap: 11px;
+        min-width: 0;
+    }
+
+    .saved-title-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+    }
+
+    .saved-title h3 {
+        font-size: 15px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .saved-title p,
+    .saved-date {
+        font-size: 11px;
+    }
+
+    .saved-date {
+        white-space: normal;
+    }
+
+    .saved-stats {
+        margin: 14px 0;
+        gap: 7px;
+    }
+
+    .stat-pill {
+        padding: 7px 9px;
+        font-size: 11px;
+    }
+
+    .saved-actions {
+        justify-content: stretch;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .saved-btn {
+        min-height: 40px;
+        flex: 1 1 calc(50% - 8px);
+        padding: 9px 11px;
+        border-radius: 10px;
+        font-size: 11px;
+    }
+
+    .empty-state {
+        padding: 42px 15px;
+    }
+
+    .empty-icon {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state h3 {
+        font-size: 17px;
+    }
+
+    .empty-state p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 380px) {
+
+    .sidebar {
+        width: 62px;
+    }
+
+    .main-content {
+        margin-left: 62px;
+        width: calc(100% - 62px);
+        padding: 9px;
+    }
+
+    .sidebar ul,
+    .sidebar .sidebar-nav {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .sidebar ul li,
+    .sidebar .sidebar-nav a {
+        min-height: 43px;
+        height: 43px;
+        padding: 9px 5px;
+    }
+
+    .sidebar ul li i,
+    .sidebar .sidebar-nav a i {
+        font-size: 17px;
+    }
+
+    .page-header {
+        padding: 14px;
+    }
+
+    .page-header h1 {
+        font-size: 21px;
+    }
+
+    .bookmark-section {
+        padding: 13px;
+    }
+
+    .section-header h2 {
+        font-size: 19px;
+    }
+
+    .saved-card {
+        padding: 13px;
+    }
+
+    .saved-btn {
+        flex-basis: 100%;
+    }
+}
+
