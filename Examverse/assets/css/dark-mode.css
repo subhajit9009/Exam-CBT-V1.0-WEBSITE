@@ -3735,3 +3735,505 @@ html.dark-mode .saved-card * {
    Semantic colors such as green score, red fail,
    orange XP, blue rank etc. must remain intact.
 */
+
+
+
+/* =========================================================
+   EXAMVERSE — TARGETED FINAL DARK-MODE REPAIR
+   ---------------------------------------------------------
+   Only fixes the light/grey surfaces visible in the current
+   desktop and mobile screenshots. No layout changes.
+========================================================= */
+
+/* ---------------------------------------------------------
+   01. INSTRUCTIONS — QUESTION PALETTE LEGEND
+--------------------------------------------------------- */
+
+html.dark-mode .paletteStatus {
+    background: #0a1019 !important;
+    background-image: none !important;
+    border: 1px solid #20344d !important;
+    border-color: #20344d !important;
+    color: #dbe5f2 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .paletteStatus:hover {
+    background: #0e1724 !important;
+    border-color: #315b91 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .paletteText {
+    color: #dbe5f2 !important;
+}
+
+html.dark-mode .paletteText h3 {
+    color: #ffffff !important;
+}
+
+html.dark-mode .paletteText p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .cbtBox.notVisited {
+    background: #111827 !important;
+    background-image: none !important;
+    color: #cbd5e1 !important;
+    border: 2px solid #334155 !important;
+    border-color: #334155 !important;
+}
+
+/* ---------------------------------------------------------
+   02. CBT EXAM — HEADER
+--------------------------------------------------------- */
+
+html.dark-mode .exam-header {
+    background: #080c13 !important;
+    background-image: none !important;
+    color: #f8fafc !important;
+    border-bottom: 1px solid #202e43 !important;
+    box-shadow: 0 3px 12px rgba(0,0,0,.35) !important;
+}
+
+html.dark-mode .exam-header h2 {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .exam-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .timer-box {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   03. PERFORMANCE — MOBILE SECTION ROWS
+   The page-specific mobile CSS creates light glass rows.
+--------------------------------------------------------- */
+
+html.dark-mode .section-row {
+    background: #0b111a !important;
+    background-image: none !important;
+    border: 1px solid #263952 !important;
+    border-color: #263952 !important;
+    color: #f8fafc !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .section-name {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .section-percent {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .section-meta {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .section-track {
+    background: #1e293b !important;
+    border: 0 !important;
+}
+
+html.dark-mode .section-fill {
+    background: #2563eb !important;
+}
+
+/* ---------------------------------------------------------
+   04. BOOKMARKS — MOBILE ACTION BUTTONS
+   --------------------------------------------------------- */
+
+html.dark-mode .saved-btn {
+    color: #f8fafc !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode .view-btn {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+html.dark-mode .remove-btn {
+    background: #2a1218 !important;
+    color: #f87171 !important;
+    border-color: #5b2530 !important;
+}
+
+html.dark-mode .start-btn {
+    background: #10244a !important;
+    color: #60a5fa !important;
+    border-color: #28508c !important;
+}
+
+html.dark-mode .saved-btn:hover {
+    opacity: 1 !important;
+}
+
+/* ---------------------------------------------------------
+   05. MOBILE PERFORMANCE / BOOKMARK LIGHT GLASS OVERRIDES
+--------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+    html.dark-mode .section-row,
+    html.dark-mode .insight,
+    html.dark-mode .area-row {
+        background: #0b111a !important;
+        background-image: none !important;
+        border-color: #263952 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    html.dark-mode .bookmark-section,
+    html.dark-mode .summary-card,
+    html.dark-mode .saved-card,
+    html.dark-mode .filter-card {
+        background: #0b111a !important;
+        background-image: none !important;
+        border-color: #263952 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    html.dark-mode .search-box input,
+    html.dark-mode .filter-bar select {
+        background: #08101c !important;
+        color: #e8eef8 !important;
+        border-color: #2b405d !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    html.dark-mode .header-btn {
+        background: #0e1622 !important;
+        color: #60a5fa !important;
+        border-color: #2b405d !important;
+        box-shadow: none !important;
+    }
+}
+
+
+/* =========================================================
+   EXAMVERSE — ACTUAL FINAL REPAIR
+   ---------------------------------------------------------
+   This section is appended to THIS dark-mode.css file.
+   It only overrides colors/backgrounds of selectors already
+   used by the project. No layout/position/size changes.
+   ========================================================= */
+
+
+/* =========================================================
+   01. DASHBOARD — MILESTONE TEXT
+   ---------------------------------------------------------
+   Keep every milestone text explicitly readable.
+   ========================================================= */
+
+html.dark-mode .milestoneCard .milestoneTitle,
+html.dark-mode .milestoneTitle {
+    color: #f8fafc !important;
+    opacity: 1 !important;
+}
+
+html.dark-mode .milestoneCard .milestoneDescription,
+html.dark-mode .milestoneDescription {
+    color: #a9b8ca !important;
+    opacity: 1 !important;
+}
+
+html.dark-mode .milestoneCard .milestoneProgressText,
+html.dark-mode .milestoneProgressText {
+    color: #dbe7f5 !important;
+    opacity: 1 !important;
+}
+
+html.dark-mode .milestoneCard .milestoneProgressPercent,
+html.dark-mode .milestoneProgressPercent {
+    color: #cbd5e1 !important;
+    opacity: 1 !important;
+}
+
+html.dark-mode .milestoneCard .milestoneXP,
+html.dark-mode .milestoneXP {
+    color: #cbd5e1 !important;
+    opacity: 1 !important;
+}
+
+html.dark-mode .milestoneCard.unlocked .milestoneXP {
+    color: #4ade80 !important;
+}
+
+
+/* =========================================================
+   02. RESULT PAGE — TEXT VISIBILITY
+   ---------------------------------------------------------
+   Do not allow page-specific light-theme text colors to
+   leak through into dark mode.
+   ========================================================= */
+
+html.dark-mode .result-header h1 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .result-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .score-card,
+html.dark-mode .stat-card,
+html.dark-mode .details-card,
+html.dark-mode .rank-card,
+html.dark-mode .exam-leaderboard-card,
+html.dark-mode .question-analysis-card {
+    color: #e8eef8 !important;
+}
+
+html.dark-mode .score-card *,
+html.dark-mode .stat-card *,
+html.dark-mode .details-card *,
+html.dark-mode .rank-card *,
+html.dark-mode .exam-leaderboard-card *,
+html.dark-mode .question-analysis-card * {
+    border-color: inherit;
+}
+
+html.dark-mode .score-label,
+html.dark-mode .score-out-of,
+html.dark-mode .stat-card span,
+html.dark-mode .detail-item span {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .stat-card strong,
+html.dark-mode .detail-item strong {
+    color: #f8fafc !important;
+}
+
+
+/* =========================================================
+   03. CBT EXAM — MOBILE PAUSE AREA
+   ---------------------------------------------------------
+   The actual exam page uses .mobile-pause-area.
+   ========================================================= */
+
+html.dark-mode .mobile-pause-area {
+    background: #05070b !important;
+    background-image: none !important;
+    color: #f8fafc !important;
+    border-color: #202e43 !important;
+    box-shadow: none !important;
+}
+
+html.dark-mode #mobilePauseBtn {
+    background: #0b1424 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #293b55 !important;
+}
+
+
+/* =========================================================
+   04. CBT EXAM — MOBILE PALETTE / SUBMIT BAR
+   ---------------------------------------------------------
+   The actual mobile action bar is #mobileExamActionBar.
+   The page-specific exam.css makes it white, so this global
+   dark-mode file must explicitly override that color.
+   ========================================================= */
+
+html.dark-mode #mobileExamActionBar {
+    background: #05070b !important;
+    background-color: #05070b !important;
+    background-image: none !important;
+    border-top-color: #202e43 !important;
+    box-shadow: 0 -4px 18px rgba(0,0,0,.35) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode #mobileActionPalette {
+    background: #2563eb !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #3b82f6 !important;
+}
+
+html.dark-mode #mobileActionSubmit {
+    background: #dc2626 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+}
+
+
+/* =========================================================
+   05. CBT EXAM — MOBILE / FULLSCREEN BACKGROUND
+   ========================================================= */
+
+html.dark-mode .exam-container {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+html.dark-mode .exam-container:fullscreen {
+    background: #05070b !important;
+    background-image: none !important;
+}
+
+
+/* =========================================================
+   06. PAGE HEADERS
+   ---------------------------------------------------------
+   The existing file deliberately gives .page-header a dark
+   card background and 1px border. That creates the visible
+   rectangular header box. Keep the header text/button, but
+   remove that outer visual box.
+   ========================================================= */
+
+html.dark-mode .page-header {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .page-header h1,
+html.dark-mode .page-header h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .page-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .page-header .eyebrow {
+    color: #60a5fa !important;
+}
+
+
+/* =========================================================
+   07. PREVIOUS TESTS TOPBAR
+   ---------------------------------------------------------
+   Do NOT remove the dashboard's topbar background. Previous
+   Tests uses .topbar too, so only remove a border/background
+   if the page-specific topbar is acting as the unwanted box.
+   ========================================================= */
+
+html.dark-mode .topbar {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .topbar h1 {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .topbar h1 #userName {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .topbar p {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   08. MOBILE PAGE HEADER
+   ---------------------------------------------------------
+   Overrides the existing @media(max-width:700px) block
+   earlier in this same file.
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    html.dark-mode .page-header {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        border: 0 !important;
+        box-shadow: none !important;
+    }
+
+    html.dark-mode .page-header h1,
+    html.dark-mode .page-header h2 {
+        color: #f8fafc !important;
+    }
+
+    html.dark-mode .page-header p {
+        color: #94a3b8 !important;
+    }
+
+    html.dark-mode .mobile-pause-area {
+        background: #05070b !important;
+        background-color: #05070b !important;
+        background-image: none !important;
+    }
+
+    html.dark-mode #mobileExamActionBar {
+        background: #05070b !important;
+        background-color: #05070b !important;
+        background-image: none !important;
+    }
+
+    html.dark-mode .milestoneTitle {
+        color: #f8fafc !important;
+    }
+
+    html.dark-mode .milestoneDescription {
+        color: #a9b8ca !important;
+    }
+
+    html.dark-mode .milestoneProgressText {
+        color: #dbe7f5 !important;
+    }
+
+    html.dark-mode .milestoneProgressPercent {
+        color: #cbd5e1 !important;
+    }
+
+    html.dark-mode .milestoneXP {
+        color: #cbd5e1 !important;
+    }
+}
+
+
+/* =========================================================
+   09. FINAL MOBILE SAFETY
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    html.dark-mode,
+    html.dark-mode body {
+        background: #05070b !important;
+        background-image: none !important;
+        color: #e8eef8 !important;
+    }
+
+    html.dark-mode .exam-container {
+        background: transparent !important;
+        background-image: none !important;
+    }
+
+    html.dark-mode #mobileExamActionBar {
+        background: #05070b !important;
+        background-color: #05070b !important;
+        background-image: none !important;
+    }
+}
