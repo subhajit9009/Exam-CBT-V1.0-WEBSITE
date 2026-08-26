@@ -1,283 +1,973 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Poppins,sans-serif;
+/* =========================================================
+   EXAMVERSE
+   WELCOME / START PAGE
+   DESKTOP + MOBILE RESPONSIVE
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Poppins, sans-serif;
 }
 
-body{
 
-height:100vh;
+/* =========================================================
+   BODY
+========================================================= */
 
-overflow:hidden;
+body {
 
-display:flex;
+    min-height: 100vh;
+    min-height: 100dvh;
 
-justify-content:center;
+    overflow: hidden;
 
-align-items:center;
+    display: flex;
 
-background:#0f172a;
+    justify-content: center;
+    align-items: center;
 
-}
-
-.background{
-
-position:fixed;
-
-width:100%;
-
-height:100%;
-
-background:linear-gradient(-45deg,#2563eb,#7c3aed,#0ea5e9,#14b8a6);
-
-background-size:400% 400%;
-
-animation:bg 15s infinite;
-
-z-index:-1;
+    background: #0f172a;
 
 }
 
-@keyframes bg{
 
-0%{background-position:0 50%;}
+/* =========================================================
+   ANIMATED BACKGROUND
+========================================================= */
 
-50%{background-position:100% 50%;}
+.background {
 
-100%{background-position:0 50%;}
+    position: fixed;
 
-}
+    inset: 0;
 
-.container{
+    width: 100%;
+    height: 100%;
 
-width:100%;
+    background:
+        linear-gradient(
+            -45deg,
+            #2563eb,
+            #7c3aed,
+            #0ea5e9,
+            #14b8a6
+        );
 
-display:flex;
+    background-size: 400% 400%;
 
-justify-content:center;
+    animation: bg 15s infinite;
 
-align-items:center;
-
-}
-
-.glass{
-
-width:600px;
-
-padding:50px;
-
-background:rgba(255,255,255,.15);
-
-backdrop-filter:blur(15px);
-
-border-radius:20px;
-
-text-align:center;
-
-color:white;
-
-box-shadow:0 20px 40px rgba(0,0,0,.3);
-
-animation:fade 1.2s;
+    z-index: -1;
 
 }
 
-@keyframes fade{
 
-from{
+@keyframes bg {
 
-opacity:0;
+    0% {
+        background-position: 0 50%;
+    }
 
-transform:translateY(30px);
+    50% {
+        background-position: 100% 50%;
+    }
 
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
+    100% {
+        background-position: 0 50%;
+    }
 
 }
 
-.glass h1{
 
-font-size:55px;
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
 
-}
+.container {
 
-.glass h2{
+    width: 100%;
 
-margin-top:10px;
+    min-height: 100vh;
+    min-height: 100dvh;
 
-font-weight:400;
+    display: flex;
 
-}
+    justify-content: center;
+    align-items: center;
 
-.glass p{
-
-margin-top:20px;
-
-font-size:18px;
-
-}
-
-.glass h3{
-
-margin:30px 0;
-
-font-weight:400;
+    padding: 25px;
 
 }
 
-.glass span{
 
-font-weight:bold;
+/* =========================================================
+   GLASS CARD
+========================================================= */
 
-color:#ffe082;
+.glass {
 
-}
+    width: 600px;
+    max-width: 100%;
 
-button{
+    padding: 50px;
 
-padding:15px 35px;
+    background: rgba(255, 255, 255, 0.15);
 
-border:none;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 
-border-radius:40px;
+    border-radius: 20px;
 
-font-size:18px;
+    text-align: center;
 
-cursor:pointer;
+    color: white;
 
-transition:.3s;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.3);
 
-}
-
-#startBtn{
-
-background:#fff;
-
-color:#2563eb;
+    animation: fade 1.2s ease;
 
 }
 
-#startBtn:hover{
 
-transform:scale(1.05);
+/* =========================================================
+   CARD FADE ANIMATION
+========================================================= */
 
-}
+@keyframes fade {
 
-.popup{
+    from {
 
-position:fixed;
+        opacity: 0;
 
-top:0;
+        transform: translateY(30px);
 
-left:0;
+    }
 
-width:100%;
+    to {
 
-height:100%;
+        opacity: 1;
 
-background:rgba(0,0,0,.6);
+        transform: translateY(0);
 
-display:none;
-
-justify-content:center;
-
-align-items:center;
+    }
 
 }
 
-.popup-content{
 
-width:550px;
+/* =========================================================
+   LOGO
+========================================================= */
 
-background:white;
+.logo {
 
-padding:35px;
+    width: 120px;
+    height: 120px;
 
-border-radius:15px;
+    object-fit: contain;
 
-animation:fade .5s;
+    margin: 0 auto 20px;
 
-}
-
-.popup-content h2{
-
-margin-bottom:20px;
+    display: block;
 
 }
 
-.popup-content ul{
 
-margin:15px 0 20px 20px;
+/* =========================================================
+   MAIN TITLE
+========================================================= */
 
-}
+.glass h1 {
 
-.buttons{
+    font-size: 55px;
 
-display:flex;
+    line-height: 1.15;
 
-justify-content:space-between;
-
-margin-top:25px;
-
-}
-
-#acceptBtn{
-
-background:#16a34a;
-
-color:white;
+    font-weight: 700;
 
 }
 
-#rejectBtn{
 
-background:#dc2626;
+/* =========================================================
+   SUBTITLE
+========================================================= */
 
-color:white;
+.glass h2 {
 
-}
+    margin-top: 10px;
 
-@media(max-width:700px){
+    font-size: 25px;
 
-.glass{
+    line-height: 1.3;
 
-width:90%;
-
-padding:30px;
-
-}
-
-.popup-content{
-
-width:90%;
+    font-weight: 400;
 
 }
 
-.glass h1{
 
-font-size:40px;
+/* =========================================================
+   DESCRIPTION
+========================================================= */
 
-}
+.glass p {
 
-}
+    margin-top: 20px;
 
-.logo{
+    font-size: 18px;
 
-    width:120px;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:20px;
+    line-height: 1.6;
 
 }
 
+
+/* =========================================================
+   GET STARTED TEXT
+========================================================= */
+
+.glass h3 {
+
+    margin: 30px 0;
+
+    font-size: 18px;
+
+    line-height: 1.5;
+
+    font-weight: 400;
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT
+========================================================= */
+
+.glass span {
+
+    font-weight: 700;
+
+    color: #ffe082;
+
+}
+
+
+/* =========================================================
+   GENERAL BUTTON
+========================================================= */
+
+button {
+
+    padding: 15px 35px;
+
+    border: none;
+
+    border-radius: 40px;
+
+    font-size: 18px;
+
+    font-family: Poppins, sans-serif;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        opacity 0.3s ease;
+
+}
+
+
+/* =========================================================
+   START BUTTON
+========================================================= */
+
+#startBtn {
+
+    background: #ffffff;
+
+    color: #2563eb;
+
+    font-weight: 600;
+
+}
+
+
+#startBtn:hover {
+
+    transform: scale(1.05);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.25);
+
+}
+
+
+#startBtn:active {
+
+    transform: scale(0.98);
+
+}
+
+
+/* =========================================================
+   PRIVACY POPUP
+   IMPORTANT:
+   HIDDEN BY DEFAULT
+========================================================= */
+
+.popup {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    /*
+       IMPORTANT:
+       Keep this as NONE.
+
+       JavaScript should change it to FLEX
+       when Get Started is clicked.
+    */
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    z-index: 9999;
+
+}
+
+
+/* =========================================================
+   POPUP CONTENT
+========================================================= */
+
+.popup-content {
+
+    width: 550px;
+
+    max-width: 100%;
+
+    max-height: 90vh;
+    max-height: 90dvh;
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    color: #111827;
+
+    padding: 35px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35);
+
+    animation: popupFade 0.5s ease;
+
+}
+
+
+/* =========================================================
+   POPUP ANIMATION
+========================================================= */
+
+@keyframes popupFade {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(0.96);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* =========================================================
+   POPUP TITLE
+========================================================= */
+
+.popup-content h2 {
+
+    margin-bottom: 20px;
+
+    font-size: 25px;
+
+    line-height: 1.3;
+
+    color: #111827;
+
+}
+
+
+/* =========================================================
+   POPUP PARAGRAPH
+========================================================= */
+
+.popup-content p {
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    color: #475569;
+
+}
+
+
+/* =========================================================
+   POPUP LIST
+========================================================= */
+
+.popup-content ul {
+
+    margin: 15px 0 20px 20px;
+
+}
+
+
+.popup-content li {
+
+    margin-bottom: 8px;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+
+    color: #334155;
+
+}
+
+
+/* =========================================================
+   POPUP BUTTON CONTAINER
+========================================================= */
+
+.buttons {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 25px;
+
+}
+
+
+/* =========================================================
+   ACCEPT BUTTON
+========================================================= */
+
+#acceptBtn {
+
+    flex: 1;
+
+    background: #16a34a;
+
+    color: white;
+
+    font-weight: 600;
+
+}
+
+
+#acceptBtn:hover {
+
+    background: #15803d;
+
+    transform: translateY(-2px);
+
+}
+
+
+/* =========================================================
+   REJECT BUTTON
+========================================================= */
+
+#rejectBtn {
+
+    flex: 1;
+
+    background: #dc2626;
+
+    color: white;
+
+    font-weight: 600;
+
+}
+
+
+#rejectBtn:hover {
+
+    background: #b91c1c;
+
+    transform: translateY(-2px);
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 700px) {
+
+    body {
+
+        overflow: auto;
+
+    }
+
+
+    .container {
+
+        min-height: 100dvh;
+
+        padding: 20px;
+
+    }
+
+
+    .glass {
+
+        width: 100%;
+
+        max-width: 520px;
+
+        padding: 35px 25px;
+
+        border-radius: 20px;
+
+    }
+
+
+    .logo {
+
+        width: 100px;
+
+        height: 100px;
+
+        margin-bottom: 18px;
+
+    }
+
+
+    .glass h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .glass h2 {
+
+        font-size: 22px;
+
+    }
+
+
+    .glass p {
+
+        font-size: 16px;
+
+        line-height: 1.6;
+
+    }
+
+
+    .glass h3 {
+
+        margin: 25px 0;
+
+        font-size: 16px;
+
+    }
+
+
+    #startBtn {
+
+        padding: 14px 30px;
+
+        font-size: 17px;
+
+    }
+
+
+    .popup {
+
+        padding: 18px;
+
+    }
+
+
+    .popup-content {
+
+        width: 100%;
+
+        max-width: 500px;
+
+        max-height: 90dvh;
+
+        padding: 28px 22px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .popup-content h2 {
+
+        font-size: 22px;
+
+        margin-bottom: 16px;
+
+    }
+
+
+    .popup-content p {
+
+        font-size: 14px;
+
+    }
+
+
+    .popup-content li {
+
+        font-size: 14px;
+
+    }
+
+
+    .buttons {
+
+        gap: 12px;
+
+    }
+
+
+    .buttons button {
+
+        padding: 13px 20px;
+
+        font-size: 15px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .container {
+
+        padding: 15px;
+
+    }
+
+
+    .glass {
+
+        width: 100%;
+
+        padding: 28px 18px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .logo {
+
+        width: 85px;
+
+        height: 85px;
+
+        margin-bottom: 15px;
+
+    }
+
+
+    .glass h1 {
+
+        font-size: 34px;
+
+    }
+
+
+    .glass h2 {
+
+        margin-top: 8px;
+
+        font-size: 19px;
+
+    }
+
+
+    .glass p {
+
+        margin-top: 16px;
+
+        font-size: 14px;
+
+        line-height: 1.55;
+
+    }
+
+
+    .glass h3 {
+
+        margin: 22px 0;
+
+        font-size: 14px;
+
+        line-height: 1.5;
+
+    }
+
+
+    .glass span {
+
+        font-size: inherit;
+
+    }
+
+
+    #startBtn {
+
+        width: 100%;
+
+        padding: 14px 20px;
+
+        font-size: 16px;
+
+    }
+
+
+    /* ==========================
+       MOBILE POPUP
+    ========================== */
+
+    .popup {
+
+        padding: 12px;
+
+        /*
+           Still hidden by default.
+           JS opens it.
+        */
+        display: none;
+
+    }
+
+
+    .popup-content {
+
+        width: 100%;
+
+        max-width: 430px;
+
+        max-height: 92dvh;
+
+        padding: 22px 18px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .popup-content h2 {
+
+        font-size: 20px;
+
+        line-height: 1.3;
+
+        margin-bottom: 14px;
+
+    }
+
+
+    .popup-content p {
+
+        font-size: 13px;
+
+        line-height: 1.55;
+
+    }
+
+
+    .popup-content ul {
+
+        margin:
+            12px 0 18px 18px;
+
+    }
+
+
+    .popup-content li {
+
+        margin-bottom: 7px;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+
+    }
+
+
+    .buttons {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        margin-top: 20px;
+
+    }
+
+
+    .buttons button {
+
+        width: 100%;
+
+        min-height: 46px;
+
+        padding: 12px 18px;
+
+        border-radius: 12px;
+
+        font-size: 14px;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .glass {
+
+        padding: 24px 15px;
+
+    }
+
+
+    .logo {
+
+        width: 75px;
+
+        height: 75px;
+
+    }
+
+
+    .glass h1 {
+
+        font-size: 30px;
+
+    }
+
+
+    .glass h2 {
+
+        font-size: 17px;
+
+    }
+
+
+    .glass p {
+
+        font-size: 13px;
+
+    }
+
+
+    .glass h3 {
+
+        font-size: 13px;
+
+    }
+
+
+    .popup-content {
+
+        padding: 20px 15px;
+
+    }
+
+
+    .popup-content h2 {
+
+        font-size: 18px;
+
+    }
+
+
+    .popup-content p,
+    .popup-content li {
+
+        font-size: 12px;
+
+    }
+
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+
+    #startBtn:hover {
+
+        transform: none;
+
+        box-shadow: none;
+
+    }
+
+
+    #acceptBtn:hover,
+    #rejectBtn:hover {
+
+        transform: none;
+
+    }
+
+}

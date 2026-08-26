@@ -235,100 +235,158 @@
 
 
 
-    <!-- =================================================
-         APPEARANCE
-    ================================================== -->
+   <!-- =================================================
+     APPEARANCE
+================================================== -->
 
-    <section class="settings-card">
+<section class="settings-card">
+
+    <div class="settings-card-header">
+
+        <div class="section-icon blue">
+            <i class="fa-solid fa-palette"></i>
+        </div>
+
+        <div>
+            <h2>Appearance</h2>
+
+            <p>
+                Customize how ExamVerse looks.
+            </p>
+        </div>
+
+    </div>
 
 
-        <div class="settings-card-header">
+    <!-- ================================
+         MANUAL DARK MODE
+    ================================= -->
 
-            <div class="section-icon blue">
+    <div class="setting-row">
 
-                <i class="fa-solid fa-palette"></i>
+        <div class="setting-info">
 
-            </div>
+            <h3>
+                Dark Mode
+            </h3>
 
-
-            <div>
-
-                <h2>
-                    Appearance
-                </h2>
-
-                <p>
-                    Customize how ExamVerse looks.
-                </p>
-
-            </div>
+            <p>
+                Turn dark mode on or off whenever you want.
+            </p>
 
         </div>
 
 
+        <label class="switch">
 
-        <div class="setting-row">
+            <input
+                type="checkbox"
+                id="darkModeToggle"
+            >
 
-            <div class="setting-info">
+            <span class="slider"></span>
 
-                <h3>
-                    Theme
-                </h3>
+        </label>
 
-                <p>
-                    Choose your preferred interface theme.
-                </p>
-
-            </div>
+    </div>
 
 
-            <select id="themeSelect">
+    <!-- ================================
+         SCHEDULE DARK MODE
+    ================================= -->
 
-                <option value="light">
-                    Light
-                </option>
+    <div class="setting-row schedule-row">
 
-                <option value="dark">
-                    Dark
-                </option>
+        <div class="setting-info">
 
-            </select>
+            <h3>
+                Schedule Dark Mode
+            </h3>
+
+            <p>
+                Automatically switch to dark mode during your selected time.
+            </p>
 
         </div>
 
 
+        <label class="switch">
 
-        <div class="setting-row">
+            <input
+                type="checkbox"
+                id="darkScheduleToggle"
+            >
 
-            <div class="setting-info">
+            <span class="slider"></span>
 
-                <h3>
-                    Dark Mode
-                </h3>
+        </label>
 
-                <p>
-                    Switch between light and dark appearance.
-                </p>
-
-            </div>
+    </div>
 
 
-            <label class="switch">
+    <!-- ================================
+         SCHEDULE TIME
+    ================================= -->
+
+    <div
+        class="setting-row schedule-time-row"
+        id="darkScheduleSettings"
+    >
+
+        <div class="setting-info">
+
+            <h3>
+                Dark Mode Schedule
+            </h3>
+
+            <p>
+                Choose when automatic dark mode should start and end.
+            </p>
+
+        </div>
+
+
+        <div class="schedule-controls">
+
+            <div class="schedule-time-group">
+
+                <label for="darkScheduleStart">
+                    From
+                </label>
 
                 <input
-                    type="checkbox"
-                    id="darkModeToggle"
+                    type="time"
+                    id="darkScheduleStart"
+                    value="20:00"
                 >
 
-                <span class="slider"></span>
+            </div>
 
-            </label>
+
+            <span class="schedule-arrow">
+                →
+            </span>
+
+
+            <div class="schedule-time-group">
+
+                <label for="darkScheduleEnd">
+                    To
+                </label>
+
+                <input
+                    type="time"
+                    id="darkScheduleEnd"
+                    value="06:00"
+                >
+
+            </div>
 
         </div>
 
+    </div>
 
-    </section>
-
+</section>
 
 
     <!-- =================================================
@@ -841,6 +899,21 @@
 
         </p>
 
+        <div class="delete-password-group">
+
+    <label for="deleteAccountPassword">
+        Enter your account password
+    </label>
+
+    <input
+        type="password"
+        id="deleteAccountPassword"
+        placeholder="Enter your account password"
+        autocomplete="current-password"
+    >
+
+</div>
+
 
         <div class="modal-actions">
 
@@ -851,7 +924,7 @@
                 Keep My Account
             </button>
 
-
+            
             <button
                 class="delete-btn"
                 id="confirmDeleteBtn"

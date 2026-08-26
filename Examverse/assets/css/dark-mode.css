@@ -4237,3 +4237,83 @@ html.dark-mode .topbar p {
         background-image: none !important;
     }
 }
+
+/* =========================================================
+   PRIVACY POPUP — DARK MODE FINAL FIX
+========================================================= */
+
+html.dark-mode .popup {
+    background: rgba(0, 0, 0, 0.82) !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .popup-content {
+    background: #080c13 !important;
+    background-image: none !important;
+
+    color: #f8fafc !important;
+
+    border: 1px solid #24344c !important;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.70) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Privacy Policy heading */
+html.dark-mode .popup-content h2 {
+    color: #ffffff !important;
+}
+
+/* All popup paragraphs */
+html.dark-mode .popup-content p {
+    color: #cbd5e1 !important;
+}
+
+/* Popup list */
+html.dark-mode .popup-content ul {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .popup-content li {
+    color: #cbd5e1 !important;
+}
+
+/* Bold text */
+html.dark-mode .popup-content b,
+html.dark-mode .popup-content strong {
+    color: #ffffff !important;
+}
+
+/* Popup buttons container */
+html.dark-mode .popup-content .buttons {
+    color: #ffffff !important;
+}
+
+/* Accept button */
+html.dark-mode .popup-content #acceptBtn {
+    background: #16a34a !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Accept hover */
+html.dark-mode .popup-content #acceptBtn:hover {
+    background: #15803d !important;
+    color: #ffffff !important;
+}
+
+/* Reject button */
+html.dark-mode .popup-content #rejectBtn {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Reject hover */
+html.dark-mode .popup-content #rejectBtn:hover {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+}

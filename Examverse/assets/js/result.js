@@ -1980,6 +1980,17 @@ function createQuestionCard(
 
 
     // ==========================================
+// EXPLANATION
+// ==========================================
+
+const explanation =
+    question.explanation ||
+    question.question_explanation ||
+    question.solution ||
+    "";
+
+
+    // ==========================================
     // Answer Classes
     // ==========================================
 
@@ -2149,6 +2160,20 @@ function createQuestionCard(
 
             </div>
 
+            ${explanation ? `
+    <div class="question-explanation">
+
+        <div class="explanation-title">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Explanation</span>
+        </div>
+
+        <div class="explanation-text">${escapeHTML(
+            String(explanation).trim()
+        )}</div>
+
+    </div>
+` : ""}
 
         </div>
 
@@ -3832,6 +3857,10 @@ body {
    INDIVIDUAL QUESTION
 ===================================================== */
 
+/* =====================================================
+   INDIVIDUAL QUESTION — PDF SPACE OPTIMIZATION
+===================================================== */
+
 .ev-existing .question-result-card {
 
     width: 100% !important;
@@ -3840,10 +3869,82 @@ body {
 
     margin-bottom: 2mm !important;
 
-    break-inside: avoid !important;
+    /*
+       IMPORTANT:
+       Allow the browser to use remaining
+       page space instead of moving the
+       entire next question to a new page.
+    */
+    break-inside: auto !important;
 
-    page-break-inside: avoid !important;
+    page-break-inside: auto !important;
 
+    /*
+       Prevent the browser from creating
+       artificial height.
+    */
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+}
+
+/* =====================================================
+   EXPLANATION — COMPACT PDF SPACING
+===================================================== */
+
+.ev-existing .question-explanation {
+
+    width: 100% !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    overflow: visible !important;
+
+    margin-top: 3mm !important;
+
+    margin-bottom: 2mm !important;
+
+    padding: 4mm !important;
+
+    box-sizing: border-box !important;
+
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+}
+
+.ev-existing .explanation-title {
+
+    margin-bottom: 2mm !important;
+
+    line-height: 1.2 !important;
+}
+
+.ev-existing .explanation-text {
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    line-height: 1.35 !important;
+
+    text-indent: 0 !important;
+
+    text-align: left !important;
+
+    white-space: normal !important;
+
+    word-break: normal !important;
+
+    overflow-wrap: break-word !important;
 }
 
 

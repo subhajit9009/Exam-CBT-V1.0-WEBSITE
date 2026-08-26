@@ -617,6 +617,140 @@ body {
 
 }
 
+/* =========================================================
+   DARK MODE SCHEDULE
+========================================================= */
+
+.schedule-time-row {
+    display: none;
+}
+
+.schedule-time-row.active {
+    display: flex;
+}
+
+
+/* Schedule controls */
+
+.schedule-controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+
+.schedule-time-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+
+.schedule-time-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #7183a4;
+}
+
+
+.schedule-time-group input[type="time"] {
+    width: 125px;
+    height: 44px;
+
+    padding: 0 12px;
+
+    border:
+        1px solid
+        #dbe3ef;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #102044;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+}
+
+
+.schedule-time-group input[type="time"]:focus {
+    border-color: #2f6df6;
+}
+
+
+.schedule-arrow {
+    margin-top: 20px;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #7183a4;
+}
+
+
+/* =========================================================
+   DARK MODE SCHEDULE - DARK THEME
+========================================================= */
+
+html.dark-mode .schedule-time-group label {
+    color: #94a3b8;
+}
+
+
+html.dark-mode .schedule-time-group input[type="time"] {
+    background: #111827;
+    color: #f8fafc;
+
+    border-color: #475569;
+
+    color-scheme: dark;
+}
+
+
+html.dark-mode .schedule-arrow {
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .schedule-time-row {
+        align-items: flex-start;
+    }
+
+
+    .schedule-controls {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+
+    .schedule-time-group {
+        flex: 1;
+        min-width: 110px;
+    }
+
+
+    .schedule-time-group input[type="time"] {
+        width: 100%;
+    }
+
+
+    .schedule-arrow {
+        margin-top: 27px;
+    }
+
+}
+
 
 /* =========================================================
    BUTTONS
@@ -5992,4 +6126,134 @@ html.dark-mode .secondary-btn {
 
         font-size: 12px !important;
     }
+}
+
+/* =========================================================
+   ACCOUNT DELETION PASSWORD FIELD
+========================================================= */
+
+.delete-password-group {
+
+    width: 100%;
+
+    margin: 18px 0 20px;
+
+}
+
+
+.delete-password-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #233452;
+
+}
+
+
+.delete-password-group input {
+
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 14px;
+
+    border: 1px solid #dce4ef;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #102044;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.delete-password-group input:focus {
+
+    border-color: #e54848;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(229,72,72,.12);
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+html.dark-mode .delete-password-group label {
+
+    color: #dbeafe;
+
+}
+
+
+html.dark-mode .delete-password-group input {
+
+    background: #111827;
+
+    color: #f8fafc;
+
+    border-color: #475569;
+
+    color-scheme: dark;
+
+}
+
+
+html.dark-mode .delete-password-group input::placeholder {
+
+    color: #64748b;
+
+}
+
+
+html.dark-mode .delete-password-group input:focus {
+
+    border-color: #ef4444;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(239,68,68,.15);
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .delete-password-group {
+
+        margin-top: 15px;
+
+    }
+
+    .delete-password-group input {
+
+        height: 44px;
+
+    }
+
 }

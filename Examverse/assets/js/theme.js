@@ -1,164 +1,199 @@
 /* =========================================================
-   EXAMVERSE — GLOBAL THEME SYSTEM
-   ========================================================= */
+   EXAMVERSE GLOBAL THEME SYSTEM
+========================================================= */
 
 (function () {
 
-    const THEME_KEY = "examverse_theme";
+    const savedTheme =
+        localStorage.getItem(
+            "examverse_theme"
+        ) || "light";
 
-    function getSavedTheme() {
-        return localStorage.getItem(THEME_KEY) || "light";
-    }
 
-    function applyTheme(theme) {
+    const scheduleEnabled =
+        localStorage.getItem(
+            "examverse_dark_schedule_enabled"
+        ) === "true";
 
-        const isDark = theme === "dark";
 
-        const html = document.documentElement;
+    /* ==========================================
+       NO SCHEDULE
+    ========================================== */
 
-        /* -----------------------------------------
-           APPLY GLOBAL CLASS
-        ----------------------------------------- */
+    if (!scheduleEnabled) {
 
-        html.classList.toggle(
-            "dark-mode",
-            isDark
+        setTheme(
+            savedTheme
         );
 
-        /* -----------------------------------------
-           ALSO KEEP BODY IN SYNC
-        ----------------------------------------- */
+        return;
 
-        if (document.body) {
+    }
 
-            document.body.classList.toggle(
-                "dark-mode",
-                isDark
+
+    /* ==========================================
+       SCHEDULED THEME
+    ========================================== */
+
+    const start =
+        localStorage.getItem(
+            "examverse_dark_schedule_start"
+        ) || "20:00";
+
+
+    const end =
+        localStorage.getItem(
+            "examverse_dark_schedule_end"
+        ) || "06:00";
+
+
+    const now =
+        new Date();
+
+
+    const currentMinutes =
+        now.getHours() * 60 +
+        now.getMinutes();
+
+
+    const startParts =
+        start.split(":");
+
+
+    const endParts =
+        end.split(":");
+
+
+    const startMinutes =
+        Number(startParts[0]) * 60 +
+        Number(startParts[1]);
+
+
+    const endMinutes =
+        Number(endParts[0]) * 60 +
+        Number(endParts[1]);
+
+
+    let darkNow;
+
+
+    if (startMinutes < endMinutes) {
+
+        darkNow =
+            currentMinutes >= startMinutes &&
+            currentMinutes < endMinutes;
+
+    } else {
+
+        darkNow =
+            currentMinutes >= startMinutes ||
+            currentMinutes < endMinutes;
+
+    }
+
+
+    setTheme(
+        darkNow
+            ? "dark"
+            : "light"
+    );
+
+
+    /* ==========================================
+       CHECK EVERY 30 SECONDS
+    ========================================== */
+
+    setInterval(
+        () => {
+
+            const enabled =
+                localStorage.getItem(
+                    "examverse_dark_schedule_enabled"
+                ) === "true";
+
+
+            if (!enabled) {
+                return;
+            }
+
+
+            const start =
+                localStorage.getItem(
+                    "examverse_dark_schedule_start"
+                ) || "20:00";
+
+
+            const end =
+                localStorage.getItem(
+                    "examverse_dark_schedule_end"
+                ) || "06:00";
+
+
+            const now =
+                new Date();
+
+
+            const current =
+                now.getHours() * 60 +
+                now.getMinutes();
+
+
+            const s =
+                Number(
+                    start.split(":")[0]
+                ) * 60 +
+                Number(
+                    start.split(":")[1]
+                );
+
+
+            const e =
+                Number(
+                    end.split(":")[0]
+                ) * 60 +
+                Number(
+                    end.split(":")[1]
+                );
+
+
+            let dark;
+
+
+            if (s < e) {
+
+                dark =
+                    current >= s &&
+                    current < e;
+
+            } else {
+
+                dark =
+                    current >= s ||
+                    current < e;
+
+            }
+
+
+            setTheme(
+                dark
+                    ? "dark"
+                    : "light"
             );
 
-        }
+        },
+        30000
+    );
 
-        /* -----------------------------------------
-           SAVE
-        ----------------------------------------- */
 
-        localStorage.setItem(
-            THEME_KEY,
-            isDark ? "dark" : "light"
-        );
+    function setTheme(theme) {
 
-        /* -----------------------------------------
-           COLOR SCHEME
-        ----------------------------------------- */
-
-        html.style.colorScheme =
-            isDark ? "dark" : "light";
-
-        /* -----------------------------------------
-           DEBUG
-        ----------------------------------------- */
-
-        console.log(
-            "ExamVerse Theme:",
-            isDark ? "DARK" : "LIGHT"
-        );
+        document.documentElement
+            .classList
+            .toggle(
+                "dark-mode",
+                theme === "dark"
+            );
 
     }
-
-
-    /* =================================================
-       APPLY BEFORE DOM IS FULLY LOADED
-    ================================================= */
-
-    applyTheme(
-        getSavedTheme()
-    );
-
-
-    /* =================================================
-       AFTER DOM LOAD
-    ================================================= */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            const theme =
-                getSavedTheme();
-
-            applyTheme(theme);
-
-            /* -----------------------------------------
-               THEME SELECT
-            ----------------------------------------- */
-
-            const themeSelect =
-                document.getElementById(
-                    "themeSelect"
-                );
-
-            if (themeSelect) {
-
-                themeSelect.value =
-                    theme;
-
-                themeSelect.addEventListener(
-                    "change",
-                    function () {
-
-                        applyTheme(
-                            this.value
-                        );
-
-                    }
-                );
-
-            }
-
-
-            /* -----------------------------------------
-               DARK MODE TOGGLE
-            ----------------------------------------- */
-
-            const darkModeToggle =
-                document.getElementById(
-                    "darkModeToggle"
-                );
-
-            if (darkModeToggle) {
-
-                darkModeToggle.checked =
-                    theme === "dark";
-
-                darkModeToggle.addEventListener(
-                    "change",
-                    function () {
-
-                        applyTheme(
-                            this.checked
-                                ? "dark"
-                                : "light"
-                        );
-
-                    }
-                );
-
-            }
-
-        }
-    );
-
-
-    /* =================================================
-       GLOBAL ACCESS
-       ================================================= */
-
-    window.ExamVerseTheme = {
-
-        apply: applyTheme,
-
-        get: getSavedTheme
-
-    };
 
 })();

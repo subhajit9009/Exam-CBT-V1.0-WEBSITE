@@ -279,50 +279,47 @@ function setupAppearance() {
             "darkModeToggle"
         );
 
-
-    const theme =
+    const scheduleToggle =
         document.getElementById(
-            "themeSelect"
+            "darkScheduleToggle"
         );
 
+    const scheduleSettings =
+        document.getElementById(
+            "darkScheduleSettings"
+        );
+
+    const startInput =
+        document.getElementById(
+            "darkScheduleStart"
+        );
+
+    const endInput =
+        document.getElementById(
+            "darkScheduleEnd"
+        );
+
+
+    /* ==========================================
+       LOAD SAVED MANUAL THEME
+    ========================================== */
 
     const savedTheme =
         localStorage.getItem(
             "examverse_theme"
-        ) ||
-        "light";
+        ) || "light";
 
 
     applyTheme(
-        savedTheme
+        savedTheme,
+        false
     );
-
-
-    if (theme) {
-
-        theme.value =
-            savedTheme;
-
-
-        theme.addEventListener(
-            "change",
-            () => {
-
-                applyTheme(
-                    theme.value
-                );
-
-            }
-        );
-
-    }
 
 
     if (toggle) {
 
         toggle.checked =
-            savedTheme ===
-            "dark";
+            savedTheme === "dark";
 
 
         toggle.addEventListener(
@@ -332,13 +329,334 @@ function setupAppearance() {
                 applyTheme(
                     toggle.checked
                         ? "dark"
-                        : "light"
+                        : "light",
+                    true
                 );
 
             }
         );
 
     }
+
+
+    /* ==========================================
+       LOAD SCHEDULE
+    ========================================== */
+
+    const scheduleEnabled =
+        localStorage.getItem(
+            "examverse_dark_schedule_enabled"
+        ) === "true";
+
+
+    const scheduleStart =
+        localStorage.getItem(
+            "examverse_dark_schedule_start"
+        ) || "20:00";
+
+
+    const scheduleEnd =
+        localStorage.getItem(
+            "examverse_dark_schedule_end"
+        ) || "06:00";
+
+
+    if (scheduleToggle) {
+
+        scheduleToggle.checked =
+            scheduleEnabled;
+
+    }
+
+
+    if (startInput) {
+
+        startInput.value =
+            scheduleStart;
+
+    }
+
+
+    if (endInput) {
+
+        endInput.value =
+            scheduleEnd;
+
+    }
+
+
+    updateScheduleVisibility();
+
+
+    /* ==========================================
+       SCHEDULE ENABLE / DISABLE
+    ========================================== */
+
+    if (scheduleToggle) {
+
+        scheduleToggle.addEventListener(
+            "change",
+            () => {
+
+                localStorage.setItem(
+                    "examverse_dark_schedule_enabled",
+                    scheduleToggle.checked
+                );
+
+
+                updateScheduleVisibility();
+
+
+                if (scheduleToggle.checked) {
+
+                    applyScheduledTheme();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       SCHEDULE TIME CHANGES
+    ========================================== */
+
+    if (startInput) {
+
+        startInput.addEventListener(
+            "change",
+            () => {
+
+                localStorage.setItem(
+                    "examverse_dark_schedule_start",
+                    startInput.value
+                );
+
+
+                if (
+                    scheduleToggle?.checked
+                ) {
+
+                    applyScheduledTheme();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (endInput) {
+
+        endInput.addEventListener(
+            "change",
+            () => {
+
+                localStorage.setItem(
+                    "examverse_dark_schedule_end",
+                    endInput.value
+                );
+
+
+                if (
+                    scheduleToggle?.checked
+                ) {
+
+                    applyScheduledTheme();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       AUTOMATIC SCHEDULE CHECK
+    ========================================== */
+
+    setInterval(
+        applyScheduledTheme,
+        30000
+    );
+
+}
+
+
+/* =========================================================
+   SHOW / HIDE SCHEDULE SETTINGS
+========================================================= */
+
+function updateScheduleVisibility() {
+
+    const toggle =
+        document.getElementById(
+            "darkScheduleToggle"
+        );
+
+    const settings =
+        document.getElementById(
+            "darkScheduleSettings"
+        );
+
+
+    if (!settings) {
+        return;
+    }
+
+
+    settings.classList.toggle(
+        "active",
+        toggle?.checked === true
+    );
+
+}
+
+
+/* =========================================================
+   APPLY THEME
+========================================================= */
+
+function applyTheme(
+    theme,
+    manualChange = false
+) {
+
+    const isDark =
+        theme === "dark";
+
+
+    document.documentElement
+        .classList
+        .toggle(
+            "dark-mode",
+            isDark
+        );
+
+
+    localStorage.setItem(
+        "examverse_theme",
+        theme
+    );
+
+
+    const toggle =
+        document.getElementById(
+            "darkModeToggle"
+        );
+
+
+    if (toggle) {
+
+        toggle.checked =
+            isDark;
+
+    }
+
+}
+
+
+/* =========================================================
+   SCHEDULED DARK MODE
+========================================================= */
+
+function applyScheduledTheme() {
+
+    const enabled =
+        localStorage.getItem(
+            "examverse_dark_schedule_enabled"
+        ) === "true";
+
+
+    if (!enabled) {
+        return;
+    }
+
+
+    const start =
+        localStorage.getItem(
+            "examverse_dark_schedule_start"
+        ) || "20:00";
+
+
+    const end =
+        localStorage.getItem(
+            "examverse_dark_schedule_end"
+        ) || "06:00";
+
+
+    const now =
+        new Date();
+
+
+    const currentMinutes =
+        now.getHours() * 60 +
+        now.getMinutes();
+
+
+    const startParts =
+        start.split(":");
+
+
+    const endParts =
+        end.split(":");
+
+
+    const startMinutes =
+        Number(startParts[0]) * 60 +
+        Number(startParts[1]);
+
+
+    const endMinutes =
+        Number(endParts[0]) * 60 +
+        Number(endParts[1]);
+
+
+    let shouldBeDark;
+
+
+    /* ==========================================
+       SAME-DAY SCHEDULE
+
+       Example:
+       08:00 → 18:00
+    ========================================== */
+
+    if (startMinutes < endMinutes) {
+
+        shouldBeDark =
+            currentMinutes >= startMinutes &&
+            currentMinutes < endMinutes;
+
+    }
+
+
+    /* ==========================================
+       OVERNIGHT SCHEDULE
+
+       Example:
+       20:00 → 06:00
+    ========================================== */
+
+    else {
+
+        shouldBeDark =
+            currentMinutes >= startMinutes ||
+            currentMinutes < endMinutes;
+
+    }
+
+
+    applyTheme(
+        shouldBeDark
+            ? "dark"
+            : "light",
+        false
+    );
 
 }
 
@@ -415,11 +733,12 @@ async function loadProfile() {
         .from("profiles")
 
         .select(`
-            first_name,
-            middle_name,
-            last_name,
-            email
-        `)
+    first_name,
+    middle_name,
+    last_name,
+    email,
+    name_change_used
+`)
 
         .eq(
             "id",
@@ -439,6 +758,9 @@ async function loadProfile() {
         return;
 
     }
+
+    window.examVerseNameChangeUsed =
+    profile?.name_change_used === true;
 
 
     const firstName =
@@ -623,7 +945,6 @@ async function saveProfile() {
         return;
     }
 
-
     const firstNameInput =
         document.getElementById("profileFirstName");
 
@@ -632,7 +953,6 @@ async function saveProfile() {
 
     const lastNameInput =
         document.getElementById("profileLastName");
-
 
     const message =
         document.getElementById("profileMessage");
@@ -648,6 +968,10 @@ async function saveProfile() {
         lastNameInput?.value.trim() || "";
 
 
+    /* ==========================================
+       FIRST NAME REQUIRED
+    ========================================== */
+
     if (!firstName) {
 
         if (message) {
@@ -657,7 +981,25 @@ async function saveProfile() {
 
             message.style.color =
                 "#d94444";
+        }
 
+        return;
+    }
+
+
+    /* ==========================================
+       CHECK ONE-TIME NAME CHANGE
+    ========================================== */
+
+    if (window.examVerseNameChangeUsed === true) {
+
+        if (message) {
+
+            message.textContent =
+                "Your name has already been changed once. You cannot change it again.";
+
+            message.style.color =
+                "#d94444";
         }
 
         return;
@@ -666,40 +1008,53 @@ async function saveProfile() {
 
     try {
 
+        /* ==========================================
+           UPDATE PROFILE + LOCK NAME CHANGE
+        ========================================== */
+
         const {
             error
         } =
-        await supabaseClient
-            .from("profiles")
-            .update({
+            await supabaseClient
+                .from("profiles")
+                .update({
 
-                first_name:
-                    firstName,
+                    first_name:
+                        firstName,
 
-                middle_name:
-                    middleName,
+                    middle_name:
+                        middleName,
 
-                last_name:
-                    lastName
+                    last_name:
+                        lastName,
 
-            })
-            .eq(
-                "id",
-                currentUser.id
-            );
+                    name_change_used:
+                        true
+
+                })
+                .eq(
+                    "id",
+                    currentUser.id
+                );
 
 
         if (error) {
 
             throw error;
-
         }
 
 
-        /*
-         * Also keep the Supabase Auth
-         * metadata synchronized.
-         */
+        /* ==========================================
+           MARK LOCALLY AS USED
+        ========================================== */
+
+        window.examVerseNameChangeUsed =
+            true;
+
+
+        /* ==========================================
+           UPDATE SUPABASE AUTH METADATA
+        ========================================== */
 
         const fullName = [
             firstName,
@@ -716,18 +1071,18 @@ async function saveProfile() {
             error:
                 authUpdateError
         } =
-        await supabaseClient
-            .auth
-            .updateUser({
+            await supabaseClient
+                .auth
+                .updateUser({
 
-                data: {
+                    data: {
 
-                    full_name:
-                        fullName
+                        full_name:
+                            fullName
 
-                }
+                    }
 
-            });
+                });
 
 
         if (authUpdateError) {
@@ -740,21 +1095,23 @@ async function saveProfile() {
         }
 
 
+        /* ==========================================
+           SUCCESS MESSAGE
+        ========================================== */
+
         if (message) {
 
             message.textContent =
-                "Name updated successfully.";
+                "Name updated successfully. Your name can no longer be changed.";
 
             message.style.color =
                 "#1c9a64";
-
         }
 
 
-        /*
-         * Update displayed account name
-         * immediately.
-         */
+        /* ==========================================
+           CLOSE + REFRESH
+        ========================================== */
 
         setTimeout(
             () => {
@@ -764,7 +1121,7 @@ async function saveProfile() {
                 window.location.reload();
 
             },
-            700
+            1200
         );
 
     }
@@ -785,7 +1142,6 @@ async function saveProfile() {
 
             message.style.color =
                 "#d94444";
-
         }
 
     }
@@ -1386,47 +1742,133 @@ function setupDeleteAccount() {
 }
 
 
+/* =========================================================
+   ACCOUNT DELETION
+   PASSWORD CONFIRMATION
+========================================================= */
+
 async function scheduleAccountDeletion() {
 
     if (!currentUser) {
 
-        return;
+        alert("User not logged in.");
 
+        return;
     }
 
 
-    const confirmText =
-        prompt(
-            'Type DELETE to schedule account deletion.'
+    /* ==========================================
+       GET PASSWORD
+    ========================================== */
+
+    const passwordInput =
+        document.getElementById(
+            "deleteAccountPassword"
         );
 
+    const password =
+        passwordInput?.value.trim() || "";
 
-    if (
-        confirmText !==
-        "DELETE"
-    ) {
+
+    /* ==========================================
+       PASSWORD REQUIRED
+    ========================================== */
+
+    if (!password) {
+
+        alert(
+            "Please enter your account password to continue."
+        );
+
+        passwordInput?.focus();
 
         return;
-
     }
 
 
-    const now =
-        new Date();
+    /* ==========================================
+       CONFIRM BUTTON
+    ========================================== */
 
-
-    const deletionDate =
-        new Date(
-            now.getTime() +
-            30 *
-            24 *
-            60 *
-            60 *
-            1000
+    const confirmButton =
+        document.getElementById(
+            "confirmDeleteBtn"
         );
+
+
+    if (confirmButton) {
+
+        confirmButton.disabled =
+            true;
+
+        confirmButton.textContent =
+            "Verifying...";
+
+    }
 
 
     try {
+
+        /* ==========================================
+           VERIFY PASSWORD
+        ========================================== */
+
+        const {
+            error: passwordError
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email:
+                        currentUser.email,
+
+                    password:
+                        password
+
+                });
+
+
+        /* ==========================================
+           WRONG PASSWORD
+        ========================================== */
+
+        if (passwordError) {
+
+            alert(
+                "Incorrect password. Account deletion was not scheduled."
+            );
+
+            passwordInput?.focus();
+
+            return;
+        }
+
+
+        /* ==========================================
+           PASSWORD CORRECT
+        ========================================== */
+
+        const now =
+            new Date();
+
+
+        const deletionDate =
+            new Date(
+                now.getTime() +
+                (
+                    30 *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+                )
+            );
+
+
+        /* ==========================================
+           SAVE DELETION REQUEST
+        ========================================== */
 
         const {
             error
@@ -1455,10 +1897,44 @@ async function scheduleAccountDeletion() {
         }
 
 
+        /* ==========================================
+           CLEAR PASSWORD
+        ========================================== */
+
+        if (passwordInput) {
+
+            passwordInput.value = "";
+
+        }
+
+
+        /* ==========================================
+           CLOSE MODAL
+        ========================================== */
+
+        document
+            .getElementById(
+                "deleteModal"
+            )
+            ?.classList.remove(
+                "show"
+            );
+
+
+        /* ==========================================
+           SUCCESS MESSAGE
+        ========================================== */
+
         alert(
-            "Account deletion has been scheduled. You have 30 days to recover your account by logging in again."
+            "Account deletion has been scheduled.\n\n" +
+            "You have 30 days to recover your account " +
+            "by logging in again."
         );
 
+
+        /* ==========================================
+           LOG OUT
+        ========================================== */
 
         await supabaseClient
             .auth
@@ -1466,16 +1942,18 @@ async function scheduleAccountDeletion() {
 
 
         if (
-            typeof Storage !==
-            "undefined" &&
-            typeof Storage.logout ===
-            "function"
+            typeof Storage !== "undefined" &&
+            typeof Storage.logout === "function"
         ) {
 
             Storage.logout();
 
         }
 
+
+        /* ==========================================
+           GO TO LOGIN
+        ========================================== */
 
         window.location.replace(
             "login.html"
@@ -1486,13 +1964,29 @@ async function scheduleAccountDeletion() {
     catch (error) {
 
         console.error(
-            "Account deletion scheduling error:",
+            "Account deletion error:",
             error
         );
 
+
         alert(
+            error.message ||
             "Unable to schedule account deletion."
         );
+
+    }
+
+    finally {
+
+        if (confirmButton) {
+
+            confirmButton.disabled =
+                false;
+
+            confirmButton.textContent =
+                "Schedule Deletion";
+
+        }
 
     }
 
@@ -1591,178 +2085,3 @@ async function checkDeletionStatus() {
     }
 
 }
-
-async function deleteAccount() {
-
-    if (!currentUser) {
-
-        alert("User not logged in.");
-
-        return;
-    }
-
-
-    const firstConfirm = confirm(
-        "Delete your ExamVerse account?\n\n" +
-        "Your account will enter a 30-day recovery period.\n\n" +
-        "You can recover your account by logging in again during those 30 days.\n\n" +
-        "After 30 days, the account will be permanently deleted."
-    );
-
-
-    if (!firstConfirm) {
-
-        return;
-    }
-
-
-    const secondConfirm = confirm(
-        "FINAL CONFIRMATION\n\n" +
-        "Are you sure you want to schedule your account for deletion?"
-    );
-
-
-    if (!secondConfirm) {
-
-        return;
-    }
-
-
-    try {
-
-        const deletionDate =
-            new Date(
-                Date.now() +
-                (30 * 24 * 60 * 60 * 1000)
-            );
-
-
-        console.log(
-            "Account deletion scheduled:",
-            deletionDate.toISOString()
-        );
-
-
-        const {
-            error
-        } =
-        await supabaseClient
-
-            .from("profiles")
-
-            .update({
-
-                deletion_scheduled_at:
-                    deletionDate.toISOString()
-
-            })
-
-            .eq(
-                "id",
-                currentUser.id
-            );
-
-
-        if (error) {
-
-            console.error(
-                "Account deletion scheduling error:",
-                error
-            );
-
-            alert(
-                "Unable to schedule account deletion.\n\n" +
-                error.message
-            );
-
-            return;
-        }
-
-
-        /*
-         * ==========================================
-         * LOG OUT
-         * ==========================================
-         */
-
-        await supabaseClient
-            .auth
-            .signOut();
-
-
-        /*
-         * Clear local ExamVerse data.
-         */
-
-        if (
-            typeof Storage !== "undefined" &&
-            typeof Storage.logout === "function"
-        ) {
-
-            Storage.logout();
-
-        }
-
-
-        /*
-         * Clear examination session.
-         */
-
-        sessionStorage.removeItem(
-            "selectedExam"
-        );
-
-        sessionStorage.removeItem(
-            "attemptId"
-        );
-
-        sessionStorage.removeItem(
-            "attemptStartedFresh"
-        );
-
-        sessionStorage.removeItem(
-            "examStartTime"
-        );
-
-        sessionStorage.removeItem(
-            "examActiveStartedAt"
-        );
-
-        sessionStorage.removeItem(
-            "currentQuestionIndex"
-        );
-
-        sessionStorage.removeItem(
-            "currentSectionIndex"
-        );
-
-
-        alert(
-            "Your account has been scheduled for deletion.\n\n" +
-            "You have 30 days to recover it.\n\n" +
-            "Simply log in again with your email and password during this period."
-        );
-
-
-        window.location.replace(
-            "login.html"
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Delete Account Error:",
-            error
-        );
-
-        alert(
-            "Unable to process account deletion.\n\n" +
-            error.message
-        );
-
-    }
-
-}
-

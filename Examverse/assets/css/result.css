@@ -1003,6 +1003,75 @@ body {
 
 }
 
+/* ==========================================
+   QUESTION EXPLANATION
+========================================== */
+
+.question-explanation {
+
+    margin-top: 16px;
+
+    padding: 15px 17px;
+
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #f5f3ff
+    );
+
+    border: 1px solid #c7d2fe;
+
+    box-shadow:
+        0 4px 14px
+        rgba(37, 99, 235, 0.08);
+
+}
+
+
+.explanation-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+
+    color: #4338ca;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+
+.explanation-title i {
+
+    color: #f59e0b;
+
+    font-size: 15px;
+
+}
+
+
+.explanation-text {
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    line-height: 1.65;
+
+    word-break: break-word;
+
+}
+
 
 /* ==========================================
    Marks
@@ -3073,6 +3142,67 @@ body {
 
 }
 
+/* =========================================================
+   PDF - QUESTION EXPLANATION
+   ========================================================= */
+
+.pdf-mode .question-explanation {
+
+    margin-top: 12px !important;
+
+    padding: 12px 14px !important;
+
+    background: #f8fbff !important;
+
+    border: 1px solid #cbd5e1 !important;
+
+    border-radius: 10px !important;
+
+    box-shadow: none !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+
+}
+
+
+.pdf-mode .explanation-title {
+
+    margin-bottom: 6px !important;
+
+    color: #4338ca !important;
+
+    font-size: 12px !important;
+
+    font-weight: 800 !important;
+
+}
+
+
+.pdf-mode .explanation-title i {
+
+    color: #f59e0b !important;
+
+}
+
+
+.pdf-mode .explanation-text {
+
+    color: #334155 !important;
+
+    font-size: 11px !important;
+
+    font-weight: 500 !important;
+
+    line-height: 1.5 !important;
+
+    overflow-wrap: break-word !important;
+
+    word-break: normal !important;
+
+}
+
 
 /* =========================================================
    PAGE BREAK SAFETY
@@ -4349,5 +4479,378 @@ body {
         font-size: 8px;
 
     }
+
+}
+
+/* ==========================================
+   EXAMVERSE - QUESTION EXPLANATION
+   DARK MODE MATCHING RESULT PAGE
+========================================== */
+
+.question-explanation {
+    width: 100%;
+    margin-top: 18px;
+    padding: 18px 20px;
+
+    background: #0b1524 !important;
+
+    border: 1px solid #263b56 !important;
+    border-radius: 12px;
+
+    box-shadow: none;
+
+    color: #e5edf7;
+}
+
+
+/* Explanation heading */
+
+.question-explanation .explanation-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin: 0 0 12px 0;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    color: #3b82f6 !important;
+}
+
+
+.question-explanation .explanation-title i {
+    font-size: 15px;
+    color: #3b82f6 !important;
+}
+
+
+/* Explanation content */
+
+.question-explanation .explanation-text {
+    margin: 0;
+    padding: 0;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    color: #d7e2f0 !important;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+/* ==========================================
+   LIGHT MODE
+========================================== */
+
+body:not(.dark-mode) .question-explanation {
+    background: #f8fafc !important;
+    border-color: #dbe4ef !important;
+    color: #334155;
+}
+
+body:not(.dark-mode) .question-explanation .explanation-title {
+    color: #2563eb !important;
+}
+
+body:not(.dark-mode) .question-explanation .explanation-title i {
+    color: #2563eb !important;
+}
+
+body:not(.dark-mode) .question-explanation .explanation-text {
+    color: #475569 !important;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .question-explanation {
+        margin-top: 14px;
+        padding: 15px 16px;
+
+        border-radius: 10px;
+    }
+
+    .question-explanation .explanation-title {
+        font-size: 14px;
+        margin-bottom: 9px;
+    }
+
+    .question-explanation .explanation-text {
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+}
+
+/* =========================================================
+   EXAMVERSE RESULT PAGE
+   FINAL EXPLANATION FIX
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   EXPLANATION BOX — COMMON
+--------------------------------------------------------- */
+
+.question-result-card .question-explanation {
+
+    width: 100% !important;
+
+    margin: 18px 0 0 0 !important;
+
+    padding: 18px 20px !important;
+
+    border-radius: 12px !important;
+
+    box-sizing: border-box !important;
+
+    text-align: left !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   EXPLANATION TITLE
+--------------------------------------------------------- */
+
+.question-result-card .question-explanation .explanation-title {
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: flex-start !important;
+
+    gap: 9px !important;
+
+    margin: 0 0 12px 0 !important;
+
+    padding: 0 !important;
+
+    text-align: left !important;
+
+    font-size: 15px !important;
+
+    line-height: 1.4 !important;
+
+    font-weight: 800 !important;
+
+}
+
+
+/* Icon */
+
+.question-result-card
+.question-explanation
+.explanation-title i {
+
+    flex-shrink: 0 !important;
+
+}
+
+
+/* ---------------------------------------------------------
+   EXPLANATION TEXT
+--------------------------------------------------------- */
+
+.question-result-card .question-explanation .explanation-text {
+
+    display: block !important;
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    text-align: left !important;
+
+    text-indent: 0 !important;
+
+    font-size: 14px !important;
+
+    line-height: 1.75 !important;
+
+    font-weight: 600 !important;
+
+    white-space: pre-line !important;
+
+    overflow-wrap: break-word !important;
+
+    word-break: normal !important;
+
+}
+
+
+/* =========================================================
+   LIGHT MODE
+   ========================================================= */
+
+html:not(.dark-mode)
+.question-result-card
+.question-explanation {
+
+    background: #f8fbff !important;
+
+    border: 1px solid #cbdcf5 !important;
+
+    color: #334155 !important;
+
+    box-shadow: none !important;
+
+}
+
+
+html:not(.dark-mode)
+.question-result-card
+.question-explanation
+.explanation-title {
+
+    color: #2563eb !important;
+
+}
+
+
+html:not(.dark-mode)
+.question-result-card
+.question-explanation
+.explanation-title i {
+
+    color: #2563eb !important;
+
+}
+
+
+html:not(.dark-mode)
+.question-result-card
+.question-explanation
+.explanation-text {
+
+    color: #334155 !important;
+
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+html.dark-mode
+.question-result-card
+.question-explanation {
+
+    background: #071426 !important;
+
+    border: 1px solid #1f4d8f !important;
+
+    color: #e8f2ff !important;
+
+    box-shadow: none !important;
+
+}
+
+
+html.dark-mode
+.question-result-card
+.question-explanation
+.explanation-title {
+
+    color: #60a5fa !important;
+
+}
+
+
+html.dark-mode
+.question-result-card
+.question-explanation
+.explanation-title i {
+
+    color: #60a5fa !important;
+
+}
+
+
+html.dark-mode
+.question-result-card
+.question-explanation
+.explanation-text {
+
+    color: #dbeafe !important;
+
+}
+
+
+/* =========================================================
+   PDF MODE
+   ========================================================= */
+
+.pdf-mode
+.question-result-card
+.question-explanation {
+
+    width: 100% !important;
+
+    margin: 16px 0 0 0 !important;
+
+    padding: 16px 18px !important;
+
+    box-sizing: border-box !important;
+
+    background: #f8fafc !important;
+
+    border: 1px solid #dbe4ef !important;
+
+    color: #334155 !important;
+
+}
+
+
+.pdf-mode
+.question-result-card
+.question-explanation
+.explanation-title {
+
+    color: #2563eb !important;
+
+    text-align: left !important;
+
+}
+
+
+.pdf-mode
+.question-result-card
+.question-explanation
+.explanation-text {
+
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    text-align: left !important;
+
+    text-indent: 0 !important;
+
+    color: #334155 !important;
+
+    white-space: pre-line !important;
+
+    line-height: 1.65 !important;
+
+    font-weight: 600 !important;
+
+    overflow-wrap: break-word !important;
 
 }
