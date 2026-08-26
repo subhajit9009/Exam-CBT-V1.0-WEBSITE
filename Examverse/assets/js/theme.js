@@ -1,272 +1,164 @@
-/* ================================================================
-   EXAMVERSE — GLOBAL THEME CONTROLLER
-   ================================================================
-   File:
-   assets/js/theme.js
-
-   Behaviour:
-   ✓ remembers light/dark mode
-   ✓ applies theme before page becomes visible
-   ✓ works across every page
-   ✓ does not depend on page-specific JavaScript
-   ✓ supports future theme buttons
-   ✓ dispatches a themechange event
-   ✓ prevents flash of light theme
-================================================================ */
+/* =========================================================
+   EXAMVERSE — GLOBAL THEME SYSTEM
+   ========================================================= */
 
 (function () {
 
-    "use strict";
-
-
-    /* ============================================================
-       CONSTANTS
-    ============================================================ */
-
-    const STORAGE_KEY = "examverse_theme";
-
-    const DARK_CLASS = "dark-mode";
-
-    const root = document.documentElement;
-
-
-    /* ============================================================
-       READ SAVED THEME
-    ============================================================ */
+    const THEME_KEY = "examverse_theme";
 
     function getSavedTheme() {
-
-        try {
-
-            const saved =
-                localStorage.getItem(STORAGE_KEY);
-
-            if (
-                saved === "dark" ||
-                saved === "light"
-            ) {
-
-                return saved;
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "ExamVerse theme storage unavailable:",
-                error
-            );
-
-        }
-
-
-        return "light";
-
+        return localStorage.getItem(THEME_KEY) || "light";
     }
 
+    function applyTheme(theme) {
 
-    /* ============================================================
-       APPLY THEME
-    ============================================================ */
+        const isDark = theme === "dark";
 
-    function applyTheme(theme, save = true) {
+        const html = document.documentElement;
 
-        const isDark =
-            theme === "dark";
+        /* -----------------------------------------
+           APPLY GLOBAL CLASS
+        ----------------------------------------- */
 
-
-        /*
-           Add/remove class from <html>.
-           CSS is written against html.dark-mode.
-        */
-
-        root.classList.toggle(
-            DARK_CLASS,
+        html.classList.toggle(
+            "dark-mode",
             isDark
         );
 
+        /* -----------------------------------------
+           ALSO KEEP BODY IN SYNC
+        ----------------------------------------- */
 
-        /*
-           Keep the browser's native controls, scrollbars,
-           select boxes etc. synchronized.
-        */
+        if (document.body) {
 
-        root.style.colorScheme =
-            isDark
-                ? "dark"
-                : "light";
-
-
-        /*
-           Save preference.
-        */
-
-        if (save) {
-
-            try {
-
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    isDark
-                        ? "dark"
-                        : "light"
-                );
-
-            } catch (error) {
-
-                console.warn(
-                    "ExamVerse could not save theme:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        /*
-           Notify other scripts/components.
-
-           Example:
-
-           window.addEventListener(
-               "examverse:themechange",
-               function (event) {
-                   console.log(event.detail.theme);
-               }
-           );
-        */
-
-        try {
-
-            window.dispatchEvent(
-                new CustomEvent(
-                    "examverse:themechange",
-                    {
-                        detail: {
-                            theme:
-                                isDark
-                                    ? "dark"
-                                    : "light",
-
-                            isDark:
-                                isDark
-                        }
-                    }
-                )
+            document.body.classList.toggle(
+                "dark-mode",
+                isDark
             );
 
-        } catch (error) {
-
-            /*
-               Older environments may not support CustomEvent.
-               Theme itself is already applied, so do nothing.
-            */
-
         }
 
-    }
+        /* -----------------------------------------
+           SAVE
+        ----------------------------------------- */
 
+        localStorage.setItem(
+            THEME_KEY,
+            isDark ? "dark" : "light"
+        );
 
-    /* ============================================================
-       TOGGLE
-    ============================================================ */
+        /* -----------------------------------------
+           COLOR SCHEME
+        ----------------------------------------- */
 
-    function toggleTheme() {
+        html.style.colorScheme =
+            isDark ? "dark" : "light";
 
-        const isDark =
-            root.classList.contains(DARK_CLASS);
+        /* -----------------------------------------
+           DEBUG
+        ----------------------------------------- */
 
-        applyTheme(
-            isDark
-                ? "light"
-                : "dark"
+        console.log(
+            "ExamVerse Theme:",
+            isDark ? "DARK" : "LIGHT"
         );
 
     }
 
 
-    /* ============================================================
-       SET EXPLICIT THEME
-    ============================================================ */
-
-    function setTheme(theme) {
-
-        if (
-            theme !== "dark" &&
-            theme !== "light"
-        ) {
-
-            return;
-
-        }
-
-        applyTheme(theme);
-
-    }
-
-
-    /* ============================================================
-       INITIAL THEME
-       ============================================================ */
-
-    const initialTheme =
-        getSavedTheme();
-
-
-    /*
-       Apply immediately.
-
-       This runs as soon as theme.js is executed, before the
-       rest of the page finishes rendering.
-    */
+    /* =================================================
+       APPLY BEFORE DOM IS FULLY LOADED
+    ================================================= */
 
     applyTheme(
-        initialTheme,
-        false
+        getSavedTheme()
     );
 
 
-    /* ============================================================
-       PUBLIC API
-    ============================================================ */
+    /* =================================================
+       AFTER DOM LOAD
+    ================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const theme =
+                getSavedTheme();
+
+            applyTheme(theme);
+
+            /* -----------------------------------------
+               THEME SELECT
+            ----------------------------------------- */
+
+            const themeSelect =
+                document.getElementById(
+                    "themeSelect"
+                );
+
+            if (themeSelect) {
+
+                themeSelect.value =
+                    theme;
+
+                themeSelect.addEventListener(
+                    "change",
+                    function () {
+
+                        applyTheme(
+                            this.value
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* -----------------------------------------
+               DARK MODE TOGGLE
+            ----------------------------------------- */
+
+            const darkModeToggle =
+                document.getElementById(
+                    "darkModeToggle"
+                );
+
+            if (darkModeToggle) {
+
+                darkModeToggle.checked =
+                    theme === "dark";
+
+                darkModeToggle.addEventListener(
+                    "change",
+                    function () {
+
+                        applyTheme(
+                            this.checked
+                                ? "dark"
+                                : "light"
+                        );
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       GLOBAL ACCESS
+       ================================================= */
 
     window.ExamVerseTheme = {
 
-        get: function () {
+        apply: applyTheme,
 
-            return root.classList.contains(
-                DARK_CLASS
-            )
-                ? "dark"
-                : "light";
-
-        },
-
-        set: setTheme,
-
-        toggle: toggleTheme,
-
-        isDark: function () {
-
-            return root.classList.contains(
-                DARK_CLASS
-            );
-
-        }
+        get: getSavedTheme
 
     };
-
-
-    /* ============================================================
-       OPTIONAL GLOBAL HELPERS
-    ============================================================ */
-
-    window.toggleExamVerseTheme =
-        toggleTheme;
-
-    window.setExamVerseTheme =
-        setTheme;
-
 
 })();

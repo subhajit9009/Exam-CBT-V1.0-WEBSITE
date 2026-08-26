@@ -2860,3 +2860,878 @@ html.dark-mode .progressSection .xpBadge {
         0.25
     ) !important;
 }
+
+/* =========================================================
+   EXAMVERSE — FINAL DARK MODE VISUAL OVERRIDE
+   ---------------------------------------------------------
+   Fixes remaining dark-text / grey-card problems across:
+
+   • Dashboard
+   • Milestones
+   • Result
+   • Performance
+   • Bookmarks
+   • Mobile + Desktop
+
+   NO layout changes.
+========================================================= */
+
+
+/* =========================================================
+   01. GLOBAL DARK TEXT SAFETY
+========================================================= */
+
+html.dark-mode {
+    color-scheme: dark !important;
+}
+
+html.dark-mode body {
+    color: #f8fafc !important;
+}
+
+
+/* =========================================================
+   02. DASHBOARD — WELCOME HEADER
+========================================================= */
+
+html.dark-mode .topbar h1 {
+    color: #60a5fa !important;
+    font-weight: 800 !important;
+}
+
+html.dark-mode .topbar h1 #userName {
+    color: #60a5fa !important;
+    font-weight: 800 !important;
+}
+
+html.dark-mode .topbar p {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   03. DASHBOARD — MILESTONES
+========================================================= */
+
+/* Milestone category heading */
+html.dark-mode .milestoneCategoryHeader h3 {
+    color: #f8fafc !important;
+}
+
+/* Category description */
+html.dark-mode .milestoneCategoryHeader p {
+    color: #94a3b8 !important;
+}
+
+/* Milestone title */
+html.dark-mode .milestoneTitle {
+    color: #f8fafc !important;
+}
+
+/* Milestone description */
+html.dark-mode .milestoneDescription {
+    color: #94a3b8 !important;
+}
+
+/* 1 / 1, 2 / 5 etc. */
+html.dark-mode .milestoneProgressText {
+    color: #e2e8f0 !important;
+}
+
+/* 100%, 40% etc. */
+html.dark-mode .milestoneProgressPercent {
+    color: #cbd5e1 !important;
+}
+
+/* +100 XP / Completed */
+html.dark-mode .milestoneXP {
+    color: #cbd5e1 !important;
+}
+
+/* Completed XP */
+html.dark-mode .milestoneCard.unlocked .milestoneXP {
+    color: #4ade80 !important;
+}
+
+
+/* Milestone cards */
+html.dark-mode .milestoneCard {
+    color: #f8fafc !important;
+}
+
+
+/* Milestone progress bar track */
+html.dark-mode .milestoneMiniBar {
+    background: #111827 !important;
+    border-color: #334155 !important;
+}
+
+
+/* Milestone progress */
+html.dark-mode .milestoneMiniFill {
+    background:
+        linear-gradient(
+            90deg,
+            #16a34a,
+            #22c55e
+        ) !important;
+}
+
+
+/* =========================================================
+   04. DASHBOARD — XP AREA
+========================================================= */
+
+html.dark-mode .progressSection {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .progressSection .progressLabel {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .progressSection #xpLevel {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .progressSection #xpCurrentText {
+    color: #f8fafc !important;
+    font-weight: 700 !important;
+}
+
+html.dark-mode .progressSection #xpNextText {
+    color: #cbd5e1 !important;
+    font-weight: 600 !important;
+}
+
+
+/* XP track */
+html.dark-mode .progressSection .xpProgressBar {
+    width: 100% !important;
+    height: 10px !important;
+    min-height: 10px !important;
+
+    background: #1e293b !important;
+
+    border: 1px solid #334155 !important;
+    border-radius: 999px !important;
+
+    overflow: hidden !important;
+
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+
+/* XP fill */
+html.dark-mode .progressSection .xpProgressFill {
+    height: 100% !important;
+    min-height: 8px !important;
+
+    background: #f59e0b !important;
+
+    border-radius: 999px !important;
+
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+
+/* XP badge */
+html.dark-mode .progressSection .xpBadge {
+    color: #60a5fa !important;
+
+    background: #0d2447 !important;
+    border-color: #244b7d !important;
+}
+
+
+/* =========================================================
+   05. RESULT PAGE — MAIN TEXT
+========================================================= */
+
+html.dark-mode .result-header h1 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .result-header p {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   06. RESULT PAGE — SCORE CARD
+========================================================= */
+
+html.dark-mode .score-card {
+    background: #0b1421 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+}
+
+html.dark-mode .score-label {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .score-out-of {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   07. RESULT PAGE — STATISTICS
+========================================================= */
+
+html.dark-mode .stat-card {
+    background: #0b1421 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+}
+
+html.dark-mode .stat-card span {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .stat-card strong {
+    color: #f8fafc !important;
+}
+
+
+/* Keep semantic numbers */
+html.dark-mode .stat-card .positive-value {
+    color: #4ade80 !important;
+}
+
+html.dark-mode .stat-card .negative-value {
+    color: #fb7185 !important;
+}
+
+
+/* =========================================================
+   08. RESULT PAGE — RESULT SUMMARY
+========================================================= */
+
+html.dark-mode .details-card {
+    background: #0b1421 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+}
+
+html.dark-mode .details-card h2 {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .details-card h2 i {
+    color: #60a5fa !important;
+}
+
+
+/* Detail boxes */
+html.dark-mode .detail-item {
+    background: #101b2b !important;
+    border-color: #263b57 !important;
+}
+
+html.dark-mode .detail-item span {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .detail-item strong {
+    color: #e2e8f0 !important;
+}
+
+
+/* =========================================================
+   09. RESULT PAGE — YOUR EXAM RANK
+========================================================= */
+
+html.dark-mode .rank-card {
+    background: #0b1421 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+}
+
+html.dark-mode .rank-header h2 {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .rank-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .rank-label {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .rank-total {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .rank-main,
+html.dark-mode .rank-score {
+    background: #101b2b !important;
+    border-color: #263b57 !important;
+
+    color: #f8fafc !important;
+}
+
+html.dark-mode #examRank,
+html.dark-mode #rankScore {
+    color: #60a5fa !important;
+}
+
+
+/* =========================================================
+   10. RESULT PAGE — EXAM LEADERBOARD
+========================================================= */
+
+html.dark-mode .exam-leaderboard-card {
+    background: #0b1421 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+}
+
+
+/* Heading */
+html.dark-mode .leaderboard-header h2 {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .leaderboard-header p {
+    color: #94a3b8 !important;
+}
+
+
+/* Table heading */
+html.dark-mode .leaderboard-heading {
+    background: #10244a !important;
+
+    color: #e2e8f0 !important;
+
+    border-color: #244b9b !important;
+}
+
+
+/* Candidate rows */
+html.dark-mode .leaderboard-row {
+    background: #0b1018 !important;
+
+    color: #e2e8f0 !important;
+
+    border-color: #293b55 !important;
+}
+
+
+/* Rank */
+html.dark-mode .leaderboard-rank {
+    color: #f8fafc !important;
+}
+
+
+/* Candidate name */
+html.dark-mode .leaderboard-name {
+    color: #f8fafc !important;
+}
+
+
+/* Score */
+html.dark-mode .leaderboard-score {
+    color: #4ade80 !important;
+}
+
+
+/* Current user */
+html.dark-mode .leaderboard-row.current-user {
+    background:
+        linear-gradient(
+            90deg,
+            #102e61,
+            #12366f
+        ) !important;
+
+    border-color: #2da9ff !important;
+
+    color: #ffffff !important;
+}
+
+html.dark-mode .leaderboard-row.current-user
+.leaderboard-rank,
+
+html.dark-mode .leaderboard-row.current-user
+.leaderboard-name,
+
+html.dark-mode .leaderboard-row.current-user
+.leaderboard-score {
+    color: #ffffff !important;
+}
+
+
+/* YOU badge */
+html.dark-mode .you-badge {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   11. RESULT PAGE — QUESTION ANALYSIS
+========================================================= */
+
+html.dark-mode .question-analysis-card {
+    background: #0b1421 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+}
+
+html.dark-mode .analysis-header h2 {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .analysis-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .analysis-loading {
+    color: #94a3b8 !important;
+}
+
+
+/* Question result cards */
+html.dark-mode .question-result-card {
+    background: #080f19 !important;
+    border-color: #293b55 !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .question-result-header {
+    background: #0c1624 !important;
+    border-color: #293b55 !important;
+}
+
+html.dark-mode .question-number {
+    color: #60a5fa !important;
+}
+
+html.dark-mode .question-text {
+    color: #f8fafc !important;
+}
+
+
+/* =========================================================
+   12. PERFORMANCE PAGE — HEADER
+========================================================= */
+
+html.dark-mode .page-header {
+    background: #080f19 !important;
+    background-image: none !important;
+
+    border: 1px solid #22354e !important;
+
+    color: #f8fafc !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .page-header h1,
+html.dark-mode .page-header h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .page-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .page-header .eyebrow {
+    color: #60a5fa !important;
+}
+
+
+/* Refresh */
+html.dark-mode .page-header .header-btn {
+    background: #10244a !important;
+
+    color: #60a5fa !important;
+
+    border-color: #244b9b !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   13. PERFORMANCE PAGE — FILTERS
+========================================================= */
+
+html.dark-mode .filter-card {
+    background: #080f19 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .filter-card h2,
+html.dark-mode .filter-card h3 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .filter-card p,
+html.dark-mode .filter-card span {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .filter-group label {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .filter-group select {
+    background: #05070b !important;
+    color: #f8fafc !important;
+    border-color: #293b55 !important;
+}
+
+
+/* Reset button */
+html.dark-mode .reset-btn {
+    background: #10244a !important;
+    color: #60a5fa !important;
+    border-color: #244b9b !important;
+}
+
+
+/* =========================================================
+   14. PERFORMANCE PAGE — OVERALL PERFORMANCE
+========================================================= */
+
+html.dark-mode .overall-performance {
+    background:
+        linear-gradient(
+            135deg,
+            #1746c7,
+            #4338ca
+        ) !important;
+
+    color: #ffffff !important;
+
+    border-color: #315bd8 !important;
+}
+
+html.dark-mode .overall-performance * {
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   15. BOOKMARKS — HEADER
+========================================================= */
+
+html.dark-mode .bookmarks-header,
+html.dark-mode .page-header {
+    color: #f8fafc !important;
+}
+
+
+/* If bookmarks uses .header-card */
+html.dark-mode .header-card {
+    background: #080f19 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .header-card h1,
+html.dark-mode .header-card h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .header-card p {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   16. BOOKMARKS — REFRESH BUTTON
+========================================================= */
+
+html.dark-mode .header-btn {
+    background: #10244a !important;
+
+    color: #60a5fa !important;
+
+    border-color: #244b9b !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   17. BOOKMARKS — SUMMARY CARDS
+========================================================= */
+
+html.dark-mode .summary-card {
+    background: #080f19 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .summary-content span {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .summary-content strong {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .summary-content small {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   18. BOOKMARKS — SECTIONS
+========================================================= */
+
+html.dark-mode .bookmark-section {
+    background: #080f19 !important;
+    background-image: none !important;
+
+    border-color: #22354e !important;
+
+    color: #f8fafc !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .bookmark-section h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .bookmark-section p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .section-header h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .section-header p {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .section-eyebrow {
+    color: #60a5fa !important;
+}
+
+
+/* =========================================================
+   19. BOOKMARKS — SAVED ITEMS
+========================================================= */
+
+html.dark-mode .saved-card {
+    background: #0b1018 !important;
+
+    border-color: #293b55 !important;
+
+    color: #f8fafc !important;
+
+    box-shadow: none !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+html.dark-mode .saved-title h3,
+html.dark-mode .saved-title h4 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .saved-title p,
+html.dark-mode .saved-date {
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================================
+   20. REMOVE LIGHT GLASS FROM THESE DARK-MODE COMPONENTS
+========================================================= */
+
+html.dark-mode .page-header,
+html.dark-mode .header-card,
+html.dark-mode .summary-card,
+html.dark-mode .bookmark-section,
+html.dark-mode .saved-card,
+html.dark-mode .filter-card,
+html.dark-mode .score-card,
+html.dark-mode .details-card,
+html.dark-mode .rank-card,
+html.dark-mode .exam-leaderboard-card,
+html.dark-mode .question-analysis-card,
+html.dark-mode .milestoneCard {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+
+/* =========================================================
+   21. MOBILE — SAME COLORS
+   No layout modifications
+========================================================= */
+
+@media (max-width: 700px) {
+
+    html.dark-mode .page-header,
+    html.dark-mode .header-card {
+        background: #080f19 !important;
+        background-image: none !important;
+
+        color: #f8fafc !important;
+
+        border-color: #22354e !important;
+
+        box-shadow: none !important;
+
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+
+    html.dark-mode .page-header h1,
+    html.dark-mode .page-header h2,
+    html.dark-mode .header-card h1,
+    html.dark-mode .header-card h2 {
+        color: #f8fafc !important;
+    }
+
+
+    html.dark-mode .page-header p,
+    html.dark-mode .header-card p {
+        color: #94a3b8 !important;
+    }
+
+
+    html.dark-mode .filter-card,
+    html.dark-mode .summary-card,
+    html.dark-mode .bookmark-section,
+    html.dark-mode .saved-card,
+    html.dark-mode .score-card,
+    html.dark-mode .details-card,
+    html.dark-mode .rank-card,
+    html.dark-mode .exam-leaderboard-card,
+    html.dark-mode .question-analysis-card {
+        background: #080f19 !important;
+        background-image: none !important;
+
+        color: #f8fafc !important;
+
+        border-color: #22354e !important;
+
+        box-shadow: none !important;
+    }
+
+
+    html.dark-mode .milestoneTitle {
+        color: #f8fafc !important;
+    }
+
+
+    html.dark-mode .milestoneDescription {
+        color: #94a3b8 !important;
+    }
+
+
+    html.dark-mode .milestoneProgressText {
+        color: #e2e8f0 !important;
+    }
+
+
+    html.dark-mode .milestoneProgressPercent {
+        color: #cbd5e1 !important;
+    }
+
+
+    html.dark-mode .milestoneXP {
+        color: #cbd5e1 !important;
+    }
+
+
+    html.dark-mode .leaderboard-name,
+    html.dark-mode .leaderboard-rank {
+        color: #f8fafc !important;
+    }
+
+
+    html.dark-mode .leaderboard-score {
+        color: #4ade80 !important;
+    }
+}
+
+
+/* =========================================================
+   22. FINAL TEXT SAFETY FOR DARK COMPONENTS
+========================================================= */
+
+html.dark-mode .milestoneCard *,
+html.dark-mode .score-card *,
+html.dark-mode .details-card *,
+html.dark-mode .rank-card *,
+html.dark-mode .exam-leaderboard-card *,
+html.dark-mode .question-analysis-card *,
+html.dark-mode .summary-card *,
+html.dark-mode .bookmark-section *,
+html.dark-mode .saved-card * {
+    border-color: inherit;
+}
+
+
+/* IMPORTANT:
+   Do NOT use a global "* { color: white }" rule here.
+   Semantic colors such as green score, red fail,
+   orange XP, blue rank etc. must remain intact.
+*/
