@@ -13,6 +13,32 @@ async function registerUser(e) {
 
     e.preventDefault();
 
+    /* =====================================================
+   SHOW REGISTERING SCREEN
+===================================================== */
+
+const registerProcessing =
+    document.getElementById("registerProcessing");
+
+const registerButton =
+    document.querySelector(".register-btn");
+
+
+if (registerProcessing) {
+
+    registerProcessing.style.display = "flex";
+
+}
+
+
+if (registerButton) {
+
+    registerButton.disabled = true;
+
+    registerButton.style.pointerEvents = "none";
+
+}
+
     // ==========================
     // Get Form Values
     // ==========================
@@ -166,6 +192,8 @@ async function registerUser(e) {
         return;
 
     }
+
+    
 
         // ==========================
     // Create Supabase Auth Account

@@ -6,16 +6,137 @@
 const loginForm =
     document.getElementById("loginForm");
 
+    /* =========================================================
+   SESSION CHECKING UI
+========================================================= */
 
-// =====================================
-// Already Logged In
-// =====================================
+let sessionCheckFinished = false;
+
+let sessionCheckingTimer = null;
+
+
+/* =========================================================
+   SHOW SESSION CHECKING SCREEN
+========================================================= */
+
+function showSessionChecking() {
+
+    const loginProcessing =
+        document.getElementById("loginProcessing");
+
+    const processingTitle =
+        document.querySelector(
+            ".login-processing-card h2"
+        );
+
+    const processingText =
+        document.getElementById(
+            "loginProcessingText"
+        );
+
+
+    if (processingTitle) {
+
+        processingTitle.textContent =
+            "Checking your session...";
+
+    }
+
+
+    if (processingText) {
+
+        processingText.textContent =
+            "Verifying your account";
+
+    }
+
+
+    if (loginProcessing) {
+
+        loginProcessing.style.display =
+            "flex";
+
+    }
+
+}
+
+
+/* =========================================================
+   HIDE SESSION CHECKING SCREEN
+========================================================= */
+
+function hideSessionChecking() {
+
+    const loginProcessing =
+        document.getElementById("loginProcessing");
+
+    if (loginProcessing) {
+
+        loginProcessing.style.display =
+            "none";
+
+    }
+
+}
+
+    /* ==========================================
+   HIDE LOGIN PROCESSING SCREEN
+========================================== */
+
+function hideLoginProcessing() {
+
+    const loginProcessing =
+        document.getElementById("loginProcessing");
+
+    const loginButton =
+        document.querySelector(".login-btn");
+
+
+    if (loginProcessing) {
+
+        loginProcessing.style.display = "none";
+
+    }
+
+
+    if (loginButton) {
+
+        loginButton.disabled = false;
+
+        loginButton.style.pointerEvents = "";
+
+    }
+
+}
 
 // =====================================
 // CHECK EXISTING SUPABASE SESSION
 // =====================================
 
 async function checkExistingSession() {
+
+    sessionCheckFinished = false;
+
+
+    /*
+       Give the ExamVerse entrance animation
+       time to play first.
+
+       If the backend is still checking after
+       the entrance animation, show the
+       "Checking your session..." screen.
+    */
+
+    sessionCheckingTimer = setTimeout(() => {
+
+        if (!sessionCheckFinished) {
+
+            showSessionChecking();
+
+        }
+
+    }, 3800);
+
 
     try {
 
@@ -28,19 +149,36 @@ async function checkExistingSession() {
             .getUser();
 
 
-        // No active session
         if (
-            error ||
-            !data?.user
-        ) {
+    error ||
+    !data?.user
+) {
 
-            return;
+    sessionCheckFinished = true;
 
-        }
+    clearTimeout(
+        sessionCheckingTimer
+    );
+
+    hideSessionChecking();
+
+    return;
+
+}
 
 
         const loggedUser =
             data.user;
+
+            /* =====================================================
+   EXISTING SESSION FOUND
+===================================================== */
+
+sessionCheckFinished = true;
+
+clearTimeout(
+    sessionCheckingTimer
+);
 
 
         // ==========================================
@@ -258,12 +396,20 @@ async function checkExistingSession() {
 
     catch (error) {
 
-        console.error(
-            "Session check error:",
-            error
-        );
+    console.error(
+        "Session check error:",
+        error
+    );
 
-    }
+    sessionCheckFinished = true;
+
+    clearTimeout(
+        sessionCheckingTimer
+    );
+
+    hideSessionChecking();
+
+}
 
 }
 
@@ -283,6 +429,35 @@ loginForm.addEventListener(
 async function loginUser(e) {
 
     e.preventDefault();
+
+        /* ==========================================
+       SHOW LOGIN PROCESSING SCREEN
+    ========================================== */
+
+    const loginProcessing =
+        document.getElementById("loginProcessing");
+
+    const loginProcessingText =
+        document.getElementById("loginProcessingText");
+
+    const loginButton =
+        document.querySelector(".login-btn");
+
+
+    if (loginProcessing) {
+
+        loginProcessing.style.display = "flex";
+
+    }
+
+
+    if (loginButton) {
+
+        loginButton.disabled = true;
+
+        loginButton.style.pointerEvents = "none";
+
+    }
 
 
     const phone =
@@ -339,17 +514,18 @@ async function loginUser(e) {
 
 
     if (
-        profileError ||
-        !profile
-    ) {
+    profileError ||
+    !profile
+) {
 
-        alert(
-            "Phone Number is not registered."
-        );
+    hideLoginProcessing();
 
-        return;
+    alert(
+        "Phone Number is not registered."
+    );
 
-    }
+    return;
+}
 
 
     // ==========================
@@ -374,13 +550,15 @@ async function loginUser(e) {
 
     if (error) {
 
-        alert(
-            "Invalid Phone Number or Password."
-        );
+    hideLoginProcessing();
 
-        return;
+    alert(
+        "Invalid Phone Number or Password."
+    );
 
-    }
+    return;
+
+}
 
 
     // ==========================
@@ -388,22 +566,22 @@ async function loginUser(e) {
     // ==========================
 
     if (
-        !data.user.email_confirmed_at
-    ) {
+    !data.user.email_confirmed_at
+) {
 
-        alert(
-            "Please verify your email before login."
-        );
+    hideLoginProcessing();
 
+    alert(
+        "Please verify your email before login."
+    );
 
-        await supabaseClient
-            .auth
-            .signOut();
+    await supabaseClient
+        .auth
+        .signOut();
 
+    return;
 
-        return;
-
-    }
+}
 
 
     // =====================================================

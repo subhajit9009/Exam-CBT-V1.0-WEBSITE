@@ -841,3 +841,733 @@ select {
     text-decoration: underline !important;
 
 }
+
+/* =========================================================
+   EXAMVERSE REGISTER PAGE ENTRANCE
+   ========================================================= */
+
+#examverseEntrance {
+    position: fixed;
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e3a8a,
+        #312e81
+    );
+
+    overflow: hidden;
+
+    animation: registerEntranceFadeOut 1s ease forwards;
+
+    animation-delay: 2.8s;
+}
+
+
+/* Background glow */
+
+#examverseEntrance::before,
+#examverseEntrance::after {
+    content: "";
+
+    position: absolute;
+
+    width: 350px;
+    height: 350px;
+
+    border-radius: 50%;
+
+    filter: blur(80px);
+
+    opacity: .35;
+
+    pointer-events: none;
+}
+
+#examverseEntrance::before {
+    background: #2563eb;
+
+    top: -120px;
+    left: -100px;
+}
+
+#examverseEntrance::after {
+    background: #7c3aed;
+
+    right: -100px;
+    bottom: -120px;
+}
+
+
+/* =========================================================
+   EXAMVERSE BRAND CARD
+   ========================================================= */
+
+#examverseEntrance .entrance-brand {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(90%, 650px);
+
+    padding: 55px 40px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    background: rgba(255,255,255,.08);
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.35);
+
+    animation:
+        registerDoorOpen
+        1.5s
+        cubic-bezier(.22,.61,.36,1)
+        forwards;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+#examverseEntrance .entrance-logo {
+
+    width: 110px;
+    height: 110px;
+
+    object-fit: contain;
+
+    margin-bottom: 20px;
+
+    animation:
+        registerEntranceLogo
+        1s
+        ease
+        forwards;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+#examverseEntrance .entrance-brand h1 {
+
+    margin: 0;
+
+    font-size: clamp(42px, 7vw, 70px);
+
+    font-weight: 700;
+
+    letter-spacing: -2px;
+
+    color: #ffffff;
+
+    animation:
+        registerEntranceText
+        1s
+        ease
+        .2s
+        both;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+#examverseEntrance .entrance-brand h2 {
+
+    margin: 15px auto 0;
+
+    max-width: 520px;
+
+    font-size: clamp(18px, 3vw, 27px);
+
+    line-height: 1.4;
+
+    font-weight: 400;
+
+    color: #dbeafe;
+
+    animation:
+        registerEntranceText
+        1s
+        ease
+        .35s
+        both;
+}
+
+
+/* =========================================================
+   TAGLINE
+   ========================================================= */
+
+#examverseEntrance .entrance-brand p {
+
+    margin-top: 22px;
+
+    font-size: 18px;
+
+    color: #bfdbfe;
+
+    letter-spacing: .5px;
+
+    animation:
+        registerEntranceText
+        1s
+        ease
+        .5s
+        both;
+}
+
+
+/* =========================================================
+   CREATOR
+   ========================================================= */
+
+#examverseEntrance .entrance-brand small {
+
+    display: block;
+
+    margin-top: 25px;
+
+    font-size: 15px;
+
+    color: #cbd5e1;
+
+    animation:
+        registerEntranceText
+        1s
+        ease
+        .65s
+        both;
+}
+
+#examverseEntrance .entrance-brand strong {
+
+    color: #fde68a;
+}
+
+
+/* =========================================================
+   DOOR OPEN ANIMATION
+   ========================================================= */
+
+@keyframes registerDoorOpen {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            perspective(1000px)
+            rotateY(-90deg)
+            scale(.85);
+
+        transform-origin: left center;
+    }
+
+    60% {
+
+        opacity: 1;
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            perspective(1000px)
+            rotateY(0deg)
+            scale(1);
+
+        transform-origin: center;
+    }
+}
+
+
+/* =========================================================
+   LOGO ANIMATION
+   ========================================================= */
+
+@keyframes registerEntranceLogo {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            scale(.5)
+            rotate(-10deg);
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            rotate(0);
+    }
+}
+
+
+/* =========================================================
+   TEXT ANIMATION
+   ========================================================= */
+
+@keyframes registerEntranceText {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   FADE OUT
+   ========================================================= */
+
+@keyframes registerEntranceFadeOut {
+
+    0% {
+
+        opacity: 1;
+
+        visibility: visible;
+    }
+
+    70% {
+
+        opacity: 1;
+
+        visibility: visible;
+    }
+
+    100% {
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        pointer-events: none;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    #examverseEntrance {
+
+        padding: 20px;
+    }
+
+    #examverseEntrance .entrance-brand {
+
+        width: 100%;
+
+        padding: 40px 22px;
+
+        border-radius: 20px;
+    }
+
+    #examverseEntrance .entrance-logo {
+
+        width: 85px;
+        height: 85px;
+
+        margin-bottom: 15px;
+    }
+
+    #examverseEntrance .entrance-brand h1 {
+
+        font-size: 42px;
+
+        letter-spacing: -1px;
+    }
+
+    #examverseEntrance .entrance-brand h2 {
+
+        font-size: 18px;
+
+        line-height: 1.45;
+    }
+
+    #examverseEntrance .entrance-brand p {
+
+        font-size: 15px;
+    }
+
+    #examverseEntrance .entrance-brand small {
+
+        font-size: 13px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    #examverseEntrance .entrance-brand {
+
+        padding: 32px 18px;
+    }
+
+    #examverseEntrance .entrance-logo {
+
+        width: 70px;
+        height: 70px;
+    }
+
+    #examverseEntrance .entrance-brand h1 {
+
+        font-size: 34px;
+    }
+
+    #examverseEntrance .entrance-brand h2 {
+
+        font-size: 16px;
+    }
+}
+
+/* =========================================================
+   EXAMVERSE REGISTER PROCESSING
+   Shown ONLY after Register is clicked
+========================================================= */
+
+#registerProcessing {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1e3a8a,
+            #312e81
+        );
+
+    z-index: 100000;
+
+    overflow: hidden;
+}
+
+
+/* Background glow */
+
+#registerProcessing::before,
+#registerProcessing::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 320px;
+    height: 320px;
+
+    border-radius: 50%;
+
+    filter: blur(90px);
+
+    opacity: .30;
+
+    pointer-events: none;
+}
+
+
+#registerProcessing::before {
+
+    background: #2563eb;
+
+    top: -100px;
+    left: -100px;
+}
+
+
+#registerProcessing::after {
+
+    background: #7c3aed;
+
+    right: -100px;
+    bottom: -100px;
+}
+
+
+/* Processing card */
+
+.register-processing-card {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: min(90%, 430px);
+
+    padding: 45px 30px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    background:
+        rgba(255,255,255,.09);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(20px);
+
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 30px 80px
+        rgba(0,0,0,.35);
+
+    animation:
+        registerProcessingIn
+        .5s
+        ease
+        both;
+}
+
+
+/* Logo */
+
+.register-processing-logo {
+
+    width: 85px;
+    height: 85px;
+
+    object-fit: contain;
+
+    margin-bottom: 18px;
+
+    animation:
+        registerProcessingPulse
+        1.8s
+        ease-in-out
+        infinite;
+}
+
+
+/* Heading */
+
+.register-processing-card h2 {
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 28px;
+
+    font-weight: 600;
+}
+
+
+/* Description */
+
+.register-processing-card p {
+
+    margin-top: 10px;
+
+    margin-bottom: 22px;
+
+    color:
+        rgba(255,255,255,.82);
+
+    font-size: 15px;
+}
+
+
+/* Spinner */
+
+.register-processing-spinner {
+
+    width: 42px;
+    height: 42px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    border:
+        3px solid
+        rgba(255,255,255,.20);
+
+    border-top-color:
+        #ffffff;
+
+    animation:
+        registerProcessingSpin
+        .8s
+        linear
+        infinite;
+}
+
+
+/* Please wait */
+
+.register-processing-card span {
+
+    color:
+        rgba(255,255,255,.65);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes registerProcessingIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(.95);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+}
+
+
+@keyframes registerProcessingPulse {
+
+    0%,
+    100% {
+
+        transform: scale(1);
+
+    }
+
+    50% {
+
+        transform: scale(1.07);
+
+    }
+}
+
+
+@keyframes registerProcessingSpin {
+
+    to {
+
+        transform: rotate(360deg);
+
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    #registerProcessing {
+
+        padding: 15px;
+
+    }
+
+    .register-processing-card {
+
+        width: 100%;
+
+        max-width: 380px;
+
+        padding: 38px 22px;
+
+        border-radius: 20px;
+
+    }
+
+    .register-processing-logo {
+
+        width: 70px;
+        height: 70px;
+
+    }
+
+    .register-processing-card h2 {
+
+        font-size: 24px;
+
+    }
+
+    .register-processing-card p {
+
+        font-size: 14px;
+
+    }
+
+}
