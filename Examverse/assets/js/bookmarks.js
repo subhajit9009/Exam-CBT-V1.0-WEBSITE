@@ -1697,15 +1697,19 @@ async function removeSavedAttempt(
     bookmarkId
 ) {
 
-    if (
-        !confirm(
-            "Remove this attempt from Bookmarks?"
-        )
-    ) {
-
-        return;
-
+    const confirmed = await showConfirm(
+    "Remove Saved Attempt?",
+    "Are you sure you want to remove this attempt from your bookmarks?",
+    null,
+    {
+        confirmText: "Remove",
+        cancelText: "Cancel"
     }
+);
+
+if (!confirmed) {
+    return;
+}
 
 
     const {
@@ -1737,9 +1741,11 @@ async function removeSavedAttempt(
             error
         );
 
-        alert(
-            "Unable to remove bookmark."
-        );
+        showPopup(
+    "error",
+    "Unable to Remove",
+    "We couldn't remove this bookmark. Please try again."
+);
 
         return;
 
@@ -1759,15 +1765,21 @@ async function removeSavedExam(
     bookmarkId
 ) {
 
-    if (
-        !confirm(
-            "Remove this exam from Saved Exams?"
-        )
-    ) {
-
-        return;
-
+    const confirmed = await showConfirm(
+    "Remove Saved Exam?",
+    "Are you sure you want to remove this exam from your saved exams?",
+    null,
+    {
+        confirmText: "Remove",
+        cancelText: "Cancel"
     }
+);
+
+if (!confirmed) {
+
+    return;
+
+}
 
 
     const {
@@ -1799,9 +1811,11 @@ async function removeSavedExam(
             error
         );
 
-        alert(
-            "Unable to remove saved exam."
-        );
+        showPopup(
+    "error",
+    "Unable to Remove",
+    "We couldn't remove this bookmark. Please try again."
+);
 
         return;
 
@@ -1970,11 +1984,17 @@ function setupSidebar() {
 
 async function logoutUser() {
 
-    if (
-        !confirm(
-            "Logout from ExamVerse?"
-        )
-    ) {
+    const confirmed = await showConfirm(
+        "Logout from ExamVerse?",
+        "Are you sure you want to log out of your ExamVerse account?",
+        null,
+        {
+            confirmText: "Logout",
+            cancelText: "Cancel"
+        }
+    );
+
+    if (!confirmed) {
 
         return;
 

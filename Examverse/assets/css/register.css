@@ -1272,8 +1272,7 @@ select {
 }
 
 /* =========================================================
-   EXAMVERSE REGISTER PROCESSING
-   Shown ONLY after Register is clicked
+   REGISTER PROCESSING SCREEN
 ========================================================= */
 
 #registerProcessing {
@@ -1300,7 +1299,7 @@ select {
             #312e81
         );
 
-    z-index: 100000;
+    z-index: 999999;
 
     overflow: hidden;
 }
@@ -1346,7 +1345,7 @@ select {
 }
 
 
-/* Processing card */
+/* Card */
 
 .register-processing-card {
 
@@ -1362,12 +1361,9 @@ select {
 
     color: #ffffff;
 
-    background:
-        rgba(255,255,255,.09);
+    background: rgba(255,255,255,.09);
 
-    border:
-        1px solid
-        rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.18);
 
     border-radius: 24px;
 
@@ -1376,8 +1372,7 @@ select {
     -webkit-backdrop-filter: blur(20px);
 
     box-shadow:
-        0 30px 80px
-        rgba(0,0,0,.35);
+        0 30px 80px rgba(0,0,0,.35);
 
     animation:
         registerProcessingIn
@@ -1420,7 +1415,7 @@ select {
 }
 
 
-/* Description */
+/* Text */
 
 .register-processing-card p {
 
@@ -1428,8 +1423,7 @@ select {
 
     margin-bottom: 22px;
 
-    color:
-        rgba(255,255,255,.82);
+    color: rgba(255,255,255,.82);
 
     font-size: 15px;
 }
@@ -1446,12 +1440,9 @@ select {
 
     border-radius: 50%;
 
-    border:
-        3px solid
-        rgba(255,255,255,.20);
+    border: 3px solid rgba(255,255,255,.20);
 
-    border-top-color:
-        #ffffff;
+    border-top-color: #ffffff;
 
     animation:
         registerProcessingSpin
@@ -1465,8 +1456,7 @@ select {
 
 .register-processing-card span {
 
-    color:
-        rgba(255,255,255,.65);
+    color: rgba(255,255,255,.65);
 
     font-size: 13px;
 }
@@ -1497,6 +1487,7 @@ select {
             scale(1);
 
     }
+
 }
 
 
@@ -1514,6 +1505,7 @@ select {
         transform: scale(1.07);
 
     }
+
 }
 
 
@@ -1524,6 +1516,7 @@ select {
         transform: rotate(360deg);
 
     }
+
 }
 
 
@@ -1539,6 +1532,7 @@ select {
 
     }
 
+
     .register-processing-card {
 
         width: 100%;
@@ -1551,6 +1545,7 @@ select {
 
     }
 
+
     .register-processing-logo {
 
         width: 70px;
@@ -1558,11 +1553,13 @@ select {
 
     }
 
+
     .register-processing-card h2 {
 
         font-size: 24px;
 
     }
+
 
     .register-processing-card p {
 

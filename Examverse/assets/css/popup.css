@@ -1,0 +1,758 @@
+/* =========================================================
+   ExamVerse Global Popup System
+   popup.css
+========================================================= */
+
+:root {
+
+    --ev-popup-bg: rgba(255, 255, 255, 0.96);
+
+    --ev-popup-text: #0f172a;
+
+    --ev-popup-muted: #64748b;
+
+    --ev-popup-border: rgba(15, 23, 42, 0.10);
+
+    --ev-popup-shadow:
+        0 25px 80px rgba(15, 23, 42, 0.25);
+
+    --ev-popup-overlay:
+        rgba(15, 23, 42, 0.55);
+
+    --ev-popup-primary: #2563eb;
+
+    --ev-popup-success: #16a34a;
+
+    --ev-popup-error: #dc2626;
+
+    --ev-popup-warning: #d97706;
+
+    --ev-popup-info: #2563eb;
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+html.dark-mode {
+
+    --ev-popup-bg: rgba(15, 23, 42, 0.97);
+
+    --ev-popup-text: #f8fafc;
+
+    --ev-popup-muted: #cbd5e1;
+
+    --ev-popup-border:
+        rgba(255, 255, 255, 0.12);
+
+    --ev-popup-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.55);
+
+    --ev-popup-overlay:
+        rgba(0, 0, 0, 0.72);
+
+}
+
+
+/* =========================================================
+   MAIN OVERLAY
+========================================================= */
+
+#examversePopupOverlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        var(--ev-popup-overlay);
+
+    backdrop-filter: blur(5px);
+
+    -webkit-backdrop-filter: blur(5px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+
+    z-index: 999999;
+
+}
+
+
+/* =========================================================
+   OPEN STATE
+========================================================= */
+
+#examversePopupOverlay.ev-popup-visible {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+}
+
+
+/* =========================================================
+   POPUP CARD
+========================================================= */
+
+.ev-popup-card {
+
+    position: relative;
+
+    width: min(100%, 460px);
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    padding: 34px 30px 28px;
+
+    border-radius: 24px;
+
+    background:
+        var(--ev-popup-bg);
+
+    border:
+        1px solid
+        var(--ev-popup-border);
+
+    color:
+        var(--ev-popup-text);
+
+    box-shadow:
+        var(--ev-popup-shadow);
+
+    text-align: center;
+
+    transform:
+        translateY(20px)
+        scale(.94);
+
+    opacity: 0;
+
+    transition:
+        transform .3s cubic-bezier(.2,.8,.2,1),
+        opacity .25s ease;
+
+}
+
+
+/* Card open animation */
+
+#examversePopupOverlay.ev-popup-visible
+.ev-popup-card {
+
+    transform:
+        translateY(0)
+        scale(1);
+
+    opacity: 1;
+
+}
+
+
+/* =========================================================
+   POPUP ICON
+========================================================= */
+
+.ev-popup-icon {
+
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    animation:
+        evPopupIconIn
+        .45s
+        ease
+        both;
+
+}
+
+
+/* Success */
+
+.ev-popup-success
+.ev-popup-icon {
+
+    background:
+        rgba(22, 163, 74, .12);
+
+    color:
+        var(--ev-popup-success);
+
+}
+
+
+/* Error */
+
+.ev-popup-error
+.ev-popup-icon {
+
+    background:
+        rgba(220, 38, 38, .12);
+
+    color:
+        var(--ev-popup-error);
+
+}
+
+
+/* Warning */
+
+.ev-popup-warning
+.ev-popup-icon {
+
+    background:
+        rgba(217, 119, 6, .13);
+
+    color:
+        var(--ev-popup-warning);
+
+}
+
+
+/* Info */
+
+.ev-popup-info
+.ev-popup-icon {
+
+    background:
+        rgba(37, 99, 235, .12);
+
+    color:
+        var(--ev-popup-info);
+
+}
+
+
+/* =========================================================
+   POPUP TITLE
+========================================================= */
+
+.ev-popup-title {
+
+    margin: 0;
+
+    color:
+        var(--ev-popup-text);
+
+    font-family:
+        Poppins,
+        sans-serif;
+
+    font-size: 24px;
+
+    font-weight: 600;
+
+    line-height: 1.3;
+
+}
+
+
+/* =========================================================
+   POPUP MESSAGE
+========================================================= */
+
+.ev-popup-message {
+
+    margin: 12px auto 0;
+
+    max-width: 380px;
+
+    color:
+        var(--ev-popup-muted);
+
+    font-family:
+        Poppins,
+        sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    line-height: 1.7;
+
+    white-space: pre-line;
+
+}
+
+
+/* =========================================================
+   BUTTON AREA
+========================================================= */
+
+.ev-popup-actions {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 26px;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.ev-popup-btn {
+
+    min-width: 120px;
+
+    padding: 11px 22px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-family:
+        Poppins,
+        sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+
+}
+
+
+/* Hover */
+
+.ev-popup-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+/* Active */
+
+.ev-popup-btn:active {
+
+    transform:
+        translateY(0)
+        scale(.98);
+
+}
+
+
+/* Primary */
+
+.ev-popup-primary-btn {
+
+    background:
+        var(--ev-popup-primary);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 20px
+        rgba(37, 99, 235, .25);
+
+}
+
+
+/* Success */
+
+.ev-popup-success-btn {
+
+    background:
+        var(--ev-popup-success);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 20px
+        rgba(22, 163, 74, .25);
+
+}
+
+
+/* Error */
+
+.ev-popup-error-btn {
+
+    background:
+        var(--ev-popup-error);
+
+    color: #ffffff;
+
+}
+
+
+/* Secondary */
+
+.ev-popup-secondary-btn {
+
+    background:
+        transparent;
+
+    color:
+        var(--ev-popup-text);
+
+    border:
+        1px solid
+        var(--ev-popup-border);
+
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.ev-popup-close {
+
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        transparent;
+
+    color:
+        var(--ev-popup-muted);
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+
+}
+
+
+.ev-popup-close:hover {
+
+    background:
+        rgba(100, 116, 139, .12);
+
+    color:
+        var(--ev-popup-text);
+
+}
+
+
+/* =========================================================
+   CONFIRMATION POPUP
+========================================================= */
+
+.ev-popup-confirm
+.ev-popup-icon {
+
+    background:
+        rgba(217, 119, 6, .13);
+
+    color:
+        var(--ev-popup-warning);
+
+}
+
+
+/* =========================================================
+   LOADING POPUP
+========================================================= */
+
+.ev-popup-loading
+.ev-popup-icon {
+
+    background:
+        rgba(37, 99, 235, .12);
+
+    color:
+        var(--ev-popup-primary);
+
+}
+
+
+.ev-popup-spinner {
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    border:
+        3px solid
+        currentColor;
+
+    border-right-color:
+        transparent;
+
+    animation:
+        evPopupSpin
+        .75s
+        linear
+        infinite;
+
+}
+
+
+/* =========================================================
+   ICON ANIMATIONS
+========================================================= */
+
+@keyframes evPopupIconIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(.65);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+
+@keyframes evPopupSpin {
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    #examversePopupOverlay {
+
+        padding: 16px;
+
+    }
+
+
+    .ev-popup-card {
+
+        width: 100%;
+
+        max-width: 390px;
+
+        padding:
+            32px
+            20px
+            24px;
+
+        border-radius: 20px;
+
+    }
+
+
+    .ev-popup-icon {
+
+        width: 64px;
+        height: 64px;
+
+        font-size: 27px;
+
+        margin-bottom: 16px;
+
+    }
+
+
+    .ev-popup-title {
+
+        font-size: 21px;
+
+    }
+
+
+    .ev-popup-message {
+
+        font-size: 13px;
+
+        line-height: 1.65;
+
+    }
+
+
+    .ev-popup-actions {
+
+        flex-direction: column;
+
+        width: 100%;
+
+    }
+
+
+    .ev-popup-btn {
+
+        width: 100%;
+
+        min-width: 0;
+
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #examversePopupOverlay,
+    .ev-popup-card,
+    .ev-popup-icon {
+
+        animation: none !important;
+
+        transition: none !important;
+
+    }
+
+}
+
+/* =========================================================
+   EXAMVERSE POPUP BUTTON FIX
+   Prevent global button styles from affecting popup buttons
+========================================================= */
+
+#examversePopupOverlay .ev-popup-btn {
+    width: auto;
+    min-width: 130px;
+    height: 46px;
+    padding: 0 28px;
+
+    margin: 0;
+
+    border: none;
+    outline: none;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Poppins, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    line-height: 1;
+    text-align: center;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+#examversePopupOverlay .ev-popup-btn:hover {
+    transform: translateY(-2px);
+}
+
+#examversePopupOverlay .ev-popup-btn:active {
+    transform: translateY(0);
+}
+
+#examversePopupOverlay .ev-popup-primary-btn,
+#examversePopupOverlay .ev-popup-success-btn,
+#examversePopupOverlay .ev-popup-error-btn {
+    color: #ffffff;
+}
+
+#examversePopupOverlay .ev-popup-primary-btn {
+    background: #2563eb;
+}
+
+#examversePopupOverlay .ev-popup-success-btn {
+    background: #16a34a;
+}
+
+#examversePopupOverlay .ev-popup-error-btn {
+    background: #dc2626;
+}
+
+#examversePopupOverlay .ev-popup-secondary-btn {
+    background: #e5e7eb;
+    color: #1f2937;
+}

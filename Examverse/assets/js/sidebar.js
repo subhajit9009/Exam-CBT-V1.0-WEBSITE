@@ -144,16 +144,20 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             async function () {
 
-                const confirmed =
-                    confirm(
-                        "Logout from ExamVerse?"
-                    );
+                const confirmed = await showConfirm(
+    "Logout from ExamVerse?",
+    "Are you sure you want to log out of your ExamVerse account?",
+    null,
+    {
+        confirmText: "Logout",
+        cancelText: "Cancel"
+    }
+);
 
-                if (!confirmed) {
+if (!confirmed) {
 
-                    return;
-
-                }
+    return;
+}
 
 
                 try {

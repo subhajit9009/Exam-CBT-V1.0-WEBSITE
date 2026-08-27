@@ -311,10 +311,12 @@ clearTimeout(
                         );
 
 
-                        alert(
-                            "Unable to recover your account.\n\n" +
-                            recoveryError.message
-                        );
+                        showPopup(
+    "error",
+    "Account Recovery Failed",
+    "Unable to recover your account.\n\n" +
+    recoveryError.message
+);
 
 
                         return;
@@ -322,10 +324,11 @@ clearTimeout(
                     }
 
 
-                    alert(
-                        "Welcome back! 🎉\n\n" +
-                        "Your account has been successfully recovered."
-                    );
+                    showPopup(
+    "success",
+    "Welcome Back! 🎉",
+    "Your account has been successfully recovered."
+);
 
 
                     // Now go to dashboard
@@ -348,10 +351,11 @@ clearTimeout(
                     .signOut();
 
 
-                alert(
-                    "Your account remains scheduled for deletion.\n\n" +
-                    "You can recover it by logging in again before the 30-day period expires."
-                );
+                showPopup(
+    "warning",
+    "Account Still Scheduled",
+    "Your account remains scheduled for deletion. You can recover it by logging in again before the 30-day period expires."
+);
 
 
                 return;
@@ -372,9 +376,11 @@ clearTimeout(
                     .signOut();
 
 
-                alert(
-                    "Your account recovery period has expired."
-                );
+                showPopup(
+    "error",
+    "Recovery Period Expired",
+    "Your account recovery period has expired."
+);
 
 
                 return;
@@ -520,9 +526,11 @@ async function loginUser(e) {
 
     hideLoginProcessing();
 
-    alert(
-        "Phone Number is not registered."
-    );
+    showPopup(
+    "error",
+    "Phone Number Not Registered",
+    "This phone number is not registered with ExamVerse."
+);
 
     return;
 }
@@ -552,9 +560,11 @@ async function loginUser(e) {
 
     hideLoginProcessing();
 
-    alert(
-        "Invalid Phone Number or Password."
-    );
+    showPopup(
+    "error",
+    "Login Failed",
+    "Invalid phone number or password."
+);
 
     return;
 
@@ -571,9 +581,11 @@ async function loginUser(e) {
 
     hideLoginProcessing();
 
-    alert(
-        "Please verify your email before login."
-    );
+    showPopup(
+    "warning",
+    "Email Verification Required",
+    "Please verify your email before logging in."
+);
 
     await supabaseClient
         .auth
@@ -631,17 +643,18 @@ if (deletionScheduledAt) {
 
 
         const recoverAccount =
-            confirm(
-
-                "Your ExamVerse account is scheduled for permanent deletion.\n\n" +
-
-                "You have approximately " +
-                remainingDays +
-                " day(s) remaining to recover it.\n\n" +
-
-                "Do you want to recover your account now?"
-
-            );
+    await showConfirm(
+        "Recover Your Account?",
+        "Your ExamVerse account is scheduled for permanent deletion.\n\n" +
+        "You have approximately " +
+        remainingDays +
+        " day(s) remaining to recover it.",
+        null,
+        {
+            confirmText: "Recover Account",
+            cancelText: "Keep Deletion"
+        }
+    );
 
 
         // ==========================================
@@ -701,10 +714,12 @@ if (deletionScheduledAt) {
                 .signOut();
 
 
-            alert(
-                "Unable to recover your account.\n\n" +
-                recoveryError.message
-            );
+            showPopup(
+    "error",
+    "Account Recovery Failed",
+    "Unable to recover your account.\n\n" +
+    recoveryError.message
+);
 
 
             return;
@@ -717,10 +732,11 @@ if (deletionScheduledAt) {
             null;
 
 
-        alert(
-            "Welcome back! 🎉\n\n" +
-            "Your account has been successfully recovered."
-        );
+        showPopup(
+    "success",
+    "Welcome Back! 🎉",
+    "Your account has been successfully recovered."
+);
 
     }
 
@@ -736,9 +752,11 @@ if (deletionScheduledAt) {
             .signOut();
 
 
-        alert(
-            "Your account recovery period has expired."
-        );
+        showPopup(
+    "error",
+    "Recovery Period Expired",
+    "Your account recovery period has expired."
+);
 
 
         return;
@@ -892,11 +910,11 @@ if (deletionScheduledAt) {
     }
 
 
-    alert(
-        "Welcome Back, " +
-        user.firstName +
-        "!"
-    );
+    showPopup(
+    "success",
+    "Welcome Back! 👋",
+    "Welcome back, " + user.firstName + "!"
+);
 
 
     // ==========================

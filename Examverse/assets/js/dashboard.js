@@ -96,9 +96,11 @@ async function loadDashboard() {
                 "No profile found for user."
             );
 
-            alert(
-                "Your profile could not be loaded."
-            );
+            showPopup(
+    "error",
+    "Profile Not Found",
+    "Your profile could not be loaded. Please try again."
+);
 
             return;
 
@@ -219,9 +221,11 @@ preferredExamButtons.forEach(
                     "Not Selected"
                 ) {
 
-                    alert(
-                        "This preferred exam is not available."
-                    );
+                    showPopup(
+    "warning",
+    "Exam Not Available",
+    "This preferred exam is not available right now."
+);
 
                     return;
 
@@ -897,9 +901,11 @@ renderMilestones(
             error
         );
 
-        alert(
-            "Unable to load dashboard data."
-        );
+        showPopup(
+    "error",
+    "Dashboard Error",
+    "Unable to load dashboard data. Please try again."
+);
 
     }
 
@@ -2943,15 +2949,21 @@ if (logoutBtn) {
         "click",
         async () => {
 
-        if (
-            !confirm(
-                "Logout from ExamVerse?"
-            )
-        ) {
+        const confirmed = await showConfirm(
+    "Logout from ExamVerse?",
+    "Are you sure you want to log out of your ExamVerse account?",
+    null,
+    {
+        confirmText: "Logout",
+        cancelText: "Cancel"
+    }
+);
 
-            return;
+if (!confirmed) {
 
-        }
+    return;
+
+}
 
 
         try {
