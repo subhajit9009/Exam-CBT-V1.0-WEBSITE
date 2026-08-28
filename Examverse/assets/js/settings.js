@@ -216,15 +216,19 @@ function setupSidebar() {
 
 async function logoutUser() {
 
-    if (
-        !confirm(
-            "Logout from ExamVerse?"
-        )
-    ) {
-
-        return;
-
+    const confirmed = await showConfirm(
+    "Logout from ExamVerse?",
+    "Are you sure you want to logout from your ExamVerse account?",
+    null,
+    {
+        cancelText: "Cancel",
+        confirmText: "Logout"
     }
+);
+
+if (!confirmed) {
+    return;
+}
 
 
     try {
@@ -278,6 +282,11 @@ function setupAppearance() {
         document.getElementById(
             "darkModeToggle"
         );
+
+        const cbtFullscreenToggle =
+    document.getElementById(
+        "cbtFullscreenToggle"
+    );
 
     const scheduleToggle =
         document.getElementById(
@@ -709,6 +718,38 @@ function applyTheme(
             theme;
 
     }
+
+}
+
+/* ==========================================
+   CBT FULL SCREEN SETTING
+========================================== */
+
+const fullscreenEnabled =
+    localStorage.getItem(
+        "examverse_cbt_fullscreen"
+    ) === "true";
+
+
+if (cbtFullscreenToggle) {
+
+    cbtFullscreenToggle.checked =
+        fullscreenEnabled;
+
+
+    cbtFullscreenToggle.addEventListener(
+        "change",
+        () => {
+
+            localStorage.setItem(
+                "examverse_cbt_fullscreen",
+                String(
+                    cbtFullscreenToggle.checked
+                )
+            );
+
+        }
+    );
 
 }
 
@@ -1220,9 +1261,11 @@ async function changePassword() {
         }
 
 
-        alert(
-            "A password reset link has been sent to your email."
-        );
+        showPopup(
+    "success",
+    "Password Reset",
+    "A password reset link has been sent to your email."
+);
 
     }
 
@@ -1233,9 +1276,11 @@ async function changePassword() {
             error
         );
 
-        alert(
-            "Unable to send password reset email."
-        );
+        showPopup(
+    "error",
+    "Password Reset Failed",
+    "Unable to send password reset email."
+);
 
     }
 
@@ -1417,9 +1462,11 @@ async function downloadMyData() {
         );
 
 
-        alert(
-            "Your ExamVerse data has been downloaded."
-        );
+        showPopup(
+    "success",
+    "Download Complete",
+    "Your ExamVerse data has been downloaded."
+);
 
     }
 
@@ -1430,9 +1477,11 @@ async function downloadMyData() {
             error
         );
 
-        alert(
-            "Unable to download your data."
-        );
+        showPopup(
+    "error",
+    "Download Failed",
+    "Unable to download your data."
+);
 
     }
 
@@ -1461,17 +1510,25 @@ async function clearTestHistory() {
 
     if (!currentUser) {
 
-        alert("User not logged in.");
-
-        return;
-    }
-
-
-    const confirmed = confirm(
-        "Clear your test history?\n\n" +
-        "Completed tests will be removed from Previous Tests.\n\n" +
-        "Bookmarked attempts will NOT be removed."
+    showPopup(
+        "warning",
+        "Login Required",
+        "User not logged in."
     );
+
+    return;
+}
+
+
+    const confirmed = await showConfirm(
+    "Clear Test History?",
+    "Completed tests will be removed from Previous Tests.\n\nBookmarked attempts will NOT be removed.",
+    null,
+    {
+        cancelText: "Cancel",
+        confirmText: "Clear History"
+    }
+);
 
 
     if (!confirmed) {
@@ -1597,11 +1654,13 @@ async function clearTestHistory() {
             idsToDelete.length === 0
         ) {
 
-            alert(
-                completedAttempts?.length
-                    ? "All your completed tests are bookmarked, so nothing was removed."
-                    : "There is no test history to clear."
-            );
+            showPopup(
+    "info",
+    "Nothing to Clear",
+    completedAttempts?.length
+        ? "All your completed tests are bookmarked, so nothing was removed."
+        : "There is no test history to clear."
+);
 
             return;
         }
@@ -1651,13 +1710,15 @@ async function clearTestHistory() {
         // 6. SUCCESS
         // ==========================================
 
-        alert(
-            `${deletedAttempts.length} test${
-                deletedAttempts.length === 1
-                    ? ""
-                    : "s"
-            } cleared successfully.`
-        );
+        showPopup(
+    "success",
+    "History Cleared",
+    `${deletedAttempts.length} test${
+        deletedAttempts.length === 1
+            ? ""
+            : "s"
+    } cleared successfully.`
+);
 
 
         // ==========================================
@@ -1676,10 +1737,12 @@ async function clearTestHistory() {
         );
 
 
-        alert(
-            "Unable to clear test history.\n\n" +
-            error.message
-        );
+        showPopup(
+    "error",
+    "Clear History Failed",
+    "Unable to clear test history.\n\n" +
+    error.message
+);
 
     }
 
@@ -1751,10 +1814,14 @@ async function scheduleAccountDeletion() {
 
     if (!currentUser) {
 
-        alert("User not logged in.");
+    showPopup(
+        "warning",
+        "Login Required",
+        "User not logged in."
+    );
 
-        return;
-    }
+    return;
+}
 
 
     /* ==========================================
@@ -1776,9 +1843,11 @@ async function scheduleAccountDeletion() {
 
     if (!password) {
 
-        alert(
-            "Please enter your account password to continue."
-        );
+        showPopup(
+    "warning",
+    "Password Required",
+    "Please enter your account password to continue."
+);
 
         passwordInput?.focus();
 
@@ -1835,9 +1904,11 @@ async function scheduleAccountDeletion() {
 
         if (passwordError) {
 
-            alert(
-                "Incorrect password. Account deletion was not scheduled."
-            );
+            showPopup(
+    "error",
+    "Incorrect Password",
+    "Account deletion was not scheduled."
+);
 
             passwordInput?.focus();
 
@@ -1925,11 +1996,12 @@ async function scheduleAccountDeletion() {
            SUCCESS MESSAGE
         ========================================== */
 
-        alert(
-            "Account deletion has been scheduled.\n\n" +
-            "You have 30 days to recover your account " +
-            "by logging in again."
-        );
+        showPopup(
+    "success",
+    "Deletion Scheduled",
+    "Account deletion has been scheduled.\n\n" +
+    "You have 30 days to recover your account by logging in again."
+);
 
 
         /* ==========================================
@@ -1969,11 +2041,12 @@ async function scheduleAccountDeletion() {
         );
 
 
-        alert(
-            error.message ||
-            "Unable to schedule account deletion."
-        );
-
+        showPopup(
+    "error",
+    "Account Deletion Failed",
+    error.message ||
+    "Unable to schedule account deletion."
+);
     }
 
     finally {

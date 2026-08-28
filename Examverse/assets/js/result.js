@@ -5,6 +5,58 @@
 
 let attemptedUserName = "Student";
 
+
+/* ==========================================
+   RESULT LOADING OVERLAY
+========================================== */
+
+function showResultLoading() {
+
+    const overlay =
+        document.getElementById(
+            "resultLoadingOverlay"
+        );
+
+    if (!overlay) {
+        return;
+    }
+
+    overlay.classList.remove(
+        "resultLoadingDone"
+    );
+
+}
+
+
+function hideResultLoading() {
+
+    const overlay =
+        document.getElementById(
+            "resultLoadingOverlay"
+        );
+
+    if (!overlay) {
+        return;
+    }
+
+    /*
+       Small delay so the user can see
+       the completed page transition.
+    */
+
+    requestAnimationFrame(
+        function () {
+
+            overlay.classList.add(
+                "resultLoadingDone"
+            );
+
+        }
+    );
+
+}
+
+
 window.addEventListener(
     "DOMContentLoaded",
     loadResult
@@ -16,6 +68,8 @@ window.addEventListener(
 // ==========================================
 
 async function loadResult() {
+
+    showResultLoading();
 
     try {
 
@@ -66,9 +120,11 @@ if (!attemptId) {
     );
 
 
-    alert(
-        "Result attempt not found."
-    );
+    showPopup(
+    "error",
+    "Result Not Found",
+    "The examination result attempt could not be found."
+);
 
 
     // Go back to Dashboard,
@@ -193,9 +249,11 @@ if (attempt?.user_id) {
             );
 
 
-            alert(
-                "Unable to load examination result."
-            );
+            showPopup(
+    "error",
+    "Result Loading Failed",
+    "Unable to load the examination result. Please try again."
+);
 
 
             return;
@@ -205,9 +263,11 @@ if (attempt?.user_id) {
 
         if (!attempt) {
 
-            alert(
-                "Examination result not found."
-            );
+            showPopup(
+    "error",
+    "Result Not Found",
+    "The examination result could not be found."
+);
 
 
             return;
@@ -248,14 +308,6 @@ if (attempt?.user_id) {
 
         // ==========================================
 // EXAM RANK
-// ==========================================
-
-// ==========================================
-// EXAM RANK + LEADERBOARD
-// ==========================================
-
-/// ==========================================
-// EXAM RANK + COLLAPSIBLE LEADERBOARD
 // ==========================================
 
 // ==========================================
@@ -929,6 +981,8 @@ async function loadExamRank(attemptId) {
 
     catch (error) {
 
+        hideResultLoading();
+
         console.error(
             "Exam Rank Error:",
             error
@@ -1361,6 +1415,10 @@ renderQuestionAnalysis(
 // Dashboard Button
 // ==========================================
 
+// ==========================================
+// Dashboard Button
+// ==========================================
+
 const dashboardBtn =
     document.getElementById("dashboardBtn");
 
@@ -1371,7 +1429,7 @@ if (dashboardBtn) {
         function () {
 
             // ======================================
-            // CLEAR ONLY ACTIVE EXAM STATE
+            // CLEAR ACTIVE EXAM STATE
             // ======================================
 
             sessionStorage.removeItem(
@@ -1390,24 +1448,27 @@ if (dashboardBtn) {
                 "examResult"
             );
 
-            // ======================================
-            // KEEP RESULT HISTORY
-            // ======================================
-            //
-            // DO NOT REMOVE:
-            //
-            // resultAttemptId
-            // examVerseResultAttemptId
-            //
-            // These identify the completed result.
-            //
 
             // ======================================
-            // OPEN DASHBOARD
+            // CLEAR CURRENT RESULT POINTER
             // ======================================
 
-            window.location.href =
-                "dashboard.html";
+            sessionStorage.removeItem(
+                "resultAttemptId"
+            );
+
+            localStorage.removeItem(
+                "examVerseResultAttemptId"
+            );
+
+
+            // ======================================
+            // REPLACE RESULT PAGE
+            // ======================================
+
+            window.location.replace(
+                "dashboard.html"
+            );
 
         }
     );
@@ -1421,6 +1482,8 @@ if (dashboardBtn) {
 setupAnalysisButton();
 
 setupPdfButton();
+
+hideResultLoading();
 
 
         // ==========================================
@@ -1456,15 +1519,19 @@ setupPdfButton();
 
     catch (error) {
 
+        hideResultLoading();
+
         console.error(
             "Result Error:",
             error
         );
 
 
-        alert(
-            "Something went wrong while loading the result."
-        );
+        showPopup(
+    "error",
+    "Something Went Wrong",
+    "Something went wrong while loading the result. Please try again."
+);
 
     }
 
@@ -1594,43 +1661,55 @@ function renderQuestionAnalysis(
 
 
     // ==========================================
-    // NORMAL / NON-SECTIONAL EXAM
-    // ==========================================
+// NORMAL / NON-SECTIONAL EXAM
+// ==========================================
 
-    if (
-        !sections ||
-        sections.length === 0
-    ) {
+if (
+    !sections ||
+    sections.length === 0
+) {
 
-        container.innerHTML =
-            questions
-                .map(
-                    (
-                        question,
-                        index
-                    ) => {
-
-                        const answer =
-                            answerMap.get(
-                                String(
-                                    question.id
-                                )
-                            );
+    const sortedQuestions =
+        [...questions].sort(
+            (a, b) =>
+                Number(
+                    a.question_no || 0
+                ) -
+                Number(
+                    b.question_no || 0
+                )
+        );
 
 
-                        return createQuestionCard(
-                            question,
-                            answer,
-                            index
+    container.innerHTML =
+        sortedQuestions
+            .map(
+                (
+                    question,
+                    index
+                ) => {
+
+                    const answer =
+                        answerMap.get(
+                            String(
+                                question.id
+                            )
                         );
 
-                    }
-                )
-                .join("");
+
+                    return createQuestionCard(
+                        question,
+                        answer,
+                        index
+                    );
+
+                }
+            )
+            .join("");
 
 
-        return;
-    }
+    return;
+}
 
 
     // ==========================================
@@ -2948,9 +3027,11 @@ console.log(
 
     if (!printWindow) {
 
-        alert(
-            "Please allow pop-ups for ExamVerse."
-        );
+        showPopup(
+    "warning",
+    "Pop-up Blocked",
+    "Please allow pop-ups for ExamVerse to generate the result PDF."
+);
 
         return;
 
@@ -5306,6 +5387,8 @@ if (sectionContainer) {
 
 
     catch (error) {
+
+        hideResultLoading();
 
         console.error(
             "Section Performance Error:",

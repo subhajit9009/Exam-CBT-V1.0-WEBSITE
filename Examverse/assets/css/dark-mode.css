@@ -4317,3 +4317,154 @@ html.dark-mode .popup-content #rejectBtn:hover {
     background: #dc2626 !important;
     color: #ffffff !important;
 }
+
+/* =========================================================
+   CBT EXAM — DARK MODE COLORED ACTION BUTTONS
+   ========================================================= */
+
+
+/* =========================================================
+   MOBILE — PAUSE BUTTON
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    html.dark-mode #mobilePauseBtn {
+
+        background: #f59e0b !important;
+        background-color: #f59e0b !important;
+        background-image: none !important;
+
+        color: #ffffff !important;
+
+        border-color: #f59e0b !important;
+
+        box-shadow:
+            0 4px 12px rgba(245, 158, 11, 0.25) !important;
+
+    }
+
+
+    html.dark-mode #mobilePauseBtn:hover {
+
+        background: #d97706 !important;
+        background-color: #d97706 !important;
+
+    }
+
+
+    html.dark-mode #mobilePauseBtn:active {
+
+        background: #b45309 !important;
+        background-color: #b45309 !important;
+
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP — PAUSE BUTTON
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+    html.dark-mode #pauseBtn {
+
+        background: #f59e0b !important;
+        background-color: #f59e0b !important;
+        background-image: none !important;
+
+        color: #ffffff !important;
+
+        border-color: #f59e0b !important;
+
+        box-shadow:
+            0 4px 14px rgba(245, 158, 11, 0.25) !important;
+
+    }
+
+
+    html.dark-mode #pauseBtn:hover {
+
+        background: #d97706 !important;
+        background-color: #d97706 !important;
+
+    }
+
+
+    html.dark-mode #pauseBtn:active {
+
+        background: #b45309 !important;
+        background-color: #b45309 !important;
+
+    }
+
+}
+
+
+/* =========================================================
+   DESKTOP — SUBMIT BUTTON
+   ========================================================= */
+
+@media (min-width: 769px) {
+
+    html.dark-mode #submitBtn {
+
+        background: #dc2626 !important;
+        background-color: #dc2626 !important;
+        background-image: none !important;
+
+        color: #ffffff !important;
+
+        border-color: #ef4444 !important;
+
+        box-shadow:
+            0 4px 14px rgba(220, 38, 38, 0.25) !important;
+
+    }
+
+
+    html.dark-mode #submitBtn:hover:not(:disabled) {
+
+        background: #b91c1c !important;
+        background-color: #b91c1c !important;
+
+    }
+
+
+    html.dark-mode #submitBtn:active:not(:disabled) {
+
+        background: #991b1b !important;
+        background-color: #991b1b !important;
+
+    }
+
+}
+
+/* Slightly duller / softer amber */
+
+html.dark-mode #mobilePauseBtn,
+html.dark-mode #pauseBtn {
+    background: #d89000 !important;
+    background-color: #d89000 !important;
+    background-image: none !important;
+
+    color: #ffffff !important;
+    border-color: #d89000 !important;
+
+    box-shadow:
+        0 3px 10px rgba(216, 144, 0, 0.16) !important;
+}
+
+html.dark-mode #mobilePauseBtn:hover,
+html.dark-mode #pauseBtn:hover {
+    background: #b97800 !important;
+    background-color: #b97800 !important;
+}
+
+html.dark-mode #mobilePauseBtn:active,
+html.dark-mode #pauseBtn:active {
+    background: #996400 !important;
+    background-color: #996400 !important;
+}

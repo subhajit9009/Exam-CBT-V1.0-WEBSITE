@@ -1253,9 +1253,11 @@ async function saveAttemptBookmark(
         !authData.user
     ) {
 
-        alert(
-            "Please login again."
-        );
+        showPopup(
+    "warning",
+    "Login Required",
+    "Please login again to continue."
+);
 
         return;
 
@@ -1302,9 +1304,11 @@ async function saveAttemptBookmark(
             checkError
         );
 
-        alert(
-            "Unable to check bookmark."
-        );
+        showPopup(
+    "error",
+    "Bookmark Error",
+    "Unable to check the bookmark. Please try again."
+);
 
         return;
 
@@ -1318,16 +1322,21 @@ async function saveAttemptBookmark(
     if (existing) {
 
         const confirmed =
-            confirm(
-                "Remove this test from Bookmarks?"
-            );
-
-
-        if (!confirmed) {
-
-            return;
-
+    await showConfirm(
+        "Remove Bookmark?",
+        "Are you sure you want to remove this test from your bookmarks?",
+        null,
+        {
+            cancelText: "Cancel",
+            confirmText: "Remove"
         }
+    );
+
+if (!confirmed) {
+
+    return;
+
+}
 
 
         const {
@@ -1359,9 +1368,11 @@ async function saveAttemptBookmark(
                 error
             );
 
-            alert(
-                "Unable to remove bookmark."
-            );
+            showPopup(
+    "error",
+    "Remove Failed",
+    "Unable to remove this test from your bookmarks."
+);
 
             return;
 
@@ -1426,9 +1437,11 @@ async function saveAttemptBookmark(
         }
 
 
-        alert(
-            "Unable to save bookmark."
-        );
+        showPopup(
+    "error",
+    "Save Failed",
+    "Unable to save this test to your bookmarks."
+);
 
         return;
 

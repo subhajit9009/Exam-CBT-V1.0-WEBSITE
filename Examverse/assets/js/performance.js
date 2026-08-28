@@ -1500,31 +1500,41 @@ function renderDistribution() {
 
 
     const total =
-        filteredAttempts.length;
+    filteredAttempts.length;
 
 
-    setText(
-        "passedTests",
-        passed
-    );
+/* ==========================================
+   DISPLAY COUNTS
+========================================== */
+
+setText(
+    "passedTests",
+    passed
+);
+
+setText(
+    "failedTests",
+    failed
+);
 
 
-    setText(
-        "failedTests",
-        failed
-    );
+/*
+   Every attempt loaded on this page already
+   has status = "Completed".
 
+   Therefore this is the total number
+   of completed tests.
+*/
 
-    setText(
-        "otherTests",
-        other
-    );
+setText(
+    "otherTests",
+    total
+);
 
-
-    setText(
-        "resultTotal",
-        total
-    );
+setText(
+    "resultTotal",
+    total
+);
 
 
     const donut =

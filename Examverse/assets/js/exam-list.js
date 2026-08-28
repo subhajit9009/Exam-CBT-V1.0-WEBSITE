@@ -645,9 +645,11 @@ async function shareExam(examId) {
             shareUrl.href
         );
 
-        alert(
-            "Exam link copied successfully!"
-        );
+        showPopup(
+    "success",
+    "Link Copied",
+    "Exam link copied successfully!"
+);
 
     } catch (error) {
 
@@ -770,9 +772,11 @@ async function toggleExamBookmark(
             authError
         );
 
-        alert(
-            "Please login again."
-        );
+        showPopup(
+    "warning",
+    "Login Required",
+    "Please login again."
+);
 
         return;
 
@@ -823,9 +827,11 @@ async function toggleExamBookmark(
                 checkError
             );
 
-            alert(
-                "Unable to check saved exam."
-            );
+            showPopup(
+    "error",
+    "Bookmark Error",
+    "Unable to check saved exam."
+);
 
             return;
 
@@ -871,9 +877,11 @@ async function toggleExamBookmark(
                     deleteError
                 );
 
-                alert(
-                    "Unable to remove bookmark."
-                );
+                showPopup(
+    "error",
+    "Bookmark Error",
+    "Unable to remove bookmark."
+);
 
                 return;
 
@@ -946,10 +954,12 @@ async function toggleExamBookmark(
                 insertError
             );
 
-            alert(
-                "Unable to save exam.\n\n" +
-                insertError.message
-            );
+            showPopup(
+    "error",
+    "Bookmark Error",
+    "Unable to save exam.\n\n" +
+    insertError.message
+);
 
             return;
 
@@ -996,13 +1006,15 @@ async function toggleExamBookmark(
         error
     );
 
-    alert(
-        "Bookmark operation failed.\n\n" +
-        (
-            error?.message ||
-            String(error)
-        )
-    );
+    showPopup(
+    "error",
+    "Bookmark Error",
+    "Bookmark operation failed.\n\n" +
+    (
+        error?.message ||
+        String(error)
+    )
+);
 
 }
 

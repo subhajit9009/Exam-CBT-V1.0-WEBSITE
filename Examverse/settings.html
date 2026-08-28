@@ -388,6 +388,44 @@
 
     </div>
 
+    <!-- ==========================================
+     CBT FULL SCREEN
+========================================== -->
+
+<div class="setting-row">
+
+    <div class="setting-info">
+
+        <h3>
+            CBT Full Screen
+        </h3>
+
+        <p>
+            Automatically enter full screen when
+            starting an examination.
+        </p>
+
+        <small class="setting-note">
+            Off by default. Your browser may ask
+            for permission to enter full screen.
+        </small>
+
+    </div>
+
+
+    <label class="switch">
+
+        <input
+            type="checkbox"
+            id="cbtFullscreenToggle"
+        >
+
+        <span class="slider"></span>
+
+    </label>
+
+</div>
+
 </section>
 
 
@@ -432,8 +470,12 @@
                 </h3>
 
                 <p>
-                    Update your name and profile information.
-                </p>
+    Update your name and profile information.
+    <br>
+    <small class="one-time-note">
+        You can change your name only once.
+    </small>
+</p>
 
             </div>
 
@@ -501,6 +543,68 @@
 
 
     </section>
+
+    <!-- =================================================
+     SUPPORT
+================================================== -->
+
+<section class="settings-card">
+
+    <div class="settings-card-header">
+
+        <div class="section-icon cyan">
+
+            <i class="fa-solid fa-headset"></i>
+
+        </div>
+
+
+        <div>
+
+            <h2>
+                Support
+            </h2>
+
+            <p>
+                Contact ExamVerse and send your feedback.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="setting-row">
+
+        <div class="setting-info">
+
+            <h3>
+                Contact Us
+            </h3>
+
+            <p>
+                Send feedback, report a problem,
+                or share your suggestions.
+            </p>
+
+        </div>
+
+
+        <button
+            class="action-btn"
+            id="contactUsBtn"
+            type="button"
+        >
+
+            <i class="fa-solid fa-envelope"></i>
+
+            Contact Us
+
+        </button>
+
+    </div>
+
+</section>
 
 
 
@@ -738,6 +842,10 @@
                     Edit Profile
                 </h2>
 
+                <small class="one-time-note profile-one-time-note">
+    Name can be changed only once.
+</small>
+
             </div>
 
 
@@ -936,6 +1044,140 @@
 
         </div>
 
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     CONTACT US MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="contactModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    SUPPORT
+                </span>
+
+                <h2>
+                    Contact Us
+                </h2>
+
+            </div>
+
+
+            <button
+                class="modal-close"
+                id="closeContactModal"
+                type="button"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Your Name
+            </label>
+
+            <input
+                type="text"
+                id="contactName"
+                placeholder="Enter your name"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Your Email
+            </label>
+
+            <input
+                type="email"
+                id="contactEmail"
+                placeholder="Enter your email"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Subject
+            </label>
+
+            <input
+                type="text"
+                id="contactSubject"
+                placeholder="Feedback / Problem / Suggestion"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Message
+            </label>
+
+            <textarea
+                id="contactMessage"
+                rows="6"
+                placeholder="Write your feedback or message..."
+            ></textarea>
+
+        </div>
+
+
+        <div
+            class="modal-message"
+            id="contactFormMessage"
+        ></div>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-btn"
+                id="cancelContactBtn"
+                type="button"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                class="primary-btn"
+                id="sendContactBtn"
+                type="button"
+            >
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+                Send Feedback
+
+            </button>
+
+        </div>
 
     </div>
 

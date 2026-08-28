@@ -3,6 +3,31 @@
    Created by Subhajit Paul
 ========================================== */
 
+/* ==========================================
+   CBT FULL SCREEN
+========================================== */
+
+async function exitCBTFullscreen() {
+
+    if (document.fullscreenElement) {
+
+        try {
+
+            await document.exitFullscreen();
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to exit fullscreen:",
+                error
+            );
+
+        }
+
+    }
+
+}
+
 let selectedExam = null;
 let answerSavePromise = null;
 let questions = [];
@@ -60,6 +85,180 @@ let pauseOperationInProgress = false;
 
 let sectionTimerInterval = null;
 
+/* =========================================================
+   EXAM BACK BUTTON PROTECTION
+   ========================================================= */
+
+let examLeaveConfirmed = false;
+let examBackGuardActive = false;
+
+
+/* =========================================================
+   ACTIVATE BACK BUTTON GUARD
+   ========================================================= */
+
+function activateExamBackGuard() {
+
+    if (examBackGuardActive) {
+        return;
+    }
+
+    examBackGuardActive = true;
+
+    history.pushState(
+        {
+            examVerseExamGuard: true
+        },
+        "",
+        window.location.href
+    );
+}
+
+
+/* =========================================================
+   BROWSER BACK BUTTON
+   ========================================================= */
+
+window.addEventListener(
+    "popstate",
+    async function () {
+
+        /*
+         * If the user has already confirmed
+         * leaving, allow the browser to go back.
+         */
+
+        if (examLeaveConfirmed) {
+            return;
+        }
+
+
+        /*
+         * Keep the user on the CBT page while
+         * the confirmation popup is displayed.
+         */
+
+        history.pushState(
+            {
+                examVerseExamGuard: true
+            },
+            "",
+            window.location.href
+        );
+
+
+        /*
+         * Ask the user.
+         */
+
+        const confirmed =
+            await showConfirm(
+                "Leave Examination?",
+                "Are you sure you want to leave this examination?\n\nIf you leave now, your progress will not be saved and this examination cannot be restored.",
+                null,
+                {
+                    cancelText: "Cancel",
+                    confirmText: "Leave Exam"
+                }
+            );
+
+
+        /*
+         * CANCEL
+         */
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        /*
+         * LEAVE EXAM
+         */
+
+        examLeaveConfirmed = true;
+
+
+        /*
+         * Stop normal timer.
+         */
+
+        if (timerInterval) {
+
+            clearInterval(
+                timerInterval
+            );
+
+            timerInterval = null;
+        }
+
+
+        /*
+         * Stop sectional timer.
+         */
+
+        if (sectionTimerInterval) {
+
+            clearInterval(
+                sectionTimerInterval
+            );
+
+            sectionTimerInterval = null;
+        }
+
+
+        /*
+         * Remove the active exam session.
+         */
+
+        sessionStorage.removeItem(
+            "attemptId"
+        );
+
+        sessionStorage.removeItem(
+            "examStartTime"
+        );
+
+        sessionStorage.removeItem(
+            "attemptStartedFresh"
+        );
+
+        sessionStorage.removeItem(
+            "currentQuestionIndex"
+        );
+
+        sessionStorage.removeItem(
+            "currentSectionIndex"
+        );
+
+        sessionStorage.removeItem(
+            "examActiveStartedAt"
+        );
+
+        sessionStorage.removeItem(
+            "resumeRemainingTime"
+        );
+
+
+        /*
+         * Clear pending local review saves.
+         */
+
+        pendingReviewSaves = [];
+
+        localStorage.removeItem(
+            "examVersePendingReviews"
+        );
+
+
+        /*
+         * Now actually leave the CBT page.
+         */
+
+        window.location.replace("exam-list.html");
+
+    }
+);
 
 // ==========================
 // Page Load
@@ -90,9 +289,11 @@ async function initExam() {
         !authData.user
     ) {
 
-        alert(
-            "Please login to access the examination."
-        );
+        showPopup(
+    "warning",
+    "Login Required",
+    "Please login to access the examination."
+);
 
         window.location.replace(
             "login.html"
@@ -110,7 +311,11 @@ const selectedExamId =
 
 if (!selectedExamId) {
 
-    alert("No exam selected.");
+    showPopup(
+    "warning",
+    "No Exam Selected",
+    "Please select an examination before continuing."
+);
 
     window.location.href =
         "exam-list.html";
@@ -144,9 +349,11 @@ if (examError || !examData) {
         examError
     );
 
-    alert(
-        "Unable to load the selected examination."
-    );
+    showPopup(
+    "error",
+    "Unable to Load Exam",
+    "Unable to load the selected examination. Please try again."
+);
 
     window.location.href =
         "exam-list.html";
@@ -648,9 +855,11 @@ if (
             resumeError
         );
 
-        alert(
-            "Unable to resume this examination."
-        );
+        showPopup(
+    "error",
+    "Unable to Resume",
+    "Unable to resume this examination. Please try again."
+);
 
         return;
     }
@@ -723,9 +932,11 @@ if (
     // RETURN TO RESULT PAGE
     // ======================================
 
-    window.location.replace(
-        "result.html"
-    );
+    await exitCBTFullscreen();
+
+window.location.replace(
+    "result.html"
+);
 
     return;
 
@@ -734,7 +945,11 @@ if (
 
     if (!selectedExam) {
 
-        alert("No exam selected.");
+        showPopup(
+    "warning",
+    "No Exam Selected",
+    "Please select an examination before continuing."
+);
 
         window.location.href =
             "exam-list.html";
@@ -1089,6 +1304,8 @@ document.body.classList.add(
 
 }
 
+activateExamBackGuard();
+
 // ==========================================
 // RETRY PENDING REVIEW SAVES
 // ==========================================
@@ -1167,9 +1384,11 @@ if (pauseBtn) {
                     "pauseExam() function is not available."
                 );
 
-                alert(
-                    "Pause system is not loaded. Please refresh the page."
-                );
+                showPopup(
+    "error",
+    "Pause System Unavailable",
+    "Pause system is not loaded. Please refresh the page."
+);
 
             }
 
@@ -1874,7 +2093,11 @@ async function loadQuestions() {
 
         console.error(error);
 
-        alert(error.message);
+        showPopup(
+    "error",
+    "Unable to Load Questions",
+    error.message
+);
 
         return;
 
@@ -4038,9 +4261,11 @@ window.pauseExam = async function pauseExam() {
 
     if (!attemptId) {
 
-        alert(
-            "Exam attempt not found."
-        );
+        showPopup(
+    "error",
+    "Exam Attempt Not Found",
+    "The examination attempt could not be found."
+);
 
         return;
     }
@@ -4051,12 +4276,15 @@ window.pauseExam = async function pauseExam() {
     // --------------------------------------
 
     const confirmed =
-        window.confirm(
-            "PAUSE EXAMINATION?\n\n" +
-            "Your answers and progress will be saved.\n\n" +
-            "The examination timer will stop.\n\n" +
-            "You can resume this examination later."
-        );
+    await showConfirm(
+        "Pause Examination?",
+        "Your answers and progress will be saved.\n\nThe examination timer will stop.\n\nYou can resume this examination later.",
+        null,
+        {
+            cancelText: "Continue Exam",
+            confirmText: "Pause Exam"
+        }
+    );
 
 
     if (!confirmed) {
@@ -4342,10 +4570,11 @@ window.pauseExam = async function pauseExam() {
         // SUCCESS
         // ==================================
 
-        alert(
-            "Your examination has been paused successfully.\n\n" +
-            "Your progress has been saved."
-        );
+        showPopup(
+    "success",
+    "Examination Paused",
+    "Your examination has been paused successfully.\n\nYour progress has been saved."
+);
 
 
         window.location.replace(
@@ -4361,10 +4590,11 @@ window.pauseExam = async function pauseExam() {
         );
 
 
-        alert(
-            "Unable to pause the examination.\n\n" +
-            "Please try again."
-        );
+        showPopup(
+    "error",
+    "Unable to Pause",
+    "Unable to pause the examination.\n\nPlease try again."
+);
 
 
         if (pauseBtn) {
@@ -4439,7 +4669,15 @@ async function submitExam(autoSubmit = false) {
 
 
         const confirmed =
-            window.confirm(message);
+    await showConfirm(
+        "Submit Examination?",
+        message,
+        null,
+        {
+            cancelText: "Continue Exam",
+            confirmText: "Submit Exam"
+        }
+    );
 
 
         if (!confirmed) {
@@ -4477,9 +4715,11 @@ async function submitExam(autoSubmit = false) {
     }
 
 
-    window.location.replace(
-        "result.html"
-    );
+    await exitCBTFullscreen();
+
+window.location.replace(
+    "result.html"
+);
 
 }
 
@@ -4609,7 +4849,15 @@ async function submitCurrentSection(autoSubmit = false) {
 
 
         const confirmed =
-            window.confirm(message);
+    await showConfirm(
+        "Submit Examination?",
+        message,
+        null,
+        {
+            cancelText: "Continue Exam",
+            confirmText: "Submit Exam"
+        }
+    );
 
 
         if (!confirmed) {
@@ -4669,9 +4917,11 @@ async function submitCurrentSection(autoSubmit = false) {
         }
 
 
-        window.location.replace(
-            "result.html"
-        );
+        await exitCBTFullscreen();
+
+window.location.replace(
+    "result.html"
+);
 
         return;
     }
@@ -4914,9 +5164,11 @@ async function finalizeExamAttempt(
 
         if (!attemptId) {
 
-            alert(
-                "Exam attempt not found."
-            );
+            showPopup(
+    "error",
+    "Exam Attempt Not Found",
+    "The examination attempt could not be found."
+);
 
             return false;
 
@@ -4943,9 +5195,11 @@ async function finalizeExamAttempt(
                 userError
             );
 
-            alert(
-                "User session expired. Please login again."
-            );
+            showPopup(
+    "warning",
+    "Session Expired",
+    "Your user session has expired. Please login again."
+);
 
             return false;
 
@@ -4980,9 +5234,11 @@ async function finalizeExamAttempt(
                 questionError
             );
 
-            alert(
-                "Unable to load question answers."
-            );
+            showPopup(
+    "error",
+    "Unable to Load Answers",
+    "Unable to load question answers."
+);
 
             return false;
 
@@ -5017,9 +5273,11 @@ async function finalizeExamAttempt(
                 answerError
             );
 
-            alert(
-                "Unable to load your answers."
-            );
+            showPopup(
+    "error",
+    "Unable to Load Answers",
+    "Unable to load your answers."
+);
 
             return false;
 
@@ -5399,9 +5657,11 @@ timeTaken =
                 updateError
             );
 
-            alert(
-                "Unable to save exam result."
-            );
+            showPopup(
+    "error",
+    "Unable to Save Result",
+    "Unable to save the examination result."
+);
 
             return false;
 
@@ -5442,9 +5702,11 @@ timeTaken =
         );
 
 
-        alert(
-            "Something went wrong while submitting the exam."
-        );
+        showPopup(
+    "error",
+    "Submission Failed",
+    "Something went wrong while submitting the exam."
+);
 
 
         return false;

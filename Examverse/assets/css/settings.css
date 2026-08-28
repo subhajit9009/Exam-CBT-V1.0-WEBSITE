@@ -6257,3 +6257,61 @@ html.dark-mode .delete-password-group input:focus {
     }
 
 }
+
+/* =========================================================
+   SETTINGS — SMALL INFORMATION NOTES
+========================================================= */
+
+.one-time-note {
+
+    display: inline-block;
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    color: #d97706;
+
+}
+
+
+.profile-one-time-note {
+
+    display: block;
+
+    margin-top: 5px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.setting-note {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    color: #6b7280;
+
+}
+
+
+html.dark-mode .one-time-note {
+
+    color: #f0b44d;
+
+}
+
+
+html.dark-mode .setting-note {
+
+    color: #94a3b8;
+
+}

@@ -50,9 +50,11 @@ async function loadExam() {
         !authData.user
     ) {
 
-        alert(
-            "Please login to access this examination."
-        );
+        showPopup(
+    "warning",
+    "Login Required",
+    "Please login to access this examination."
+);
 
 
         // Remember the shared exam URL
@@ -116,9 +118,11 @@ if (sharedExamId) {
 
     if (!examId) {
 
-        alert(
-            "No Exam Selected."
-        );
+        showPopup(
+    "warning",
+    "No Exam Selected",
+    "Please select an examination before continuing."
+);
 
 
         window.location.replace(
@@ -159,9 +163,11 @@ if (sharedExamId) {
             );
 
 
-            alert(
-                "Exam not found."
-            );
+            showPopup(
+    "error",
+    "Exam Not Found",
+    "The requested examination could not be found."
+);
 
 
             window.location.replace(
@@ -524,9 +530,11 @@ else if (completedAttempt) {
         );
 
 
-        alert(
-            "Unable to load examination details."
-        );
+        showPopup(
+    "error",
+    "Unable to Load Exam",
+    "Unable to load the examination details. Please try again."
+);
 
     }
 
@@ -648,11 +656,15 @@ startExamBtn.addEventListener(
 
 async function startExam() {
 
+    
+
     if (!selectedExam) {
 
-        alert(
-            "Examination details are still loading."
-        );
+        showPopup(
+    "warning",
+    "Please Wait",
+    "Examination details are still loading. Please wait a moment and try again."
+);
 
         return;
 
@@ -714,9 +726,11 @@ if (pausedAttempt) {
             !data.user
         ) {
 
-            alert(
-                "Please login again."
-            );
+            showPopup(
+    "warning",
+    "Login Required",
+    "Your login session has expired. Please login again."
+);
 
 
             window.location.replace(
@@ -773,10 +787,11 @@ if (pausedAttempt) {
             );
 
 
-            alert(
-                error.message
-            );
-
+            showPopup(
+    "error",
+    "Unable to Start Exam",
+    error.message
+);
 
             startExamBtn.disabled =
                 false;
@@ -895,9 +910,11 @@ sessionStorage.setItem(
         );
 
 
-        alert(
-            "Unable to start the examination."
-        );
+        showPopup(
+    "error",
+    "Unable to Start Exam",
+    "Unable to start the examination. Please try again."
+);
 
 
         startExamBtn.disabled =
