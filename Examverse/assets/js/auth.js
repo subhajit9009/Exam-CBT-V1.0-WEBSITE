@@ -99,6 +99,24 @@ async function registerUser(e) {
 
     e.preventDefault();
 
+        // ==========================================
+    // reCAPTCHA CHECK
+    // ==========================================
+
+    if (
+        typeof grecaptcha === "undefined" ||
+        grecaptcha.getResponse() === ""
+    ) {
+
+        showPopup(
+            "warning",
+            "Verification Required",
+            "Please complete the reCAPTCHA verification before registering."
+        );
+
+        return;
+    }
+
 
     /* ======================================
        GET FORM VALUES

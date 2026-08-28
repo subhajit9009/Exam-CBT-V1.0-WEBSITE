@@ -8,6 +8,24 @@
     const SITE_KEY =
         "6Le9L50tAAAAAHV0kR_kRycTmPYIJVViX4fgJwAy";
 
+            /* =========================================================
+       TEMPORARY LOCALHOST DEVELOPMENT BYPASS
+
+       CAPTCHA is required everywhere except:
+       localhost
+       127.0.0.1
+
+       REMOVE THIS BLOCK BEFORE PRODUCTION.
+    ========================================================= */
+
+    const isLocalDevelopment =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1";
+
+
+    window.examVerseCaptchaRequired =
+        !isLocalDevelopment;
+
 
     let captchaRendered = false;
 
@@ -100,17 +118,17 @@
 
         try {
 
-            grecaptcha.render(
-                container,
-                {
-                    sitekey:
-                        SITE_KEY,
+            const widgetId =
+    grecaptcha.render(
+        container,
+        {
+            sitekey: SITE_KEY,
+            size: captchaSize
+        }
+    );
 
-                    size:
-                        captchaSize
-                }
-            );
-
+window.examVerseCaptchaId =
+    widgetId;
 
             captchaRendered =
                 true;

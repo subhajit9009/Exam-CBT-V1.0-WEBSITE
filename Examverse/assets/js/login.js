@@ -436,6 +436,26 @@ async function loginUser(e) {
 
     e.preventDefault();
 
+        // ==========================================
+    // reCAPTCHA CHECK
+    // ==========================================
+
+        if (
+        window.examVerseCaptchaRequired !== false &&
+        (
+            typeof grecaptcha === "undefined" ||
+            grecaptcha.getResponse() === ""
+        )
+    ) {
+
+        showPopup(
+            "warning",
+            "Verification Required",
+            "Please complete the reCAPTCHA verification before logging in."
+        );
+
+        return;
+    }
         /* ==========================================
        SHOW LOGIN PROCESSING SCREEN
     ========================================== */

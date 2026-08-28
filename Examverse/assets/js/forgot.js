@@ -4,6 +4,24 @@ form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
+        // ==========================================
+    // reCAPTCHA CHECK
+    // ==========================================
+
+    if (
+        typeof grecaptcha === "undefined" ||
+        grecaptcha.getResponse() === ""
+    ) {
+
+        showPopup(
+            "warning",
+            "Verification Required",
+            "Please complete the reCAPTCHA verification before recovering your account."
+        );
+
+        return;
+    }
+
     const phone = document.getElementById("phone").value.trim();
 
     // Find profile by phone
@@ -17,7 +35,11 @@ form.addEventListener("submit", async function (e) {
 
     if (error || !profile) {
 
-        alert("Phone number not found.");
+        showPopup(
+    "error",
+    "Phone Number Not Found",
+    "No ExamVerse account was found with this phone number."
+);
 
         return;
 
@@ -41,12 +63,20 @@ form.addEventListener("submit", async function (e) {
 
     if (resetError) {
 
-        alert(resetError.message);
+        showPopup(
+    "error",
+    "Password Reset Failed",
+    resetError.message
+);
 
         return;
 
     }
 
-    alert("Password reset link has been sent to your email.");
+    showPopup(
+    "success",
+    "Reset Link Sent",
+    "A password reset link has been sent to your registered email address."
+);
 
 });
