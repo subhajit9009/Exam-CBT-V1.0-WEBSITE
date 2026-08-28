@@ -1,6 +1,6 @@
 /* =========================================================
    ExamVerse Google reCAPTCHA v2
-   Responsive normal / compact renderer
+   Reliable Universal Renderer
 ========================================================= */
 
 (function () {
@@ -9,29 +9,52 @@
         "6Le9L50tAAAAAHV0kR_kRycTmPYIJVViX4fgJwAy";
 
 
+    let captchaRendered = false;
+
+
+    function getCaptchaContainer() {
+
+        return (
+            document.getElementById(
+                "registerCaptcha"
+            ) ||
+            document.getElementById(
+                "loginCaptcha"
+            ) ||
+            document.getElementById(
+                "forgotCaptcha"
+            )
+        );
+
+    }
+
+
     function renderCaptcha() {
 
         const container =
-            document.getElementById(
-                "registerCaptcha"
-            );
+            getCaptchaContainer();
+
 
         if (!container) {
             return;
         }
 
+
         /*
-            Wait until Google's API is ready.
+            Google API is not ready yet.
+            Try again shortly.
         */
 
         if (
             typeof grecaptcha ===
-            "undefined"
+            "undefined" ||
+            typeof grecaptcha.render !==
+            "function"
         ) {
 
             setTimeout(
                 renderCaptcha,
-                200
+                250
             );
 
             return;
@@ -40,106 +63,127 @@
 
 
         /*
-            Prevent rendering twice.
+            Prevent duplicate rendering.
         */
 
-        if (
-            container.dataset.rendered ===
-            "true"
-        ) {
-
+        if (captchaRendered) {
             return;
-
         }
 
 
         /*
-            Check the actual available width.
+            Determine available width.
         */
 
-        const width =
-            container.parentElement
-                ? container.parentElement
-                    .getBoundingClientRect()
-                    .width
+        const parent =
+            container.parentElement;
+
+
+        const availableWidth =
+            parent
+                ? parent.getBoundingClientRect().width
                 : window.innerWidth;
 
 
         /*
-            Google officially supports:
-            
+            Google-supported sizes:
+
             normal  = 304px
             compact = 164px
-
-            Use compact when the
-            available area is too narrow.
         */
 
-        const size =
-            width < 304
+        const captchaSize =
+            availableWidth < 304
                 ? "compact"
                 : "normal";
 
 
-        grecaptcha.render(
-            container,
-            {
-                sitekey: SITE_KEY,
-                size: size
-            }
-        );
+        try {
+
+            grecaptcha.render(
+                container,
+                {
+                    sitekey:
+                        SITE_KEY,
+
+                    size:
+                        captchaSize
+                }
+            );
 
 
-        container.dataset.rendered =
-            "true";
+            captchaRendered =
+                true;
+
+
+            container.dataset.rendered =
+                "true";
+
+
+        }
+        catch (error) {
+
+            console.error(
+                "ExamVerse CAPTCHA render error:",
+                error
+            );
+
+            /*
+                If Google wasn't ready
+                completely, try again.
+            */
+
+            setTimeout(
+                renderCaptcha,
+                500
+            );
+
+        }
 
     }
 
 
     /*
-        Wait for page + Google.
-    */
+        Wait until the complete page
+        has loaded.
 
-    if (
-        document.readyState ===
-        "loading"
-    ) {
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            renderCaptcha
-        );
-
-    }
-    else {
-
-        renderCaptcha();
-
-    }
-
-
-    /*
-        Re-evaluate after orientation
-        changes / resizing.
-
-        We don't re-render the existing
-        Google widget because Google
-        does not support changing its
-        size after rendering.
+        This is more reliable than
+        depending only on DOMContentLoaded.
     */
 
     window.addEventListener(
-        "orientationchange",
+        "load",
         function () {
 
-            /*
-                Page reload is intentionally
-                avoided here.
-
-                The widget remains stable.
-            */
+            renderCaptcha();
 
         }
     );
+
+
+    /*
+        Backup attempt.
+
+        Useful when Google's script
+        finishes after the page load.
+    */
+
+    setTimeout(
+        renderCaptcha,
+        500
+    );
+
+
+    setTimeout(
+        renderCaptcha,
+        1500
+    );
+
+
+    setTimeout(
+        renderCaptcha,
+        3000
+    );
+
 
 })();
