@@ -190,9 +190,11 @@ async function registerUser(e) {
 
     if (firstName.length < 2) {
 
-        alert(
-            "First name must contain at least 2 characters."
-        );
+        showPopup(
+    "warning",
+    "Invalid First Name",
+    "First name must contain at least 2 characters."
+);
 
         return;
 
@@ -201,9 +203,11 @@ async function registerUser(e) {
 
     if (lastName.length < 2) {
 
-        alert(
-            "Last name must contain at least 2 characters."
-        );
+        showPopup(
+    "warning",
+    "Invalid Last Name",
+    "Last name must contain at least 2 characters."
+);
 
         return;
 
@@ -216,9 +220,11 @@ async function registerUser(e) {
         age > 80
     ) {
 
-        alert(
-            "Enter a valid age."
-        );
+        showPopup(
+    "warning",
+    "Invalid Age",
+    "Please enter a valid age between 10 and 80."
+);
 
         return;
 
@@ -229,9 +235,11 @@ async function registerUser(e) {
         !/^[6-9]\d{9}$/.test(phone)
     ) {
 
-        alert(
-            "Enter a valid Indian mobile number."
-        );
+        showPopup(
+    "warning",
+    "Invalid Phone Number",
+    "Please enter a valid 10-digit Indian mobile number."
+);
 
         return;
 
@@ -244,9 +252,11 @@ async function registerUser(e) {
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
 
-        alert(
-            "Enter a valid Email Address."
-        );
+        showPopup(
+    "warning",
+    "Invalid Email Address",
+    "Please enter a valid email address."
+);
 
         return;
 
@@ -263,21 +273,16 @@ async function registerUser(e) {
         !passwordPattern.test(password)
     ) {
 
-        alert(
-
-            "Password must contain\n\n" +
-
-            "• Minimum 8 characters\n" +
-
-            "• One uppercase\n" +
-
-            "• One lowercase\n" +
-
-            "• One number\n" +
-
-            "• One special character"
-
-        );
+        showPopup(
+    "warning",
+    "Weak Password",
+    "Your password must contain:\n\n" +
+    "• Minimum 8 characters\n" +
+    "• One uppercase letter\n" +
+    "• One lowercase letter\n" +
+    "• One number\n" +
+    "• One special character"
+);
 
         return;
 
@@ -288,9 +293,11 @@ async function registerUser(e) {
         password !== confirmPassword
     ) {
 
-        alert(
-            "Passwords do not match."
-        );
+        showPopup(
+    "warning",
+    "Passwords Don't Match",
+    "The passwords you entered do not match."
+);
 
         return;
 
@@ -299,9 +306,11 @@ async function registerUser(e) {
 
     if (gender === "") {
 
-        alert(
-            "Select Gender."
-        );
+        showPopup(
+    "warning",
+    "Gender Required",
+    "Please select your gender."
+);
 
         return;
 
@@ -314,9 +323,11 @@ async function registerUser(e) {
         exam3 === ""
     ) {
 
-        alert(
-            "Select all exam preferences."
-        );
+        showPopup(
+    "warning",
+    "Exam Preferences Required",
+    "Please select all three exam preferences."
+);
 
         return;
 
@@ -329,9 +340,11 @@ async function registerUser(e) {
         exam2 === exam3
     ) {
 
-        alert(
-            "Exam preferences must be different."
-        );
+        showPopup(
+    "warning",
+    "Duplicate Exam Preference",
+    "Your three exam preferences must be different."
+);
 
         return;
 
@@ -360,9 +373,11 @@ async function registerUser(e) {
             phoneCheckError
         );
 
-        alert(
-            phoneCheckError.message
-        );
+        showPopup(
+    "error",
+    "Unable to Check Phone",
+    phoneCheckError.message
+);
 
         return;
 
@@ -371,9 +386,11 @@ async function registerUser(e) {
 
     if (phoneExists) {
 
-        alert(
-            "Phone Number already registered."
-        );
+        showPopup(
+    "error",
+    "Phone Already Registered",
+    "This phone number is already registered with ExamVerse."
+);
 
         return;
 
@@ -424,9 +441,11 @@ async function registerUser(e) {
 
         hideRegisterProcessing();
 
-        alert(
-            authError.message
-        );
+        showPopup(
+    "error",
+    "Registration Failed",
+    authError.message
+);
 
         return;
 
@@ -441,9 +460,11 @@ async function registerUser(e) {
 
         hideRegisterProcessing();
 
-        alert(
-            "Registration could not be completed. Please try again."
-        );
+        showPopup(
+    "error",
+    "Registration Incomplete",
+    "Registration could not be completed. Please try again."
+);
 
         return;
 
@@ -505,44 +526,39 @@ async function registerUser(e) {
 
         hideRegisterProcessing();
 
-        alert(
-            profileError.message
-        );
+        showPopup(
+    "error",
+    "Profile Creation Failed",
+    profileError.message
+);
 
         return;
 
     }
 
 
-    /* ======================================
-       REGISTRATION SUCCESS
+    /* ==========================================
+   REGISTRATION SUCCESS
+========================================== */
 
-       IMPORTANT:
-       Keep animation running until
-       registration is completely finished.
-    ====================================== */
+form.reset();
 
-    form.reset();
+hideRegisterProcessing();
 
+showPopup(
+    "success",
+    "Registration Successful! 🎉",
+    "A verification email has been sent.\n\n" +
+    "Please verify your email before logging in.",
+    {
+        buttonText: "Continue",
+        onClose: function () {
 
-    /* Stop animation immediately before
-       showing the verification popup */
+            window.location.href =
+                "login.html";
 
-    hideRegisterProcessing();
-
-
-    alert(
-
-        "Registration Successful!\n\n" +
-
-        "A verification email has been sent.\n\n" +
-
-        "Please verify your email before logging in."
-
-    );
-
-
-    window.location.href =
-        "login.html";
+        }
+    }
+);
 
 }
