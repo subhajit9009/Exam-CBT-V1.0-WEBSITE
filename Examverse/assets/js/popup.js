@@ -346,6 +346,16 @@
 
         clearState();
 
+        currentConfirmCallback =
+    typeof options.onConfirm === "function"
+        ? options.onConfirm
+        : null;
+
+currentCancelCallback =
+    typeof options.onClose === "function"
+        ? options.onClose
+        : null;
+
 
         const icon =
             document.getElementById(
@@ -525,29 +535,20 @@
 
         else {
 
-            newPrimaryButton.style.display =
-                "inline-flex";
+    newPrimaryButton.style.display =
+        "inline-flex";
 
 
-            newPrimaryButton.addEventListener(
-                "click",
-                function () {
+    newPrimaryButton.addEventListener(
+        "click",
+        function () {
 
-                    hidePopup();
-
-                    if (
-                        typeof options.onClose ===
-                        "function"
-                    ) {
-
-                        options.onClose();
-
-                    }
-
-                }
-            );
+            finishPopup(true);
 
         }
+    );
+
+}
 
 
         /* =================================================

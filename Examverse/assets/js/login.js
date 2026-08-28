@@ -909,14 +909,6 @@ if (deletionScheduledAt) {
 
     }
 
-
-    showPopup(
-    "success",
-    "Welcome Back! 👋",
-    "Welcome back, " + user.firstName + "!"
-);
-
-
     // ==========================
     // Check Admin
     // ==========================
@@ -958,62 +950,77 @@ if (deletionScheduledAt) {
 
 
     // ==========================
-    // REDIRECT AFTER LOGIN
-    // ==========================
+// REDIRECT AFTER LOGIN
+// ==========================
 
-    // Check whether login came
-    // from a shared examination link
+// Check whether login came
+// from a shared examination link
 
-    const examLoginReturnUrl =
-        sessionStorage.getItem(
-            "examLoginReturnUrl"
-        );
-
-
-    // ------------------------------------------
-    // Shared Exam Login
-    // ------------------------------------------
-
-    if (
-        examLoginReturnUrl
-    ) {
-
-        sessionStorage.removeItem(
-            "examLoginReturnUrl"
-        );
+const examLoginReturnUrl =
+    sessionStorage.getItem(
+        "examLoginReturnUrl"
+    );
 
 
-        window.location.href =
-            examLoginReturnUrl;
+// ==========================
+// SHOW WELCOME BACK POPUP
+// ==========================
+
+showPopup(
+    "success",
+    "Welcome Back! 👋",
+    "Welcome back, " + user.firstName + "!",
+    {
+        buttonText: "Continue",
+
+        onConfirm: function () {
+
+            // ------------------------------------------
+            // Shared Exam Login
+            // ------------------------------------------
+
+            if (
+                examLoginReturnUrl
+            ) {
+
+                sessionStorage.removeItem(
+                    "examLoginReturnUrl"
+                );
+
+                window.location.href =
+                    examLoginReturnUrl;
+
+                return;
+            }
 
 
-        return;
+            // ------------------------------------------
+            // Admin Login
+            // ------------------------------------------
 
+            if (
+                admin
+            ) {
+
+                window.location.href =
+                    "admin-dashboard.html";
+
+                return;
+            }
+
+
+            // ------------------------------------------
+            // Normal User Login
+            // ------------------------------------------
+
+            window.location.href =
+                "dashboard.html";
+
+        }
     }
-
-
-    // ------------------------------------------
-    // Normal Login
-    // ------------------------------------------
-
-    if (
-        admin
-    ) {
-
-        window.location.href =
-            "admin-dashboard.html";
-
-    }
-
-    else {
-
-        window.location.href =
-            "dashboard.html";
-
-    }
+);
 
 }
-
 
 // =====================================
 // Remember User
