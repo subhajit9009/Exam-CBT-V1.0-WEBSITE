@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ExamVerse | Users</title>
+
+    <link
+        rel="stylesheet"
+        href="assets/css/admin-users.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="users-page">
+
+
+        <!-- ==============================
+             HEADER
+        =============================== -->
+
+        <header class="users-header">
+
+            <div>
+
+                <h1>
+                    <i class="fa-solid fa-users"></i>
+                    Users
+                </h1>
+
+                <p>
+                    Manage ExamVerse users and administrators
+                </p>
+
+            </div>
+
+
+            <button
+                id="refreshUsersBtn"
+                class="refresh-btn"
+                type="button"
+            >
+
+                <i class="fa-solid fa-rotate"></i>
+
+                Refresh
+
+            </button>
+
+        </header>
+
+
+        <!-- ==============================
+             SEARCH
+        =============================== -->
+
+        <section class="users-toolbar">
+
+            <div class="search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="search"
+                    id="userSearch"
+                    placeholder="Search by name, email or phone..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div
+                id="userCount"
+                class="user-count"
+            >
+                Loading users...
+            </div>
+
+        </section>
+
+
+        <!-- ==============================
+             USERS TABLE
+        =============================== -->
+
+        <section class="users-card">
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Name</th>
+
+                            <th>Status</th>
+
+                            <th>Email</th>
+
+                            <th>Phone</th>
+
+                            <th>Age</th>
+
+                            <th>Gender</th>
+
+                            <th>Account Created</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="usersTableBody">
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="loading-cell"
+                            >
+
+                                <i
+                                    class="fa-solid fa-spinner fa-spin"
+                                ></i>
+
+                                Loading users...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+
+    <!-- ==============================
+         USER DETAILS MODAL
+    =============================== -->
+
+    <div
+        id="userDetailsModal"
+        class="modal"
+    >
+
+        <div class="modal-box">
+
+            <button
+                id="closeUserModal"
+                class="modal-close"
+                type="button"
+                aria-label="Close"
+            >
+                &times;
+            </button>
+
+
+            <h2>
+                User Details
+            </h2>
+
+
+            <div
+                id="userDetailsContent"
+                class="user-details"
+            >
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- Supabase Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ExamVerse Supabase Configuration -->
+<script src="assets/js/supabase.js"></script>
+
+<!-- Admin Authentication -->
+<script src="assets/js/admin-auth.js"></script>
+
+<!-- Users Management -->
+<script src="assets/js/admin-users.js"></script>
+
+</body>
+
+</html>
