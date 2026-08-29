@@ -1611,6 +1611,11 @@ async function handleBookmarkActions(
             )
         );
 
+        sessionStorage.setItem(
+    "resultReturnPage",
+    window.location.href
+);
+
 
         window.location.href =
             "result.html";

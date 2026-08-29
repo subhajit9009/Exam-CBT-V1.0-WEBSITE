@@ -1066,7 +1066,10 @@ historyTable.addEventListener(
             )
         );
 
-
+        sessionStorage.setItem(
+    "resultReturnPage",
+    window.location.href
+);
         // ======================================
         // OPEN RESULT PAGE
         // ======================================

@@ -33,6 +33,8 @@ async function initializeSettings() {
 
     setupDeleteAccount();
 
+    setupContactUs();
+
     await loadAccount();
 
 }
@@ -724,6 +726,36 @@ function applyTheme(
 /* ==========================================
    CBT FULL SCREEN SETTING
 ========================================== */
+
+/* ==========================================
+   CBT FULL SCREEN SETTING
+========================================== */
+
+/*
+ * One-time migration:
+ * Make Full Screen ON for users who have
+ * never been migrated to the new default.
+ */
+
+const fullscreenMigration =
+    localStorage.getItem(
+        "examverse_cbt_fullscreen_v2"
+    );
+
+if (fullscreenMigration === null) {
+
+    localStorage.setItem(
+        "examverse_cbt_fullscreen",
+        "true"
+    );
+
+    localStorage.setItem(
+        "examverse_cbt_fullscreen_v2",
+        "done"
+    );
+
+}
+
 
 const fullscreenEnabled =
     localStorage.getItem(
@@ -2156,5 +2188,516 @@ async function checkDeletionStatus() {
             ". Logging in has restored access; contact support if this deletion was not intended.";
 
     }
+
+}
+
+/* =========================================================
+   CONTACT US / FEEDBACK
+========================================================= */
+
+function setupContactUs() {
+
+    const openButton =
+        document.getElementById(
+            "contactUsBtn"
+        );
+
+    const modal =
+        document.getElementById(
+            "contactModal"
+        );
+
+    const closeButton =
+        document.getElementById(
+            "closeContactModal"
+        );
+
+    const cancelButton =
+        document.getElementById(
+            "cancelContactBtn"
+        );
+
+    const sendButton =
+        document.getElementById(
+            "sendContactBtn"
+        );
+
+    const nameInput =
+        document.getElementById(
+            "contactName"
+        );
+
+    const emailInput =
+        document.getElementById(
+            "contactEmail"
+        );
+
+    const subjectInput =
+        document.getElementById(
+            "contactSubject"
+        );
+
+    const messageInput =
+        document.getElementById(
+            "contactMessage"
+        );
+
+    const attachmentInput =
+        document.getElementById(
+            "contactAttachment"
+        );
+
+    const formMessage =
+        document.getElementById(
+            "contactFormMessage"
+        );
+
+
+    /*
+     * ==========================================
+     * OPEN MODAL
+     * ==========================================
+     */
+
+    openButton?.addEventListener(
+        "click",
+        () => {
+
+            modal?.classList.add(
+                "show"
+            );
+
+
+            /*
+             * Automatically fill logged-in
+             * user's email.
+             */
+
+            if (
+                currentUser &&
+                emailInput
+            ) {
+
+                emailInput.value =
+                    currentUser.email || "";
+
+            }
+
+
+            /*
+             * Automatically fill user's name
+             * when available.
+             */
+
+            if (
+                currentUser &&
+                nameInput &&
+                !nameInput.value
+            ) {
+
+                const fullName =
+                    currentUser
+                        ?.user_metadata
+                        ?.full_name ||
+                    currentUser
+                        ?.user_metadata
+                        ?.name ||
+                    "";
+
+                nameInput.value =
+                    fullName;
+
+            }
+
+        }
+    );
+
+
+    /*
+     * ==========================================
+     * CLOSE MODAL
+     * ==========================================
+     */
+
+    function closeContactModal() {
+
+        modal?.classList.remove(
+            "show"
+        );
+
+        if (formMessage) {
+
+            formMessage.textContent =
+                "";
+
+        }
+
+    }
+
+
+    closeButton?.addEventListener(
+        "click",
+        closeContactModal
+    );
+
+
+    cancelButton?.addEventListener(
+        "click",
+        closeContactModal
+    );
+
+
+    /*
+     * Close when clicking outside modal.
+     */
+
+    modal?.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === modal
+            ) {
+
+                closeContactModal();
+
+            }
+
+        }
+    );
+
+
+    /*
+     * ==========================================
+     * SEND FEEDBACK
+     * ==========================================
+     */
+
+    sendButton?.addEventListener(
+        "click",
+        async () => {
+
+            const name =
+                nameInput?.value.trim() || "";
+
+            const email =
+                emailInput?.value.trim() || "";
+
+            const subject =
+                subjectInput?.value.trim() ||
+                "ExamVerse Feedback";
+
+            const message =
+                messageInput?.value.trim() || "";
+
+            const attachment =
+                attachmentInput?.files?.[0] ||
+                null;
+
+
+            /*
+             * ======================================
+             * VALIDATION
+             * ======================================
+             */
+
+            if (!name) {
+
+                formMessage.textContent =
+                    "Please enter your name.";
+
+                nameInput?.focus();
+
+                return;
+
+            }
+
+
+            if (!email) {
+
+                formMessage.textContent =
+                    "Please enter your email.";
+
+                emailInput?.focus();
+
+                return;
+
+            }
+
+
+            if (!message) {
+
+                formMessage.textContent =
+                    "Please write your feedback or message.";
+
+                messageInput?.focus();
+
+                return;
+
+            }
+
+
+            /*
+             * ======================================
+             * IMAGE VALIDATION
+             * ======================================
+             */
+
+            if (attachment) {
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+
+                if (
+                    !allowedTypes.includes(
+                        attachment.type
+                    )
+                ) {
+
+                    formMessage.textContent =
+                        "Please select a JPG, PNG or WEBP image.";
+
+                    return;
+
+                }
+
+
+                /*
+                 * 10 MB maximum.
+                 */
+
+                if (
+                    attachment.size >
+                    10 * 1024 * 1024
+                ) {
+
+                    formMessage.textContent =
+                        "Image must be smaller than 10 MB.";
+
+                    return;
+
+                }
+
+            }
+
+
+            /*
+             * ======================================
+             * LOADING STATE
+             * ======================================
+             */
+
+            sendButton.disabled = true;
+
+            sendButton.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+            formMessage.textContent =
+                "Sending your feedback...";
+
+
+            try {
+
+                /*
+                 * ==================================
+                 * FORM DATA
+                 * ==================================
+                 */
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "name",
+                    name
+                );
+
+                formData.append(
+                    "email",
+                    email
+                );
+
+                formData.append(
+                    "_replyto",
+                    email
+                );
+
+                formData.append(
+                    "_subject",
+                    "ExamVerse: " +
+                    subject
+                );
+
+                formData.append(
+                    "message",
+                    message
+                );
+
+
+                /*
+                 * Identify ExamVerse.
+                 */
+
+                formData.append(
+                    "_url",
+                    window.location.href
+                );
+
+
+                /*
+                 * Optional screenshot.
+                 */
+
+                if (attachment) {
+
+                    formData.append(
+                        "attachment",
+                        attachment
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * SEND TO YOUR EMAIL
+                 * ==================================
+                 *
+                 * CHANGE ONLY THIS EMAIL.
+                 */
+
+                const supportEmail =
+                    "lovercoc868@gmail.com";
+
+
+                const response =
+                    await fetch(
+                        "https://formsubmit.co/ajax/" +
+                        encodeURIComponent(
+                            supportEmail
+                        ),
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Accept":
+                                    "application/json"
+                            },
+
+                            body:
+                                formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+
+                    throw new Error(
+                        result.message ||
+                        "Unable to send feedback."
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * SUCCESS
+                 * ==================================
+                 */
+
+                formMessage.textContent =
+                    "Feedback sent successfully. Thank you!";
+
+                formMessage.style.color =
+                    "#1c9a64";
+
+
+                /*
+                 * Clear form.
+                 */
+
+                if (subjectInput) {
+
+                    subjectInput.value =
+                        "";
+
+                }
+
+                if (messageInput) {
+
+                    messageInput.value =
+                        "";
+
+                }
+
+                if (attachmentInput) {
+
+                    attachmentInput.value =
+                        "";
+
+                }
+
+
+                /*
+                 * Close after a short delay.
+                 */
+
+                setTimeout(
+                    () => {
+
+                        closeContactModal();
+
+                        formMessage.style.color =
+                            "";
+
+                    },
+                    1500
+                );
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Contact form error:",
+                    error
+                );
+
+
+                formMessage.textContent =
+                    "Unable to send feedback. Please try again.";
+
+                formMessage.style.color =
+                    "#d94444";
+
+            }
+
+
+            finally {
+
+                sendButton.disabled =
+                    false;
+
+                sendButton.innerHTML =
+                    '<i class="fa-solid fa-paper-plane"></i> Send Feedback';
+
+            }
+
+        }
+    );
 
 }

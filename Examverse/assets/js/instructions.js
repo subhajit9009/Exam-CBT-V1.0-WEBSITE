@@ -358,6 +358,37 @@ else if (completedAttempt) {
 
 }
 
+// ==========================================
+// CHECK FOR SECTIONAL EXAM
+// ==========================================
+
+const {
+    data: examSections,
+    error: examSectionsError
+} = await supabaseClient
+    .from("exam_sections")
+    .select("id")
+    .eq(
+        "exam_id",
+        data.id
+    )
+    .limit(1);
+
+
+if (examSectionsError) {
+
+    console.error(
+        "Unable to check exam sections:",
+        examSectionsError
+    );
+
+}
+
+
+const hasSections =
+    Array.isArray(examSections) &&
+    examSections.length > 0;
+
 
         // ==========================================
         // Display Exam Information
@@ -450,34 +481,36 @@ else if (completedAttempt) {
 
                     <!-- Positive Marks -->
 
-                    <div class="info-box">
+<div class="info-box">
+    <span>
+        Positive Marks
+    </span>
 
-                        <span>
-                            Positive Marks
-                        </span>
-
-                        <strong>
-                            +${data.positive_marks ?? 0}
-                        </strong>
-
-                    </div>
+    <strong>
+        ${hasSections
+            ? "Section-wise"
+            : `+${data.positive_marks ?? 0}`
+        }
+    </strong>
+</div>
 
 
                     <!-- Negative Marks -->
 
-                    <div class="info-box">
+<div class="info-box">
+    <span>
+        Negative Marks
+    </span>
 
-                        <span>
-                            Negative Marks
-                        </span>
-
-                        <strong>
-                            ${formatNegativeMarks(
-                                data.negative_marks
-                            )}
-                        </strong>
-
-                    </div>
+    <strong>
+        ${hasSections
+            ? "Section-wise"
+            : formatNegativeMarks(
+                data.negative_marks
+            )
+        }
+    </strong>
+</div>
 
 
                     <!-- Passing Marks -->
@@ -952,9 +985,7 @@ async function loadSectionPattern(examId) {
         !sectionCard ||
         !sectionContent
     ) {
-
         return;
-
     }
 
 
@@ -970,139 +1001,391 @@ async function loadSectionPattern(examId) {
 
 
     if (!examId) {
-
         return;
-
     }
 
 
-    // ------------------------------------------
-    // Load sections
-    // ------------------------------------------
+    try {
 
-    const {
-        data: sections,
-        error
-    } = await supabaseClient
+        // ==========================================
+        // LOAD SECTIONS
+        // ==========================================
 
-        .from("exam_sections")
+        const {
+            data: sections,
+            error: sectionError
+        } =
+            await supabaseClient
 
-        .select(`
-            id,
-            section_name,
-            section_order,
-            question_count,
-            duration_minutes
-        `)
+                .from("exam_sections")
 
-        .eq(
-            "exam_id",
-            examId
-        )
+                .select(`
+                    id,
+                    section_name,
+                    section_order,
+                    question_count,
+                    duration_minutes
+                `)
 
-        .order(
-            "section_order",
-            {
-                ascending: true
+                .eq(
+                    "exam_id",
+                    examId
+                )
+
+                .order(
+                    "section_order",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (sectionError) {
+
+            console.error(
+                "Section pattern loading error:",
+                sectionError
+            );
+
+            return;
+        }
+
+
+        // ==========================================
+        // NORMAL EXAM
+        // ==========================================
+
+        if (
+            !sections ||
+            sections.length === 0
+        ) {
+
+            sectionCard.style.display =
+                "none";
+
+            return;
+        }
+
+
+        // ==========================================
+        // LOAD QUESTIONS
+        //
+        // Marks are stored per question.
+        // Questions are ordered by question_no.
+        // Section question counts determine which
+        // questions belong to each section.
+        // ==========================================
+
+        const {
+            data: questions,
+            error: questionError
+        } =
+            await supabaseClient
+
+                .from("questions")
+
+                .select(`
+                    question_no,
+                    marks,
+                    negative_marks
+                `)
+
+                .eq(
+                    "exam_id",
+                    examId
+                )
+
+                .order(
+                    "question_no",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (questionError) {
+
+            console.error(
+                "Section marking scheme loading error:",
+                questionError
+            );
+
+            return;
+        }
+
+
+        const questionList =
+            Array.isArray(questions)
+                ? questions
+                : [];
+
+
+        // ==========================================
+        // SHOW SECTION CARD
+        // ==========================================
+
+        sectionCard.style.display =
+            "block";
+
+        sectionContent.innerHTML =
+            "";
+
+
+        // ==========================================
+        // TRACK QUESTION POSITION
+        // ==========================================
+
+        let questionOffset = 0;
+
+
+        // ==========================================
+        // RENDER EACH SECTION
+        // ==========================================
+
+        sections.forEach(
+            (
+                section,
+                index
+            ) => {
+
+                const questionCount =
+                    Number(
+                        section.question_count || 0
+                    );
+
+
+                // ----------------------------------
+                // Get questions belonging to section
+                // ----------------------------------
+
+                const sectionQuestions =
+                    questionList.slice(
+                        questionOffset,
+                        questionOffset +
+                        questionCount
+                    );
+
+
+                questionOffset +=
+                    questionCount;
+
+
+                // ----------------------------------
+                // Determine section marking scheme
+                // ----------------------------------
+
+                let positiveMarks = null;
+
+                let negativeMarks = null;
+
+
+                if (
+                    sectionQuestions.length > 0
+                ) {
+
+                    const firstQuestion =
+                        sectionQuestions[0];
+
+
+                    positiveMarks =
+                        Number(
+                            firstQuestion.marks
+                        );
+
+                    negativeMarks =
+                        Number(
+                            firstQuestion.negative_marks
+                        );
+
+
+                    // ------------------------------
+                    // Check whether all questions
+                    // in this section have the
+                    // same marking scheme.
+                    // ------------------------------
+
+                    const allSamePositive =
+                        sectionQuestions.every(
+                            question =>
+                                Number(
+                                    question.marks
+                                ) ===
+                                positiveMarks
+                        );
+
+
+                    const allSameNegative =
+                        sectionQuestions.every(
+                            question =>
+                                Number(
+                                    question.negative_marks
+                                ) ===
+                                negativeMarks
+                        );
+
+
+                    if (
+                        !allSamePositive
+                    ) {
+
+                        positiveMarks =
+                            null;
+
+                    }
+
+
+                    if (
+                        !allSameNegative
+                    ) {
+
+                        negativeMarks =
+                            null;
+
+                    }
+
+                }
+
+
+                // ----------------------------------
+                // Format Positive Marks
+                // ----------------------------------
+
+                const positiveText =
+                    positiveMarks !== null &&
+                    Number.isFinite(
+                        positiveMarks
+                    )
+
+                        ? `+${positiveMarks}`
+
+                        : "Varies";
+
+
+                // ----------------------------------
+                // Format Negative Marks
+                // ----------------------------------
+
+                let negativeText =
+                    "Varies";
+
+
+                if (
+                    negativeMarks !== null &&
+                    Number.isFinite(
+                        negativeMarks
+                    )
+                ) {
+
+                    if (
+                        negativeMarks === 0
+                    ) {
+
+                        negativeText =
+                            "0";
+
+                    }
+
+                    else {
+
+                        negativeText =
+                            `-${negativeMarks}`;
+
+                    }
+
+                }
+
+
+                // ==================================
+                // CREATE SECTION ROW
+                // ==================================
+
+                const row =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                row.className =
+                    "instruction-section-row";
+
+
+                row.innerHTML = `
+
+                    <div class="section-number">
+                        ${index + 1}
+                    </div>
+
+
+                    <div class="section-main">
+
+                        <strong>
+                            ${escapeHTML(
+                                section.section_name
+                            )}
+                        </strong>
+
+
+                        <span>
+                            ${questionCount}
+                            Questions
+                        </span>
+
+
+                        <div
+                            style="
+                                margin-top:6px;
+                                font-size:13px;
+                                font-weight:600;
+                                color:#475569;
+                            "
+                        >
+                            Correct:
+                            <strong>
+                                ${positiveText}
+                            </strong>
+                            &nbsp; | &nbsp;
+                            Incorrect:
+                            <strong>
+                                ${negativeText}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="section-time">
+
+                        <i
+                            class="fa-regular fa-clock"
+                        ></i>
+
+                        ${Number(
+                            section.duration_minutes || 0
+                        )}
+                        min
+
+                    </div>
+
+                `;
+
+
+                sectionContent.appendChild(
+                    row
+                );
+
             }
         );
 
 
-    if (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Section pattern loading error:",
+            "Unexpected section pattern error:",
             error
         );
 
-        return;
-
     }
-
-
-    // ------------------------------------------
-    // NORMAL EXAM
-    // ------------------------------------------
-
-    if (
-        !sections ||
-        sections.length === 0
-    ) {
-
-        sectionCard.style.display =
-            "none";
-
-        return;
-
-    }
-
-
-    // ------------------------------------------
-    // SECTIONAL EXAM
-    // ------------------------------------------
-
-    sectionCard.style.display =
-        "block";
-
-
-    sectionContent.innerHTML = "";
-
-
-    sections.forEach(
-        (section, index) => {
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-
-            row.className =
-                "instruction-section-row";
-
-
-            row.innerHTML = `
-
-                <div class="section-number">
-                    ${index + 1}
-                </div>
-
-                <div class="section-main">
-
-                    <strong>
-                        ${escapeHTML(
-                            section.section_name
-                        )}
-                    </strong>
-
-                    <span>
-                        ${Number(
-                            section.question_count || 0
-                        )}
-                        Questions
-                    </span>
-
-                </div>
-
-                <div class="section-time">
-
-                    <i class="fa-regular fa-clock"></i>
-
-                    ${Number(
-                        section.duration_minutes || 0
-                    )}
-                    min
-
-                </div>
-
-            `;
-
-
-            sectionContent.appendChild(
-                row
-            );
-
-        }
-    );
 
 }

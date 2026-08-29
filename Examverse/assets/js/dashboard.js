@@ -1335,8 +1335,13 @@ document
             // OPEN RESULT PAGE
             // ======================================
 
-            window.location.href =
-                "result.html";
+            sessionStorage.setItem(
+    "resultReturnPage",
+    window.location.href
+);
+
+window.location.href =
+    "result.html";
 
         }
     );

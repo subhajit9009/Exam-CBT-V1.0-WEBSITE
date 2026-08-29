@@ -416,9 +416,10 @@
     <label class="switch">
 
         <input
-            type="checkbox"
-            id="cbtFullscreenToggle"
-        >
+    type="checkbox"
+    id="cbtFullscreenToggle"
+    checked
+>
 
         <span class="slider"></span>
 
@@ -1144,6 +1145,28 @@
                 rows="6"
                 placeholder="Write your feedback or message..."
             ></textarea>
+
+            <div class="form-group">
+
+    <label for="contactAttachment">
+        Screenshot / Image
+        <small style="font-weight:400; opacity:0.7;">
+            (Optional)
+        </small>
+    </label>
+
+    <input
+        type="file"
+        id="contactAttachment"
+        accept="image/png,image/jpeg,image/webp"
+    >
+
+    <small class="setting-note">
+        You can attach a screenshot of the problem.
+        Maximum size: 10 MB.
+    </small>
+
+</div>
 
         </div>
 

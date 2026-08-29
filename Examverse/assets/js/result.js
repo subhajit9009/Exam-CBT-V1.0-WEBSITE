@@ -5,6 +5,97 @@
 
 let attemptedUserName = "Student";
 
+/* =========================================================
+   RESULT PAGE BACK NAVIGATION PROTECTION
+   ========================================================= */
+
+let resultBackGuardActive = false;
+
+
+/* =========================================================
+   ACTIVATE RESULT BACK GUARD
+   ========================================================= */
+
+function activateResultBackGuard() {
+
+    /*
+     * Prevent this from being installed twice.
+     */
+
+    if (resultBackGuardActive) {
+        return;
+    }
+
+    resultBackGuardActive = true;
+
+
+    /*
+     * The current history entry is the actual RESULT page.
+     *
+     * Keep it as the base result entry.
+     */
+
+    history.replaceState(
+        {
+            examVerseResultPage: true
+        },
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Add a second entry representing the active
+     * result-page guard.
+     *
+     * The browser Back button will hit this entry first.
+     */
+
+    history.pushState(
+        {
+            examVerseResultGuard: true
+        },
+        "",
+        window.location.href
+    );
+
+}
+
+
+/* =========================================================
+   RESULT PAGE BACK BUTTON
+   ========================================================= */
+
+window.addEventListener(
+    "popstate",
+    function () {
+
+        /*
+         * The Back button has reached the result guard.
+         *
+         * Do NOT allow the browser to return to the
+         * examination page.
+         *
+         * Instead replace the current result history
+         * entry with the dashboard.
+         */
+
+        const returnPage =
+    sessionStorage.getItem(
+        "resultReturnPage"
+    );
+
+sessionStorage.removeItem(
+    "resultReturnPage"
+);
+
+window.location.replace(
+    returnPage || "exam-list.html"
+);
+
+    }
+);
+
 
 /* ==========================================
    RESULT LOADING OVERLAY
@@ -59,7 +150,23 @@ function hideResultLoading() {
 
 window.addEventListener(
     "DOMContentLoaded",
-    loadResult
+    async function () {
+
+        /*
+         * Install the result-page history guard
+         * BEFORE loading the result data.
+         */
+
+        activateResultBackGuard();
+
+
+        /*
+         * Load the normal result page.
+         */
+
+        await loadResult();
+
+    }
 );
 
 

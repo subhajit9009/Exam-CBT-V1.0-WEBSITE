@@ -226,6 +226,11 @@ let examLeaveConfirmed = false;
 let examBackGuardActive = false;
 let examLeavePopupOpen = false;
 
+let examSessionActive =
+    sessionStorage.getItem(
+        "examVerseCBTActive"
+    ) === "true";
+
 
 /* =========================================================
    ACTIVATE BACK BUTTON GUARD
@@ -233,11 +238,35 @@ let examLeavePopupOpen = false;
 
 function activateExamBackGuard() {
 
-    if (examBackGuardActive) {
-        return;
-    }
+    /*
+     * =====================================================
+     * CBT BACK GUARD
+     * =====================================================
+     *
+     * Every time exam.js loads, including after F5,
+     * create a fresh BASE + GUARD pair.
+     *
+     * We intentionally do NOT use
+     * examBackGuardActive as a reason to skip this.
+     */
 
-    examBackGuardActive = true;
+
+    /*
+     * Current CBT document becomes the BASE entry.
+     */
+
+    history.replaceState(
+        {
+            examVerseBase: true
+        },
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Immediately place the GUARD entry after BASE.
+     */
 
     history.pushState(
         {
@@ -246,73 +275,97 @@ function activateExamBackGuard() {
         "",
         window.location.href
     );
+
+
+    /*
+     * Mark the guard active for this
+     * JavaScript document.
+     */
+
+    examBackGuardActive = true;
+
+
+    /*
+     * Remember that this tab is currently
+     * inside an active CBT session.
+     *
+     * sessionStorage survives F5.
+     */
+
+    sessionStorage.setItem(
+        "examVerseCBTActive",
+        "true"
+    );
+
+    examSessionActive = true;
+
 }
-
-
 /* =========================================================
-   BROWSER BACK BUTTON
+   CBT BROWSER BACK BUTTON
    ========================================================= */
 
 window.addEventListener(
     "popstate",
-    async function () {
+    function () {
 
         /*
-         * If the user has already confirmed
-         * leaving, allow the browser to go back.
+         * If Leave Exam was already confirmed,
+         * allow the navigation.
          */
-
         if (examLeaveConfirmed) {
             return;
         }
 
 
         /*
-         * If the confirmation popup is already open,
-         * prevent another Back press from moving
-         * through the exam history.
+         * -------------------------------------------------
+         * IMPORTANT
+         * -------------------------------------------------
+         *
+         * Do NOT call history.forward() first.
+         *
+         * First lock the popup state and show the
+         * custom confirmation.
+         *
+         * This also works immediately after F5.
          */
 
         if (examLeavePopupOpen) {
 
-            history.pushState(
-                {
-                    examVerseExamGuard: true
-                },
-                "",
-                window.location.href
-            );
+            /*
+             * Popup is already visible.
+             *
+             * Just restore the CBT history position.
+             */
+            history.forward();
 
             return;
         }
 
 
         /*
-         * Lock the confirmation popup immediately.
+         * Lock immediately.
          */
 
         examLeavePopupOpen = true;
 
-        /*
-         * Keep the user on the CBT page while
-         * the confirmation popup is displayed.
-         */
 
-        history.pushState(
-            {
-                examVerseExamGuard: true
-            },
-            "",
-            window.location.href
-        );
+        /*
+         * Restore CBT history position.
+         *
+         * This happens after the popup state is locked.
+         */
+        history.forward();
 
 
         /*
-         * Ask the user.
+         * -------------------------------------------------
+         * SHOW EXISTING CUSTOM POPUP
+         * -------------------------------------------------
          */
 
-        const confirmed =
-            await showConfirm(
+        Promise.resolve(
+            showConfirm(
                 "Leave Examination?",
                 "Are you sure you want to leave this examination?\n\nIf you leave now, your progress will not be saved and this examination cannot be restored.",
                 null,
@@ -320,105 +373,152 @@ window.addEventListener(
                     cancelText: "Cancel",
                     confirmText: "Leave Exam"
                 }
-            );
+            )
+        )
+        .then(
+            function (confirmed) {
+
+                /*
+                 * =========================================
+                 * CANCEL
+                 * =========================================
+                 */
+
+                if (!confirmed) {
+
+                    examLeavePopupOpen = false;
+
+                    /*
+                     * Make sure the CBT guard is present
+                     * again after Cancel.
+                     */
+
+                    if (
+                        !history.state ||
+                        !history.state.examVerseExamGuard
+                    ) {
+
+                        history.pushState(
+                            {
+                                examVerseExamGuard: true
+                            },
+                            "",
+                            window.location.href
+                        );
+
+                    }
+
+                    return;
+                }
 
 
-        /*
-         * CANCEL
-         */
+                /*
+                 * =========================================
+                 * LEAVE EXAM
+                 * =========================================
+                 */
 
-        if (!confirmed) {
+                examLeaveConfirmed = true;
 
-    examLeavePopupOpen = false;
-
-    return;
-}
-
-
-        /*
-         * LEAVE EXAM
-         */
-
-        examLeaveConfirmed = true;
+                examLeavePopupOpen = false;
 
 
-        /*
-         * Stop normal timer.
-         */
+                /*
+                 * Stop normal timer.
+                 */
 
-        if (timerInterval) {
+                if (timerInterval) {
 
-            clearInterval(
-                timerInterval
-            );
+                    clearInterval(
+                        timerInterval
+                    );
 
-            timerInterval = null;
-        }
+                    timerInterval = null;
 
-
-        /*
-         * Stop sectional timer.
-         */
-
-        if (sectionTimerInterval) {
-
-            clearInterval(
-                sectionTimerInterval
-            );
-
-            sectionTimerInterval = null;
-        }
+                }
 
 
-        /*
-         * Remove the active exam session.
-         */
+                /*
+                 * Stop sectional timer.
+                 */
 
-        sessionStorage.removeItem(
-            "attemptId"
+                if (sectionTimerInterval) {
+
+                    clearInterval(
+                        sectionTimerInterval
+                    );
+
+                    sectionTimerInterval = null;
+
+                }
+
+
+                /*
+                 * Clear active exam session.
+                 */
+
+                sessionStorage.removeItem(
+                    "attemptId"
+                );
+
+                sessionStorage.removeItem(
+                    "examStartTime"
+                );
+
+                sessionStorage.removeItem(
+                    "attemptStartedFresh"
+                );
+
+                sessionStorage.removeItem(
+                    "currentQuestionIndex"
+                );
+
+                sessionStorage.removeItem(
+                    "currentSectionIndex"
+                );
+
+                sessionStorage.removeItem(
+                    "examActiveStartedAt"
+                );
+
+                sessionStorage.removeItem(
+                    "resumeRemainingTime"
+                );
+
+
+                /*
+                 * Clear pending review saves.
+                 */
+
+                pendingReviewSaves = [];
+
+                localStorage.removeItem(
+                    "examVersePendingReviews"
+                );
+
+
+                /*
+                 * Finally leave CBT.
+                 */
+
+                window.location.replace(
+                    "exam-list.html"
+                );
+
+            }
+        )
+        .catch(
+            function (error) {
+
+                console.error(
+                    "Leave confirmation error:",
+                    error
+                );
+
+                examLeavePopupOpen = false;
+
+            }
         );
-
-        sessionStorage.removeItem(
-            "examStartTime"
-        );
-
-        sessionStorage.removeItem(
-            "attemptStartedFresh"
-        );
-
-        sessionStorage.removeItem(
-            "currentQuestionIndex"
-        );
-
-        sessionStorage.removeItem(
-            "currentSectionIndex"
-        );
-
-        sessionStorage.removeItem(
-            "examActiveStartedAt"
-        );
-
-        sessionStorage.removeItem(
-            "resumeRemainingTime"
-        );
-
-
-        /*
-         * Clear pending local review saves.
-         */
-
-        pendingReviewSaves = [];
-
-        localStorage.removeItem(
-            "examVersePendingReviews"
-        );
-
-
-        /*
-         * Now actually leave the CBT page.
-         */
-
-        window.location.replace("exam-list.html");
 
     }
 );
@@ -433,11 +533,47 @@ window.addEventListener(
 
         await initExam();
 
+        /*
+         * Activate the browser Back guard
+         * only after the CBT attempt has been
+         * successfully restored/validated.
+         */
+
+        if (
+            sessionStorage.getItem(
+                "examVerseCBTActive"
+            ) === "true"
+        ) {
+
+            activateExamBackGuard();
+
+        }
+
         setupCBTFullscreen();
 
     }
 );
 
+window.addEventListener(
+    "pageshow",
+    function () {
+
+        /*
+         * Re-establish CBT Back protection when
+         * the browser restores/reloads this page.
+         */
+
+        if (
+            !history.state ||
+            !history.state.examVerseExamGuard
+        ) {
+
+            activateExamBackGuard();
+
+        }
+
+    }
+);
 
 // ==========================
 // Initialize Exam
@@ -787,6 +923,22 @@ if (
     // ==========================================
 // PAUSE / RESUME RESTORATION
 // ==========================================
+
+/*
+ * ==========================================
+ * MARK CBT SESSION ACTIVE
+ * ==========================================
+ *
+ * This survives F5 / Ctrl+R.
+ */
+
+sessionStorage.setItem(
+    "examVerseCBTActive",
+    "true"
+);
+
+examSessionActive = true;
+
 
 currentAttemptState = currentAttempt;
 
@@ -1475,8 +1627,6 @@ document.body.classList.add(
 );
 
 }
-
-activateExamBackGuard();
 
 // ==========================================
 // RETRY PENDING REVIEW SAVES
