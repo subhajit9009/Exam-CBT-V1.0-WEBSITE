@@ -2782,3 +2782,159 @@ body.exam-ready .exam-container {
     }
 
 }
+
+/* =========================================================
+   CBT FULLSCREEN BUTTON
+   ========================================================= */
+
+.fullscreen-exam-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 38px;
+
+    padding: 8px 14px;
+
+    border: 1px solid #2563eb;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease;
+}
+
+
+/* Hover */
+
+.fullscreen-exam-btn:hover {
+
+    background: #1d4ed8;
+
+}
+
+
+/* Click */
+
+.fullscreen-exam-btn:active {
+
+    transform: scale(0.97);
+
+}
+
+
+/* Keyboard focus */
+
+.fullscreen-exam-btn:focus-visible {
+
+    outline: 2px solid #93c5fd;
+
+    outline-offset: 2px;
+
+}
+
+
+/* Icon */
+
+.fullscreen-exam-btn i {
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+html.dark-mode .fullscreen-exam-btn {
+
+    background: #1d4ed8;
+
+    border-color: #3b82f6;
+
+    color: #ffffff;
+
+}
+
+
+html.dark-mode .fullscreen-exam-btn:hover {
+
+    background: #2563eb;
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .fullscreen-exam-btn {
+
+        min-height: 36px;
+
+        padding: 7px 11px;
+
+        font-size: 12px;
+
+        gap: 6px;
+
+    }
+
+    .fullscreen-exam-btn i {
+
+        font-size: 12px;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .fullscreen-exam-btn {
+
+        padding: 7px 9px;
+
+        font-size: 11px;
+
+        gap: 5px;
+
+    }
+
+    .fullscreen-exam-btn span {
+
+        display: inline;
+
+    }
+
+}

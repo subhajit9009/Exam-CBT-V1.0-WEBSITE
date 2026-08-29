@@ -28,6 +28,139 @@ async function exitCBTFullscreen() {
 
 }
 
+/* ==========================================
+   CBT FULLSCREEN BUTTON
+========================================== */
+
+function setupCBTFullscreen() {
+
+    const button =
+        document.getElementById(
+            "enterFullscreenBtn"
+        );
+
+    if (!button) {
+        return;
+    }
+
+
+    /*
+       Read the setting from Settings.
+       If it is not exactly "true",
+       fullscreen remains disabled.
+    */
+
+    const fullscreenEnabled =
+        localStorage.getItem(
+            "examverse_cbt_fullscreen"
+        ) === "true";
+
+
+    /*
+       Setting OFF
+       → hide button
+    */
+
+    if (!fullscreenEnabled) {
+
+        button.style.display = "none";
+
+        return;
+
+    }
+
+
+    /*
+       Setting ON
+       → show button
+    */
+
+    button.style.display = "inline-flex";
+
+
+    button.addEventListener(
+        "click",
+        async function () {
+
+            /*
+               Already fullscreen?
+               Nothing to do.
+            */
+
+            if (
+                document.fullscreenElement
+            ) {
+
+                return;
+
+            }
+
+
+            /*
+               Browser does not support
+               fullscreen.
+            */
+
+            if (
+                !document.fullscreenEnabled
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                await document
+                    .documentElement
+                    .requestFullscreen();
+
+            }
+
+            catch (error) {
+
+                console.warn(
+                    "Fullscreen could not be enabled:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+       Keep button state synchronized
+       with browser fullscreen state.
+    */
+
+    document.addEventListener(
+        "fullscreenchange",
+        function () {
+
+            if (
+                document.fullscreenElement
+            ) {
+
+                button.style.display =
+                    "none";
+
+            }
+
+            else {
+
+                button.style.display =
+                    "inline-flex";
+
+            }
+
+        }
+    );
+
+}
+
 let selectedExam = null;
 let answerSavePromise = null;
 let questions = [];
@@ -91,6 +224,7 @@ let sectionTimerInterval = null;
 
 let examLeaveConfirmed = false;
 let examBackGuardActive = false;
+let examLeavePopupOpen = false;
 
 
 /* =========================================================
@@ -134,6 +268,32 @@ window.addEventListener(
 
 
         /*
+         * If the confirmation popup is already open,
+         * prevent another Back press from moving
+         * through the exam history.
+         */
+
+        if (examLeavePopupOpen) {
+
+            history.pushState(
+                {
+                    examVerseExamGuard: true
+                },
+                "",
+                window.location.href
+            );
+
+            return;
+        }
+
+
+        /*
+         * Lock the confirmation popup immediately.
+         */
+
+        examLeavePopupOpen = true;
+
+        /*
          * Keep the user on the CBT page while
          * the confirmation popup is displayed.
          */
@@ -168,8 +328,11 @@ window.addEventListener(
          */
 
         if (!confirmed) {
-            return;
-        }
+
+    examLeavePopupOpen = false;
+
+    return;
+}
 
 
         /*
@@ -264,7 +427,16 @@ window.addEventListener(
 // Page Load
 // ==========================
 
-window.addEventListener("DOMContentLoaded", initExam);
+window.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+        await initExam();
+
+        setupCBTFullscreen();
+
+    }
+);
 
 
 // ==========================
