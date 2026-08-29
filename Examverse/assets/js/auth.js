@@ -444,7 +444,7 @@ async function registerUser(e) {
                 options: {
 
                     emailRedirectTo:
-                        "https://subhajit9009.github.io/Exam-CBT-V1.0-WEBSITE/Examverse/login.html"
+    "https://subhajit9009.github.io/Exam-CBT-V1.0-WEBSITE/Examverse/email-verified.html"
 
                 }
 

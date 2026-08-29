@@ -7,15 +7,19 @@ const form = document.getElementById("resetForm");
 
 form.addEventListener("submit", resetPassword);
 
+
 async function resetPassword(e) {
 
     e.preventDefault();
 
+
     const password =
         document.getElementById("password").value;
 
+
     const confirmPassword =
         document.getElementById("confirmPassword").value;
+
 
     // ==========================
     // Password Validation
@@ -24,9 +28,12 @@ async function resetPassword(e) {
     const passwordPattern =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+=-]).{8,}$/;
 
+
     if (!passwordPattern.test(password)) {
 
-        alert(
+        showPopup(
+            "warning",
+            "Invalid Password",
             "Password must contain:\n\n" +
             "• Minimum 8 characters\n" +
             "• One uppercase letter\n" +
@@ -39,13 +46,19 @@ async function resetPassword(e) {
 
     }
 
+
     if (password !== confirmPassword) {
 
-        alert("Passwords do not match.");
+        showPopup(
+            "warning",
+            "Passwords Don't Match",
+            "The passwords you entered do not match."
+        );
 
         return;
 
     }
+
 
     // ==========================
     // Update Password
@@ -58,18 +71,36 @@ async function resetPassword(e) {
 
         });
 
+
     if (error) {
 
-        alert(error.message);
+        showPopup(
+            "error",
+            "Password Update Failed",
+            error.message
+        );
 
         return;
 
     }
 
-    alert("Password updated successfully!");
 
-    await supabaseClient.auth.signOut();
+    showPopup(
+        "success",
+        "Password Updated Successfully!",
+        "Your password has been updated successfully.\n\n" +
+        "You will now be signed out and redirected to the login page.",
+        {
+            buttonText: "Continue",
+            onClose: async function () {
 
-    window.location.href = "login.html";
+                await supabaseClient.auth.signOut();
+
+                window.location.href =
+                    "login.html";
+
+            }
+        }
+    );
 
 }

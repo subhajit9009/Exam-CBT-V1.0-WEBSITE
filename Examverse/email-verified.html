@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamVerse | Email Verified</title>
+
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative ambient background blur objects */
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+        }
+
+        body::before {
+            background: rgba(37, 99, 235, 0.45);
+            top: 15%;
+            left: 20%;
+        }
+
+        body::after {
+            background: rgba(124, 58, 237, 0.45);
+            bottom: 15%;
+            right: 20%;
+        }
+
+        /* Glassmorphism Card Container */
+        .verification-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            padding: 50px 40px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.37);
+        }
+
+        /* Success Icon Styling */
+        .verification-icon {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            font-size: 38px;
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.25);
+        }
+
+        h1 {
+            margin-bottom: 14px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .main-message {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            font-weight: 400;
+        }
+
+        .close-message {
+            margin-top: 10px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #94a3b8;
+        }
+
+        /* Action Button Styling */
+        .btn-login {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(59, 130, 246, 0.45);
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+        }
+
+        .brand {
+            margin-top: 32px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #60a5fa;
+        }
+
+        @media (max-width: 480px) {
+            .verification-card {
+                padding: 38px 24px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .main-message {
+                font-size: 15px;
+            }
+
+            .close-message {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="verification-card">
+
+        <div class="verification-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h1>Email Verified Successfully</h1>
+
+        <p class="main-message">
+            Your ExamVerse account has been successfully verified.
+        </p>
+
+        <p class="close-message">
+            You can now log in to access your dashboard and continue using ExamVerse.
+        </p>
+
+        <a href="https://subhajit9009.github.io/Exam-CBT-V1.0-WEBSITE/Examverse/login.html" class="btn-login">
+            <span>Go to Login</span>
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+        <div class="brand">
+            ExamVerse
+        </div>
+
+    </div>
+
+</body>
+
+</html>
