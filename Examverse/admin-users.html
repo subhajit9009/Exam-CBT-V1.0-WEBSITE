@@ -106,7 +106,45 @@
 
         <section class="users-card">
 
-            <div class="table-wrapper">
+    <!-- Table navigation -->
+    <div class="table-navigation">
+
+        <span class="table-navigation-label">
+            <i class="fa-solid fa-arrows-left-right"></i>
+            Scroll table
+        </span>
+
+        <div class="table-navigation-buttons">
+
+            <button
+                type="button"
+                id="usersScrollLeft"
+                class="table-scroll-btn"
+                title="Scroll left"
+                aria-label="Scroll users table left"
+            >
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <button
+                type="button"
+                id="usersScrollRight"
+                class="table-scroll-btn"
+                title="Scroll right"
+                aria-label="Scroll users table right"
+            >
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="table-wrapper"
+        id="usersTableScroll"
+    >
 
                 <table>
 

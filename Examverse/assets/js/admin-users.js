@@ -1,21 +1,9 @@
-/* ==========================================
-   ExamVerse Admin Users
-   Created by Subhajit Paul
-========================================== */
-
-
 let allUsers = [];
-
-
-/* ==========================================
-   INITIALIZE
-========================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
     initializeUsers
 );
-
 
 async function initializeUsers() {
 
@@ -25,34 +13,18 @@ async function initializeUsers() {
 
     setupModal();
 
-
-    // ==========================================
-    // WAIT FOR ADMIN AUTHENTICATION
-    // ==========================================
+    setupUsersTableScroll();
 
     if (
         window.examVerseAdminReady
     ) {
-
         await window.examVerseAdminReady;
-
     }
-
-
-    // ==========================================
-    // LOAD USERS ONLY AFTER AUTH IS READY
-    // ==========================================
 
     await loadUsers();
 
     startLastSeenTracking();
-
 }
-
-
-/* ==========================================
-   LOAD USERS
-========================================== */
 
 async function loadUsers() {
 
@@ -66,35 +38,21 @@ async function loadUsers() {
             "userCount"
         );
 
-
     tableBody.innerHTML = `
-
         <tr>
-
             <td
                 colspan="8"
                 class="loading-cell"
             >
-
                 <i
                     class="fa-solid fa-spinner fa-spin"
                 ></i>
-
                 Loading users...
-
             </td>
-
         </tr>
-
     `;
 
-
     try {
-
-        // ==========================================
-        // GET COMPLETE USER DIRECTORY
-        // INCLUDING AUTH CREATED_AT
-        // ==========================================
 
         const {
             data,
@@ -104,24 +62,14 @@ async function loadUsers() {
                 "get_admin_user_directory"
             );
 
-
         if (error) {
-
             throw error;
-
         }
-
 
         const users =
             Array.isArray(data)
                 ? data
                 : [];
-
-
-        // ==========================================
-        // CONVERT RPC DATA TO THE FORMAT USED
-        // BY THE EXISTING USER TABLE
-        // ==========================================
 
         allUsers =
             users.map(
@@ -160,32 +108,20 @@ async function loadUsers() {
                     exam3:
                         user.exam3,
 
-
-                    // --------------------------------
-                    // IMPORTANT
-                    // Real Supabase Auth creation date
-                    // --------------------------------
-
                     account_created_at:
                         user.account_created_at,
 
-                        last_login_at:
-    user.last_login_at,
+                    last_login_at:
+                        user.last_login_at,
 
-last_seen_at:
-    user.last_seen_at,
+                    last_seen_at:
+                        user.last_seen_at,
 
-is_online:
-    user.is_online,
+                    is_online:
+                        user.is_online,
 
-activity_status:
-    user.activity_status,
-
-
-                    // --------------------------------
-                    // Keep admin information compatible
-                    // with existing rendering code
-                    // --------------------------------
+                    activity_status:
+                        user.activity_status,
 
                     admin:
                         user.role
@@ -206,19 +142,9 @@ activity_status:
                 })
             );
 
-
-        // ==========================================
-        // RENDER USERS
-        // ==========================================
-
         renderUsers(
             allUsers
         );
-
-
-        // ==========================================
-        // USER COUNT
-        // ==========================================
 
         userCount.textContent =
             `${allUsers.length} user${
@@ -226,8 +152,6 @@ activity_status:
                     ? ""
                     : "s"
             }`;
-
-
     }
 
     catch (error) {
@@ -237,40 +161,24 @@ activity_status:
             error
         );
 
-
         tableBody.innerHTML = `
-
             <tr>
-
                 <td
                     colspan="8"
                     class="error-cell"
                 >
-
                     <i
                         class="fa-solid fa-circle-exclamation"
                     ></i>
-
                     Unable to load users.
-
                 </td>
-
             </tr>
-
         `;
-
 
         userCount.textContent =
             "Unable to load users.";
-
     }
-
 }
-
-
-/* ==========================================
-   RENDER USERS
-========================================== */
 
 function renderUsers(users) {
 
@@ -279,37 +187,27 @@ function renderUsers(users) {
             "usersTableBody"
         );
 
-
     if (
         !users ||
         users.length === 0
     ) {
 
         tableBody.innerHTML = `
-
             <tr>
-
                 <td
                     colspan="8"
                     class="empty-cell"
                 >
-
                     No users found.
-
                 </td>
-
             </tr>
-
         `;
 
         return;
-
     }
-
 
     const isMainAdmin =
         window.examVerseAdmin?.isMainAdmin === true;
-
 
     tableBody.innerHTML =
         users.map(
@@ -330,17 +228,11 @@ function renderUsers(users) {
                     .trim() ||
                     "Unnamed User";
 
-
-                // ==================================
-                // DETERMINE ROLE
-                // ==================================
-
                 let status =
                     "USER";
 
                 let statusClass =
                     "user";
-
 
                 if (
                     user.admin
@@ -366,88 +258,73 @@ function renderUsers(users) {
 
                         statusClass =
                             "admin";
-
                     }
-
                 }
-
-
-                // ==================================
-                // EMAIL
-                // ==================================
 
                 const email =
                     user.email ||
                     "—";
 
-
-                // ==================================
-                // PHONE
-                // ==================================
-
                 const phone =
                     user.phone ||
                     "—";
-
-
-                // ==================================
-                // ACCOUNT CREATION DATE
-                // ==================================
 
                 const createdAt =
                     user.account_created_at ||
                     null;
 
-                    // ==================================
-// LAST LOGIN
-// ==================================
+                const lastLogin =
+                    user.last_login_at ||
+                    null;
 
-const lastLogin =
-    user.last_login_at ||
-    null;
+                const lastSeen =
+                    user.last_seen_at ||
+                    null;
 
+                const activityStatus =
+                    user.activity_status ||
+                    "Never Active";
 
-// ==================================
-// LAST SEEN
-// ==================================
+                const isOnline =
+                    user.is_online === true;
 
-const lastSeen =
-    user.last_seen_at ||
-    null;
+                const canMakeAdmin =
+                    isMainAdmin ||
+                    window.examVerseAdmin?.hasPermission(
+                        "admin_management.make_admin"
+                    ) === true;
 
+                const canChangePermissions =
+                    isMainAdmin ||
+                    window.examVerseAdmin?.hasPermission(
+                        "admin_management.change_permissions"
+                    ) === true;
 
-// ==================================
-// ACTIVITY STATUS
-// ==================================
+                const canRemoveAdmin =
+                    isMainAdmin ||
+                    window.examVerseAdmin?.hasPermission(
+                        "admin_management.remove_admin"
+                    ) === true;
 
-const activityStatus =
-    user.activity_status ||
-    "Never Active";
+                let actionHTML = "";
 
+                /*
+                 * ==================================================
+                 * MAIN ADMIN
+                 * ==================================================
+                 *
+                 * Main Admin can manage everyone, BUT the buttons
+                 * depend on the TARGET USER'S actual role.
+                 */
 
-// ==================================
-// ONLINE
-// ==================================
+                if (isMainAdmin) {
 
-const isOnline =
-    user.is_online === true;
-
-
-                // ==================================
-                // ACTIONS
-                // ==================================
-
-                let actionHTML =
-                    `<span class="no-action">—</span>`;
-
-
-                if (
-                    isMainAdmin
-                ) {
-
-                    // ------------------------------
-                    // MAIN ADMIN
-                    // ------------------------------
+                    /*
+                     * TARGET = MAIN ADMIN
+                     *
+                     * Never show Remove Admin or Permissions
+                     * for the Main Admin itself.
+                     */
 
                     if (
                         user.admin?.role ===
@@ -455,29 +332,23 @@ const isOnline =
                     ) {
 
                         actionHTML = `
-
                             <span
                                 class="full-access-badge"
                             >
-
                                 <i
-                                    class="
-                                        fa-solid
-                                        fa-crown
-                                    "
+                                    class="fa-solid fa-crown"
                                 ></i>
-
                                 Full Access
-
                             </span>
-
                         `;
-
                     }
 
-                    // ------------------------------
-                    // ADMIN
-                    // ------------------------------
+                    /*
+                     * TARGET = DELEGATED ADMIN
+                     *
+                     * Only delegated admins receive:
+                     * Permissions + Remove Admin.
+                     */
 
                     else if (
                         user.admin?.role ===
@@ -485,101 +356,160 @@ const isOnline =
                     ) {
 
                         actionHTML = `
-
-                            <div
-                                class="admin-actions"
-                            >
+                            <div class="admin-actions">
 
                                 <button
                                     type="button"
-                                    class="
-                                        view-btn
-                                        permission-btn
-                                    "
+                                    class="view-btn permission-btn"
                                     data-user-id="${escapeHTML(
                                         user.id
                                     )}"
                                 >
-
                                     <i
-                                        class="
-                                            fa-solid
-                                            fa-key
-                                        "
+                                        class="fa-solid fa-key"
                                     ></i>
-
                                     Permissions
-
                                 </button>
 
-
                                 <button
                                     type="button"
-                                    class="
-                                        view-btn
-                                        remove-admin-btn
-                                    "
+                                    class="view-btn remove-admin-btn"
                                     data-user-id="${escapeHTML(
                                         user.id
                                     )}"
                                 >
-
                                     <i
-                                        class="
-                                            fa-solid
-                                            fa-user-minus
-                                        "
+                                        class="fa-solid fa-user-minus"
                                     ></i>
-
                                     Remove Admin
-
                                 </button>
 
                             </div>
-
                         `;
-
                     }
 
-                    // ------------------------------
-                    // NORMAL USER
-                    // ------------------------------
+                    /*
+                     * TARGET = NORMAL USER
+                     *
+                     * Normal users receive Make Admin.
+                     */
 
                     else {
 
                         actionHTML = `
-
                             <button
                                 type="button"
-                                class="
-                                    view-btn
-                                    make-admin-btn
-                                "
+                                class="view-btn make-admin-btn"
                                 data-user-id="${escapeHTML(
                                     user.id
                                 )}"
                             >
-
                                 <i
-                                    class="
-                                        fa-solid
-                                        fa-user-shield
-                                    "
+                                    class="fa-solid fa-user-shield"
                                 ></i>
-
                                 Make Admin
-
                             </button>
-
                         `;
-
                     }
-
                 }
 
+                /*
+                 * ==================================================
+                 * DELEGATED ADMIN
+                 * ==================================================
+                 *
+                 * A delegated Admin can only see the admin-management
+                 * actions for another delegated Admin if their own
+                 * permissions allow it.
+                 */
+
+                else if (
+                    user.admin?.role ===
+                    "admin"
+                ) {
+
+                    const adminActions = [];
+
+                    if (
+                        canChangePermissions
+                    ) {
+
+                        adminActions.push(`
+                            <button
+                                type="button"
+                                class="view-btn permission-btn"
+                                data-user-id="${escapeHTML(
+                                    user.id
+                                )}"
+                            >
+                                <i
+                                    class="fa-solid fa-key"
+                                ></i>
+                                Permissions
+                            </button>
+                        `);
+                    }
+
+                    if (
+                        canRemoveAdmin
+                    ) {
+
+                        adminActions.push(`
+                            <button
+                                type="button"
+                                class="view-btn remove-admin-btn"
+                                data-user-id="${escapeHTML(
+                                    user.id
+                                )}"
+                            >
+                                <i
+                                    class="fa-solid fa-user-minus"
+                                ></i>
+                                Remove Admin
+                            </button>
+                        `);
+                    }
+
+                    actionHTML =
+                        adminActions.length > 0
+                            ? `
+                                <div class="admin-actions">
+                                    ${adminActions.join("")}
+                                </div>
+                            `
+                            : "";
+                }
+
+                /*
+                 * ==================================================
+                 * NORMAL USER
+                 * ==================================================
+                 */
+
+                else {
+
+                    if (
+                        canMakeAdmin
+                    ) {
+
+                        actionHTML = `
+                            <button
+                                type="button"
+                                class="view-btn make-admin-btn"
+                                data-user-id="${escapeHTML(
+                                    user.id
+                                )}"
+                            >
+                                <i
+                                    class="fa-solid fa-user-shield"
+                                ></i>
+                                Make Admin
+                            </button>
+                        `;
+                    }
+                }
 
                 return `
-
                     <tr>
 
                         <td>
@@ -591,7 +521,6 @@ const isOnline =
                             </strong>
 
                         </td>
-
 
                         <td>
 
@@ -615,7 +544,6 @@ const isOnline =
 
                         </td>
 
-
                         <td>
 
                             ${escapeHTML(
@@ -623,7 +551,6 @@ const isOnline =
                             )}
 
                         </td>
-
 
                         <td>
 
@@ -633,7 +560,6 @@ const isOnline =
 
                         </td>
 
-
                         <td>
 
                             ${
@@ -642,7 +568,6 @@ const isOnline =
                             }
 
                         </td>
-
 
                         <td>
 
@@ -656,7 +581,6 @@ const isOnline =
 
                         </td>
 
-
                         <td>
 
                             ${
@@ -669,54 +593,59 @@ const isOnline =
 
                         </td>
 
-                        <!-- Last Login -->
+                        <td>
 
-<td>
+                            ${
+                                lastLogin
+                                    ? formatDate(
+                                        lastLogin
+                                    )
+                                    : "Never"
+                            }
 
-    ${
-        lastLogin
-            ? formatDate(lastLogin)
-            : "Never"
-    }
+                        </td>
 
-</td>
+                        <td>
 
+                            ${
+                                lastSeen
+                                    ? formatDate(
+                                        lastSeen
+                                    )
+                                    : "Never"
+                            }
 
-<!-- Last Seen -->
+                        </td>
 
-<td>
+                        <td>
 
-    ${
-        lastSeen
-            ? formatDate(lastSeen)
-            : "Never"
-    }
+                            ${
+                                isOnline
+                                    ? `
+                                        <span
+                                            class="activity-badge online"
+                                        >
+                                            <span
+                                                class="activity-dot"
+                                            ></span>
+                                            Online
+                                        </span>
+                                      `
+                                    : `
+                                        <span
+                                            class="activity-badge offline"
+                                        >
+                                            <span
+                                                class="activity-dot"
+                                            ></span>
+                                            ${escapeHTML(
+                                                activityStatus
+                                            )}
+                                        </span>
+                                      `
+                            }
 
-</td>
-
-
-<!-- Activity -->
-
-<td>
-
-    ${
-        isOnline
-            ? `
-                <span class="activity-badge online">
-                    <span class="activity-dot"></span>
-                    Online
-                </span>
-              `
-            : `
-                <span class="activity-badge offline">
-                    <span class="activity-dot"></span>
-                    ${escapeHTML(activityStatus)}
-                </span>
-              `
-    }
-
-</td>
-
+                        </td>
 
                         <td>
 
@@ -726,23 +655,42 @@ const isOnline =
 
                                 <button
                                     type="button"
-                                    class="view-btn"
+                                    class="view-btn user-view-btn"
                                     data-user-id="${escapeHTML(
                                         user.id
                                     )}"
                                 >
-
                                     <i
-                                        class="
-                                            fa-solid
-                                            fa-eye
-                                        "
+                                        class="fa-solid fa-eye"
                                     ></i>
-
                                     View
-
                                 </button>
 
+                                <button
+                                    type="button"
+                                    class="edit-btn user-edit-btn"
+                                    data-user-id="${escapeHTML(
+                                        user.id
+                                    )}"
+                                >
+                                    <i
+                                        class="fa-solid fa-pen"
+                                    ></i>
+                                    Edit
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="delete-btn user-delete-btn"
+                                    data-user-id="${escapeHTML(
+                                        user.id
+                                    )}"
+                                >
+                                    <i
+                                        class="fa-solid fa-trash"
+                                    ></i>
+                                    Delete
+                                </button>
 
                                 ${actionHTML}
 
@@ -751,65 +699,16 @@ const isOnline =
                         </td>
 
                     </tr>
-
                 `;
-
             }
         )
         .join("");
 
-
-    // ==========================================
-    // VIEW BUTTONS
-    // ==========================================
-
-    tableBody
-        .querySelectorAll(
-            ".view-btn"
-        )
-        .forEach(
-            button => {
-
-                /*
-                 * Permission / Admin buttons are
-                 * handled separately below.
-                 */
-
-                if (
-                    button.classList.contains(
-                        "permission-btn"
-                    ) ||
-                    button.classList.contains(
-                        "remove-admin-btn"
-                    ) ||
-                    button.classList.contains(
-                        "make-admin-btn"
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        showUserDetails(
-                            button.dataset.userId
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-
-    // ==========================================
-    // MAKE ADMIN
-    // ==========================================
+    /*
+     * ==========================================================
+     * MAKE ADMIN BUTTONS
+     * ==========================================================
+     */
 
     tableBody
         .querySelectorAll(
@@ -828,14 +727,14 @@ const isOnline =
 
                     }
                 );
-
             }
         );
 
-
-    // ==========================================
-    // REMOVE ADMIN
-    // ==========================================
+    /*
+     * ==========================================================
+     * REMOVE ADMIN BUTTONS
+     * ==========================================================
+     */
 
     tableBody
         .querySelectorAll(
@@ -854,14 +753,14 @@ const isOnline =
 
                     }
                 );
-
             }
         );
 
-
-    // ==========================================
-    // PERMISSIONS
-    // ==========================================
+    /*
+     * ==========================================================
+     * PERMISSION BUTTONS
+     * ==========================================================
+     */
 
     tableBody
         .querySelectorAll(
@@ -880,16 +779,99 @@ const isOnline =
 
                     }
                 );
-
             }
         );
 
+    /*
+     * ==========================================================
+     * VIEW USERS
+     * ==========================================================
+     */
+
+    tableBody
+        .querySelectorAll(
+            ".user-view-btn"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            !window.examVerseAdmin?.hasPermission(
+                                "users.view"
+                            )
+                        ) {
+
+                            showAccessDenied(
+                                "view users"
+                            );
+
+                            return;
+                        }
+
+                        showUserDetails(
+                            button.dataset.userId
+                        );
+                    }
+                );
+            }
+        );
+
+    /*
+     * ==========================================================
+     * EDIT USERS
+     * ==========================================================
+     */
+
+    tableBody
+        .querySelectorAll(
+            ".user-edit-btn"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    async () => {
+
+                        await editUser(
+                            button.dataset.userId
+                        );
+
+                    }
+                );
+            }
+        );
+
+    /*
+     * ==========================================================
+     * DELETE USERS
+     * ==========================================================
+     */
+
+    tableBody
+        .querySelectorAll(
+            ".user-delete-btn"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    async () => {
+
+                        await deleteUser(
+                            button.dataset.userId
+                        );
+
+                    }
+                );
+            }
+        );
 }
-
-
-/* ==========================================
-   SEARCH
-========================================== */
 
 function setupSearch() {
 
@@ -897,7 +879,6 @@ function setupSearch() {
         document.getElementById(
             "userSearch"
         );
-
 
     searchInput?.addEventListener(
         "input",
@@ -908,7 +889,6 @@ function setupSearch() {
                     .trim()
                     .toLowerCase();
 
-
             if (!query) {
 
                 renderUsers(
@@ -916,9 +896,7 @@ function setupSearch() {
                 );
 
                 return;
-
             }
-
 
             const filtered =
                 allUsers.filter(
@@ -933,17 +911,14 @@ function setupSearch() {
                             .filter(Boolean)
                             .join(" ");
 
-
                         const email =
                             user.email ||
                             user.admin?.email ||
                             "";
 
-
                         const phone =
                             user.phone ||
                             "";
-
 
                         return (
 
@@ -964,24 +939,15 @@ function setupSearch() {
                                 .includes(query)
 
                         );
-
                     }
                 );
-
 
             renderUsers(
                 filtered
             );
-
         }
     );
-
 }
-
-
-/* ==========================================
-   REFRESH
-========================================== */
 
 function setupRefresh() {
 
@@ -990,7 +956,6 @@ function setupRefresh() {
             "refreshUsersBtn"
         );
 
-
     button?.addEventListener(
         "click",
         async () => {
@@ -998,22 +963,13 @@ function setupRefresh() {
             button.disabled =
                 true;
 
-
             await loadUsers();
-
 
             button.disabled =
                 false;
-
         }
     );
-
 }
-
-
-/* ==========================================
-   USER DETAILS MODAL
-========================================== */
 
 function setupModal() {
 
@@ -1027,7 +983,6 @@ function setupModal() {
             "closeUserModal"
         );
 
-
     closeButton?.addEventListener(
         "click",
         () => {
@@ -1035,10 +990,8 @@ function setupModal() {
             modal.classList.remove(
                 "show"
             );
-
         }
     );
-
 
     modal?.addEventListener(
         "click",
@@ -1051,14 +1004,10 @@ function setupModal() {
                 modal.classList.remove(
                     "show"
                 );
-
             }
-
         }
     );
-
 }
-
 
 function showUserDetails(
     userId
@@ -1070,11 +1019,9 @@ function showUserDetails(
                 item.id === userId
         );
 
-
     if (!user) {
         return;
     }
-
 
     const modal =
         document.getElementById(
@@ -1085,7 +1032,6 @@ function showUserDetails(
         document.getElementById(
             "userDetailsContent"
         );
-
 
     const fullName =
         [
@@ -1098,10 +1044,8 @@ function showUserDetails(
         .trim() ||
         "Unnamed User";
 
-
     let status =
         "USER";
-
 
     if (
         user.admin
@@ -1114,9 +1058,7 @@ function showUserDetails(
                 ? "MAIN ADMIN"
 
                 : "ADMIN";
-
     }
-
 
     content.innerHTML = `
 
@@ -1132,7 +1074,6 @@ function showUserDetails(
 
         </div>
 
-
         <div class="detail-row">
 
             <span>Status</span>
@@ -1142,7 +1083,6 @@ function showUserDetails(
             </strong>
 
         </div>
-
 
         <div class="detail-row">
 
@@ -1158,7 +1098,6 @@ function showUserDetails(
 
         </div>
 
-
         <div class="detail-row">
 
             <span>Phone</span>
@@ -1172,7 +1111,6 @@ function showUserDetails(
 
         </div>
 
-
         <div class="detail-row">
 
             <span>Age</span>
@@ -1185,7 +1123,6 @@ function showUserDetails(
             </strong>
 
         </div>
-
 
         <div class="detail-row">
 
@@ -1203,36 +1140,28 @@ function showUserDetails(
 
         </div>
 
-
         <div class="detail-row">
 
             <span>Account Created</span>
 
             <strong>
                 ${
-    user.account_created_at
-        ? formatDate(
-            user.account_created_at
-        )
-        : "—"
-}
+                    user.account_created_at
+                        ? formatDate(
+                            user.account_created_at
+                        )
+                        : "—"
+                }
             </strong>
 
         </div>
 
     `;
 
-
     modal.classList.add(
         "show"
     );
-
 }
-
-
-/* ==========================================
-   DATE FORMAT
-========================================== */
 
 function formatDate(
     value
@@ -1242,10 +1171,8 @@ function formatDate(
         return "—";
     }
 
-
     const date =
         new Date(value);
-
 
     if (
         Number.isNaN(
@@ -1254,9 +1181,7 @@ function formatDate(
     ) {
 
         return "—";
-
     }
-
 
     return date.toLocaleString(
         undefined,
@@ -1268,13 +1193,7 @@ function formatDate(
             minute: "2-digit"
         }
     );
-
 }
-
-
-/* ==========================================
-   HTML ESCAPE
-========================================== */
 
 function escapeHTML(
     value
@@ -1303,16 +1222,25 @@ function escapeHTML(
         /'/g,
         "&#039;"
     );
-
 }
-
-/* ==========================================
-   MAKE USER ADMIN
-========================================== */
 
 async function makeUserAdmin(
     userId
 ) {
+
+    if (
+        window.examVerseAdmin?.isMainAdmin !== true &&
+        window.examVerseAdmin?.hasPermission(
+            "admin_management.make_admin"
+        ) !== true
+    ) {
+
+        showAccessDenied(
+            "make users Admin"
+        );
+
+        return;
+    }
 
     const user =
         allUsers.find(
@@ -1320,11 +1248,9 @@ async function makeUserAdmin(
                 item.id === userId
         );
 
-
     if (!user) {
         return;
     }
-
 
     const name =
         [
@@ -1337,20 +1263,16 @@ async function makeUserAdmin(
         .trim() ||
         "this user";
 
-
     const confirmed =
         window.confirm(
             `Make ${name} an Admin?\n\n` +
-            `You will be able to assign their `
-            +
+            `You will be able to assign their ` +
             `permissions after they become an Admin.`
         );
-
 
     if (!confirmed) {
         return;
     }
-
 
     try {
 
@@ -1368,22 +1290,15 @@ async function makeUserAdmin(
                 }
             );
 
-
         if (error) {
-
             throw error;
-
         }
 
-
         await loadUsers();
-
 
         alert(
             `${name} is now an Admin.`
         );
-
-
     }
 
     catch (error) {
@@ -1393,24 +1308,30 @@ async function makeUserAdmin(
             error
         );
 
-
         alert(
             error.message ||
             "Unable to make this user an Admin."
         );
-
     }
-
 }
-
-
-/* ==========================================
-   REMOVE ADMIN
-========================================== */
 
 async function removeAdmin(
     userId
 ) {
+
+    if (
+        window.examVerseAdmin?.isMainAdmin !== true &&
+        window.examVerseAdmin?.hasPermission(
+            "admin_management.remove_admin"
+        ) !== true
+    ) {
+
+        showAccessDenied(
+            "remove Admin access"
+        );
+
+        return;
+    }
 
     const user =
         allUsers.find(
@@ -1418,11 +1339,9 @@ async function removeAdmin(
                 item.id === userId
         );
 
-
     if (!user) {
         return;
     }
-
 
     const name =
         [
@@ -1435,18 +1354,15 @@ async function removeAdmin(
         .trim() ||
         "this Admin";
 
-
     const confirmed =
         window.confirm(
             `Remove Admin access from ${name}?\n\n` +
             `Their administrator permissions will also be removed.`
         );
 
-
     if (!confirmed) {
         return;
     }
-
 
     try {
 
@@ -1464,22 +1380,15 @@ async function removeAdmin(
                 }
             );
 
-
         if (error) {
-
             throw error;
-
         }
 
-
         await loadUsers();
-
 
         alert(
             `${name} is now a normal User.`
         );
-
-
     }
 
     catch (error) {
@@ -1489,23 +1398,30 @@ async function removeAdmin(
             error
         );
 
-
         alert(
             error.message ||
             "Unable to remove Admin access."
         );
-
     }
-
 }
-
-/* ==========================================
-   OPEN PERMISSION MANAGER
-========================================== */
 
 async function openPermissions(
     adminId
 ) {
+
+    if (
+        window.examVerseAdmin?.isMainAdmin !== true &&
+        window.examVerseAdmin?.hasPermission(
+            "admin_management.change_permissions"
+        ) !== true
+    ) {
+
+        showAccessDenied(
+            "change administrator permissions"
+        );
+
+        return;
+    }
 
     const adminUser =
         allUsers.find(
@@ -1513,11 +1429,9 @@ async function openPermissions(
                 user.id === adminId
         );
 
-
     if (!adminUser) {
         return;
     }
-
 
     if (
         adminUser.admin?.role !==
@@ -1529,9 +1443,7 @@ async function openPermissions(
         );
 
         return;
-
     }
-
 
     try {
 
@@ -1547,13 +1459,9 @@ async function openPermissions(
                 }
             );
 
-
         if (error) {
-
             throw error;
-
         }
-
 
         const currentPermissions =
             Array.isArray(data)
@@ -1563,12 +1471,10 @@ async function openPermissions(
                 )
                 : [];
 
-
         createPermissionModal(
             adminUser,
             currentPermissions
         );
-
     }
 
     catch (error) {
@@ -1578,20 +1484,12 @@ async function openPermissions(
             error
         );
 
-
         alert(
             error.message ||
             "Unable to load permissions."
         );
-
     }
-
 }
-
-
-/* ==========================================
-   CREATE GRANULAR PERMISSION MODAL
-========================================== */
 
 function createPermissionModal(
     adminUser,
@@ -1603,11 +1501,9 @@ function createPermissionModal(
             "adminPermissionModal"
         );
 
-
     if (existing) {
         existing.remove();
     }
-
 
     const fullName =
         [
@@ -1619,11 +1515,6 @@ function createPermissionModal(
         .join(" ")
         .trim() ||
         "Administrator";
-
-
-    /* ==========================================
-       PERMISSION GROUPS
-    ========================================== */
 
     const permissionGroups = [
 
@@ -1649,9 +1540,7 @@ function createPermissionModal(
                 }
 
             ]
-
         },
-
 
         {
             title: "Exams",
@@ -1680,9 +1569,7 @@ function createPermissionModal(
                 }
 
             ]
-
         },
-
 
         {
             title: "Questions",
@@ -1711,9 +1598,7 @@ function createPermissionModal(
                 }
 
             ]
-
         },
-
 
         {
             title: "Results",
@@ -1727,9 +1612,7 @@ function createPermissionModal(
                 }
 
             ]
-
         },
-
 
         {
             title: "Analytics",
@@ -1743,9 +1626,7 @@ function createPermissionModal(
                 }
 
             ]
-
         },
-
 
         {
             title: "Settings",
@@ -1764,9 +1645,7 @@ function createPermissionModal(
                 }
 
             ]
-
         },
-
 
         {
             title: "Admin Management",
@@ -1799,29 +1678,20 @@ function createPermissionModal(
                 }
 
             ]
-
         }
 
     ];
-
-
-    /* ==========================================
-       CREATE MODAL
-    ========================================== */
 
     const modal =
         document.createElement(
             "div"
         );
 
-
     modal.id =
         "adminPermissionModal";
 
-
     modal.className =
         "admin-permission-modal";
-
 
     modal.innerHTML = `
 
@@ -1835,11 +1705,8 @@ function createPermissionModal(
                 id="permissionCloseBtn"
                 aria-label="Close"
             >
-
                 &times;
-
             </button>
-
 
             <div
                 class="permission-modal-header"
@@ -1858,7 +1725,6 @@ function createPermissionModal(
 
                 </div>
 
-
                 <div>
 
                     <h2>
@@ -1875,17 +1741,13 @@ function createPermissionModal(
 
             </div>
 
-
             <div
                 class="permission-info"
             >
-
                 Choose exactly what this
                 administrator can view,
                 create, edit or delete.
-
             </div>
-
 
             <div
                 class="permission-list"
@@ -1921,7 +1783,6 @@ function createPermissionModal(
 
                                     </div>
 
-
                                     <div
                                         class="
                                             permission-group-options
@@ -1955,17 +1816,13 @@ function createPermissionModal(
                                                                 }
                                                             >
 
-
                                                             <span
                                                                 class="
                                                                     permission-item-text
                                                                 "
                                                             >
-
                                                                 ${permission.label}
-
                                                             </span>
-
 
                                                             <span
                                                                 class="
@@ -2000,7 +1857,6 @@ function createPermissionModal(
 
             </div>
 
-
             <div
                 class="
                     permission-modal-actions
@@ -2014,11 +1870,8 @@ function createPermissionModal(
                         permission-cancel-btn
                     "
                 >
-
                     Cancel
-
                 </button>
-
 
                 <button
                     type="button"
@@ -2045,15 +1898,9 @@ function createPermissionModal(
 
     `;
 
-
     document.body.appendChild(
         modal
     );
-
-
-    /* ==========================================
-       CLOSE
-    ========================================== */
 
     document
         .getElementById(
@@ -2068,7 +1915,6 @@ function createPermissionModal(
             }
         );
 
-
     document
         .getElementById(
             "permissionCancelBtn"
@@ -2082,7 +1928,6 @@ function createPermissionModal(
             }
         );
 
-
     modal.addEventListener(
         "click",
         event => {
@@ -2094,14 +1939,8 @@ function createPermissionModal(
                 modal.remove();
 
             }
-
         }
     );
-
-
-    /* ==========================================
-       SAVE
-    ========================================== */
 
     document
         .getElementById(
@@ -2118,12 +1957,7 @@ function createPermissionModal(
 
             }
         );
-
 }
-
-/* ==========================================
-   SAVE ADMIN PERMISSIONS
-========================================== */
 
 async function saveAdminPermissions(
     adminId,
@@ -2134,7 +1968,6 @@ async function saveAdminPermissions(
         modal.querySelectorAll(
             ".admin-permission-checkbox"
         );
-
 
     const permissions =
         Array.from(
@@ -2149,21 +1982,17 @@ async function saveAdminPermissions(
                 checkbox.value
         );
 
-
     const saveButton =
         document.getElementById(
             "permissionSaveBtn"
         );
 
-
     if (!saveButton) {
         return;
     }
 
-
     saveButton.disabled =
         true;
-
 
     saveButton.innerHTML = `
 
@@ -2178,7 +2007,6 @@ async function saveAdminPermissions(
         Saving...
 
     `;
-
 
     try {
 
@@ -2196,30 +2024,18 @@ async function saveAdminPermissions(
                 }
             );
 
-
         if (error) {
-
             throw error;
-
         }
-
 
         modal.remove();
 
-
-        /*
-         * Refresh the Users page so the latest
-         * administrator state is available.
-         */
-
         await loadUsers();
-
 
         showAccessMessage(
             "Administrator permissions updated successfully.",
             "success"
         );
-
     }
 
     catch (error) {
@@ -2229,17 +2045,14 @@ async function saveAdminPermissions(
             error
         );
 
-
         showAccessMessage(
             error.message ||
             "Unable to save administrator permissions.",
             "error"
         );
 
-
         saveButton.disabled =
             false;
-
 
         saveButton.innerHTML = `
 
@@ -2253,14 +2066,8 @@ async function saveAdminPermissions(
             Save Permissions
 
         `;
-
     }
-
 }
-
-/* ==========================================
-   ACCESS / SYSTEM MESSAGE
-========================================== */
 
 function showAccessMessage(
     message,
@@ -2272,25 +2079,20 @@ function showAccessMessage(
             "examVerseAccessMessage"
         );
 
-
     if (existing) {
         existing.remove();
     }
-
 
     const popup =
         document.createElement(
             "div"
         );
 
-
     popup.id =
         "examVerseAccessMessage";
 
-
     popup.className =
         `examverse-access-message ${type}`;
-
 
     popup.innerHTML = `
 
@@ -2311,46 +2113,43 @@ function showAccessMessage(
 
         </div>
 
-
         <div
             class="access-message-content"
         >
 
             <strong>
+
                 ${
                     type === "success"
                         ? "Success"
                         : "Access Denied"
                 }
+
             </strong>
 
-
             <span>
+
                 ${escapeHTML(
                     message
                 )}
+
             </span>
 
         </div>
-
 
         <button
             type="button"
             class="access-message-close"
             aria-label="Close"
         >
-
             &times;
-
         </button>
 
     `;
 
-
     document.body.appendChild(
         popup
     );
-
 
     popup
         .querySelector(
@@ -2365,7 +2164,6 @@ function showAccessMessage(
             }
         );
 
-
     setTimeout(
         () => {
 
@@ -2374,12 +2172,7 @@ function showAccessMessage(
         },
         4500
     );
-
 }
-
-/* ==========================================
-   LAST SEEN HEARTBEAT
-========================================== */
 
 async function updateLastSeen() {
 
@@ -2394,11 +2187,9 @@ async function updateLastSeen() {
                 .auth
                 .getUser();
 
-
         if (!user) {
             return;
         }
-
 
         const {
             error
@@ -2407,40 +2198,371 @@ async function updateLastSeen() {
                 "update_my_last_seen"
             );
 
-
         if (error) {
 
             console.error(
                 "Last seen update failed:",
                 error
             );
-
         }
-
     }
+
     catch (error) {
 
         console.error(
             "Last seen error:",
             error
         );
-
     }
-
 }
-
-/* ==========================================
-   START LAST SEEN TRACKING
-========================================== */
 
 async function startLastSeenTracking() {
 
     await updateLastSeen();
 
-
     setInterval(
         updateLastSeen,
         60 * 1000
     );
+}
 
+async function editUser(
+    userId
+) {
+
+    if (
+        !window.examVerseAdmin?.hasPermission(
+            "users.edit"
+        )
+    ) {
+
+        showAccessDenied(
+            "edit users"
+        );
+
+        return;
+    }
+
+    const user =
+        allUsers.find(
+            item =>
+                item.id === userId
+        );
+
+    if (!user) {
+        return;
+    }
+
+    const firstName =
+        prompt(
+            "First name:",
+            user.first_name || ""
+        );
+
+    if (firstName === null) {
+        return;
+    }
+
+    const middleName =
+        prompt(
+            "Middle name:",
+            user.middle_name || ""
+        );
+
+    if (middleName === null) {
+        return;
+    }
+
+    const lastName =
+        prompt(
+            "Last name:",
+            user.last_name || ""
+        );
+
+    if (lastName === null) {
+        return;
+    }
+
+    const phone =
+        prompt(
+            "Phone:",
+            user.phone || ""
+        );
+
+    if (phone === null) {
+        return;
+    }
+
+    const ageInput =
+        prompt(
+            "Age:",
+            user.age ?? ""
+        );
+
+    if (ageInput === null) {
+        return;
+    }
+
+    const age =
+        ageInput.trim() === ""
+            ? null
+            : Number(ageInput);
+
+    if (
+        age !== null &&
+        (
+            !Number.isInteger(age) ||
+            age < 1 ||
+            age > 120
+        )
+    ) {
+
+        showPopup(
+            "error",
+            "Invalid Age",
+            "Please enter a valid age."
+        );
+
+        return;
+    }
+
+    const gender =
+        prompt(
+            "Gender:",
+            user.gender || ""
+        );
+
+    if (gender === null) {
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "update_user_profile",
+                {
+
+                    target_user_id:
+                        userId,
+
+                    new_first_name:
+                        firstName,
+
+                    new_middle_name:
+                        middleName,
+
+                    new_last_name:
+                        lastName,
+
+                    new_phone:
+                        phone,
+
+                    new_age:
+                        age,
+
+                    new_gender:
+                        gender
+                }
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        await loadUsers();
+
+        showPopup(
+            "success",
+            "User Updated",
+            "The user's information was updated successfully."
+        );
+    }
+
+    catch (error) {
+
+        console.error(
+            "Edit user error:",
+            error
+        );
+
+        showPopup(
+            "error",
+            "Unable to Edit User",
+            error.message ||
+            "The user could not be updated."
+        );
+    }
+}
+
+async function deleteUser(
+    userId
+) {
+
+    if (
+        !window.examVerseAdmin?.hasPermission(
+            "users.delete"
+        )
+    ) {
+
+        showAccessDenied(
+            "delete users"
+        );
+
+        return;
+    }
+
+    const user =
+        allUsers.find(
+            item =>
+                item.id === userId
+        );
+
+    if (!user) {
+        return;
+    }
+
+    const name =
+        [
+            user.first_name,
+            user.middle_name,
+            user.last_name
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .trim() ||
+        "this user";
+
+    const confirmed =
+        window.confirm(
+            `Delete ${name}?\n\n` +
+            `This action cannot be undone.`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "delete_user_profile",
+                {
+                    target_user_id:
+                        userId
+                }
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        await loadUsers();
+
+        showPopup(
+            "success",
+            "User Deleted",
+            `${name} has been removed successfully.`
+        );
+    }
+
+    catch (error) {
+
+        console.error(
+            "Delete user error:",
+            error
+        );
+
+        showPopup(
+            "error",
+            "Unable to Delete User",
+            error.message ||
+            "The user could not be deleted."
+        );
+    }
+}
+
+function showAccessDenied(
+    action
+) {
+
+    showPopup(
+        "error",
+        "Access Restricted",
+        `You don't have permission to ${action}. Please contact the Main Admin.`
+    );
+}
+
+function setupUsersTableScroll() {
+
+    const scrollContainer =
+        document.getElementById(
+            "usersTableScroll"
+        );
+
+    const leftButton =
+        document.getElementById(
+            "usersScrollLeft"
+        );
+
+    const rightButton =
+        document.getElementById(
+            "usersScrollRight"
+        );
+
+    if (
+        !scrollContainer ||
+        !leftButton ||
+        !rightButton
+    ) {
+
+        console.warn(
+            "Users table scroll controls not found."
+        );
+
+        return;
+    }
+
+    const scrollAmount = 500;
+
+    leftButton.addEventListener(
+        "click",
+        function () {
+
+            scrollContainer.scrollBy({
+
+                left:
+                    -scrollAmount,
+
+                behavior:
+                    "smooth"
+
+            });
+        }
+    );
+
+    rightButton.addEventListener(
+        "click",
+        function () {
+
+            scrollContainer.scrollBy({
+
+                left:
+                    scrollAmount,
+
+                behavior:
+                    "smooth"
+
+            });
+        }
+    );
+
+    console.log(
+        "Users table horizontal scroll ready."
+    );
 }

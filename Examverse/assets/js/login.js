@@ -575,6 +575,26 @@ async function loginUser(e) {
 
         });
 
+        // ==========================================
+// UPDATE LAST SEEN IMMEDIATELY AFTER LOGIN
+// ==========================================
+
+const {
+    error: lastSeenError
+} =
+await supabaseClient.rpc(
+    "update_my_last_seen"
+);
+
+if (lastSeenError) {
+
+    console.error(
+        "Initial last seen update failed:",
+        lastSeenError
+    );
+
+}
+
 
     if (error) {
 

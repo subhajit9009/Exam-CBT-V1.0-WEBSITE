@@ -4,6 +4,147 @@
    Created by Subhajit Paul
 ========================================== */
 
+// ==========================================
+// USER LAST SEEN / ONLINE HEARTBEAT
+// ==========================================
+
+let lastSeenInterval = null;
+let lastSeenUpdating = false;
+
+
+// ==========================================
+// UPDATE LAST SEEN
+// ==========================================
+
+async function updateLastSeen() {
+
+    // Prevent overlapping requests
+    if (lastSeenUpdating) {
+        return;
+    }
+
+    lastSeenUpdating = true;
+
+    try {
+
+        const {
+            data: {
+                user
+            },
+            error: userError
+        } = await supabaseClient.auth.getUser();
+
+
+        // User is no longer logged in
+        if (
+            userError ||
+            !user
+        ) {
+
+            return;
+
+        }
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient.rpc(
+            "update_my_last_seen"
+        );
+
+
+        if (error) {
+
+            console.error(
+                "Last seen update failed:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "🟢 Last seen updated:",
+            data
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Last seen heartbeat error:",
+            error
+        );
+
+    }
+
+    finally {
+
+        lastSeenUpdating = false;
+
+    }
+
+}
+
+
+// ==========================================
+// START LAST SEEN HEARTBEAT
+// ==========================================
+
+function startLastSeenHeartbeat() {
+
+    // Prevent duplicate intervals
+    if (lastSeenInterval) {
+        return;
+    }
+
+
+    // Update immediately
+    updateLastSeen();
+
+
+    // Update every 60 seconds
+    lastSeenInterval = setInterval(
+        updateLastSeen,
+        60 * 1000
+    );
+
+
+    // Update immediately when user returns
+    window.addEventListener(
+        "focus",
+        updateLastSeen
+    );
+
+
+    // Update when browser tab becomes visible
+    document.addEventListener(
+        "visibilitychange",
+        () => {
+
+            if (
+                document.visibilityState ===
+                "visible"
+            ) {
+
+                updateLastSeen();
+
+            }
+
+        }
+    );
+
+
+    console.log(
+        "🟢 Last seen heartbeat started."
+    );
+
+}
+
 
 // ==========================================
 // CHECK SUPABASE LOGIN
@@ -27,23 +168,29 @@ async function loadDashboard() {
         // ==========================================
 
         if (
-            authError ||
-            !authUser
-        ) {
+    authError ||
+    !authUser
+) {
 
-            window.location.replace(
-                "login.html"
-            );
+    window.location.replace(
+        "login.html"
+    );
 
-            return;
+    return;
+}
 
-        }
+
+// ==========================================
+// START LAST SEEN HEARTBEAT
+// ==========================================
+
+startLastSeenHeartbeat();
 
 
-        console.log(
-            "Dashboard Auth User:",
-            authUser
-        );
+console.log(
+    "Dashboard Auth User:",
+    authUser
+);
 
 
         // ==========================================
@@ -2972,6 +3119,20 @@ if (!confirmed) {
 
 
         try {
+
+            // ==================================
+// STOP LAST SEEN HEARTBEAT
+// ==================================
+
+if (lastSeenInterval) {
+
+    clearInterval(
+        lastSeenInterval
+    );
+
+    lastSeenInterval = null;
+
+}
 
             // ==================================
             // SUPABASE LOGOUT
