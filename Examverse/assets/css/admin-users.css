@@ -950,3 +950,389 @@ tr:last-child td {
     }
 
 }
+
+/* ==========================================
+   GRANULAR PERMISSION GROUPS
+========================================== */
+
+.permission-group {
+
+    margin-bottom: 18px;
+
+}
+
+
+.permission-group-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 8px;
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+}
+
+
+.permission-group-title i {
+
+    width: 20px;
+
+    color: #2563eb;
+
+}
+
+
+.permission-group-options {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(120px, 1fr)
+        );
+
+    gap: 8px;
+
+}
+
+
+.permission-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 42px;
+
+    padding: 9px 11px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #fff;
+
+    cursor: pointer;
+
+    transition: 0.15s ease;
+
+}
+
+
+.permission-item:hover {
+
+    border-color: #93c5fd;
+
+    background: #f8fbff;
+
+}
+
+
+.permission-item input {
+
+    width: 16px;
+
+    height: 16px;
+
+    margin: 0;
+
+    cursor: pointer;
+
+}
+
+
+.permission-item-text {
+
+    flex: 1;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+.permission-check {
+
+    color: #2563eb;
+
+    opacity: 0;
+
+}
+
+
+.permission-item:has(
+    input:checked
+) {
+
+    border-color: #93c5fd;
+
+    background: #eff6ff;
+
+}
+
+
+.permission-item:has(
+    input:checked
+)
+.permission-check {
+
+    opacity: 1;
+
+}
+
+
+/* ==========================================
+   ACCESS MESSAGE
+========================================== */
+
+.examverse-access-message {
+
+    position: fixed;
+
+    top: 24px;
+
+    right: 24px;
+
+    z-index: 20000;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: min(
+        420px,
+        calc(100vw - 40px)
+    );
+
+    padding: 15px 16px;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 15px 45px
+        rgba(15, 23, 42, 0.18);
+
+    border: 1px solid #e2e8f0;
+
+}
+
+
+.examverse-access-message.error {
+
+    border-left: 4px solid #dc2626;
+
+}
+
+
+.examverse-access-message.success {
+
+    border-left: 4px solid #16a34a;
+
+}
+
+
+.access-message-icon {
+
+    font-size: 21px;
+
+}
+
+
+.examverse-access-message.error
+.access-message-icon {
+
+    color: #dc2626;
+
+}
+
+
+.examverse-access-message.success
+.access-message-icon {
+
+    color: #16a34a;
+
+}
+
+
+.access-message-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    flex: 1;
+
+}
+
+
+.access-message-content strong {
+
+    color: #172033;
+
+    font-size: 14px;
+
+}
+
+
+.access-message-content span {
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+}
+
+
+.access-message-close {
+
+    border: none;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+}
+
+
+.access-message-close:hover {
+
+    color: #334155;
+
+}
+
+
+@media (
+    max-width: 600px
+) {
+
+    .examverse-access-message {
+
+        top: 12px;
+
+        right: 12px;
+
+        left: 12px;
+
+        width: auto;
+
+    }
+
+
+    .permission-group-options {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+}
+
+/* ==========================================
+   ACTIVITY STATUS
+========================================== */
+
+.activity-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+.activity-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    display: inline-block;
+
+}
+
+
+.activity-badge.online {
+
+    color: #15803d;
+
+    background: #dcfce7;
+
+}
+
+
+.activity-badge.online
+.activity-dot {
+
+    background: #22c55e;
+
+}
+
+
+.activity-badge.offline {
+
+    color: #64748b;
+
+    background: #f1f5f9;
+
+}
+
+
+.activity-badge.offline
+.activity-dot {
+
+    background: #94a3b8;
+
+}
+
+.table-wrapper {
+
+    overflow-x: auto;
+
+}
+
+
+.users-card table {
+
+    min-width: 1450px;
+
+}

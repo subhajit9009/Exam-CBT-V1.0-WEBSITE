@@ -45,6 +45,8 @@ async function initializeUsers() {
 
     await loadUsers();
 
+    startLastSeenTracking();
+
 }
 
 
@@ -166,6 +168,18 @@ async function loadUsers() {
 
                     account_created_at:
                         user.account_created_at,
+
+                        last_login_at:
+    user.last_login_at,
+
+last_seen_at:
+    user.last_seen_at,
+
+is_online:
+    user.is_online,
+
+activity_status:
+    user.activity_status,
 
 
                     // --------------------------------
@@ -383,6 +397,40 @@ function renderUsers(users) {
                 const createdAt =
                     user.account_created_at ||
                     null;
+
+                    // ==================================
+// LAST LOGIN
+// ==================================
+
+const lastLogin =
+    user.last_login_at ||
+    null;
+
+
+// ==================================
+// LAST SEEN
+// ==================================
+
+const lastSeen =
+    user.last_seen_at ||
+    null;
+
+
+// ==================================
+// ACTIVITY STATUS
+// ==================================
+
+const activityStatus =
+    user.activity_status ||
+    "Never Active";
+
+
+// ==================================
+// ONLINE
+// ==================================
+
+const isOnline =
+    user.is_online === true;
 
 
                 // ==================================
@@ -620,6 +668,54 @@ function renderUsers(users) {
                             }
 
                         </td>
+
+                        <!-- Last Login -->
+
+<td>
+
+    ${
+        lastLogin
+            ? formatDate(lastLogin)
+            : "Never"
+    }
+
+</td>
+
+
+<!-- Last Seen -->
+
+<td>
+
+    ${
+        lastSeen
+            ? formatDate(lastSeen)
+            : "Never"
+    }
+
+</td>
+
+
+<!-- Activity -->
+
+<td>
+
+    ${
+        isOnline
+            ? `
+                <span class="activity-badge online">
+                    <span class="activity-dot"></span>
+                    Online
+                </span>
+              `
+            : `
+                <span class="activity-badge offline">
+                    <span class="activity-dot"></span>
+                    ${escapeHTML(activityStatus)}
+                </span>
+              `
+    }
+
+</td>
 
 
                         <td>
@@ -1494,7 +1590,7 @@ async function openPermissions(
 
 
 /* ==========================================
-   CREATE PERMISSION MODAL
+   CREATE GRANULAR PERMISSION MODAL
 ========================================== */
 
 function createPermissionModal(
@@ -1525,46 +1621,193 @@ function createPermissionModal(
         "Administrator";
 
 
-    const permissions = [
+    /* ==========================================
+       PERMISSION GROUPS
+    ========================================== */
+
+    const permissionGroups = [
 
         {
-            id: "users",
-            label: "Manage Users",
-            icon: "fa-users"
+            title: "Users",
+            icon: "fa-users",
+
+            permissions: [
+
+                {
+                    id: "users.view",
+                    label: "View"
+                },
+
+                {
+                    id: "users.edit",
+                    label: "Edit"
+                },
+
+                {
+                    id: "users.delete",
+                    label: "Delete"
+                }
+
+            ]
+
         },
 
-        {
-            id: "exams",
-            label: "Manage Exams",
-            icon: "fa-file-lines"
-        },
 
         {
-            id: "questions",
-            label: "Manage Questions",
-            icon: "fa-book"
+            title: "Exams",
+            icon: "fa-file-lines",
+
+            permissions: [
+
+                {
+                    id: "exams.view",
+                    label: "View"
+                },
+
+                {
+                    id: "exams.create",
+                    label: "Create"
+                },
+
+                {
+                    id: "exams.edit",
+                    label: "Edit"
+                },
+
+                {
+                    id: "exams.delete",
+                    label: "Delete"
+                }
+
+            ]
+
         },
 
-        {
-            id: "results",
-            label: "Manage Results",
-            icon: "fa-chart-column"
-        },
 
         {
-            id: "analytics",
-            label: "Analytics",
-            icon: "fa-chart-line"
+            title: "Questions",
+            icon: "fa-book",
+
+            permissions: [
+
+                {
+                    id: "questions.view",
+                    label: "View"
+                },
+
+                {
+                    id: "questions.create",
+                    label: "Create"
+                },
+
+                {
+                    id: "questions.edit",
+                    label: "Edit"
+                },
+
+                {
+                    id: "questions.delete",
+                    label: "Delete"
+                }
+
+            ]
+
         },
 
+
         {
-            id: "settings",
-            label: "Manage Settings",
-            icon: "fa-gear"
+            title: "Results",
+            icon: "fa-chart-column",
+
+            permissions: [
+
+                {
+                    id: "results.view",
+                    label: "View"
+                }
+
+            ]
+
+        },
+
+
+        {
+            title: "Analytics",
+            icon: "fa-chart-line",
+
+            permissions: [
+
+                {
+                    id: "analytics.view",
+                    label: "View"
+                }
+
+            ]
+
+        },
+
+
+        {
+            title: "Settings",
+            icon: "fa-gear",
+
+            permissions: [
+
+                {
+                    id: "settings.view",
+                    label: "View"
+                },
+
+                {
+                    id: "settings.edit",
+                    label: "Edit"
+                }
+
+            ]
+
+        },
+
+
+        {
+            title: "Admin Management",
+            icon: "fa-user-shield",
+
+            permissions: [
+
+                {
+                    id:
+                        "admin_management.make_admin",
+
+                    label:
+                        "Make Admin"
+                },
+
+                {
+                    id:
+                        "admin_management.change_permissions",
+
+                    label:
+                        "Change Permissions"
+                },
+
+                {
+                    id:
+                        "admin_management.remove_admin",
+
+                    label:
+                        "Remove Admin"
+                }
+
+            ]
+
         }
 
     ];
 
+
+    /* ==========================================
+       CREATE MODAL
+    ========================================== */
 
     const modal =
         document.createElement(
@@ -1590,6 +1833,7 @@ function createPermissionModal(
                 type="button"
                 class="permission-close"
                 id="permissionCloseBtn"
+                aria-label="Close"
             >
 
                 &times;
@@ -1636,8 +1880,9 @@ function createPermissionModal(
                 class="permission-info"
             >
 
-                Select which areas this Admin
-                is allowed to manage.
+                Choose exactly what this
+                administrator can view,
+                create, edit or delete.
 
             </div>
 
@@ -1647,92 +1892,127 @@ function createPermissionModal(
             >
 
                 ${
-                    permissions.map(
-                        permission => `
+                    permissionGroups
+                        .map(
+                            group => `
 
-                            <label
-                                class="
-                                    permission-item
-                                "
-                            >
-
-                                <input
-                                    type="checkbox"
+                                <div
                                     class="
-                                        admin-permission-checkbox
-                                    "
-                                    value="${permission.id}"
-                                    ${
-                                        currentPermissions
-                                            .includes(
-                                                permission.id
-                                            )
-                                            ? "checked"
-                                            : ""
-                                    }
-                                >
-
-
-                                <span
-                                    class="
-                                        permission-item-icon
+                                        permission-group
                                     "
                                 >
 
-                                    <i
+                                    <div
                                         class="
-                                            fa-solid
-                                            ${permission.icon}
+                                            permission-group-title
                                         "
-                                    ></i>
+                                    >
 
-                                </span>
+                                        <i
+                                            class="
+                                                fa-solid
+                                                ${group.icon}
+                                            "
+                                        ></i>
+
+                                        <span>
+                                            ${group.title}
+                                        </span>
+
+                                    </div>
 
 
-                                <span
-                                    class="
-                                        permission-item-text
-                                    "
-                                >
-
-                                    ${permission.label}
-
-                                </span>
-
-
-                                <span
-                                    class="
-                                        permission-check
-                                    "
-                                >
-
-                                    <i
+                                    <div
                                         class="
-                                            fa-solid
-                                            fa-check
+                                            permission-group-options
                                         "
-                                    ></i>
+                                    >
 
-                                </span>
+                                        ${
+                                            group.permissions
+                                                .map(
+                                                    permission => `
 
-                            </label>
+                                                        <label
+                                                            class="
+                                                                permission-item
+                                                            "
+                                                        >
 
-                        `
-                    )
-                    .join("")
+                                                            <input
+                                                                type="checkbox"
+                                                                class="
+                                                                    admin-permission-checkbox
+                                                                "
+                                                                value="${permission.id}"
+                                                                ${
+                                                                    currentPermissions
+                                                                        .includes(
+                                                                            permission.id
+                                                                        )
+                                                                            ? "checked"
+                                                                            : ""
+                                                                }
+                                                            >
+
+
+                                                            <span
+                                                                class="
+                                                                    permission-item-text
+                                                                "
+                                                            >
+
+                                                                ${permission.label}
+
+                                                            </span>
+
+
+                                                            <span
+                                                                class="
+                                                                    permission-check
+                                                                "
+                                                            >
+
+                                                                <i
+                                                                    class="
+                                                                        fa-solid
+                                                                        fa-check
+                                                                    "
+                                                                ></i>
+
+                                                            </span>
+
+                                                        </label>
+
+                                                    `
+                                                )
+                                                .join("")
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            `
+                        )
+                        .join("")
                 }
 
             </div>
 
 
             <div
-                class="permission-modal-actions"
+                class="
+                    permission-modal-actions
+                "
             >
 
                 <button
                     type="button"
                     id="permissionCancelBtn"
-                    class="permission-cancel-btn"
+                    class="
+                        permission-cancel-btn
+                    "
                 >
 
                     Cancel
@@ -1743,7 +2023,9 @@ function createPermissionModal(
                 <button
                     type="button"
                     id="permissionSaveBtn"
-                    class="permission-save-btn"
+                    class="
+                        permission-save-btn
+                    "
                 >
 
                     <i
@@ -1769,9 +2051,9 @@ function createPermissionModal(
     );
 
 
-    // ==========================================
-    // CLOSE
-    // ==========================================
+    /* ==========================================
+       CLOSE
+    ========================================== */
 
     document
         .getElementById(
@@ -1817,9 +2099,9 @@ function createPermissionModal(
     );
 
 
-    // ==========================================
-    // SAVE
-    // ==========================================
+    /* ==========================================
+       SAVE
+    ========================================== */
 
     document
         .getElementById(
@@ -1874,6 +2156,11 @@ async function saveAdminPermissions(
         );
 
 
+    if (!saveButton) {
+        return;
+    }
+
+
     saveButton.disabled =
         true;
 
@@ -1920,10 +2207,18 @@ async function saveAdminPermissions(
         modal.remove();
 
 
-        alert(
-            "Administrator permissions updated successfully."
-        );
+        /*
+         * Refresh the Users page so the latest
+         * administrator state is available.
+         */
 
+        await loadUsers();
+
+
+        showAccessMessage(
+            "Administrator permissions updated successfully.",
+            "success"
+        );
 
     }
 
@@ -1935,9 +2230,10 @@ async function saveAdminPermissions(
         );
 
 
-        alert(
+        showAccessMessage(
             error.message ||
-            "Unable to save administrator permissions."
+            "Unable to save administrator permissions.",
+            "error"
         );
 
 
@@ -1959,5 +2255,192 @@ async function saveAdminPermissions(
         `;
 
     }
+
+}
+
+/* ==========================================
+   ACCESS / SYSTEM MESSAGE
+========================================== */
+
+function showAccessMessage(
+    message,
+    type = "error"
+) {
+
+    const existing =
+        document.getElementById(
+            "examVerseAccessMessage"
+        );
+
+
+    if (existing) {
+        existing.remove();
+    }
+
+
+    const popup =
+        document.createElement(
+            "div"
+        );
+
+
+    popup.id =
+        "examVerseAccessMessage";
+
+
+    popup.className =
+        `examverse-access-message ${type}`;
+
+
+    popup.innerHTML = `
+
+        <div
+            class="access-message-icon"
+        >
+
+            <i
+                class="
+                    fa-solid
+                    ${
+                        type === "success"
+                            ? "fa-circle-check"
+                            : "fa-lock"
+                    }
+                "
+            ></i>
+
+        </div>
+
+
+        <div
+            class="access-message-content"
+        >
+
+            <strong>
+                ${
+                    type === "success"
+                        ? "Success"
+                        : "Access Denied"
+                }
+            </strong>
+
+
+            <span>
+                ${escapeHTML(
+                    message
+                )}
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="access-message-close"
+            aria-label="Close"
+        >
+
+            &times;
+
+        </button>
+
+    `;
+
+
+    document.body.appendChild(
+        popup
+    );
+
+
+    popup
+        .querySelector(
+            ".access-message-close"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                popup.remove();
+
+            }
+        );
+
+
+    setTimeout(
+        () => {
+
+            popup.remove();
+
+        },
+        4500
+    );
+
+}
+
+/* ==========================================
+   LAST SEEN HEARTBEAT
+========================================== */
+
+async function updateLastSeen() {
+
+    try {
+
+        const {
+            data: {
+                user
+            }
+        } =
+            await supabaseClient
+                .auth
+                .getUser();
+
+
+        if (!user) {
+            return;
+        }
+
+
+        const {
+            error
+        } =
+            await supabaseClient.rpc(
+                "update_my_last_seen"
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Last seen update failed:",
+                error
+            );
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Last seen error:",
+            error
+        );
+
+    }
+
+}
+
+/* ==========================================
+   START LAST SEEN TRACKING
+========================================== */
+
+async function startLastSeenTracking() {
+
+    await updateLastSeen();
+
+
+    setInterval(
+        updateLastSeen,
+        60 * 1000
+    );
 
 }

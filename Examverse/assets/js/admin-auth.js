@@ -205,3 +205,98 @@ window.examVerseAdminReady =
 
 
 })();
+
+/* ==========================================
+   EXAMVERSE GLOBAL LAST SEEN TRACKING
+========================================== */
+
+(function startGlobalLastSeen() {
+
+    let lastSeenTimer = null;
+
+
+    async function updateLastSeen() {
+
+        try {
+
+            const {
+                data: {
+                    user
+                },
+                error: userError
+            } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+
+
+            if (
+                userError ||
+                !user
+            ) {
+                return;
+            }
+
+
+            const {
+                error
+            } =
+                await supabaseClient.rpc(
+                    "update_my_last_seen"
+                );
+
+
+            if (error) {
+
+                console.error(
+                    "Last seen update failed:",
+                    error
+                );
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                "Last seen tracking error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // Update immediately
+    updateLastSeen();
+
+
+    // Then every 60 seconds
+    lastSeenTimer =
+        setInterval(
+            updateLastSeen,
+            60 * 1000
+        );
+
+
+    // Update when user returns to the tab
+    document.addEventListener(
+        "visibilitychange",
+        function () {
+
+            if (
+                document.visibilityState ===
+                "visible"
+            ) {
+
+                updateLastSeen();
+
+            }
+
+        }
+    );
+
+
+})();
+
