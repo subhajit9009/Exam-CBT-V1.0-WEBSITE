@@ -1646,3 +1646,451 @@ tr:last-child td {
 .table-scroll-btn:hover:not(:disabled) {
     cursor: pointer !important;
 }
+
+/* =========================================================
+   ADMIN USERS - EDIT & DELETE BUTTONS
+   ========================================================= */
+
+.user-action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================
+   BASE BUTTON
+   ========================= */
+
+.user-action-group .edit-btn,
+.user-action-group .delete-btn {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    min-width: 82px;
+    height: 36px;
+
+    padding: 0 13px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.12s ease;
+}
+
+
+/* =========================
+   EDIT BUTTON
+   ========================= */
+
+.user-action-group .edit-btn {
+
+    background: #eef4ff;
+    color: #2563eb;
+
+    border-color: #c9dcff;
+}
+
+
+.user-action-group .edit-btn:hover {
+
+    background: #2563eb;
+    color: #ffffff;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 4px 10px rgba(
+            37,
+            99,
+            235,
+            0.18
+        );
+
+    transform: translateY(-1px);
+}
+
+
+.user-action-group .edit-btn:active {
+
+    transform: translateY(0);
+
+    box-shadow: none;
+}
+
+
+/* =========================
+   DELETE BUTTON
+   ========================= */
+
+.user-action-group .delete-btn {
+
+    background: #fff1f2;
+    color: #dc2626;
+
+    border-color: #fecdd3;
+}
+
+
+.user-action-group .delete-btn:hover {
+
+    background: #dc2626;
+    color: #ffffff;
+
+    border-color: #dc2626;
+
+    box-shadow:
+        0 4px 10px rgba(
+            220,
+            38,
+            38,
+            0.18
+        );
+
+    transform: translateY(-1px);
+}
+
+
+.user-action-group .delete-btn:active {
+
+    transform: translateY(0);
+
+    box-shadow: none;
+}
+
+
+/* =========================
+   ICONS
+   ========================= */
+
+.user-action-group .edit-btn i,
+.user-action-group .delete-btn i {
+
+    font-size: 12px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   KEYBOARD ACCESSIBILITY
+   ========================= */
+
+.user-action-group .edit-btn:focus-visible,
+.user-action-group .delete-btn:focus-visible {
+
+    outline: 3px solid rgba(
+        37,
+        99,
+        235,
+        0.25
+    );
+
+    outline-offset: 2px;
+}
+
+
+/* =========================
+   DISABLED
+   ========================= */
+
+.user-action-group .edit-btn:disabled,
+.user-action-group .delete-btn:disabled {
+
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+
+    .user-action-group {
+
+        gap: 6px;
+
+    }
+
+
+    .user-action-group .edit-btn,
+    .user-action-group .delete-btn {
+
+        min-width: 72px;
+
+        height: 34px;
+
+        padding: 0 10px;
+
+        font-size: 12px;
+
+    }
+
+}
+
+/* =========================================================
+   USERS TABLE SCROLLING
+   ========================================================= */
+
+/* The entire table card */
+.users-table-card {
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   FIXED SCROLL CONTROL BAR
+   ========================================================= */
+
+.users-table-scroll-controls {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 64px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    padding: 10px 18px;
+}
+
+
+/* =========================================================
+   ACTUAL TABLE SCROLL AREA
+   ========================================================= */
+
+#usersTableScroll {
+
+    position: relative;
+
+    width: 100%;
+
+    /* Vertical scrolling */
+    max-height: 520px;
+
+    overflow-y: auto;
+
+    /* Horizontal scrolling */
+    overflow-x: auto;
+
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+
+    /* Prevent the page from taking over horizontal scroll */
+    overscroll-behavior: contain;
+
+    /* Keep table dimensions */
+    min-width: 0;
+}
+
+
+/* =========================================================
+   TABLE ITSELF
+   ========================================================= */
+
+#usersTableScroll table {
+
+    min-width: 1200px;
+
+    width: max-content;
+
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+#usersTableScroll thead th {
+
+    position: sticky;
+    top: 0;
+
+    z-index: 10;
+
+    background: #f8fafc;
+
+    white-space: nowrap;
+
+    box-shadow:
+        0 1px 0 #e5e7eb;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+#usersTableScroll th,
+#usersTableScroll td {
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CUSTOM SCROLLBAR
+   ========================================================= */
+
+#usersTableScroll::-webkit-scrollbar {
+
+    width: 10px;
+    height: 10px;
+}
+
+
+#usersTableScroll::-webkit-scrollbar-track {
+
+    background: #f1f5f9;
+}
+
+
+#usersTableScroll::-webkit-scrollbar-thumb {
+
+    background: #cbd5e1;
+
+    border-radius: 10px;
+
+    border: 2px solid #f1f5f9;
+}
+
+
+#usersTableScroll::-webkit-scrollbar-thumb:hover {
+
+    background: #94a3b8;
+}
+
+
+/* =========================================================
+   SCROLL BUTTONS
+   ========================================================= */
+
+#usersScrollLeft,
+#usersScrollRight {
+
+    position: relative;
+
+    z-index: 30;
+
+    flex-shrink: 0;
+
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #dbe3ef;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #2563eb;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.12s ease;
+}
+
+
+#usersScrollLeft:hover,
+#usersScrollRight:hover {
+
+    background: #eff6ff;
+
+    border-color: #93c5fd;
+
+    box-shadow:
+        0 3px 10px rgba(
+            37,
+            99,
+            235,
+            0.12
+        );
+
+    transform: translateY(-1px);
+}
+
+
+#usersScrollLeft:active,
+#usersScrollRight:active {
+
+    transform: translateY(0);
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .users-table-scroll-controls {
+
+        min-height: 56px;
+
+        padding: 8px 12px;
+    }
+
+
+    #usersTableScroll {
+
+        max-height: 60vh;
+
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+
+    #usersScrollLeft,
+    #usersScrollRight {
+
+        width: 38px;
+        height: 38px;
+    }
+
+}

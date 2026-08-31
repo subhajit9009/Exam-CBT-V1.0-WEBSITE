@@ -826,25 +826,56 @@ function renderUsers(users) {
      * ==========================================================
      */
 
-    tableBody
-        .querySelectorAll(
-            ".user-edit-btn"
-        )
-        .forEach(
-            button => {
+    // ==========================================
+// EDIT USERS
+// ==========================================
+//
+// Use event delegation because renderUsers()
+// replaces the table rows with innerHTML.
+// This keeps Edit working after refresh,
+// search, delete, and every table re-render.
+//
 
-                button.addEventListener(
-                    "click",
-                    async () => {
+if (!tableBody.dataset.editHandlerAttached) {
 
-                        await editUser(
-                            button.dataset.userId
-                        );
+    tableBody.addEventListener(
+        "click",
+        async event => {
 
-                    }
+            const button =
+                event.target.closest(
+                    ".user-edit-btn"
                 );
+
+            if (!button) {
+                return;
             }
-        );
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const userId =
+                button.dataset.userId;
+
+            if (!userId) {
+                console.error(
+                    "Edit User: missing user ID"
+                );
+
+                return;
+            }
+
+            await editUser(
+                userId
+            );
+
+        }
+    );
+
+    tableBody.dataset.editHandlerAttached =
+        "true";
+
+}
 
     /*
      * ==========================================================
@@ -2226,32 +2257,43 @@ async function startLastSeenTracking() {
     );
 }
 
-async function editUser(
-    userId
-) {
+async function editUser(userId) {
 
     if (
-        !window.examVerseAdmin?.hasPermission(
+        window.examVerseAdmin?.hasPermission(
             "users.edit"
-        )
+        ) !== true
     ) {
+        showAccessDenied("edit users");
+        return;
+    }
 
-        showAccessDenied(
-            "edit users"
-        );
+    const targetId =
+        String(userId || "").trim();
 
+    if (!targetId) {
+        alert("Invalid user ID.");
         return;
     }
 
     const user =
         allUsers.find(
             item =>
-                item.id === userId
+                String(item.id || "").trim() ===
+                targetId
         );
 
     if (!user) {
+        alert(
+            "User not found. Please refresh the Users page."
+        );
         return;
     }
+
+
+    /* ================================
+       GET EDIT VALUES
+       ================================ */
 
     const firstName =
         prompt(
@@ -2259,9 +2301,8 @@ async function editUser(
             user.first_name || ""
         );
 
-    if (firstName === null) {
-        return;
-    }
+    if (firstName === null) return;
+
 
     const middleName =
         prompt(
@@ -2269,9 +2310,8 @@ async function editUser(
             user.middle_name || ""
         );
 
-    if (middleName === null) {
-        return;
-    }
+    if (middleName === null) return;
+
 
     const lastName =
         prompt(
@@ -2279,9 +2319,8 @@ async function editUser(
             user.last_name || ""
         );
 
-    if (lastName === null) {
-        return;
-    }
+    if (lastName === null) return;
+
 
     const phone =
         prompt(
@@ -2289,9 +2328,8 @@ async function editUser(
             user.phone || ""
         );
 
-    if (phone === null) {
-        return;
-    }
+    if (phone === null) return;
+
 
     const ageInput =
         prompt(
@@ -2299,32 +2337,34 @@ async function editUser(
             user.age ?? ""
         );
 
-    if (ageInput === null) {
-        return;
-    }
+    if (ageInput === null) return;
 
-    const age =
-        ageInput.trim() === ""
-            ? null
-            : Number(ageInput);
 
-    if (
-        age !== null &&
-        (
+    let age = null;
+
+    const cleanAge =
+        String(ageInput).trim();
+
+
+    if (cleanAge !== "") {
+
+        age =
+            Number(cleanAge);
+
+        if (
             !Number.isInteger(age) ||
             age < 1 ||
             age > 120
-        )
-    ) {
+        ) {
 
-        showPopup(
-            "error",
-            "Invalid Age",
-            "Please enter a valid age."
-        );
+            alert(
+                "Age must be between 1 and 120."
+            );
 
-        return;
+            return;
+        }
     }
+
 
     const gender =
         prompt(
@@ -2332,9 +2372,12 @@ async function editUser(
             user.gender || ""
         );
 
-    if (gender === null) {
-        return;
-    }
+    if (gender === null) return;
+
+
+    /* ================================
+       ADMIN UPDATE
+       ================================ */
 
     try {
 
@@ -2342,57 +2385,62 @@ async function editUser(
             error
         } =
             await supabaseClient.rpc(
-                "update_user_profile",
+                "admin_edit_user_profile",
                 {
 
                     target_user_id:
-                        userId,
+                        targetId,
 
                     new_first_name:
-                        firstName,
+                        String(firstName).trim(),
 
                     new_middle_name:
-                        middleName,
+                        String(middleName).trim(),
 
                     new_last_name:
-                        lastName,
+                        String(lastName).trim(),
 
                     new_phone:
-                        phone,
+                        String(phone).trim(),
 
                     new_age:
                         age,
 
                     new_gender:
-                        gender
+                        String(gender).trim()
+
                 }
             );
+
 
         if (error) {
             throw error;
         }
 
+
+        /* ================================
+           REFRESH TABLE
+           ================================ */
+
         await loadUsers();
 
-        showPopup(
-            "success",
-            "User Updated",
-            "The user's information was updated successfully."
+
+        alert(
+            "User information updated successfully."
         );
+
     }
 
     catch (error) {
 
         console.error(
-            "Edit user error:",
+            "Admin user edit failed:",
             error
         );
 
-        showPopup(
-            "error",
-            "Unable to Edit User",
-            error.message ||
-            "The user could not be updated."
+        alert(
+            error?.message ||
+            "The user's information could not be updated."
         );
     }
 }
