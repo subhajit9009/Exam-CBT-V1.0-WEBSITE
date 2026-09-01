@@ -7,7 +7,23 @@ const createExamBtn = document.getElementById("createExamBtn");
 
 let examSections = [];
 
-createExamBtn.addEventListener("click", openExamModal);
+function showAccessDenied(action = "perform this action") {
+    alert(`You do not have permission to ${action}.`);
+}
+
+createExamBtn.addEventListener("click", () => {
+
+    if (
+        window.examVerseAdmin?.hasPermission(
+            "exams.create"
+        ) !== true
+    ) {
+        showAccessDenied("create exams");
+        return;
+    }
+
+    openExamModal();
+});
 
 function openExamModal(){
 
@@ -513,6 +529,27 @@ saveExam
 
 async function saveExam(){
 
+        const isEditing =
+        !!window.currentExamId;
+
+    const requiredPermission =
+        isEditing
+            ? "exams.edit"
+            : "exams.create";
+
+    if (
+        window.examVerseAdmin?.hasPermission(
+            requiredPermission
+        ) !== true
+    ) {
+        showAccessDenied(
+            isEditing
+                ? "edit exams"
+                : "create exams"
+        );
+        return;
+    }
+
     const examName =
         document.getElementById("examName").value.trim();
 
@@ -768,7 +805,13 @@ async function saveExam(){
 
     closeExamModal();
 
-    loadExams();
+    (async () => {
+    if (window.examVerseAdminReady) {
+        await window.examVerseAdminReady;
+    }
+
+    await loadExams();
+})();
 
 }
 
@@ -1007,96 +1050,227 @@ async function saveExamSections(examId){
 // Load Exams
 //=========================
 
-async function loadExams(){
+async function loadExams() {
 
-const examBody =
-document.getElementById("examBody");
+    const examBody =
+        document.getElementById("examBody");
 
-const { data, error } =
 
-await supabaseClient
+    // ==========================================
+    // CHECK EXAM VIEW PERMISSION
+    // ==========================================
 
-.from("exams")
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
 
-.select("*")
 
-.order("created_at",{ascending:false});
+    const canViewExams =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "exams.view"
+        ) === true;
 
-if(error){
 
-console.log(error);
+    // ==========================================
+    // ACCESS DENIED
+    // ==========================================
 
-return;
+    if (!canViewExams) {
+
+        examBody.innerHTML = `
+            <tr>
+                <td colspan="5"
+                    style="
+                        text-align:center;
+                        padding:30px;
+                    "
+                >
+                    You do not have permission
+                    to view exams.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    // ==========================================
+    // LOAD EXAMS FROM DATABASE
+    // ==========================================
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+
+        .from("exams")
+
+        .select("*")
+
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+
+    // ==========================================
+    // DATABASE ERROR
+    // ==========================================
+
+    if (error) {
+
+        console.error(
+            "Exam Load Error:",
+            error
+        );
+
+        examBody.innerHTML = `
+            <tr>
+                <td colspan="5"
+                    style="text-align:center;"
+                >
+                    Failed to load exams.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    // ==========================================
+    // CLEAR TABLE
+    // ==========================================
+
+    examBody.innerHTML = "";
+
+
+    // ==========================================
+    // NO EXAMS
+    // ==========================================
+
+    if (!data || data.length === 0) {
+
+        examBody.innerHTML = `
+            <tr>
+
+                <td colspan="5">
+                    No Exams Created Yet
+                </td>
+
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    // ==========================================
+    // RENDER EXAMS
+    // ==========================================
+
+    data.forEach(exam => {
+
+        examBody.innerHTML += `
+
+            <tr>
+
+                <td>
+                    ${exam.exam_name || ""}
+                </td>
+
+                <td>
+                    ${exam.category || ""}
+                </td>
+
+                <td>
+                    ${exam.status || ""}
+                </td>
+
+                <td>
+                    ${exam.total_questions ?? 0}
+                </td>
+
+                <td>
+
+                    ${
+                        window.examVerseAdmin?.hasPermission(
+                            "exams.edit"
+                        ) === true
+
+                        ? `
+
+                            <button
+                                type="button"
+                                onclick="
+                                    editExam('${exam.id}')
+                                "
+                            >
+                                ✏
+                            </button>
+
+                        `
+
+                        : ""
+                    }
+
+
+                    ${
+                        window.examVerseAdmin?.hasPermission(
+                            "exams.delete"
+                        ) === true
+
+                        ? `
+
+                            <button
+                                type="button"
+                                onclick="
+                                    deleteExam('${exam.id}')
+                                "
+                            >
+                                🗑
+                            </button>
+
+                        `
+
+                        : ""
+                    }
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
 
 }
 
-examBody.innerHTML="";
+(async () => {
+    if (window.examVerseAdminReady) {
+        await window.examVerseAdminReady;
+    }
 
-if(data.length===0){
-
-examBody.innerHTML=
-
-`<tr>
-
-<td colspan="5">
-
-No Exams Created Yet
-
-</td>
-
-</tr>`;
-
-return;
-
-}
-
-data.forEach(exam=>{
-
-examBody.innerHTML +=
-
-`
-
-<tr>
-
-<td>${exam.exam_name}</td>
-
-<td>${exam.category}</td>
-
-<td>${exam.status}</td>
-
-<td>${exam.total_questions}</td>
-
-<td>
-
-<button onclick="editExam('${exam.id}')">
-
-✏
-
-</button>
-
-<button onclick="deleteExam('${exam.id}')">
-
-🗑
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-}
-
-loadExams();
+    await loadExams();
+})();
 
 // ==========================================
 // EDIT EXAM
 // ==========================================
 
 async function editExam(id){
+
+        if (
+        window.examVerseAdmin?.hasPermission(
+            "exams.edit"
+        ) !== true
+    ) {
+        showAccessDenied("edit exams");
+        return;
+    }
 
     // ==========================================
     // Load Exam
@@ -1346,6 +1520,15 @@ async function editExam(id){
 
 async function deleteExam(id){
 
+        if (
+        window.examVerseAdmin?.hasPermission(
+            "exams.delete"
+        ) !== true
+    ) {
+        showAccessDenied("delete exams");
+        return;
+    }
+
 const ok = confirm("Delete this exam?");
 
 if(!ok) return;
@@ -1368,6 +1551,36 @@ return;
 
 alert("Exam Deleted Successfully ✅");
 
-loadExams();
+(async () => {
+    if (window.examVerseAdminReady) {
+        await window.examVerseAdminReady;
+    }
+
+    await loadExams();
+})();
+
+// ==========================================
+// AUTO REFRESH WHEN ADMIN PERMISSIONS CHANGE
+// ==========================================
+
+window.addEventListener(
+    "storage",
+    event => {
+
+        if (
+            event.key !==
+            "examVersePermissionsUpdated"
+        ) {
+            return;
+        }
+
+        /*
+         * Reload the complete page so the central
+         * permission state is initialized again.
+         */
+        window.location.reload();
+
+    }
+);
 
 }

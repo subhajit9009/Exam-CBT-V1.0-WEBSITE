@@ -262,12 +262,29 @@ function renderUsers(users) {
                 }
 
                 const email =
-                    user.email ||
-                    "—";
+    user.email ||
+    "—";
 
-                const phone =
-                    user.phone ||
-                    "—";
+const phone =
+    user.phone ||
+    "—";
+
+const maskedEmail =
+    maskEmail(email);
+
+const maskedPhone =
+    maskPhone(phone);
+
+const maskedAge =
+    maskPrivateValue(user.age);
+
+const maskedGender =
+    maskGender(user.gender);
+
+const maskedCreatedAt =
+    maskCreatedDate(
+        user.account_created_at
+    );
 
                 const createdAt =
                     user.account_created_at ||
@@ -287,6 +304,24 @@ function renderUsers(users) {
 
                 const isOnline =
                     user.is_online === true;
+
+                    const canViewUsers =
+    isMainAdmin ||
+    window.examVerseAdmin?.hasPermission(
+        "users.view"
+    ) === true;
+
+const canEditUsers =
+    isMainAdmin ||
+    window.examVerseAdmin?.hasPermission(
+        "users.edit"
+    ) === true;
+
+const canDeleteUsers =
+    isMainAdmin ||
+    window.examVerseAdmin?.hasPermission(
+        "users.delete"
+    ) === true;
 
                 const canMakeAdmin =
                     isMainAdmin ||
@@ -424,6 +459,24 @@ function renderUsers(users) {
                  */
 
                 else if (
+    user.admin?.role ===
+    "main_admin"
+) {
+
+    actionHTML = `
+        <span
+            class="full-access-badge"
+        >
+            <i
+                class="fa-solid fa-crown"
+            ></i>
+            Full Access
+        </span>
+    `;
+}
+
+
+                else if (
                     user.admin?.role ===
                     "admin"
                 ) {
@@ -546,52 +599,33 @@ function renderUsers(users) {
 
                         <td>
 
-                            ${escapeHTML(
-                                email
-                            )}
+    ${maskedEmail}
 
-                        </td>
+</td>
 
                         <td>
 
-                            ${escapeHTML(
-                                phone
-                            )}
+    ${maskedPhone}
 
-                        </td>
+</td>
 
                         <td>
 
-                            ${
-                                user.age ??
-                                "—"
-                            }
+    ${maskedAge}
 
-                        </td>
+</td>
 
                         <td>
 
-                            ${
-                                user.gender
-                                    ? escapeHTML(
-                                        user.gender
-                                    )
-                                    : "—"
-                            }
+    ${maskedGender}
 
-                        </td>
+</td>
 
                         <td>
 
-                            ${
-                                createdAt
-                                    ? formatDate(
-                                        createdAt
-                                    )
-                                    : "—"
-                            }
+    ${maskedCreatedAt}
 
-                        </td>
+</td>
 
                         <td>
 
@@ -649,52 +683,72 @@ function renderUsers(users) {
 
                         <td>
 
-                            <div
-                                class="user-action-group"
-                            >
+                            <div class="user-action-group">
 
-                                <button
-                                    type="button"
-                                    class="view-btn user-view-btn"
-                                    data-user-id="${escapeHTML(
-                                        user.id
-                                    )}"
-                                >
-                                    <i
-                                        class="fa-solid fa-eye"
-                                    ></i>
-                                    View
-                                </button>
+    ${
+        canViewUsers
+            ? `
+                <button
+                    type="button"
+                    class="view-btn user-view-btn"
+                    data-user-id="${escapeHTML(
+                        user.id
+                    )}"
+                >
+                    <i
+                        class="fa-solid fa-eye"
+                    ></i>
+                    View
+                </button>
+            `
+            : ""
+    }
 
-                                <button
-                                    type="button"
-                                    class="edit-btn user-edit-btn"
-                                    data-user-id="${escapeHTML(
-                                        user.id
-                                    )}"
-                                >
-                                    <i
-                                        class="fa-solid fa-pen"
-                                    ></i>
-                                    Edit
-                                </button>
 
-                                <button
-                                    type="button"
-                                    class="delete-btn user-delete-btn"
-                                    data-user-id="${escapeHTML(
-                                        user.id
-                                    )}"
-                                >
-                                    <i
-                                        class="fa-solid fa-trash"
-                                    ></i>
-                                    Delete
-                                </button>
+    ${
+        canEditUsers
+            ? `
+                <button
+                    type="button"
+                    class="edit-btn user-edit-btn"
+                    data-user-id="${escapeHTML(
+                        user.id
+                    )}"
+                >
+                    <i
+                        class="fa-solid fa-pen"
+                    ></i>
+                    Edit
+                </button>
+            `
+            : ""
+    }
 
-                                ${actionHTML}
 
-                            </div>
+    ${
+        canDeleteUsers &&
+        user.admin?.role !== "main_admin"
+            ? `
+                <button
+                    type="button"
+                    class="delete-btn user-delete-btn"
+                    data-user-id="${escapeHTML(
+                        user.id
+                    )}"
+                >
+                    <i
+                        class="fa-solid fa-trash"
+                    ></i>
+                    Delete
+                </button>
+            `
+            : ""
+    }
+
+
+    ${actionHTML}
+
+</div>
 
                         </td>
 
@@ -783,42 +837,51 @@ function renderUsers(users) {
         );
 
     /*
-     * ==========================================================
-     * VIEW USERS
-     * ==========================================================
-     */
+ * ==========================================================
+ * VIEW USERS
+ * ==========================================================
+ */
 
-    tableBody
-        .querySelectorAll(
-            ".user-view-btn"
-        )
-        .forEach(
-            button => {
+tableBody
+    .querySelectorAll(
+        ".user-view-btn"
+    )
+    .forEach(
+        button => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                        if (
-                            !window.examVerseAdmin?.hasPermission(
-                                "users.view"
-                            )
-                        ) {
+                    const isMainAdmin =
+                        window.examVerseAdmin?.isMainAdmin === true;
 
-                            showAccessDenied(
-                                "view users"
-                            );
+                    const canViewUsers =
+                        isMainAdmin ||
+                        window.examVerseAdmin?.hasPermission(
+                            "users.view"
+                        ) === true;
 
-                            return;
-                        }
 
-                        showUserDetails(
-                            button.dataset.userId
+                    if (!canViewUsers) {
+
+                        showAccessDenied(
+                            "view users"
                         );
+
+                        return;
                     }
-                );
-            }
-        );
+
+
+                    showUserDetails(
+                        button.dataset.userId
+                    );
+
+                }
+            );
+
+        }
+    );
 
     /*
      * ==========================================================
@@ -1253,6 +1316,91 @@ function escapeHTML(
         /'/g,
         "&#039;"
     );
+}
+
+// ==========================================
+// MASK USER DATA FOR TABLE
+// ==========================================
+
+function maskEmail(email) {
+
+    if (!email) {
+        return "—";
+    }
+
+    const value = String(email).trim();
+
+    if (value.length <= 5) {
+        return "xxxxx";
+    }
+
+    return (
+        escapeHTML(value.slice(0, 3)) +
+        "xxx" +
+        escapeHTML(value.slice(-2))
+    );
+}
+
+
+function maskPhone(phone) {
+
+    if (!phone) {
+        return "—";
+    }
+
+    const value = String(phone).trim();
+
+    if (value.length <= 5) {
+        return "xxxxx";
+    }
+
+    return (
+        escapeHTML(value.slice(0, 3)) +
+        "xxx" +
+        escapeHTML(value.slice(-2))
+    );
+}
+
+
+function maskPrivateValue(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+    ) {
+        return "—";
+    }
+
+    return "XX";
+}
+
+
+function maskGender(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+    ) {
+        return "—";
+    }
+
+    return "XXX";
+}
+
+
+function maskCreatedDate(value) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+    ) {
+        return "—";
+    }
+
+    return "XXXX";
 }
 
 async function makeUserAdmin(
@@ -2061,12 +2209,29 @@ async function saveAdminPermissions(
 
         modal.remove();
 
-        await loadUsers();
+/*
+ * ==========================================
+ * NOTIFY OTHER OPEN ADMIN TABS
+ * ==========================================
+ *
+ * The permission is already saved in Supabase.
+ * Other open admin tabs will automatically
+ * reload and obtain the new permission state.
+ */
+localStorage.setItem(
+    "examVersePermissionsUpdated",
+    Date.now().toString()
+);
 
-        showAccessMessage(
-            "Administrator permissions updated successfully.",
-            "success"
-        );
+/*
+ * Re-render this Users page immediately.
+ */
+await loadUsers();
+
+showAccessMessage(
+    "Administrator permissions updated successfully.",
+    "success"
+);
     }
 
     catch (error) {
@@ -2614,3 +2779,30 @@ function setupUsersTableScroll() {
         "Users table horizontal scroll ready."
     );
 }
+
+// ==========================================
+// AUTO REFRESH WHEN ADMIN PERMISSIONS CHANGE
+// ==========================================
+
+window.addEventListener(
+    "storage",
+    event => {
+
+        if (
+            event.key !==
+            "examVersePermissionsUpdated"
+        ) {
+            return;
+        }
+
+        /*
+         * Reload the complete page.
+         *
+         * This is intentional:
+         * window.examVerseAdmin must be rebuilt
+         * with the new permissions.
+         */
+        window.location.reload();
+
+    }
+);
