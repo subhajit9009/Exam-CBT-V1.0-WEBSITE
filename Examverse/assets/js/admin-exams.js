@@ -1204,13 +1204,14 @@ async function loadExams() {
                         ? `
 
                             <button
-                                type="button"
-                                onclick="
-                                    editExam('${exam.id}')
-                                "
-                            >
-                                ✏
-                            </button>
+    type="button"
+    class="exam-action-btn exam-edit-btn"
+    onclick="editExam('${exam.id}')"
+    title="Edit Exam"
+>
+    <i class="fa-solid fa-pen"></i>
+    <span>Edit</span>
+</button>
 
                         `
 
@@ -1226,13 +1227,14 @@ async function loadExams() {
                         ? `
 
                             <button
-                                type="button"
-                                onclick="
-                                    deleteExam('${exam.id}')
-                                "
-                            >
-                                🗑
-                            </button>
+    type="button"
+    class="exam-action-btn exam-delete-btn"
+    onclick="deleteExam('${exam.id}')"
+    title="Delete Exam"
+>
+    <i class="fa-solid fa-trash"></i>
+    <span>Delete</span>
+</button>
 
                         `
 
@@ -1558,29 +1560,5 @@ alert("Exam Deleted Successfully ✅");
 
     await loadExams();
 })();
-
-// ==========================================
-// AUTO REFRESH WHEN ADMIN PERMISSIONS CHANGE
-// ==========================================
-
-window.addEventListener(
-    "storage",
-    event => {
-
-        if (
-            event.key !==
-            "examVersePermissionsUpdated"
-        ) {
-            return;
-        }
-
-        /*
-         * Reload the complete page so the central
-         * permission state is initialized again.
-         */
-        window.location.reload();
-
-    }
-);
 
 }

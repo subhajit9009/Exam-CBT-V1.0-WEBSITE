@@ -2094,3 +2094,53 @@ tr:last-child td {
     }
 
 }
+
+/* =========================================================
+   EMPTY / ERROR TABLE STATE
+   Keep all 11 columns visible across the full card
+   when there are no users or loading/error is shown.
+   ========================================================= */
+
+#usersTableScroll:has(.loading-cell) table,
+#usersTableScroll:has(.error-cell) table,
+#usersTableScroll:has(.empty-cell) table {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    table-layout: fixed;
+}
+
+/* Make the empty/error message span the complete table */
+#usersTableScroll .loading-cell,
+#usersTableScroll .error-cell,
+#usersTableScroll .empty-cell {
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 40px 20px;
+}
+
+/* No horizontal scrolling while table is empty/error/loading */
+#usersTableScroll:has(.loading-cell),
+#usersTableScroll:has(.error-cell),
+#usersTableScroll:has(.empty-cell) {
+    overflow-x: hidden;
+}
+
+/* Keep all 11 headings distributed across the full width */
+#usersTableScroll:has(.loading-cell) th,
+#usersTableScroll:has(.error-cell) th,
+#usersTableScroll:has(.empty-cell) th {
+    width: auto;
+}
+
+/* =========================================================
+   NORMAL TABLE STATE
+   Restore wide table when actual user rows exist.
+   ========================================================= */
+
+#usersTableScroll:has(tbody tr:not(:has(.loading-cell)):not(:has(.error-cell)):not(:has(.empty-cell))) table {
+    width: max-content;
+    min-width: 1200px;
+    table-layout: auto;
+}

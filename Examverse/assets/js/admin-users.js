@@ -41,7 +41,7 @@ async function loadUsers() {
     tableBody.innerHTML = `
         <tr>
             <td
-                colspan="8"
+                colspan="11"
                 class="loading-cell"
             >
                 <i
@@ -164,7 +164,7 @@ async function loadUsers() {
         tableBody.innerHTML = `
             <tr>
                 <td
-                    colspan="8"
+                    colspan="11"
                     class="error-cell"
                 >
                     <i
@@ -195,7 +195,7 @@ function renderUsers(users) {
         tableBody.innerHTML = `
             <tr>
                 <td
-                    colspan="8"
+                    colspan="11"
                     class="empty-cell"
                 >
                     No users found.
@@ -2210,20 +2210,6 @@ async function saveAdminPermissions(
         modal.remove();
 
 /*
- * ==========================================
- * NOTIFY OTHER OPEN ADMIN TABS
- * ==========================================
- *
- * The permission is already saved in Supabase.
- * Other open admin tabs will automatically
- * reload and obtain the new permission state.
- */
-localStorage.setItem(
-    "examVersePermissionsUpdated",
-    Date.now().toString()
-);
-
-/*
  * Re-render this Users page immediately.
  */
 await loadUsers();
@@ -2779,30 +2765,3 @@ function setupUsersTableScroll() {
         "Users table horizontal scroll ready."
     );
 }
-
-// ==========================================
-// AUTO REFRESH WHEN ADMIN PERMISSIONS CHANGE
-// ==========================================
-
-window.addEventListener(
-    "storage",
-    event => {
-
-        if (
-            event.key !==
-            "examVersePermissionsUpdated"
-        ) {
-            return;
-        }
-
-        /*
-         * Reload the complete page.
-         *
-         * This is intentional:
-         * window.examVerseAdmin must be rebuilt
-         * with the new permissions.
-         */
-        window.location.reload();
-
-    }
-);

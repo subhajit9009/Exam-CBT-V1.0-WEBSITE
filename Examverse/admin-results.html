@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ExamVerse | Results</title>
+
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin-results.css">
+    <link rel="stylesheet" href="assets/css/loader.css">
+    <link rel="stylesheet" href="assets/css/popup.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+<div id="loader">
+    <img src="assets/images/logo.png" class="loader-logo">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading...</div>
+</div>
+
+<div class="sidebar">
+
+    <div class="logo-section">
+        <img src="assets/images/logo.png" class="sidebar-logo">
+        <h2>ExamVerse</h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <ul>
+        <a href="admin-dashboard.html">
+            <li>🏠 Dashboard</li>
+        </a>
+
+        <a href="admin-users.html">
+            <li>👥 Users</li>
+        </a>
+
+        <a href="admin-exams.html">
+            <li>📝 Exams</li>
+        </a>
+
+        <a href="admin-questions.html">
+            <li>📚 Questions</li>
+        </a>
+
+        <a href="admin-results.html">
+            <li class="active">📊 Results</li>
+        </a>
+
+        <a href="admin-analytics.html">
+            <li>📈 Analytics</li>
+        </a>
+
+        <a href="admin-settings.html">
+            <li>⚙ Settings</li>
+        </a>
+
+        <li id="logoutBtn">🚪 Logout</li>
+    </ul>
+
+</div>
+
+<div class="main">
+
+    <header class="results-header">
+        <div>
+            <h1>
+                <i class="fa-solid fa-chart-column"></i>
+                Results
+            </h1>
+            <p>View examination attempts, scores and detailed performance.</p>
+        </div>
+
+        <button id="refreshResultsBtn" class="results-refresh-btn" type="button">
+            <i class="fa-solid fa-rotate"></i>
+            Refresh
+        </button>
+    </header>
+
+    <section id="resultsAccessDenied" class="results-access-denied" hidden>
+        <div class="access-denied-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2>Access Denied</h2>
+        <p>You do not have permission to view examination results.</p>
+    </section>
+
+    <section id="resultsContent">
+
+        <section class="results-stats-grid">
+
+            <div class="results-stat-card">
+                <div class="results-stat-icon">
+                    <i class="fa-solid fa-file-circle-check"></i>
+                </div>
+                <div>
+                    <span>Total Results</span>
+                    <strong id="totalResults">0</strong>
+                </div>
+            </div>
+
+            <div class="results-stat-card">
+                <div class="results-stat-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <span>Passed</span>
+                    <strong id="passedResults">0</strong>
+                </div>
+            </div>
+
+            <div class="results-stat-card">
+                <div class="results-stat-icon">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div>
+                    <span>Failed</span>
+                    <strong id="failedResults">0</strong>
+                </div>
+            </div>
+
+            <div class="results-stat-card">
+                <div class="results-stat-icon">
+                    <i class="fa-solid fa-percent"></i>
+                </div>
+                <div>
+                    <span>Average Score</span>
+                    <strong id="averageScore">0%</strong>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="results-toolbar">
+
+            <div class="results-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    id="resultSearch"
+                    type="search"
+                    placeholder="Search student, email or exam...">
+            </div>
+
+            <select id="examFilter">
+                <option value="">All Exams</option>
+            </select>
+
+            <select id="statusFilter">
+                <option value="">All Status</option>
+                <option value="passed">Passed</option>
+                <option value="failed">Failed</option>
+                <option value="completed">Completed</option>
+            </select>
+
+            <button id="clearFiltersBtn" class="results-secondary-btn" type="button">
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+                Clear
+            </button>
+
+            <button id="exportResultsBtn" class="results-export-btn" type="button">
+                <i class="fa-solid fa-file-csv"></i>
+                Export CSV
+            </button>
+
+        </section>
+
+        <section class="results-card">
+
+            <div class="results-card-top">
+                <div>
+                    <h2>All Results</h2>
+                    <span id="resultCountLabel">0 results</span>
+                </div>
+
+                <div class="results-pagination">
+                    <button id="prevPageBtn" type="button" aria-label="Previous page">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <span id="pageLabel">Page 1</span>
+
+                    <button id="nextPageBtn" type="button" aria-label="Next page">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-table-navigation">
+                <span>
+                    <i class="fa-solid fa-arrows-left-right"></i>
+                    Scroll table
+                </span>
+            </div>
+
+            <div id="resultsTableScroll" class="results-table-scroll">
+
+                <table id="resultsTable">
+
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Exam</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Attempted</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="resultsTableBody">
+                        <tr>
+                            <td colspan="11" class="results-loading-cell">
+                                Loading results...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</div>
+
+<!-- RESULT DETAIL MODAL -->
+
+<div id="resultDetailModal" class="result-detail-overlay" hidden>
+
+    <div class="result-detail-modal">
+
+        <div class="result-detail-header">
+            <div>
+                <span class="result-detail-kicker">RESULT DETAILS</span>
+                <h2 id="detailExamName">Examination Result</h2>
+                <p id="detailStudentName">Student</p>
+            </div>
+
+            <button
+                id="closeResultDetailBtn"
+                class="result-detail-close"
+                type="button"
+                aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="result-detail-summary">
+
+            <div>
+                <span>Score</span>
+                <strong id="detailScore">0</strong>
+            </div>
+
+            <div>
+                <span>Percentage</span>
+                <strong id="detailPercentage">0%</strong>
+            </div>
+
+            <div>
+                <span>Correct</span>
+                <strong id="detailCorrect">0</strong>
+            </div>
+
+            <div>
+                <span>Wrong</span>
+                <strong id="detailWrong">0</strong>
+            </div>
+
+            <div>
+                <span>Attempted</span>
+                <strong id="detailAttempted">0</strong>
+            </div>
+
+            <div>
+                <span>Time Taken</span>
+                <strong id="detailTimeTaken">00:00:00</strong>
+            </div>
+
+        </div>
+
+        <div class="result-detail-meta">
+
+            <div>
+                <span>Student Email</span>
+                <strong id="detailEmail">—</strong>
+            </div>
+
+            <div>
+                <span>Result</span>
+                <strong id="detailResult">—</strong>
+            </div>
+
+            <div>
+                <span>Status</span>
+                <strong id="detailStatus">—</strong>
+            </div>
+
+            <div>
+                <span>Submitted</span>
+                <strong id="detailSubmitted">—</strong>
+            </div>
+
+        </div>
+
+        <div class="result-analysis-section">
+
+            <div class="result-analysis-heading">
+                <div>
+                    <h3>Question Analysis</h3>
+                    <p>Question-by-question attempt information.</p>
+                </div>
+                <span id="detailQuestionCount">0 questions</span>
+            </div>
+
+            <div id="detailQuestions" class="detail-questions">
+                <div class="detail-empty">
+                    Question analysis will appear here.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="result-detail-footer">
+            <button id="closeResultDetailBtnBottom" type="button" class="results-secondary-btn">
+                Close
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/popup.js"></script>
+<script src="assets/js/admin-auth.js"></script>
+<script src="assets/js/admin-results.js"></script>
+<script src="assets/js/loader.js"></script>
+
+</body>
+</html>

@@ -382,16 +382,22 @@ placeholder="Exam Description"></textarea>
 
 <div class="modal-buttons">
 
-<button id="saveExam">
-
-💾 Save Exam
-
+<button
+    id="saveExam"
+    type="button"
+    class="exam-modal-btn exam-save-btn"
+>
+    <i class="fa-solid fa-floppy-disk"></i>
+    <span>Save Exam</span>
 </button>
 
-<button onclick="closeExamModal()">
-
-❌ Cancel
-
+<button
+    type="button"
+    class="exam-modal-btn exam-cancel-btn"
+    onclick="closeExamModal()"
+>
+    <i class="fa-solid fa-xmark"></i>
+    <span>Cancel</span>
 </button>
 
 </div>
