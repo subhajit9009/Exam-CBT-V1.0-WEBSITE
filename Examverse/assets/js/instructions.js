@@ -785,31 +785,19 @@ if (pausedAttempt) {
         // ==========================================
 
         const {
-            data: attempt,
-            error
-        } =
-            await supabaseClient
+    data: attempt,
+    error
+} =
+    await supabaseClient.rpc(
+        "create_exam_attempt",
+        {
+            p_exam_id:
+                selectedExam.id,
 
-                .from(
-                    "exam_attempts"
-                )
-
-                .insert({
-
-                    user_id:
-                        user.id,
-
-                    exam_id:
-                        selectedExam.id,
-
-                    total_questions:
-                        selectedExam.total_questions
-
-                })
-
-                .select()
-
-                .single();
+            p_total_questions:
+                selectedExam.total_questions
+        }
+    );
 
 
         if (error) {

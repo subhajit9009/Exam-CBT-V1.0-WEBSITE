@@ -16,6 +16,7 @@ const RESULTS_PER_PAGE = 15;
 let selectedAttempt = null;
 let selectedAnswers = [];
 let selectedQuestions = [];
+let selectedSectionResults = [];
 
 const $ = id => document.getElementById(id);
 
@@ -648,156 +649,75 @@ async function loadResults() {
         // ==========================================
 
         const {
-            data: attempts,
-            error: attemptsError
-        } = await supabaseClient
-            .from("exam_attempts")
-            .select(`
-                id,
-                user_id,
-                exam_id,
-                score,
-                percentage,
-                attempted,
-                correct,
-                wrong,
-                skipped,
-                total_questions,
-                result,
-                status,
-                start_time,
-                end_time,
-                submitted_at,
-                time_taken,
-                created_at
-            `)
-            .eq(
-                "status",
-                "Completed"
-            )
-            .order(
-                "submitted_at",
-                {
-                    ascending: false
-                }
-            );
+    data: attempts,
+    error: attemptsError
+} =
+    await supabaseClient.rpc(
+        "get_admin_results"
+    );
 
-
-        if (attemptsError) {
-            throw attemptsError;
-        }
-
+if (attemptsError) {
+    throw attemptsError;
+}
 
         // ==========================================
         // 2. LOAD EXAMS
         // ==========================================
 
-        const {
-            data: exams,
-            error: examsError
-        } = await supabaseClient
-            .from("exams")
-            .select(`
-                id,
-                exam_name,
-                total_marks,
-                passing_marks
-            `);
+        // ==========================================
+// 2. BUILD EXAM MAP
+// ==========================================
 
+examsById =
+    new Map(
+        (attempts || []).map(
+            attempt => [
+                String(attempt.exam_id),
+                {
+                    id:
+                        attempt.exam_id,
 
-        if (examsError) {
-            throw examsError;
-        }
+                    exam_name:
+                        attempt.exam_name,
 
+                    total_marks:
+                        attempt.total_marks,
+
+                    passing_marks:
+                        attempt.passing_marks
+                }
+            ]
+        )
+    );
 
         // ==========================================
-        // 3. BUILD EXAM MAP
-        // ==========================================
+// 3. BUILD PROFILE MAP
+// ==========================================
 
-        examsById =
-            new Map(
-                (exams || []).map(
-                    exam => [
-                        String(exam.id),
-                        exam
-                    ]
-                )
-            );
+profilesById =
+    new Map(
+        (attempts || []).map(
+            attempt => [
+                String(attempt.user_id),
+                {
+                    id:
+                        attempt.user_id,
 
+                    first_name:
+                        attempt.first_name,
 
-        // ==========================================
-        // 4. LOAD PROFILES
-        // ==========================================
+                    middle_name:
+                        attempt.middle_name,
 
-        const userIds = [
-            ...new Set(
-                (attempts || [])
-                    .map(
-                        attempt =>
-                            attempt.user_id
-                    )
-                    .filter(Boolean)
-            )
-        ];
+                    last_name:
+                        attempt.last_name,
 
-
-        profilesById =
-            new Map();
-
-
-        if (
-            userIds.length > 0
-        ) {
-
-            const {
-                data: profiles,
-                error: profilesError
-            } = await supabaseClient
-                .from("profiles")
-                .select(`
-                    id,
-                    first_name,
-                    middle_name,
-                    last_name,
-                    full_name,
-                    email
-                `)
-                .in(
-                    "id",
-                    userIds
-                );
-
-
-            /*
-             * Profile access must NOT prevent
-             * result records from appearing.
-             */
-
-            if (profilesError) {
-
-                console.warn(
-                    "Admin Results: profiles unavailable:",
-                    profilesError
-                );
-
-            }
-            else {
-
-                profilesById =
-                    new Map(
-                        (profiles || []).map(
-                            profile => [
-                                String(
-                                    profile.id
-                                ),
-                                profile
-                            ]
-                        )
-                    );
-            }
-        }
-
-
+                    email:
+                        attempt.email
+                }
+            ]
+        )
+    );
         // ==========================================
         // 5. STORE RESULTS
         // ==========================================
@@ -1737,70 +1657,93 @@ async function openResultDetail(
     );
 }
 
-
-/* =========================================================
-   QUESTION ANALYSIS
-   ========================================================= */
-
 async function loadQuestionAnalysis(
     attempt
 ) {
 
     selectedAnswers = [];
-
     selectedQuestions = [];
-
 
     try {
 
-        const [
-            answersResult,
-            questionsResult
-        ] = await Promise.all([
-
-            supabaseClient
-                .from("user_answers")
-                .select("*")
-                .eq(
-                    "attempt_id",
-                    attempt.id
-                ),
-
-            supabaseClient
-                .from("questions")
-                .select("*")
-                .eq(
-                    "exam_id",
-                    attempt.exam_id
-                )
-
-        ]);
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "get_admin_result_details",
+                {
+                    p_attempt_id:
+                        attempt.id
+                }
+            );
 
 
-        if (
-            answersResult.error
-        ) {
-
-            throw answersResult.error;
+        if (error) {
+            throw error;
         }
 
 
-        if (
-            questionsResult.error
-        ) {
-
-            throw questionsResult.error;
-        }
+        const details =
+            data || [];
 
 
         selectedAnswers =
-            answersResult.data ||
-            [];
+            details.map(
+                item => ({
+                    question_id:
+                        item.question_id,
+
+                    selected_option:
+                        item.selected_option
+                })
+            );
 
 
         selectedQuestions =
-            questionsResult.data ||
-            [];
+            details.map(
+                item => {
+
+                    const question =
+                        item.question_data ||
+                        {};
+
+                    return {
+                        ...question,
+
+                        _section_name:
+                            item.section_name ||
+                            null,
+
+                        _section_order:
+                            item.section_order ??
+                            null,
+
+                        _section_question_count:
+                            item.section_question_count ??
+                            null,
+
+                        _section_start_question:
+                            item.section_start_question ??
+                            null,
+
+                        _section_end_question:
+                            item.section_end_question ??
+                            null
+                    };
+
+                }
+            );
+
+                    buildSectionResults(
+            details
+        );
+
+
+        renderQuestionAnalysis();
+
+
+        renderSectionalResults();
 
 
         renderQuestionAnalysis();
@@ -1814,6 +1757,15 @@ async function loadQuestionAnalysis(
         );
 
 
+        if ($("detailQuestionCount")) {
+
+            $("detailQuestionCount")
+                .textContent =
+                "Unable to load";
+
+        }
+
+
         if ($("detailQuestions")) {
 
             $("detailQuestions")
@@ -1822,8 +1774,722 @@ async function loadQuestionAnalysis(
                         Unable to load question analysis.
                     </div>
                 `;
+
         }
+
     }
+
+}
+
+
+/* =========================================================
+   QUESTION ANALYSIS
+   ========================================================= */
+
+function renderQuestionAnalysis() {
+
+    const container =
+        $("detailQuestions");
+
+
+    if (!container) {
+        return;
+    }
+
+
+    if (!selectedQuestions.length) {
+
+        $("detailQuestionCount")
+            .textContent =
+            "0 questions";
+
+
+        container.innerHTML = `
+            <div class="detail-empty">
+                No question analysis is available for this result.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    $("detailQuestionCount")
+        .textContent =
+        `${selectedQuestions.length} question${
+            selectedQuestions.length === 1
+                ? ""
+                : "s"
+        }`;
+
+            /* =====================================================
+       NON-SECTIONAL EXAM
+       ===================================================== */
+
+    const hasSections =
+        selectedQuestions.some(
+            question =>
+                question._section_name ||
+                question._section_order !== null &&
+                question._section_order !== undefined
+        );
+
+    if (!hasSections) {
+
+        container.innerHTML =
+            selectedQuestions
+                .map(
+                    (
+                        question,
+                        index
+                    ) =>
+                        renderSingleResultQuestion(
+                            question,
+                            index
+                        )
+                )
+                .join("");
+
+        return;
+    }
+
+
+    /* =====================================================
+       GROUP QUESTIONS BY SECTION
+       ===================================================== */
+
+    const groupedSections =
+        new Map();
+
+
+    selectedQuestions.forEach(
+        (
+            question,
+            index
+        ) => {
+
+            const sectionOrder =
+                question._section_order ??
+                999999;
+
+
+            const sectionName =
+                question._section_name ||
+                "General";
+
+
+            const key =
+                String(sectionOrder);
+
+
+            if (
+                !groupedSections.has(key)
+            ) {
+
+                groupedSections.set(
+                    key,
+                    {
+                        sectionName,
+
+                        sectionOrder,
+
+                        startQuestion:
+                            question._section_start_question,
+
+                        endQuestion:
+                            question._section_end_question,
+
+                        questions: []
+                    }
+                );
+
+            }
+
+
+            groupedSections
+                .get(key)
+                .questions
+                .push({
+                    question,
+                    originalIndex: index
+                });
+
+        }
+    );
+
+
+    const sections =
+        Array.from(
+            groupedSections.values()
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                Number(a.sectionOrder) -
+                Number(b.sectionOrder)
+        );
+
+
+    /* =====================================================
+       RENDER SECTION + QUESTIONS
+       ===================================================== */
+
+    container.innerHTML =
+        sections
+            .map(
+                section => {
+
+                    const range =
+                        section.startQuestion &&
+                        section.endQuestion
+
+                            ? `Questions ${section.startQuestion}–${section.endQuestion}`
+
+                            : `${section.questions.length} Questions`;
+
+
+                    return `
+
+                        <div class="result-question-section">
+
+                            <div class="result-question-section-header">
+
+                                <div>
+
+                                    <div class="result-question-section-title">
+                                        ${escapeHTML(
+                                            section.sectionName
+                                        )}
+                                    </div>
+
+                                    <div class="result-question-section-range">
+                                        ${range}
+                                    </div>
+
+                                </div>
+
+                                <div class="result-question-section-count">
+                                    ${section.questions.length}
+                                    Questions
+                                </div>
+
+                            </div>
+
+
+                            <div class="result-question-section-list">
+
+                                ${
+                                    section.questions
+                                        .map(
+                                            item =>
+                                                renderSingleResultQuestion(
+                                                    item.question,
+                                                    item.originalIndex
+                                                )
+                                        )
+                                        .join("")
+                                }
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+}
+
+function renderSingleResultQuestion(
+    question,
+    index
+) {
+
+    const answer =
+        findAnswer(
+            question.id
+        );
+
+
+    const selected =
+        answer?.selected_option ??
+        answer?.selected_answer ??
+        "";
+
+
+    const correct =
+        getCorrectAnswer(
+            question
+        );
+
+
+    const isSkipped =
+        selected === null ||
+        selected === undefined ||
+        String(
+            selected
+        ).trim() === "";
+
+
+    const isCorrect =
+        !isSkipped &&
+        normalize(
+            selected
+        ) ===
+        normalize(
+            correct
+        );
+
+
+    const state =
+        isSkipped
+            ? "Skipped"
+            : isCorrect
+                ? "Correct"
+                : "Wrong";
+
+
+    const stateClass =
+        isSkipped
+            ? "skipped"
+            : isCorrect
+                ? "correct"
+                : "wrong";
+
+
+    const questionNumber =
+        question.question_no ??
+        (index + 1);
+
+
+    return `
+
+        <div class="detail-question-card">
+
+            <div class="detail-question-top">
+
+                <span class="detail-question-number">
+                    Question ${questionNumber}
+                </span>
+
+
+                <span class="detail-question-state ${stateClass}">
+                    ${state}
+                </span>
+
+            </div>
+
+
+            <div class="detail-question-text">
+
+                ${escapeHTML(
+                    getQuestionText(
+                        question
+                    )
+                )}
+
+            </div>
+
+
+            <div class="detail-answer-line">
+
+                <span>
+                    Selected Answer
+                </span>
+
+                <strong>
+                    ${escapeHTML(
+                        isSkipped
+                            ? "Not answered"
+                            : String(
+                                selected
+                            )
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-answer-line">
+
+                <span>
+                    Correct Answer
+                </span>
+
+                <strong>
+                    ${escapeHTML(
+                        correct || "—"
+                    )}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+function buildSectionResults(
+    details
+) {
+
+    const sections =
+        new Map();
+
+
+    details.forEach(
+        detail => {
+
+            if (
+                !detail.section_name
+            ) {
+                return;
+            }
+
+
+            const key =
+                String(
+                    detail.section_order
+                );
+
+
+            if (
+                !sections.has(key)
+            ) {
+
+                sections.set(
+                    key,
+                    {
+                        section_name:
+                            detail.section_name,
+
+                        section_order:
+                            Number(
+                                detail.section_order
+                            ),
+
+                        total_questions:
+                            Number(
+                                detail.section_question_count ||
+                                0
+                            ),
+
+                        attempted:
+                            0,
+
+                        correct:
+                            0,
+
+                        wrong:
+                            0,
+
+                        skipped:
+                            0,
+
+                        score:
+                            0
+                    }
+                );
+
+            }
+
+
+            const section =
+                sections.get(key);
+
+
+            const question =
+                detail.question_data ||
+                {};
+
+
+            const selected =
+                detail.selected_option;
+
+
+            const isSkipped =
+                selected === null ||
+                selected === undefined ||
+                String(
+                    selected
+                ).trim() === "";
+
+
+            if (isSkipped) {
+
+                section.skipped++;
+
+                return;
+
+            }
+
+
+            section.attempted++;
+
+
+            const correctAnswer =
+                firstDefined(
+                    question,
+                    [
+                        "correct_answer",
+                        "correct_option",
+                        "correctAnswer",
+                        "answer"
+                    ],
+                    ""
+                );
+
+
+            if (
+                normalize(
+                    selected
+                ) ===
+                normalize(
+                    correctAnswer
+                )
+            ) {
+
+                section.correct++;
+
+
+                section.score +=
+                    Number(
+                        question.marks || 0
+                    );
+
+            }
+
+            else {
+
+                section.wrong++;
+
+
+                section.score -=
+                    Math.abs(
+                        Number(
+                            question.negative_marks ||
+                            0
+                        )
+                    );
+
+            }
+
+        }
+    );
+
+
+    selectedSectionResults =
+        Array.from(
+            sections.values()
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                a.section_order -
+                b.section_order
+        );
+
+
+    selectedSectionResults
+        .forEach(
+            section => {
+
+                section.score =
+                    Number(
+                        section.score.toFixed(
+                            2
+                        )
+                    );
+
+            }
+        );
+}
+
+function renderSectionalResults() {
+
+    const questionsContainer =
+        $("detailQuestions");
+
+
+    if (
+        !questionsContainer
+    ) {
+        return;
+    }
+
+
+    const existing =
+        document.getElementById(
+            "detailSectionResults"
+        );
+
+
+    if (existing) {
+        existing.remove();
+    }
+
+
+    if (
+        !selectedSectionResults.length
+    ) {
+        return;
+    }
+
+
+    const sectionContainer =
+        document.createElement(
+            "div"
+        );
+
+
+    sectionContainer.id =
+        "detailSectionResults";
+
+    sectionContainer.className =
+        "detail-section-results";
+
+
+    sectionContainer.innerHTML = `
+
+        <div class="detail-section-heading">
+            <div>
+                <h3>
+                    Section-wise Result
+                </h3>
+
+                <p>
+                    Performance by examination section
+                </p>
+            </div>
+        </div>
+
+
+        <div class="detail-section-grid">
+
+            ${
+                selectedSectionResults
+                    .map(
+                        section => {
+
+                            const percentage =
+                                section.total_questions > 0
+                                    ? (
+                                        section.correct /
+                                        section.total_questions
+                                    ) * 100
+                                    : 0;
+
+
+                            return `
+
+                                <div class="detail-section-card">
+
+                                    <div class="detail-section-card-top">
+
+                                        <strong>
+                                            ${escapeHTML(
+                                                section.section_name
+                                            )}
+                                        </strong>
+
+                                        <span>
+                                            ${section.total_questions}
+                                            Questions
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="detail-section-score">
+
+                                        <strong>
+                                            ${section.score.toFixed(2)}
+                                        </strong>
+
+                                        <small>
+                                            Score
+                                        </small>
+
+                                    </div>
+
+
+                                    <div class="detail-section-stats">
+
+                                        <div class="section-stat correct">
+
+                                            <strong>
+                                                ${section.correct}
+                                            </strong>
+
+                                            <span>
+                                                Correct
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="section-stat wrong">
+
+                                            <strong>
+                                                ${section.wrong}
+                                            </strong>
+
+                                            <span>
+                                                Wrong
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="section-stat skipped">
+
+                                            <strong>
+                                                ${section.skipped}
+                                            </strong>
+
+                                            <span>
+                                                Skipped
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="section-stat percentage">
+
+                                            <strong>
+                                                ${percentage.toFixed(1)}%
+                                            </strong>
+
+                                            <span>
+                                                Accuracy
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("")
+            }
+
+        </div>
+    `;
+
+
+    questionsContainer.parentNode.insertBefore(
+        sectionContainer,
+        questionsContainer
+    );
 }
 
 
@@ -1873,174 +2539,6 @@ function findAnswer(
                 questionId
             )
     );
-}
-
-
-function renderQuestionAnalysis() {
-
-    const container =
-        $("detailQuestions");
-
-    if (!container) {
-        return;
-    }
-
-
-    if (
-        !selectedQuestions.length
-    ) {
-
-        $("detailQuestionCount")
-            .textContent =
-            "0 questions";
-
-
-        container.innerHTML = `
-            <div class="detail-empty">
-                No question analysis is available for this result.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    $("detailQuestionCount")
-        .textContent =
-        `${selectedQuestions.length} question${
-            selectedQuestions.length ===
-            1
-                ? ""
-                : "s"
-        }`;
-
-
-    container.innerHTML =
-        selectedQuestions
-            .map(
-                (
-                    question,
-                    index
-                ) => {
-
-                    const answer =
-                        findAnswer(
-                            question.id
-                        );
-
-
-                    const selected =
-                        answer?.selected_option ??
-                        answer?.selected_answer ??
-                        "";
-
-
-                    const correct =
-                        getCorrectAnswer(
-                            question
-                        );
-
-
-                    const isSkipped =
-                        selected === null ||
-                        selected === undefined ||
-                        String(
-                            selected
-                        ).trim() === "";
-
-
-                    const isCorrect =
-                        !isSkipped &&
-
-                        normalize(
-                            selected
-                        ) ===
-
-                        normalize(
-                            correct
-                        );
-
-
-                    const state =
-                        isSkipped
-                            ? "Skipped"
-                            : isCorrect
-                                ? "Correct"
-                                : "Wrong";
-
-
-                    const stateClass =
-                        isSkipped
-                            ? "skipped"
-                            : isCorrect
-                                ? "correct"
-                                : "wrong";
-
-
-                    return `
-                        <div class="detail-question-card">
-
-                            <div class="detail-question-top">
-
-                                <span class="detail-question-number">
-                                    Question ${index + 1}
-                                </span>
-
-                                <span class="detail-question-state ${stateClass}">
-                                    ${state}
-                                </span>
-
-                            </div>
-
-
-                            <div class="detail-question-text">
-                                ${escapeHTML(
-                                    getQuestionText(
-                                        question
-                                    )
-                                )}
-                            </div>
-
-
-                            <div class="detail-answer-line">
-
-                                <span>
-                                    Selected Answer
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(
-                                        isSkipped
-                                            ? "Not answered"
-                                            : String(
-                                                selected
-                                            )
-                                    )}
-                                </strong>
-
-                            </div>
-
-
-                            <div class="detail-answer-line">
-
-                                <span>
-                                    Correct Answer
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(
-                                        correct ||
-                                        "—"
-                                    )}
-                                </strong>
-
-                            </div>
-
-                        </div>
-                    `;
-                }
-            )
-            .join("");
 }
 
 

@@ -631,9 +631,24 @@
 }
 
 @media (max-width: 700px) {
+
+    /* =====================================================
+       MAIN RESULTS PAGE
+       ===================================================== */
+
     .results-header {
         align-items: flex-start;
         flex-direction: column;
+        gap: 12px;
+    }
+
+    .results-header h1 {
+        font-size: 24px;
+    }
+
+    .results-header p {
+        font-size: 12px;
+        line-height: 1.5;
     }
 
     .results-stats-grid {
@@ -642,34 +657,946 @@
 
     .results-toolbar {
         grid-template-columns: 1fr;
+        gap: 10px;
     }
 
     .results-search {
         grid-column: auto;
     }
 
+
+    /* =====================================================
+       RESULT TABLE — MOBILE SCROLL
+       ===================================================== */
+
+    .results-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #resultsTable {
+        min-width: 850px;
+    }
+
+
+    /* =====================================================
+       RESULT DETAIL MODAL
+       ===================================================== */
+
     .result-detail-overlay {
-        padding: 10px;
+        padding: 6px;
+        align-items: center;
     }
 
-    .result-detail-summary,
-    .result-detail-meta {
-        grid-template-columns: 1fr 1fr;
-        padding-left: 15px;
-        padding-right: 15px;
+    .result-detail-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 96vh;
+        border-radius: 16px;
     }
 
-    .result-analysis-section {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+
+    /* =====================================================
+       MODAL HEADER
+       ===================================================== */
 
     .result-detail-header {
-        padding: 20px 15px;
+        padding: 17px 14px;
+        gap: 10px;
     }
 
-    .result-detail-footer {
-        padding-left: 15px;
-        padding-right: 15px;
+    .result-detail-kicker {
+        font-size: 9px;
     }
+
+    .result-detail-header h2 {
+        font-size: 19px;
+        line-height: 1.25;
+    }
+
+    .result-detail-header p {
+        font-size: 12px;
+    }
+
+    .result-detail-close {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+    }
+
+
+    /* =====================================================
+       SCORE SUMMARY
+       ===================================================== */
+
+    .result-detail-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 12px 14px;
+    }
+
+    .result-detail-summary > div {
+        padding: 11px;
+        border-radius: 10px;
+    }
+
+    .result-detail-summary span {
+        font-size: 9px;
+    }
+
+    .result-detail-summary strong {
+        font-size: 16px;
+    }
+
+
+    /* =====================================================
+       RESULT META
+       ===================================================== */
+
+    .result-detail-meta {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 12px 14px;
+    }
+
+    .result-detail-meta > div {
+        padding: 11px;
+    }
+
+    .result-detail-meta span {
+        font-size: 9px;
+    }
+
+    .result-detail-meta strong {
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       QUESTION ANALYSIS HEADER
+       ===================================================== */
+
+    .result-analysis-section {
+        padding: 0 14px 18px;
+    }
+
+    .result-analysis-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 11px;
+    }
+
+    .result-analysis-heading h3 {
+        font-size: 18px;
+    }
+
+    .result-analysis-heading p {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+
+    /* =====================================================
+       50 QUESTIONS BADGE
+       ===================================================== */
+
+    #detailQuestionCount {
+        align-self: flex-start;
+
+        padding: 7px 13px;
+
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       SECTION-WISE RESULT
+       ===================================================== */
+
+    .detail-section-card {
+        width: 100%;
+    }
+
+    .detail-section-card-top {
+        gap: 8px;
+    }
+
+    .detail-section-card h4 {
+        font-size: 15px;
+    }
+
+    .detail-section-card {
+        padding: 14px;
+    }
+
+
+    /* =====================================================
+       QUESTION SECTION HEADER
+       ===================================================== */
+
+    .result-question-section {
+        margin-top: 11px;
+        border-radius: 12px;
+    }
+
+    .result-question-section-header {
+        padding: 14px 14px 14px 17px;
+
+        gap: 8px;
+    }
+
+    .result-question-section-title {
+        font-size: 15px;
+        line-height: 1.3;
+    }
+
+    .result-question-section-range {
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    .result-question-section-count {
+        padding: 6px 9px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+       QUESTIONS
+       ===================================================== */
+
+    .result-question-section-list {
+        padding: 9px;
+        gap: 8px;
+    }
+
+    .detail-questions {
+        gap: 8px;
+    }
+
+    .detail-question-card {
+        padding: 13px;
+        border-radius: 10px;
+    }
+
+    .detail-question-top {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .detail-question-number {
+        font-size: 12px;
+    }
+
+    .detail-question-state {
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .detail-question-text {
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+
+    /* =====================================================
+       ANSWER LINES
+       ===================================================== */
+
+    .detail-answer-line {
+        grid-template-columns: 1fr;
+        gap: 2px;
+        padding: 6px 0;
+        font-size: 11px;
+    }
+
+    .detail-answer-line span {
+        font-size: 10px;
+    }
+
+    .detail-answer-line strong {
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       MODAL FOOTER
+       ===================================================== */
+
+    .result-detail-footer {
+        padding: 12px 14px;
+    }
+
+    .result-detail-footer button {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   QUESTION RESULT STATUS
+   ========================================================= */
+
+.detail-question-state {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 82px;
+    height: 32px;
+
+    padding: 0 13px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: 0.5px;
+    line-height: 1;
+
+    text-transform: uppercase;
+
+    border: 1px solid transparent;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================
+   CORRECT
+   ========================== */
+
+.detail-question-state.correct {
+    background: #eaf8ef;
+    color: #15803d;
+    border-color: #b7e4c7;
+}
+
+
+/* ==========================
+   WRONG
+   ========================== */
+
+.detail-question-state.wrong {
+    background: #fff0f0;
+    color: #dc2626;
+    border-color: #f3b4b4;
+}
+
+
+/* ==========================
+   SKIPPED
+   ========================== */
+
+.detail-question-state.skipped {
+    background: #f3f4f6;
+    color: #6b7280;
+    border-color: #d1d5db;
+}
+/* =========================================================
+   SECTION-WISE RESULT
+   ========================================================= */
+
+.detail-section-results {
+    margin-bottom: 22px;
+    padding: 20px;
+    border-radius: 16px;
+    background: var(--card-bg, #ffffff);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+.detail-section-heading {
+    margin-bottom: 16px;
+}
+
+
+.detail-section-heading h3 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 900;
+}
+
+
+.detail-section-heading p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    opacity: 0.65;
+}
+
+
+.detail-section-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                250px,
+                1fr
+            )
+        );
+    gap: 14px;
+}
+
+
+.detail-section-card {
+    padding: 17px;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.015);
+}
+
+
+.detail-section-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+
+.detail-section-card-top strong {
+    font-size: 16px;
+    font-weight: 900;
+}
+
+
+.detail-section-card-top span {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.6;
+}
+
+
+.detail-section-score {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+
+.detail-section-score strong {
+    font-size: 28px;
+    font-weight: 900;
+}
+
+
+.detail-section-score small {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.65;
+}
+
+
+.detail-section-stats {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+    gap: 8px;
+}
+
+
+.section-stat {
+    padding: 10px 6px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+
+.section-stat strong {
+    display: block;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+
+.section-stat span {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+
+@media (
+    max-width: 700px
+) {
+
+    .detail-section-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+}
+
+/* =========================================================
+   QUESTION ANALYSIS - SECTION ORGANIZATION
+   ========================================================= */
+
+.result-question-section {
+    margin-bottom: 28px;
+}
+
+
+.result-question-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 14px;
+    padding: 16px 18px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+
+.result-question-section-title {
+    font-size: 18px;
+    font-weight: 900;
+
+    color: #0f172a;
+}
+
+
+.result-question-section-range {
+    margin-top: 4px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #64748b;
+}
+
+
+.result-question-section-count {
+    flex-shrink: 0;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    color: #475569;
+}
+
+
+.result-question-section-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+@media (
+    max-width: 650px
+) {
+
+    .result-question-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
+
+/* =========================================================
+   RESULT QUESTION ANALYSIS — SECTION COLORS
+   ========================================================= */
+
+/* ---------- TOTAL QUESTION COUNT ---------- */
+
+#detailQuestionCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 16px;
+
+    border-radius: 999px;
+
+    background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #dbeafe
+    );
+
+    border: 1px solid #bfdbfe;
+
+    color: #1d4ed8;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    letter-spacing: .01em;
+
+    box-shadow:
+        0 4px 12px rgba(37, 99, 235, .10);
+}
+
+
+/* =========================================================
+   SECTION-WISE RESULT CARDS
+   ========================================================= */
+
+.detail-section-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+.detail-section-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 4px;
+
+    background: #2563eb;
+}
+
+.detail-section-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, .08);
+}
+
+
+/* ---------- SECTION 1 — BLUE ---------- */
+
+.detail-section-card:nth-child(1)::before {
+    background: #2563eb;
+}
+
+.detail-section-card:nth-child(1) {
+    border-color: #bfdbfe;
+}
+
+.detail-section-card:nth-child(1)
+.detail-section-card-top strong {
+    color: #1d4ed8;
+}
+
+
+/* ---------- SECTION 2 — PURPLE ---------- */
+
+.detail-section-card:nth-child(2)::before {
+    background: #7c3aed;
+}
+
+.detail-section-card:nth-child(2) {
+    border-color: #ddd6fe;
+}
+
+.detail-section-card:nth-child(2)
+.detail-section-card-top strong {
+    color: #6d28d9;
+}
+
+
+/* ---------- SECTION 3 — GREEN ---------- */
+
+.detail-section-card:nth-child(3)::before {
+    background: #16a34a;
+}
+
+.detail-section-card:nth-child(3) {
+    border-color: #bbf7d0;
+}
+
+.detail-section-card:nth-child(3)
+.detail-section-card-top strong {
+    color: #15803d;
+}
+
+
+/* ---------- SECTION 4 — ORANGE ---------- */
+
+.detail-section-card:nth-child(4)::before {
+    background: #ea580c;
+}
+
+.detail-section-card:nth-child(4) {
+    border-color: #fed7aa;
+}
+
+.detail-section-card:nth-child(4)
+.detail-section-card-top strong {
+    color: #c2410c;
+}
+
+
+/* ---------- SECTION 5 — PINK ---------- */
+
+.detail-section-card:nth-child(5)::before {
+    background: #db2777;
+}
+
+.detail-section-card:nth-child(5) {
+    border-color: #fbcfe8;
+}
+
+.detail-section-card:nth-child(5)
+.detail-section-card-top strong {
+    color: #be185d;
+}
+
+
+/* =========================================================
+   QUESTION SECTION HEADERS
+   SAME COLORS AS SECTION RESULT CARDS
+   ========================================================= */
+
+.result-question-section {
+    position: relative;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    background: #f8fafc;
+
+    margin-top: 14px;
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, .04);
+}
+
+.result-question-section-header {
+    position: relative;
+
+    padding: 17px 20px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    background: #ffffff;
+}
+
+.result-question-section-header::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: 5px;
+
+    background: #2563eb;
+}
+
+
+/* ---------- SECTION 1 — BLUE ---------- */
+
+.result-question-section:nth-child(1)
+.result-question-section-header::before {
+    background: #2563eb;
+}
+
+.result-question-section:nth-child(1)
+.result-question-section-title {
+    color: #1d4ed8;
+}
+
+
+/* ---------- SECTION 2 — PURPLE ---------- */
+
+.result-question-section:nth-child(2)
+.result-question-section-header::before {
+    background: #7c3aed;
+}
+
+.result-question-section:nth-child(2)
+.result-question-section-title {
+    color: #6d28d9;
+}
+
+
+/* ---------- SECTION 3 — GREEN ---------- */
+
+.result-question-section:nth-child(3)
+.result-question-section-header::before {
+    background: #16a34a;
+}
+
+.result-question-section:nth-child(3)
+.result-question-section-title {
+    color: #15803d;
+}
+
+
+/* ---------- SECTION 4 — ORANGE ---------- */
+
+.result-question-section:nth-child(4)
+.result-question-section-header::before {
+    background: #ea580c;
+}
+
+.result-question-section:nth-child(4)
+.result-question-section-title {
+    color: #c2410c;
+}
+
+
+/* ---------- SECTION 5 — PINK ---------- */
+
+.result-question-section:nth-child(5)
+.result-question-section-header::before {
+    background: #db2777;
+}
+
+.result-question-section:nth-child(5)
+.result-question-section-title {
+    color: #be185d;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.result-question-section-title {
+    font-size: 17px;
+
+    font-weight: 800;
+
+    letter-spacing: -.01em;
+
+    transition: color .2s ease;
+}
+
+.result-question-section-range {
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: #64748b;
+}
+
+.result-question-section-count {
+    font-size: 12px;
+
+    font-weight: 800;
+
+    color: #475569;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    padding: 7px 11px;
+
+    border-radius: 9px;
+}
+
+
+/* =========================================================
+   QUESTIONS INSIDE SECTION
+   ========================================================= */
+
+.result-question-section-list {
+    display: grid;
+
+    gap: 10px;
+
+    padding: 12px;
+}
+
+
+/* =========================================================
+   SECTION COLORS — QUESTION NUMBER
+   ========================================================= */
+
+.result-question-section:nth-child(1)
+.detail-question-number {
+    color: #1d4ed8;
+}
+
+.result-question-section:nth-child(2)
+.detail-question-number {
+    color: #6d28d9;
+}
+
+.result-question-section:nth-child(3)
+.detail-question-number {
+    color: #15803d;
+}
+
+.result-question-section:nth-child(4)
+.detail-question-number {
+    color: #c2410c;
+}
+
+.result-question-section:nth-child(5)
+.detail-question-number {
+    color: #be185d;
+}
+
+
+/* =========================================================
+   DARK MODE SUPPORT
+   ========================================================= */
+
+html.dark-mode #detailQuestionCount {
+    background: #172554 !important;
+    border-color: #1e40af !important;
+    color: #93c5fd !important;
+}
+
+html.dark-mode .result-question-section {
+    background: #0f172a !important;
+    border-color: #24344d !important;
+}
+
+html.dark-mode .result-question-section-header {
+    background: #111c2c !important;
+    border-color: #24344d !important;
+}
+
+html.dark-mode .result-question-section-range {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode .result-question-section-count {
+    background: #172033 !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
 }

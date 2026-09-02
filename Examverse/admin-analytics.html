@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ExamVerse | Analytics</title>
+
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin-analytics.css">
+    <link rel="stylesheet" href="assets/css/loader.css">
+    <link rel="stylesheet" href="assets/css/popup.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div id="loader">
+    <img src="assets/images/logo.png" class="loader-logo">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading...</div>
+</div>
+
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<div class="sidebar">
+
+    <div class="logo-section">
+        <img src="assets/images/logo.png" class="sidebar-logo">
+        <h2>ExamVerse</h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <ul>
+
+        <a href="admin-dashboard.html">
+            <li>🏠 Dashboard</li>
+        </a>
+
+        <a href="admin-users.html">
+            <li>👥 Users</li>
+        </a>
+
+        <a href="admin-exams.html">
+            <li>📝 Exams</li>
+        </a>
+
+        <a href="admin-questions.html">
+            <li>📚 Questions</li>
+        </a>
+
+        <a href="admin-results.html">
+            <li>📊 Results</li>
+        </a>
+
+        <a href="admin-analytics.html">
+            <li class="active">📈 Analytics</li>
+        </a>
+
+        <a href="admin-settings.html">
+            <li>⚙ Settings</li>
+        </a>
+
+        <li id="logoutBtn">🚪 Logout</li>
+
+    </ul>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<div class="main">
+
+    <!-- HEADER -->
+
+    <header class="analytics-header">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-chart-line"></i>
+                Analytics
+            </h1>
+
+            <p>
+                In-depth examination, student performance and question analytics.
+            </p>
+        </div>
+
+        <button
+            id="refreshAnalyticsBtn"
+            class="analytics-refresh-btn"
+            type="button">
+
+            <i class="fa-solid fa-rotate"></i>
+            Refresh
+
+        </button>
+
+    </header>
+
+
+    <!-- =====================================================
+         ACCESS DENIED
+         ===================================================== -->
+
+    <section
+        id="analyticsAccessDenied"
+        class="analytics-access-denied"
+        hidden>
+
+        <div class="access-denied-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <h2>Access Denied</h2>
+
+        <p>
+            You do not have permission to view examination analytics.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         ANALYTICS CONTENT
+         ===================================================== -->
+
+    <section id="analyticsContent">
+
+
+        <!-- =================================================
+             FILTERS
+             ================================================= -->
+
+        <section class="analytics-filter-card">
+
+            <div class="analytics-filter-heading">
+
+                <div>
+                    <span class="analytics-section-kicker">
+                        ANALYSIS CONTROLS
+                    </span>
+
+                    <h2>Analytics Filters</h2>
+
+                    <p>
+                        Filter the analytical data by examination and time period.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-filters">
+
+                <div class="analytics-filter-group">
+
+                    <label for="analyticsExamFilter">
+                        Examination
+                    </label>
+
+                    <select id="analyticsExamFilter">
+
+                        <option value="">
+                            All Exams
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="analytics-filter-group">
+
+                    <label for="analyticsPeriodFilter">
+                        Period
+                    </label>
+
+                    <select id="analyticsPeriodFilter">
+
+                        <option value="all">
+                            All Time
+                        </option>
+
+                        <option value="today">
+                            Today
+                        </option>
+
+                        <option value="7">
+                            Last 7 Days
+                        </option>
+
+                        <option value="30" selected>
+                            Last 30 Days
+                        </option>
+
+                        <option value="90">
+                            Last 90 Days
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="analytics-filter-group">
+
+                    <label for="analyticsResultFilter">
+                        Result
+                    </label>
+
+                    <select id="analyticsResultFilter">
+
+                        <option value="">
+                            All Results
+                        </option>
+
+                        <option value="passed">
+                            Passed
+                        </option>
+
+                        <option value="failed">
+                            Failed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    id="clearAnalyticsFiltersBtn"
+                    class="analytics-secondary-btn"
+                    type="button">
+
+                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                    Clear Filters
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             OVERVIEW
+             ================================================= -->
+
+        <section class="analytics-section">
+
+            <div class="analytics-section-heading">
+
+                <div>
+                    <span class="analytics-section-kicker">
+                        OVERVIEW
+                    </span>
+
+                    <h2>Platform Performance</h2>
+
+                    <p>
+                        High-level examination and student performance indicators.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-kpi-grid">
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div>
+                        <span>Total Students</span>
+                        <strong id="analyticsTotalUsers">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+
+                    <div>
+                        <span>Total Exams</span>
+                        <strong id="analyticsTotalExams">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+
+                    <div>
+                        <span>Total Questions</span>
+                        <strong id="analyticsTotalQuestions">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+
+                    <div>
+                        <span>Completed Attempts</span>
+                        <strong id="analyticsCompletedAttempts">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+
+                    <div>
+                        <span>Pass Rate</span>
+                        <strong id="analyticsPassRate">0%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+
+                    <div>
+                        <span>Average Percentage</span>
+                        <strong id="analyticsAveragePercentage">0%</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+
+                    <div>
+                        <span>Average Score</span>
+                        <strong id="analyticsAverageScore">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-kpi-card">
+
+                    <div class="analytics-kpi-icon">
+                        <i class="fa-solid fa-stopwatch"></i>
+                    </div>
+
+                    <div>
+                        <span>Average Time</span>
+                        <strong id="analyticsAverageTime">00:00:00</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PERFORMANCE TREND
+             ================================================= -->
+
+        <section class="analytics-chart-grid">
+
+
+            <div class="analytics-chart-card analytics-chart-wide">
+
+                <div class="analytics-card-heading">
+
+                    <div>
+                        <span class="analytics-card-kicker">
+                            PERFORMANCE TREND
+                        </span>
+
+                        <h3>Performance Over Time</h3>
+
+                        <p>
+                            Average percentage and examination outcomes over time.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="analytics-chart-container">
+                    <canvas id="performanceTrendChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-chart-card">
+
+                <div class="analytics-card-heading">
+
+                    <div>
+                        <span class="analytics-card-kicker">
+                            RESULTS
+                        </span>
+
+                        <h3>Pass / Fail Distribution</h3>
+
+                        <p>
+                            Overall distribution of completed examination results.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="analytics-chart-container analytics-doughnut-container">
+                    <canvas id="passFailChart"></canvas>
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             SCORE DISTRIBUTION
+             ================================================= -->
+
+        <section class="analytics-chart-grid">
+
+
+            <div class="analytics-chart-card">
+
+                <div class="analytics-card-heading">
+
+                    <div>
+                        <span class="analytics-card-kicker">
+                            SCORES
+                        </span>
+
+                        <h3>Score Distribution</h3>
+
+                        <p>
+                            Distribution of student percentage scores.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="analytics-chart-container">
+                    <canvas id="scoreDistributionChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-chart-card">
+
+                <div class="analytics-card-heading">
+
+                    <div>
+                        <span class="analytics-card-kicker">
+                            DIFFICULTY
+                        </span>
+
+                        <h3>Question Difficulty</h3>
+
+                        <p>
+                            Accuracy and response behaviour by difficulty level.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="analytics-chart-container">
+                    <canvas id="difficultyChart"></canvas>
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             EXAM-WISE ANALYSIS
+             ================================================= -->
+
+        <section class="analytics-data-card">
+
+            <div class="analytics-card-heading">
+
+                <div>
+                    <span class="analytics-card-kicker">
+                        EXAM-WISE ANALYSIS
+                    </span>
+
+                    <h3>Examination Performance</h3>
+
+                    <p>
+                        Compare participation, performance, accuracy and completion
+                        behaviour across examinations.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-table-navigation">
+                <span>
+                    <i class="fa-solid fa-arrows-left-right"></i>
+                    Scroll table
+                </span>
+            </div>
+
+
+            <div class="analytics-table-scroll">
+
+                <table id="examAnalyticsTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Examination</th>
+                            <th>Attempts</th>
+                            <th>Students</th>
+                            <th>Avg. Score</th>
+                            <th>Avg. %</th>
+                            <th>Highest %</th>
+                            <th>Lowest %</th>
+                            <th>Pass Rate</th>
+                            <th>Attempted</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Skipped</th>
+                            <th>Avg. Time</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="examAnalyticsTableBody">
+
+                        <tr>
+                            <td colspan="13" class="analytics-loading-cell">
+                                Loading analytics...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             DIFFICULTY ANALYSIS
+             ================================================= -->
+
+        <section class="analytics-data-card">
+
+            <div class="analytics-card-heading">
+
+                <div>
+                    <span class="analytics-card-kicker">
+                        QUESTION DIFFICULTY
+                    </span>
+
+                    <h3>Difficulty Analysis</h3>
+
+                    <p>
+                        Identify how students perform against easy, medium and hard
+                        questions.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="analytics-table-scroll">
+
+                <table id="difficultyAnalyticsTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Difficulty</th>
+                            <th>Questions</th>
+                            <th>Responses</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Skipped</th>
+                            <th>Accuracy</th>
+                            <th>Skip Rate</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="difficultyAnalyticsTableBody">
+
+                        <tr>
+                            <td colspan="8" class="analytics-loading-cell">
+                                Loading difficulty analysis...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             STUDENT PERFORMANCE
+             ================================================= -->
+
+        <section class="analytics-chart-grid">
+
+
+            <div class="analytics-data-card">
+
+                <div class="analytics-card-heading">
+
+                    <div>
+                        <span class="analytics-card-kicker">
+                            TOP PERFORMANCE
+                        </span>
+
+                        <h3>Recent High Performers</h3>
+
+                        <p>
+                            Highest-performing recent completed attempts.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-table-scroll">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Student</th>
+                                <th>Exam</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Result</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="topPerformersTableBody">
+
+                            <tr>
+                                <td colspan="5" class="analytics-loading-cell">
+                                    Loading...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-data-card">
+
+                <div class="analytics-card-heading">
+
+                    <div>
+                        <span class="analytics-card-kicker">
+                            RECENT ACTIVITY
+                        </span>
+
+                        <h3>Latest Results</h3>
+
+                        <p>
+                            Most recent completed examination attempts.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-table-scroll">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Student</th>
+                                <th>Exam</th>
+                                <th>Percentage</th>
+                                <th>Result</th>
+                                <th>Submitted</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="recentResultsTableBody">
+
+                            <tr>
+                                <td colspan="5" class="analytics-loading-cell">
+                                    Loading...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             ATTEMPT BEHAVIOUR
+             ================================================= -->
+
+        <section class="analytics-chart-grid">
+
+
+            <div class="analytics-insight-card">
+
+                <div class="analytics-insight-icon">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+
+                <div>
+
+                    <span>Accuracy</span>
+
+                    <strong id="analyticsAccuracyRate">
+                        0%
+                    </strong>
+
+                    <p>
+                        Overall correct-answer rate among attempted questions.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-insight-card">
+
+                <div class="analytics-insight-icon">
+                    <i class="fa-solid fa-forward-step"></i>
+                </div>
+
+                <div>
+
+                    <span>Skip Rate</span>
+
+                    <strong id="analyticsSkipRate">
+                        0%
+                    </strong>
+
+                    <p>
+                        Percentage of questions left unanswered.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-insight-card">
+
+                <div class="analytics-insight-icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+
+                <div>
+
+                    <span>Wrong Answer Rate</span>
+
+                    <strong id="analyticsWrongRate">
+                        0%
+                    </strong>
+
+                    <p>
+                        Percentage of attempted questions answered incorrectly.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-insight-card">
+
+                <div class="analytics-insight-icon">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+
+                <div>
+
+                    <span>Average Attempt Rate</span>
+
+                    <strong id="analyticsAttemptRate">
+                        0%
+                    </strong>
+
+                    <p>
+                        Average proportion of questions attempted per completed exam.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             ANALYTICAL INSIGHTS
+             ================================================= -->
+
+        <section class="analytics-data-card">
+
+            <div class="analytics-card-heading">
+
+                <div>
+                    <span class="analytics-card-kicker">
+                        ANALYTICAL SUMMARY
+                    </span>
+
+                    <h3>Key Findings</h3>
+
+                    <p>
+                        Automatically generated observations from the available
+                        examination data.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div id="analyticsInsights" class="analytics-insights-list">
+
+                <div class="analytics-empty-state">
+                    Analytics insights will appear here.
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     SCRIPTS
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/popup.js"></script>
+<script src="assets/js/admin-auth.js"></script>
+<script src="assets/js/admin-analytics.js"></script>
+<script src="assets/js/loader.js"></script>
+
+</body>
+</html>
