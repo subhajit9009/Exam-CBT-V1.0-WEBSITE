@@ -456,6 +456,70 @@ function normalizeAnalyticsResponse(data) {
     };
 }
 
+/* =========================================================
+   LOAD EXAM AVERAGE TIMES
+   ========================================================= */
+
+async function loadExamAverageTimes() {
+    try {
+        const {
+            data,
+            error
+        } = await supabaseClient.rpc(
+            "get_admin_exam_average_times"
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        const timeRows =
+            Array.isArray(data)
+                ? data
+                : [];
+
+        const timeMap =
+            new Map(
+                timeRows.map(
+                    row => [
+                        String(
+                            row.exam_id
+                        ),
+                        numberValue(
+                            row.average_time
+                        )
+                    ]
+                )
+            );
+
+        if (
+            analyticsData &&
+            Array.isArray(
+                analyticsData.exam_wise
+            )
+        ) {
+            analyticsData.exam_wise =
+                analyticsData.exam_wise.map(
+                    exam => ({
+                        ...exam,
+                        average_time:
+                            timeMap.get(
+                                String(
+                                    exam.exam_id
+                                )
+                            ) ?? 0
+                    })
+                );
+        }
+    }
+    catch (error) {
+        console.error(
+            "ADMIN EXAM AVERAGE TIME ERROR:",
+            error
+        );
+    }
+}
+
 
 /* =========================================================
    LOAD ANALYTICS
@@ -484,15 +548,17 @@ async function loadAnalytics() {
         }
 
         analyticsData =
-            normalizeAnalyticsResponse(
-                data
-            );
+    normalizeAnalyticsResponse(
+        data
+    );
 
-        await loadAnalyticsUserDirectory();
+await loadExamAverageTimes();
 
-        populateExamFilter();
+await loadAnalyticsUserDirectory();
 
-        renderAnalytics();
+populateExamFilter();
+
+renderAnalytics();
 
         setupTableSliders();
 
@@ -1963,53 +2029,47 @@ function renderPassFailChart() {
     }
 
 
-    const totals =
-        getPassFailTotals();
+    /* =====================================================
+       FIND THE ORIGINAL CHART CONTAINER
+
+       IMPORTANT:
+       Do NOT use canvas.parentElement here.
+
+       The previous implementation changed the canvas
+       parent after every render, causing nested layouts
+       after refresh/filter changes.
+       ===================================================== */
+
+    const root =
+        canvas.closest(
+            ".analytics-doughnut-container"
+        ) ||
+        canvas.parentElement;
 
 
-    const passed =
-        numberValue(
-            totals.passed
-        );
+    if (!root) {
+        return;
+    }
 
 
-    const failed =
-        numberValue(
-            totals.failed
-        );
-
-
-    const total =
-        passed +
-        failed;
-
+    /* =====================================================
+       DESTROY PREVIOUS CHART
+       ===================================================== */
 
     if (passFailChart) {
 
         passFailChart.destroy();
 
-        passFailChart =
-            null;
+        passFailChart = null;
     }
 
 
-    /*
-     * FIND THE CHART CARD
-     */
-    const chartParent =
-        canvas.parentElement;
+    /* =====================================================
+       ALWAYS REBUILD THE LAYOUT CLEANLY
+       ===================================================== */
 
-
-    if (!chartParent) {
-        return;
-    }
-
-
-    /*
-     * CREATE MODERN TWO-COLUMN LAYOUT
-     */
     let layout =
-        chartParent.querySelector(
+        root.querySelector(
             ".analytics-passfail-layout"
         );
 
@@ -2043,122 +2103,126 @@ function renderPassFailChart() {
             "analytics-passfail-info";
 
 
-        chartParent.insertBefore(
-            layout,
-            canvas
-        );
-
-
         layout.appendChild(
             chartArea
         );
-
 
         layout.appendChild(
             infoArea
         );
 
 
+        root.appendChild(
+            layout
+        );
+
+
         chartArea.appendChild(
             canvas
         );
+
     }
+    else {
 
+        /*
+         * Existing layout:
+         * make absolutely sure the canvas is in
+         * the chart area and not nested somewhere else.
+         */
 
-    /*
-     * EMPTY STATE
-     */
-    if (total <= 0) {
-
-        layout
-            .querySelector(
-                ".analytics-passfail-info"
-            )
-            .innerHTML = `
-                <div class="analytics-passfail-empty">
-
-                    <i class="
-                        fa-solid
-                        fa-chart-pie
-                    "></i>
-
-                    <strong>
-                        No completed results
-                    </strong>
-
-                    <span>
-                        Pass and fail statistics
-                        will appear here after
-                        completed examinations.
-                    </span>
-
-                </div>
-            `;
-
-
-        const ctx =
-            canvas.getContext(
-                "2d"
+        const chartArea =
+            layout.querySelector(
+                ".analytics-passfail-chart-area"
             );
 
 
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
+        if (
+            chartArea &&
+            canvas.parentElement !==
+                chartArea
+        ) {
 
-
-        return;
+            chartArea.appendChild(
+                canvas
+            );
+        }
     }
 
 
+    /* =====================================================
+       DATA
+       ===================================================== */
+
+    const totals =
+        getPassFailTotals();
+
+
+    const passed =
+        numberValue(
+            totals.passed
+        );
+
+
+    const failed =
+        numberValue(
+            totals.failed
+        );
+
+
+    const total =
+        passed +
+        failed;
+
+
+    const behaviour =
+        getBehaviourTotals();
+
+
+    const attempted =
+        numberValue(
+            behaviour.attempted
+        );
+
+
+    const correct =
+        numberValue(
+            behaviour.correct
+        );
+
+
+    const wrong =
+        numberValue(
+            behaviour.wrong
+        );
+
+
+    const skipped =
+        numberValue(
+            behaviour.skipped
+        );
+
+
     const passRate =
-        (
-            passed /
-            total
-        ) * 100;
+        total > 0
+            ? (
+                passed /
+                total
+            ) * 100
+            : 0;
 
 
     const failRate =
-        (
-            failed /
-            total
-        ) * 100;
+        total > 0
+            ? (
+                failed /
+                total
+            ) * 100
+            : 0;
 
 
-    const answeredTotal =
-        numberValue(
-            analyticsData
-                ?.overview
-                ?.total_attempted
-        );
-
-
-    const correctTotal =
-        numberValue(
-            analyticsData
-                ?.overview
-                ?.total_correct
-        );
-
-
-    const wrongTotal =
-        numberValue(
-            analyticsData
-                ?.overview
-                ?.total_wrong
-        );
-
-
-    const skippedTotal =
-        numberValue(
-            analyticsData
-                ?.overview
-                ?.total_skipped
-        );
-
+    /* =====================================================
+       RIGHT-SIDE INFORMATION
+       ===================================================== */
 
     const infoArea =
         layout.querySelector(
@@ -2166,28 +2230,26 @@ function renderPassFailChart() {
         );
 
 
-    /*
-     * RIGHT-SIDE DATA PANEL
-     */
-    infoArea.innerHTML = `
+    if (!infoArea) {
+        return;
+    }
 
-        <div class="
-            analytics-passfail-summary-title
-        ">
+
+    infoArea.innerHTML = `
+        <div class="analytics-passfail-summary-title">
+
             <span>
                 RESULT SUMMARY
             </span>
 
             <strong>
-                Completed attempts
+                Completed Attempts
             </strong>
+
         </div>
 
 
-        <div class="
-            analytics-passfail-stat-grid
-        ">
-
+        <div class="analytics-passfail-stat-grid">
 
             <div class="
                 analytics-passfail-stat
@@ -2206,6 +2268,10 @@ function renderPassFailChart() {
                 <strong>
                     ${formatNumber(total)}
                 </strong>
+
+                <small>
+                    Completed
+                </small>
 
             </div>
 
@@ -2258,7 +2324,6 @@ function renderPassFailChart() {
                 </small>
 
             </div>
-
 
         </div>
 
@@ -2316,77 +2381,105 @@ function renderPassFailChart() {
         ">
 
             <div>
-
                 <span>
                     Attempted
                 </span>
 
                 <strong>
-                    ${formatNumber(
-                        answeredTotal
-                    )}
+                    ${formatNumber(attempted)}
                 </strong>
-
             </div>
 
 
             <div>
-
                 <span>
                     Correct
                 </span>
 
                 <strong>
-                    ${formatNumber(
-                        correctTotal
-                    )}
+                    ${formatNumber(correct)}
                 </strong>
-
             </div>
 
 
             <div>
-
                 <span>
                     Wrong
                 </span>
 
                 <strong>
-                    ${formatNumber(
-                        wrongTotal
-                    )}
+                    ${formatNumber(wrong)}
                 </strong>
-
             </div>
 
 
             <div>
-
                 <span>
                     Skipped
                 </span>
 
                 <strong>
-                    ${formatNumber(
-                        skippedTotal
-                    )}
+                    ${formatNumber(skipped)}
                 </strong>
-
             </div>
 
         </div>
-
     `;
 
 
-    /*
-     * DONUT
-     */
+    /* =====================================================
+       NO RESULT STATE
+       ===================================================== */
+
+    if (total <= 0) {
+
+        infoArea.innerHTML = `
+            <div class="
+                analytics-passfail-empty
+            ">
+
+                <i class="
+                    fa-solid
+                    fa-chart-pie
+                "></i>
+
+                <strong>
+                    No completed results
+                </strong>
+
+                <span>
+                    Pass and fail statistics
+                    will appear after students
+                    complete an examination.
+                </span>
+
+            </div>
+        `;
+
+
+        const ctx =
+            canvas.getContext("2d");
+
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+
+        return;
+    }
+
+
+    /* =====================================================
+       CREATE DONUT
+       ===================================================== */
+
     passFailChart =
         new Chart(
-            canvas.getContext(
-                "2d"
-            ),
+            canvas.getContext("2d"),
             {
 
                 type:
@@ -2404,32 +2497,26 @@ function renderPassFailChart() {
                     datasets: [
 
                         {
-
                             data: [
                                 passed,
                                 failed
                             ],
-
 
                             backgroundColor: [
                                 "#22c55e",
                                 "#ef4444"
                             ],
 
-
                             borderColor: [
                                 "#ffffff",
                                 "#ffffff"
                             ],
 
-
                             borderWidth:
                                 4,
 
-
                             hoverOffset:
-                                10
-
+                                8
                         }
 
                     ]
@@ -2445,94 +2532,91 @@ function renderPassFailChart() {
                             "passFailCenterText",
 
 
-                        afterDraw(
-                            chart
-                        ) {
+                        afterDraw:
+                            function(chart) {
 
-                            const meta =
-                                chart.getDatasetMeta(
-                                    0
+                                const meta =
+                                    chart.getDatasetMeta(
+                                        0
+                                    );
+
+
+                                if (
+                                    !meta ||
+                                    !meta.data ||
+                                    !meta.data.length
+                                ) {
+                                    return;
+                                }
+
+
+                                const point =
+                                    meta.data[0];
+
+
+                                const ctx =
+                                    chart.ctx;
+
+
+                                ctx.save();
+
+
+                                ctx.textAlign =
+                                    "center";
+
+
+                                ctx.textBaseline =
+                                    "middle";
+
+
+                                ctx.fillStyle =
+                                    "#111827";
+
+
+                                ctx.font =
+                                    "800 30px Poppins, sans-serif";
+
+
+                                ctx.fillText(
+                                    String(total),
+                                    point.x,
+                                    point.y - 15
                                 );
 
 
-                            if (
-                                !meta?.data?.length
-                            ) {
-                                return;
+                                ctx.fillStyle =
+                                    "#64748b";
+
+
+                                ctx.font =
+                                    "700 10px Poppins, sans-serif";
+
+
+                                ctx.fillText(
+                                    "TOTAL ATTEMPTS",
+                                    point.x,
+                                    point.y + 9
+                                );
+
+
+                                ctx.fillStyle =
+                                    "#16a34a";
+
+
+                                ctx.font =
+                                    "800 11px Poppins, sans-serif";
+
+
+                                ctx.fillText(
+                                    `${passRate.toFixed(1)}% PASS`,
+                                    point.x,
+                                    point.y + 29
+                                );
+
+
+                                ctx.restore();
+
                             }
-
-
-                            const x =
-                                meta.data[0].x;
-
-
-                            const y =
-                                meta.data[0].y;
-
-
-                            const ctx =
-                                chart.ctx;
-
-
-                            ctx.save();
-
-
-                            ctx.textAlign =
-                                "center";
-
-
-                            ctx.textBaseline =
-                                "middle";
-
-
-                            ctx.fillStyle =
-                                "#111827";
-
-
-                            ctx.font =
-                                "800 30px Poppins, sans-serif";
-
-
-                            ctx.fillText(
-                                String(total),
-                                x,
-                                y - 16
-                            );
-
-
-                            ctx.fillStyle =
-                                "#64748b";
-
-
-                            ctx.font =
-                                "600 10px Poppins, sans-serif";
-
-
-                            ctx.fillText(
-                                "TOTAL ATTEMPTS",
-                                x,
-                                y + 10
-                            );
-
-
-                            ctx.fillStyle =
-                                "#16a34a";
-
-
-                            ctx.font =
-                                "700 11px Poppins, sans-serif";
-
-
-                            ctx.fillText(
-                                `${passRate.toFixed(1)}% PASS`,
-                                x,
-                                y + 30
-                            );
-
-
-                            ctx.restore();
-
-                        }
 
                     }
 
@@ -2548,7 +2632,7 @@ function renderPassFailChart() {
                         false,
 
                     cutout:
-                        "65%",
+                        "66%",
 
 
                     plugins: {
@@ -2559,14 +2643,10 @@ function renderPassFailChart() {
 
                         tooltip: {
 
-                            enabled:
-                                true,
-
-
                             callbacks: {
 
                                 label:
-                                    function (
+                                    function(
                                         context
                                     ) {
 
@@ -2581,8 +2661,7 @@ function renderPassFailChart() {
                                                 ? (
                                                     value /
                                                     total
-                                                ) *
-                                                  100
+                                                ) * 100
                                                 : 0;
 
 
@@ -2604,7 +2683,6 @@ function renderPassFailChart() {
 
             }
         );
-
 }
 
 
@@ -4626,36 +4704,107 @@ function renderQuestionHighlight(
 
     if (!question) {
 
+        let message =
+            "No successful question yet.";
+
+        if (
+            label ===
+            "Most Difficult"
+        ) {
+            message =
+                "No attempted question data.";
+        }
+
+        else if (
+            label ===
+            "Most Skipped"
+        ) {
+            message =
+                "No skipped-question data.";
+        }
+
         return `
             <div
                 class="
                     analytics-question-highlight
+                    empty
                 "
             >
 
-                <i
+                <div
                     class="
-                        fa-solid
-                        ${escapeHTML(icon)}
+                        analytics-question-highlight-icon
                     "
-                ></i>
+                >
+                    <i
+                        class="
+                            fa-solid
+                            ${escapeHTML(icon)}
+                        "
+                    ></i>
+                </div>
 
-
-                <div>
+                <div
+                    class="
+                        analytics-question-highlight-content
+                    "
+                >
 
                     <span>
                         ${escapeHTML(label)}
                     </span>
 
                     <strong>
-                        No data
+                        ${escapeHTML(message)}
                     </strong>
 
                 </div>
 
             </div>
-            `;
+        `;
     }
+
+
+    const questionNo =
+        question.question_no ??
+        "—";
+
+
+    const accuracy =
+        numberValue(
+            question.accuracy
+        );
+
+
+    const skipRate =
+        numberValue(
+            question.skip_rate
+        );
+
+
+    const attempted =
+        numberValue(
+            question.attempted ??
+            question.opportunities
+        );
+
+
+    const correct =
+        numberValue(
+            question.correct
+        );
+
+
+    const wrong =
+        numberValue(
+            question.wrong
+        );
+
+
+    const skipped =
+        numberValue(
+            question.skipped
+        );
 
 
     return `
@@ -4665,15 +4814,25 @@ function renderQuestionHighlight(
             "
         >
 
-            <i
+            <div
                 class="
-                    fa-solid
-                    ${escapeHTML(icon)}
+                    analytics-question-highlight-icon
                 "
-            ></i>
+            >
+                <i
+                    class="
+                        fa-solid
+                        ${escapeHTML(icon)}
+                    "
+                ></i>
+            </div>
 
 
-            <div>
+            <div
+                class="
+                    analytics-question-highlight-content
+                "
+            >
 
                 <span>
                     ${escapeHTML(label)}
@@ -4681,28 +4840,66 @@ function renderQuestionHighlight(
 
 
                 <strong>
-                    Question
-                    ${escapeHTML(
-                        question.question_no
+                    Question ${escapeHTML(
+                        questionNo
                     )}
                 </strong>
 
 
                 <small>
+
                     ${percentage(
-                        question.accuracy
+                        accuracy
                     )}
-                    accuracy ·
+
+                    accuracy
+
+                    <b>•</b>
+
                     ${percentage(
-                        question.skip_rate
+                        skipRate
                     )}
+
                     skipped
+
+                    <b>•</b>
+
+                    ${formatNumber(
+                        attempted
+                    )}
+
+                    attempted
+
+                    <b>•</b>
+
+                    ${formatNumber(
+                        correct
+                    )}
+
+                    correct
+
+                    <b>•</b>
+
+                    ${formatNumber(
+                        wrong
+                    )}
+
+                    wrong
+
+                    <b>•</b>
+
+                    ${formatNumber(
+                        skipped
+                    )}
+
+                    skipped
+
                 </small>
 
             </div>
 
         </div>
-        `;
+    `;
 }
 
 
@@ -4966,34 +5163,46 @@ function renderExamDetail(
 
 
     const totalQuestions =
-        numberValue(
-            overview.total_questions ||
-            exam.total_questions
-        );
+    numberValue(
+        overview.total_questions ||
+        exam.total_questions
+    );
 
 
-    const totalAttempted =
-        numberValue(
-            overview.total_attempted
-        );
+const totalAttempts =
+    numberValue(
+        overview.attempts ||
+        overview.completed_attempts
+    );
 
 
-    const totalCorrect =
-        numberValue(
-            overview.total_correct
-        );
+const totalOpportunities =
+    totalQuestions *
+    totalAttempts;
 
 
-    const totalWrong =
-        numberValue(
-            overview.total_wrong
-        );
+const totalAttempted =
+    numberValue(
+        overview.total_attempted
+    );
 
 
-    const totalSkipped =
-        numberValue(
-            overview.total_skipped
-        );
+const totalCorrect =
+    numberValue(
+        overview.total_correct
+    );
+
+
+const totalWrong =
+    numberValue(
+        overview.total_wrong
+    );
+
+
+const totalSkipped =
+    numberValue(
+        overview.total_skipped
+    );
 
 
     body.innerHTML =
@@ -5110,35 +5319,32 @@ function renderExamDetail(
             >
 
                 ${detailBehaviourCard(
-                    "Attempted",
-                    totalAttempted,
-                    totalQuestions,
-                    "attempted"
-                )}
+    "Attempted",
+    totalAttempted,
+    totalOpportunities,
+    "attempted"
+)}
 
+${detailBehaviourCard(
+    "Correct",
+    totalCorrect,
+    totalOpportunities,
+    "correct"
+)}
 
-                ${detailBehaviourCard(
-                    "Correct",
-                    totalCorrect,
-                    totalQuestions,
-                    "correct"
-                )}
+${detailBehaviourCard(
+    "Wrong",
+    totalWrong,
+    totalOpportunities,
+    "wrong"
+)}
 
-
-                ${detailBehaviourCard(
-                    "Wrong",
-                    totalWrong,
-                    totalQuestions,
-                    "wrong"
-                )}
-
-
-                ${detailBehaviourCard(
-                    "Skipped",
-                    totalSkipped,
-                    totalQuestions,
-                    "skipped"
-                )}
+${detailBehaviourCard(
+    "Skipped",
+    totalSkipped,
+    totalOpportunities,
+    "skipped"
+)}
 
             </div>
 
@@ -5255,8 +5461,12 @@ function renderExamDetail(
                                         </th>
 
                                         <th>
-                                            Attempts
-                                        </th>
+    Attempts
+</th>
+
+<th>
+    Attempted
+</th>
 
                                         <th>
                                             Correct
@@ -5311,6 +5521,12 @@ function renderExamDetail(
                                                             section.attempts
                                                         )}
                                                     </td>
+
+                                                    <td>
+    ${formatNumber(
+        section.attempted
+    )}
+</td>
 
                                                     <td>
                                                         ${formatNumber(
@@ -5643,64 +5859,77 @@ function renderExamDetail(
                     >
 
                         ${renderQuestionHighlight(
-                            "fa-fire",
-                            "Most Difficult",
-                            questions
-                                .slice()
-                                .sort(
-                                    (
-                                        a,
-                                        b
-                                    ) =>
-                                        numberValue(
-                                            a.accuracy
-                                        ) -
-                                        numberValue(
-                                            b.accuracy
-                                        )
-                                )[0]
-                        )}
+    "fa-fire",
+    "Most Difficult",
+    questions
+        .filter(
+            question =>
+                numberValue(
+                    question.attempted ??
+                    question.opportunities
+                ) > 0
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                numberValue(
+                    a.accuracy
+                ) -
+                numberValue(
+                    b.accuracy
+                )
+        )[0] || null
+)}
 
+${renderQuestionHighlight(
+    "fa-check-circle",
+    "Easiest",
+    questions
+        .filter(
+            question =>
+                numberValue(
+                    question.correct
+                ) > 0
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                numberValue(
+                    b.accuracy
+                ) -
+                numberValue(
+                    a.accuracy
+                )
+        )[0] || null
+)}
 
-                        ${renderQuestionHighlight(
-                            "fa-check-circle",
-                            "Easiest",
-                            questions
-                                .slice()
-                                .sort(
-                                    (
-                                        a,
-                                        b
-                                    ) =>
-                                        numberValue(
-                                            b.accuracy
-                                        ) -
-                                        numberValue(
-                                            a.accuracy
-                                        )
-                                )[0]
-                        )}
-
-
-                        ${renderQuestionHighlight(
-                            "fa-forward",
-                            "Most Skipped",
-                            questions
-                                .slice()
-                                .sort(
-                                    (
-                                        a,
-                                        b
-                                    ) =>
-                                        numberValue(
-                                            b.skip_rate
-                                        ) -
-                                        numberValue(
-                                            a.skip_rate
-                                        )
-                                )[0]
-                        )}
-
+${renderQuestionHighlight(
+    "fa-forward",
+    "Most Skipped",
+    questions
+        .filter(
+            question =>
+                numberValue(
+                    question.opportunities
+                ) > 0
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                numberValue(
+                    b.skip_rate
+                ) -
+                numberValue(
+                    a.skip_rate
+                )
+        )[0] || null
+)}
                     </div>
 
                     `

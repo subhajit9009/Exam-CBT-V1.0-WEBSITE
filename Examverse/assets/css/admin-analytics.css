@@ -2284,386 +2284,98 @@
 }
 
 /* =========================================================
-   PASS / FAIL CHART — FULL WIDTH
-   ========================================================= */
-
-.analytics-chart-card:has(#passFailChart) {
-    grid-column: span 2;
-}
-
-.analytics-chart-card:has(#passFailChart)
-.analytics-doughnut-container {
-    width: 100%;
-    max-width: 520px;
-    height: 360px;
-    margin: 0 auto;
-}
-
-
-/* =========================================================
-   CHART HEADINGS — ALWAYS READABLE
-   ========================================================= */
-
-.analytics-chart-card h3,
-.analytics-chart-card p,
-.analytics-card-heading h3,
-.analytics-card-heading p,
-.analytics-section-heading h2,
-.analytics-section-heading p {
-    color: #111827 !important;
-    opacity: 1 !important;
-}
-
-
-/* =========================================================
-   CHART AREA
-   ========================================================= */
-
-.analytics-chart-container {
-    min-height: 330px;
-}
-
-.analytics-doughnut-container {
-    position: relative;
-    min-height: 330px;
-}
-
-
-/* =========================================================
-   TABLE SCROLL BUTTONS
-   ========================================================= */
-
-.analytics-table-slider-controls {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 7px;
-    margin-bottom: 8px;
-}
-
-.analytics-table-slider-btn {
-    width: 38px;
-    height: 34px;
-    border: 1px solid #dbe2ea;
-    border-radius: 9px;
-    background: #ffffff;
-    color: #1e293b;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.analytics-table-slider-btn:hover {
-    background: #f1f5f9;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.analytics-table-slider-btn:active {
-    transform: translateY(0);
-}
-
-
-/* =========================================================
-   CLICKABLE EXAM ROW
-   ========================================================= */
-
-.analytics-exam-row {
-    cursor: pointer;
-}
-
-.analytics-exam-row:hover {
-    background: rgba(37, 99, 235, 0.07) !important;
-}
-
-
-/* =========================================================
-   EXAM DETAIL MODAL
-   ========================================================= */
-
-.analytics-exam-detail-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    display: none;
-}
-
-.analytics-exam-detail-modal.open {
-    display: block;
-}
-
-.analytics-exam-detail-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.68);
-    backdrop-filter: blur(4px);
-}
-
-.analytics-exam-detail-dialog {
-    position: absolute;
-    top: 3vh;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(1180px, 94vw);
-    height: 94vh;
-    background: #ffffff;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
-    display: flex;
-    flex-direction: column;
-}
-
-.analytics-exam-detail-header {
-    flex-shrink: 0;
-    padding: 22px 26px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    background: #ffffff;
-}
-
-.analytics-exam-detail-header h2 {
-    margin: 5px 0;
-    color: #111827 !important;
-    font-size: 22px;
-}
-
-.analytics-exam-detail-header p {
-    margin: 0;
-    color: #64748b !important;
-    opacity: 1 !important;
-    font-size: 12px;
-}
-
-.analytics-exam-detail-close {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border: none;
-    border-radius: 10px;
-    background: #f1f5f9;
-    color: #334155;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-}
-
-.analytics-exam-detail-close:hover {
-    background: #e2e8f0;
-}
-
-.analytics-exam-detail-body {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 24px;
-    background: #f8fafc;
-}
-
-body.analytics-modal-open {
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   DETAIL SECTIONS
-   ========================================================= */
-
-.analytics-detail-section {
-    margin-bottom: 24px;
-    padding: 22px;
-    border-radius: 17px;
-    background: #ffffff;
-    box-shadow: 0 5px 22px rgba(15,23,42,0.06);
-}
-
-.analytics-detail-section-heading {
-    margin-bottom: 18px;
-}
-
-.analytics-detail-section-heading > span {
-    display: block;
-    margin-bottom: 5px;
-    color: #64748b;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.2px;
-}
-
-.analytics-detail-section-heading h3 {
-    margin: 0 0 5px;
-    color: #111827 !important;
-    font-size: 18px;
-}
-
-.analytics-detail-section-heading p {
-    margin: 0;
-    color: #64748b !important;
-    opacity: 1 !important;
-    font-size: 12px;
-}
-
-
-/* =========================================================
-   DETAIL TABLES
-   ========================================================= */
-
-.analytics-detail-table-scroll {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.analytics-detail-table-scroll table {
-    width: 100%;
-    min-width: 850px;
-    border-collapse: collapse;
-}
-
-.analytics-detail-table-scroll th {
-    padding: 12px;
-    background: #f1f5f9;
-    color: #334155 !important;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.analytics-detail-table-scroll td {
-    padding: 12px;
-    color: #334155 !important;
-    border-bottom: 1px solid #e5e7eb;
-    white-space: nowrap;
-}
-
-.analytics-detail-table-scroll tr:hover td {
-    background: #f8fafc;
-}
-
-
-/* =========================================================
-   DETAIL SLIDER BUTTONS
-   ========================================================= */
-
-.analytics-detail-slider-controls {
-    display: flex;
-    justify-content: flex-end;
-    gap: 7px;
-    margin-bottom: 8px;
-}
-
-.analytics-detail-slider-btn {
-    width: 36px;
-    height: 32px;
-    border: 1px solid #dbe2ea;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #334155;
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .analytics-chart-card:has(#passFailChart) {
-        grid-column: span 1;
-    }
-
-    .analytics-exam-detail-dialog {
-        top: 1vh;
-        width: 98vw;
-        height: 98vh;
-        border-radius: 14px;
-    }
-
-    .analytics-exam-detail-body {
-        padding: 14px;
-    }
-
-    .analytics-detail-section {
-        padding: 16px;
-    }
-
-}
-
-/* =========================================================
-   MODERN PASS / FAIL ANALYTICS
+   PASS / FAIL — MODERN DESKTOP LAYOUT
    ========================================================= */
 
 .analytics-passfail-layout {
     width: 100%;
-    min-height: 360px;
+    min-width: 0;
 
     display: grid;
-    grid-template-columns:
-        minmax(360px, 0.95fr)
-        minmax(360px, 1.05fr);
 
-    gap: 42px;
+    /*
+     * More space on the LEFT for the donut.
+     * Information remains on the RIGHT.
+     */
+    grid-template-columns:
+        minmax(430px, 1.15fr)
+        minmax(360px, 0.85fr);
+
+    gap: 24px;
 
     align-items: center;
 }
 
 
 /* =========================================================
-   LEFT CHART
+   LEFT DONUT AREA
    ========================================================= */
 
 .analytics-passfail-chart-area {
+
     width: 100%;
-    height: 360px;
+    min-width: 0;
+
+    height: 390px;
 
     display: flex;
+
     align-items: center;
-    justify-content: center;
+
+    /*
+     * IMPORTANT:
+     * Keep donut toward LEFT, not centred
+     * in the complete card.
+     */
+    justify-content: flex-start;
 
     position: relative;
+
+    padding-left: 15px;
 }
 
 
 .analytics-passfail-chart-area canvas {
-    width: 100% !important;
-    height: 350px !important;
-    max-width: 390px;
+
+    display: block;
+
+    width: 430px !important;
+    height: 370px !important;
+
+    max-width: 100%;
+
+    margin: 0 !important;
 }
 
 
 /* =========================================================
-   RIGHT INFORMATION PANEL
+   RIGHT DATA AREA
    ========================================================= */
 
 .analytics-passfail-info {
+
     width: 100%;
+    min-width: 0;
 
     display: flex;
+
     flex-direction: column;
 
-    gap: 20px;
+    gap: 15px;
+
+    padding-right: 4px;
 }
 
 
 .analytics-passfail-summary-title {
+
     display: flex;
+
     flex-direction: column;
 
-    gap: 5px;
+    gap: 4px;
 
-    padding-bottom: 14px;
+    padding-bottom: 13px;
 
     border-bottom:
         1px solid #e2e8f0;
@@ -2671,14 +2383,15 @@ body.analytics-modal-open {
 
 
 .analytics-passfail-summary-title span {
-    color: #64748b;
 
-    font-size: 11px;
+    color: #64748b !important;
 
-    font-weight: 800;
+    font-size: 10px;
+
+    font-weight: 900;
 
     letter-spacing:
-        0.14em;
+        1.5px;
 
     text-transform:
         uppercase;
@@ -2686,47 +2399,52 @@ body.analytics-modal-open {
 
 
 .analytics-passfail-summary-title strong {
-    color: #111827;
 
-    font-size: 21px;
+    color: #111827 !important;
 
-    font-weight: 800;
+    font-size: 20px;
+
+    font-weight: 850;
 }
 
 
 /* =========================================================
-   STAT GRID
+   THREE MAIN STAT CARDS
    ========================================================= */
 
 .analytics-passfail-stat-grid {
 
+    width: 100%;
+
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(3, minmax(0, 1fr));
 
-    gap: 12px;
+    gap: 10px;
 }
 
 
 .analytics-passfail-stat {
 
-    position: relative;
+    min-width: 0;
 
-    padding: 17px;
+    padding: 15px 13px;
 
-    border-radius: 16px;
-
-    background:
-        #f8fafc;
+    border-radius: 13px;
 
     border:
         1px solid #e2e8f0;
 
+    background: #f8fafc;
+
     display: flex;
+
     flex-direction: column;
 
-    gap: 7px;
+    gap: 6px;
+
+    overflow: hidden;
 }
 
 
@@ -2736,38 +2454,39 @@ body.analytics-modal-open {
 
     align-items: center;
 
-    gap: 7px;
+    gap: 6px;
 
-    color: #64748b;
+    color: #64748b !important;
 
-    font-size: 12px;
+    font-size: 10px;
 
-    font-weight: 700;
+    font-weight: 750;
 }
 
 
 .analytics-passfail-stat span i {
-    font-size: 12px;
+
+    font-size: 10px;
 }
 
 
 .analytics-passfail-stat strong {
 
-    color: #111827;
+    color: #111827 !important;
 
-    font-size: 26px;
+    font-size: 23px;
 
     line-height: 1;
 
-    font-weight: 800;
+    font-weight: 850;
 }
 
 
 .analytics-passfail-stat small {
 
-    color: #64748b;
+    color: #64748b !important;
 
-    font-size: 11px;
+    font-size: 10px;
 
     font-weight: 700;
 }
@@ -2776,8 +2495,12 @@ body.analytics-modal-open {
 /* TOTAL */
 
 .analytics-passfail-stat.total {
+
     background:
         #f8fafc;
+
+    border-color:
+        #dbe3ee;
 }
 
 
@@ -2797,7 +2520,7 @@ body.analytics-modal-open {
 .analytics-passfail-stat.pass span i {
 
     color:
-        #16a34a;
+        #16a34a !important;
 }
 
 
@@ -2817,7 +2540,7 @@ body.analytics-modal-open {
 .analytics-passfail-stat.fail span i {
 
     color:
-        #dc2626;
+        #dc2626 !important;
 }
 
 
@@ -2827,11 +2550,13 @@ body.analytics-modal-open {
 
 .analytics-passfail-ratio {
 
+    width: 100%;
+
     padding:
-        18px 20px;
+        15px 17px;
 
     border-radius:
-        16px;
+        14px;
 
     background:
         #ffffff;
@@ -2840,12 +2565,12 @@ body.analytics-modal-open {
         1px solid #e2e8f0;
 
     box-shadow:
-        0 8px 24px
+        0 5px 18px
         rgba(
             15,
             23,
             42,
-            0.05
+            .045
         );
 }
 
@@ -2860,18 +2585,20 @@ body.analytics-modal-open {
     align-items:
         center;
 
+    gap: 10px;
+
     margin-bottom:
-        12px;
+        10px;
 }
 
 
 .analytics-passfail-ratio-header strong {
 
     color:
-        #111827;
+        #111827 !important;
 
     font-size:
-        13px;
+        12px;
 
     font-weight:
         800;
@@ -2881,27 +2608,35 @@ body.analytics-modal-open {
 .analytics-passfail-ratio-header span {
 
     color:
-        #64748b;
+        #64748b !important;
 
     font-size:
-        12px;
+        11px;
 
     font-weight:
-        700;
+        800;
+
+    white-space:
+        nowrap;
 }
 
 
 .analytics-passfail-ratio-track {
 
-    width: 100%;
+    width:
+        100%;
 
-    height: 10px;
+    height:
+        9px;
 
-    display: flex;
+    display:
+        flex;
 
-    overflow: hidden;
+    overflow:
+        hidden;
 
-    border-radius: 999px;
+    border-radius:
+        999px;
 
     background:
         #e2e8f0;
@@ -2910,44 +2645,56 @@ body.analytics-modal-open {
 
 .analytics-passfail-ratio-pass {
 
-    height: 100%;
+    height:
+        100%;
 
     background:
         #22c55e;
+
+    transition:
+        width .3s ease;
 }
 
 
 .analytics-passfail-ratio-fail {
 
-    height: 100%;
+    height:
+        100%;
 
     background:
         #ef4444;
+
+    transition:
+        width .3s ease;
 }
 
 
 /* =========================================================
-   QUESTION BEHAVIOUR
+   BEHAVIOUR FOUR-CARD ROW
    ========================================================= */
 
 .analytics-passfail-behaviour {
 
+    width: 100%;
+
     display: grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(4, minmax(0, 1fr));
 
-    gap: 10px;
+    gap: 8px;
 }
 
 
 .analytics-passfail-behaviour > div {
 
+    min-width: 0;
+
     padding:
-        13px 12px;
+        11px 9px;
 
     border-radius:
-        13px;
+        11px;
 
     background:
         #f8fafc;
@@ -2955,48 +2702,48 @@ body.analytics-modal-open {
     border:
         1px solid #e2e8f0;
 
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
+    overflow:
+        hidden;
 }
 
 
 .analytics-passfail-behaviour span {
 
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
     color:
-        #64748b;
+        #64748b !important;
 
     font-size:
-        10px;
+        9px;
 
     font-weight:
-        700;
+        800;
 
     text-transform:
         uppercase;
-
-    letter-spacing:
-        0.04em;
 }
 
 
 .analytics-passfail-behaviour strong {
 
     color:
-        #111827;
+        #111827 !important;
 
     font-size:
-        17px;
+        16px;
 
     font-weight:
-        800;
+        850;
 }
 
 
 /* =========================================================
-   EMPTY STATE
+   EMPTY
    ========================================================= */
 
 .analytics-passfail-empty {
@@ -3020,17 +2767,17 @@ body.analytics-modal-open {
         center;
 
     gap:
-        10px;
+        9px;
 }
 
 
 .analytics-passfail-empty i {
 
     width:
-        56px;
+        55px;
 
     height:
-        56px;
+        55px;
 
     border-radius:
         50%;
@@ -3051,17 +2798,17 @@ body.analytics-modal-open {
         #64748b;
 
     font-size:
-        22px;
+        21px;
 }
 
 
 .analytics-passfail-empty strong {
 
     color:
-        #111827;
+        #111827 !important;
 
     font-size:
-        16px;
+        15px;
 }
 
 
@@ -3071,10 +2818,10 @@ body.analytics-modal-open {
         280px;
 
     color:
-        #64748b;
+        #64748b !important;
 
     font-size:
-        12px;
+        11px;
 
     line-height:
         1.6;
@@ -3082,12 +2829,56 @@ body.analytics-modal-open {
 
 
 /* =========================================================
-   RESPONSIVE
+   TABLET
    ========================================================= */
 
-@media (
-    max-width: 1000px
-) {
+@media (max-width: 1050px) {
+
+    .analytics-passfail-layout {
+
+        grid-template-columns:
+            minmax(330px, 1fr)
+            minmax(300px, 1fr);
+
+        gap:
+            18px;
+    }
+
+
+    .analytics-passfail-chart-area {
+
+        height:
+            330px;
+
+        padding-left:
+            0;
+    }
+
+
+    .analytics-passfail-chart-area canvas {
+
+        width:
+            340px !important;
+
+        height:
+            320px !important;
+    }
+
+
+    .analytics-passfail-stat strong {
+
+        font-size:
+            20px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE / SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
 
     .analytics-passfail-layout {
 
@@ -3095,41 +2886,1361 @@ body.analytics-modal-open {
             1fr;
 
         gap:
-            20px;
+            10px;
     }
 
 
     .analytics-passfail-chart-area {
 
-        min-height:
-            320px;
+        width:
+            100%;
+
+        height:
+            300px;
+
+        justify-content:
+            center;
+
+        padding:
+            0;
+    }
+
+
+    .analytics-passfail-chart-area canvas {
+
+        width:
+            330px !important;
+
+        height:
+            290px !important;
+
+        max-width:
+            100%;
     }
 
 
     .analytics-passfail-info {
 
-        width:
-            100%;
+        padding:
+            0;
     }
 
-}
-
-
-@media (
-    max-width: 650px
-) {
 
     .analytics-passfail-stat-grid {
 
         grid-template-columns:
-            1fr;
+            repeat(3, minmax(0, 1fr));
     }
 
 
     .analytics-passfail-behaviour {
 
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(4, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+    .analytics-passfail-chart-area {
+
+        height:
+            250px;
+    }
+
+
+    .analytics-passfail-chart-area canvas {
+
+        width:
+            270px !important;
+
+        height:
+            245px !important;
+    }
+
+
+    .analytics-passfail-summary-title strong {
+
+        font-size:
+            17px;
+    }
+
+
+    .analytics-passfail-stat-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            8px;
+    }
+
+
+    .analytics-passfail-stat {
+
+        padding:
+            12px;
+        }
+
+    .analytics-passfail-stat strong {
+
+        font-size:
+            21px;
+    }
+
+
+    .analytics-passfail-behaviour {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap:
+            7px;
+    }
+
+
+    .analytics-passfail-behaviour > div {
+
+        padding:
+            10px;
+    }
+
+
+    .analytics-passfail-ratio {
+
+        padding:
+            13px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONE
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .analytics-passfail-chart-area {
+
+        height:
+            225px;
+    }
+
+
+    .analytics-passfail-chart-area canvas {
+
+        width:
+            235px !important;
+
+        height:
+            220px !important;
+    }
+
+}
+
+/* =========================================================
+   FINAL PASS / FAIL FULL-WIDTH FIX
+   ========================================================= */
+
+/*
+ * Make the complete Pass / Fail card span both
+ * analytics chart columns.
+ */
+.analytics-chart-card:has(#passFailChart) {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+
+/*
+ * Full-width internal layout.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-layout {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.05fr)
+        minmax(430px, 0.95fr);
+
+    gap: 28px;
+
+    align-items: center;
+}
+
+
+/*
+ * LEFT DONUT.
+ *
+ * The canvas is now constrained by its own area,
+ * so it cannot push into the content below.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-chart-area {
+    width: 100%;
+    min-width: 0;
+
+    height: 390px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    padding: 0;
+}
+
+
+/*
+ * IMPORTANT:
+ * Never allow the canvas to determine the card width.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-chart-area canvas {
+    display: block;
+
+    width: min(390px, 100%) !important;
+    height: min(370px, 100%) !important;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    margin: 0 !important;
+}
+
+
+/*
+ * RIGHT INFORMATION.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-info {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/*
+ * RESULT CARDS.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat-grid {
+    width: 100%;
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+
+/*
+ * BEHAVIOUR CARDS.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-behaviour {
+    width: 100%;
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+/*
+ * Prevent any individual statistic from
+ * creating horizontal overflow.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat,
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-behaviour > div,
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-ratio {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .analytics-chart-card:has(#passFailChart) {
+        grid-column: 1 / -1 !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-layout {
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(340px, 1fr);
+
+        gap: 20px;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area {
+
+        height: 340px;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area canvas {
+
+        width: min(340px, 100%) !important;
+        height: min(320px, 100%) !important;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .analytics-chart-card:has(#passFailChart) {
+        grid-column: 1 / -1 !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-layout {
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area {
+
+        height: 310px;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area canvas {
+
+        width: min(320px, 100%) !important;
+        height: min(300px, 100%) !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONE
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area {
+
+        height: 270px;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area canvas {
+
+        width: min(270px, 100%) !important;
+        height: min(255px, 100%) !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-stat-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-behaviour {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+/* =========================================================
+   FINAL FIX — PASS / FAIL CARD
+   ========================================================= */
+
+/*
+ * The Pass / Fail card must grow naturally according
+ * to its contents.
+ */
+.analytics-chart-card:has(#passFailChart) {
+
+    grid-column: 1 / -1 !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+
+    overflow: visible !important;
+
+    box-sizing: border-box;
+}
+
+
+/*
+ * The dynamically-created Pass / Fail layout
+ * must NOT force an artificial minimum height.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-layout {
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    height: auto !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(320px, 0.95fr)
+        minmax(420px, 1.05fr) !important;
+
+    gap: 30px !important;
+
+    align-items: center !important;
+
+    box-sizing: border-box;
+}
+
+
+/*
+ * DONUT AREA
+ *
+ * Fixed, controlled area.
+ * The donut cannot push into the next row.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-chart-area {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    height: 330px !important;
+    min-height: 330px !important;
+    max-height: 330px !important;
+
+    padding: 0 !important;
+
+    margin: 0 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    position: relative !important;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box;
+}
+
+
+/*
+ * ACTUAL CHART CANVAS
+ *
+ * The important part:
+ * 320 × 320 maximum.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-chart-area canvas {
+
+    display: block !important;
+
+    width: 320px !important;
+    height: 320px !important;
+
+    max-width: 320px !important;
+    max-height: 320px !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    margin: 0 auto !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/*
+ * RIGHT INFORMATION PANEL
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-info {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+    max-width: 100% !important;
+
+    height: auto !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    gap: 13px !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/*
+ * RESULT SUMMARY
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-summary-title {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/*
+ * THREE RESULT CARDS
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat-grid {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr)) !important;
+
+    gap: 10px !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/*
+ * BEHAVIOUR CARDS
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-behaviour {
+
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+
+    gap: 9px !important;
+
+    box-sizing: border-box !important;
+}
+
+
+/*
+ * ALL INTERNAL CARDS MUST STAY INSIDE
+ * THE AVAILABLE COLUMN.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat,
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-behaviour > div,
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-ratio {
+
+    min-width: 0 !important;
+
+    max-width: 100% !important;
+
+    box-sizing: border-box !important;
+
+    overflow: hidden !important;
+}
+
+
+/*
+ * PREVENT LONG TEXT FROM EXPANDING THE GRID.
+ */
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat span,
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat strong,
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-stat small {
+
+    max-width: 100% !important;
+
+    overflow: hidden !important;
+
+    text-overflow: ellipsis !important;
+
+    white-space: nowrap !important;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-layout {
+
+        grid-template-columns:
+            minmax(280px, 0.9fr)
+            minmax(360px, 1.1fr) !important;
+
+        gap: 20px !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area {
+
+        height: 300px !important;
+        min-height: 300px !important;
+        max-height: 300px !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area canvas {
+
+        width: 290px !important;
+        height: 290px !important;
+
+        max-width: 290px !important;
+        max-height: 290px !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-layout {
+
+        grid-template-columns: 1fr !important;
+
+        gap: 18px !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area {
+
+        height: 300px !important;
+        min-height: 300px !important;
+        max-height: 300px !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area canvas {
+
+        width: 290px !important;
+        height: 290px !important;
+
+        max-width: 290px !important;
+        max-height: 290px !important;
+    }
+
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area {
+
+        height: 260px !important;
+        min-height: 260px !important;
+        max-height: 260px !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-chart-area canvas {
+
+        width: 250px !important;
+        height: 250px !important;
+
+        max-width: 250px !important;
+        max-height: 250px !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-stat-grid {
+
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    .analytics-chart-card:has(#passFailChart)
+    .analytics-passfail-behaviour {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+}
+
+/* =========================================================
+   QUESTION HIGHLIGHTS
+   ========================================================= */
+
+.analytics-question-highlights {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 14px;
+
+    margin-top: 18px;
+}
+
+
+/* =========================================================
+   HIGHLIGHT CARD
+   ========================================================= */
+
+.analytics-question-highlight {
+
+    min-width: 0;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 5px 18px
+        rgba(
+            15,
+            23,
+            42,
+            .045
+        );
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.analytics-question-highlight:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #cbd5e1;
+
+    box-shadow:
+        0 9px 25px
+        rgba(
+            15,
+            23,
+            42,
+            .08
+        );
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.analytics-question-highlight-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    min-width: 44px;
+
+    border-radius:
+        12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        #eff6ff;
+
+    color:
+        #2563eb;
+
+    font-size:
+        16px;
+}
+
+
+/* MOST DIFFICULT */
+
+.analytics-question-highlight
+    .fa-fire {
+
+    color:
+        #dc2626;
+}
+
+
+.analytics-question-highlight
+    :has(.fa-fire)
+    {
+
+    background:
+        #fef2f2;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.analytics-question-highlight-content {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.analytics-question-highlight-content span {
+
+    display: block;
+
+    color:
+        #64748b !important;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.analytics-question-highlight-content strong {
+
+    display: block;
+
+    color:
+        #111827 !important;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.25;
+
+    font-weight:
+        850;
+}
+
+
+.analytics-question-highlight-content small {
+
+    display: block;
+
+    color:
+        #64748b !important;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+}
+
+
+.analytics-question-highlight-content small b {
+
+    margin:
+        0 3px;
+
+    color:
+        #cbd5e1 !important;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   EMPTY HIGHLIGHT
+   ========================================================= */
+
+.analytics-question-highlight.empty {
+
+    background:
+        #f8fafc;
+
+    border-style:
+        dashed;
+}
+
+
+.analytics-question-highlight.empty
+    .analytics-question-highlight-icon {
+
+    background:
+        #f1f5f9;
+
+    color:
+        #64748b;
+}
+
+
+.analytics-question-highlight.empty
+    .analytics-question-highlight-content strong {
+
+    color:
+        #64748b !important;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   SECTION DETAIL TABLE — DARK TEXT
+   ========================================================= */
+
+.analytics-detail-table-wrap {
+
+    color:
+        #111827;
+}
+
+
+.analytics-detail-table-wrap
+    table {
+
+    width:
+        100%;
+
+    min-width:
+        900px;
+
+    border-collapse:
+        collapse;
+}
+
+
+.analytics-detail-table-wrap
+    th {
+
+    padding:
+        13px 12px;
+
+    background:
+        #f8fafc;
+
+    color:
+        #334155 !important;
+
+    border-bottom:
+        1px solid
+        #e2e8f0;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    text-align:
+        left;
+
+    text-transform:
+        uppercase;
+
+    white-space:
+        nowrap;
+}
+
+
+.analytics-detail-table-wrap
+    td {
+
+    padding:
+        13px 12px;
+
+    color:
+        #475569 !important;
+
+    border-bottom:
+        1px solid
+        #edf2f7;
+
+    font-size:
+        12px;
+
+    white-space:
+        nowrap;
+}
+
+
+.analytics-detail-table-wrap
+    td strong {
+
+    color:
+        #111827 !important;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   DETAIL TABLE SLIDER BUTTONS
+   ========================================================= */
+
+.analytics-detail-slider-controls {
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        8px;
+}
+
+
+.analytics-detail-slider-btn {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    min-width:
+        38px;
+
+    border:
+        1px solid
+        #dbe3ee;
+
+    border-radius:
+        9px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        #ffffff;
+
+    color:
+        #334155;
+
+    cursor:
+        pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+
+.analytics-detail-slider-btn:hover {
+
+    background:
+        #2563eb;
+
+    border-color:
+        #2563eb;
+
+    color:
+        #ffffff;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   DETAIL SECTION TABLE WRAPPER
+   ========================================================= */
+
+.analytics-detail-table-scroll {
+
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+
+    overflow-y:
+        hidden;
+
+    border-radius:
+        10px;
+
+    scrollbar-width:
+        thin;
+}
+
+
+.analytics-detail-table-scroll::-webkit-scrollbar {
+
+    height:
+        8px;
+}
+
+
+.analytics-detail-table-scroll::-webkit-scrollbar-track {
+
+    background:
+        #f1f5f9;
+}
+
+
+.analytics-detail-table-scroll::-webkit-scrollbar-thumb {
+
+    background:
+        #94a3b8;
+
+    border-radius:
+        999px;
+}
+
+
+/* =========================================================
+   SECTION CARD TEXT
+   ========================================================= */
+
+.analytics-section-detail-card span {
+
+    color:
+        #64748b !important;
+}
+
+
+.analytics-section-detail-card h4 {
+
+    color:
+        #111827 !important;
+}
+
+
+.analytics-section-detail-card strong {
+
+    color:
+        #111827 !important;
+}
+
+
+.analytics-section-detail-stats span {
+
+    color:
+        #64748b !important;
+}
+
+
+.analytics-section-detail-stats strong {
+
+    color:
+        #111827 !important;
+}
+
+
+/* =========================================================
+   DETAIL MODAL — FORCE READABLE TEXT
+   ========================================================= */
+
+.analytics-exam-detail-modal
+    * {
+
+    text-rendering:
+        optimizeLegibility;
+}
+
+
+.analytics-exam-detail-modal
+    h2,
+.analytics-exam-detail-modal
+    h3,
+.analytics-exam-detail-modal
+    h4,
+.analytics-exam-detail-modal
+    strong {
+
+    color:
+        #111827 !important;
+}
+
+
+.analytics-exam-detail-modal
+    p {
+
+    color:
+        #64748b !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE QUESTION HIGHLIGHTS
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .analytics-question-highlights {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .analytics-question-highlight {
+
+        padding:
+            13px;
+    }
+
+    .analytics-question-highlight-content
+        strong {
+
+        font-size:
+            14px;
     }
 
 }
