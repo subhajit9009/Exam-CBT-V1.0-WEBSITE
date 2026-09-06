@@ -12,7 +12,6 @@
    ========================================================= */
 
 let analyticsData = null;
-
 let performanceTrendChart = null;
 let passFailChart = null;
 let scoreDistributionChart = null;
@@ -21,6 +20,14 @@ let difficultyChart = null;
 const analyticsUserMap = new Map();
 
 let examDetailModal = null;
+
+/* =========================================================
+   INDIVIDUAL USER ANALYTICS
+   ========================================================= */
+
+let analyticsUserPerformanceData = [];
+
+let analyticsUserDetailTrendChart = null;
 
 
 /* =========================================================
@@ -346,6 +353,44 @@ async function loadAnalyticsUserDirectory() {
     }
 }
 
+/* =========================================================
+   LOAD INDIVIDUAL USER ANALYTICS
+   ========================================================= */
+
+async function loadAnalyticsUserPerformance() {
+
+    analyticsUserPerformanceData = [];
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "get_admin_user_analytics"
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        analyticsUserPerformanceData =
+            Array.isArray(data)
+                ? data
+                : [];
+
+    }
+    catch (error) {
+
+        console.error(
+            "ADMIN USER ANALYTICS ERROR:",
+            error
+        );
+
+        analyticsUserPerformanceData = [];
+    }
+}
 
 function getStudentName(row) {
 
@@ -520,6 +565,41 @@ async function loadExamAverageTimes() {
     }
 }
 
+/* =========================================================
+   LOAD DIFFICULTY ANALYTICS
+   ========================================================= */
+
+async function loadDifficultyAnalytics() {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient.rpc(
+            "get_admin_difficulty_analytics"
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        analyticsData.difficulty =
+            Array.isArray(data)
+                ? data
+                : [];
+
+    }
+    catch (error) {
+
+        console.error(
+            "ADMIN DIFFICULTY ANALYTICS ERROR:",
+            error
+        );
+
+    }
+}
+
 
 /* =========================================================
    LOAD ANALYTICS
@@ -554,13 +634,17 @@ async function loadAnalytics() {
 
 await loadExamAverageTimes();
 
+await loadDifficultyAnalytics();
+
 await loadAnalyticsUserDirectory();
+
+await loadAnalyticsUserPerformance();
 
 populateExamFilter();
 
 renderAnalytics();
 
-        setupTableSliders();
+setupTableSliders();
 
     }
     catch (error) {
@@ -1367,6 +1451,8 @@ function renderAnalytics() {
     renderRecentResults();
 
     renderInsights();
+
+    renderIndividualUserPerformance();
 }
 
 
@@ -1908,6 +1994,11 @@ function renderPerformanceTrendChart() {
 
                     maintainAspectRatio:
                         false,
+
+                        animation: {
+    duration: 1200,
+    easing: "easeOutQuart"
+},
 
                     interaction: {
 
@@ -6236,12 +6327,1935 @@ function clearAnalyticsFilters() {
     setupTableSliders();
 }
 
+/* =========================================================
+   INDIVIDUAL USER PERFORMANCE
+   ========================================================= */
+
+function getAnalyticsUserName(user) {
+
+    if (!user) {
+        return "Unknown User";
+    }
+
+    const name =
+        [
+            user.first_name,
+            user.middle_name,
+            user.last_name
+        ]
+            .map(
+                value =>
+                    String(
+                        value ?? ""
+                    ).trim()
+            )
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+
+    return (
+        String(
+            user.user_name ??
+            name ??
+            user.full_name ??
+            user.email ??
+            "Unknown User"
+        ).trim() ||
+        "Unknown User"
+    );
+}
+
+function getAnalyticsDetailExamName(row) {
+
+    if (!row) {
+        return "Unnamed Exam";
+    }
+
+    if (
+        row.exam_name &&
+        String(row.exam_name).trim()
+    ) {
+        return String(
+            row.exam_name
+        ).trim();
+    }
+
+    const examId =
+        row.exam_id ??
+        row.examination_id ??
+        row.exam?.id ??
+        "";
+
+    if (
+        examId &&
+        analyticsData &&
+        Array.isArray(
+            analyticsData.exam_wise
+        )
+    ) {
+
+        const matchedExam =
+            analyticsData.exam_wise.find(
+                exam =>
+                    String(
+                        exam.exam_id ??
+                        exam.id ??
+                        ""
+                    ) ===
+                    String(examId)
+            );
+
+        if (
+            matchedExam?.exam_name &&
+            String(
+                matchedExam.exam_name
+            ).trim()
+        ) {
+            return String(
+                matchedExam.exam_name
+            ).trim();
+        }
+    }
+
+    return "Unnamed Exam";
+}
+
+
+function getAnalyticsUserEmail(user) {
+
+    return String(
+        user?.email ??
+        ""
+    ).trim();
+}
+
+
+function renderIndividualUserPerformance() {
+
+    const tbody =
+        $("analyticsUserPerformanceTableBody");
+
+    const count =
+        $("analyticsUserPerformanceCount");
+
+    if (!tbody) {
+        return;
+    }
+
+    let rows =
+        Array.isArray(
+            analyticsUserPerformanceData
+        )
+            ? [
+                ...analyticsUserPerformanceData
+            ]
+            : [];
+
+
+    /* =====================================================
+       SEARCH
+       ===================================================== */
+
+    const search =
+        String(
+            $("analyticsUserSearch")
+                ?.value ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (search) {
+
+        rows =
+            rows.filter(
+                user => {
+
+                    const name =
+                        getAnalyticsUserName(
+                            user
+                        )
+                            .toLowerCase();
+
+                    const email =
+                        getAnalyticsUserEmail(
+                            user
+                        )
+                            .toLowerCase();
+
+                    return (
+                        name.includes(search) ||
+                        email.includes(search)
+                    );
+                }
+            );
+    }
+
+
+    /* =====================================================
+       SORT
+       ===================================================== */
+
+    const sort =
+        String(
+            $("analyticsUserSort")
+                ?.value ||
+            "tests_desc"
+        );
+
+
+    rows.sort(
+        (a, b) => {
+
+            switch (sort) {
+
+                case "average_desc":
+
+                    return (
+                        numberValue(
+                            b.average_percentage
+                        ) -
+                        numberValue(
+                            a.average_percentage
+                        )
+                    );
+
+
+                case "best_desc":
+
+                    return (
+                        numberValue(
+                            b.best_percentage
+                        ) -
+                        numberValue(
+                            a.best_percentage
+                        )
+                    );
+
+
+                case "worst_asc":
+
+                    return (
+                        numberValue(
+                            a.worst_percentage
+                        ) -
+                        numberValue(
+                            b.worst_percentage
+                        )
+                    );
+
+
+                case "pass_desc":
+
+                    return (
+                        numberValue(
+                            b.pass_rate
+                        ) -
+                        numberValue(
+                            a.pass_rate
+                        )
+                    );
+
+
+                case "time_asc":
+
+                    return (
+                        numberValue(
+                            a.average_time
+                        ) -
+                        numberValue(
+                            b.average_time
+                        )
+                    );
+
+
+                case "name_asc":
+
+                    return getAnalyticsUserName(a)
+                        .localeCompare(
+                            getAnalyticsUserName(b)
+                        );
+
+
+                case "tests_desc":
+
+                default:
+
+                    return (
+                        numberValue(
+                            b.total_tests
+                        ) -
+                        numberValue(
+                            a.total_tests
+                        )
+                    );
+            }
+        }
+    );
+
+
+    /* =====================================================
+       EMPTY STATE
+       ===================================================== */
+
+    if (!rows.length) {
+
+        tbody.innerHTML = `
+            <tr>
+
+                <td
+                    colspan="10"
+                    class="analytics-empty-cell"
+                >
+
+                    <i
+                        class="
+                            fa-solid
+                            fa-user-slash
+                        "
+                    ></i>
+
+                    No users found.
+
+                </td>
+
+            </tr>
+        `;
+
+        if (count) {
+
+            count.textContent =
+                "0 users";
+        }
+
+        return;
+    }
+
+
+    /* =====================================================
+       TABLE
+       ===================================================== */
+
+    tbody.innerHTML =
+        rows
+            .map(
+                user => {
+
+                    const userId =
+                        user.user_id ??
+                        user.id ??
+                        "";
+
+                    const name =
+                        getAnalyticsUserName(
+                            user
+                        );
+
+                    const email =
+                        getAnalyticsUserEmail(
+                            user
+                        );
+
+                    const tests =
+                        numberValue(
+                            user.total_tests
+                        );
+
+                    const average =
+                        numberValue(
+                            user.average_percentage
+                        );
+
+                    const best =
+                        numberValue(
+                            user.best_percentage
+                        );
+
+                    const worst =
+                        numberValue(
+                            user.worst_percentage
+                        );
+
+                    const passed =
+                        numberValue(
+                            user.passed
+                        );
+
+                    const failed =
+                        numberValue(
+                            user.failed
+                        );
+
+                    const passRate =
+                        numberValue(
+                            user.pass_rate
+                        );
+
+                    const averageTime =
+                        numberValue(
+                            user.average_time
+                        );
+
+
+                    return `
+                        <tr>
+
+                            <td>
+
+                                <div
+                                    class="
+                                        analytics-user-cell
+                                    "
+                                >
+
+                                    <strong>
+                                        ${escapeHTML(
+                                            name
+                                        )}
+                                    </strong>
+
+                                    ${
+                                        email
+                                            ? `
+                                                <small>
+                                                    ${escapeHTML(
+                                                        email
+                                                    )}
+                                                </small>
+                                              `
+                                            : ""
+                                    }
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                                    tests
+                                )}
+                            </td>
+
+
+                            <td>
+                                <strong>
+                                    ${percentage(
+                                        average
+                                    )}
+                                </strong>
+                            </td>
+
+
+                            <td>
+                                ${percentage(
+                                    best
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${percentage(
+                                    worst
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                                    passed
+                                )}
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                                    failed
+                                )}
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="
+                                        analytics-result-badge
+                                        ${
+                                            passRate >= 50
+                                                ? "passed"
+                                                : "failed"
+                                        }
+                                    "
+                                >
+                                    ${percentage(
+                                        passRate
+                                    )}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                ${formatTime(
+                                    averageTime
+                                )}
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    type="button"
+                                    class="
+                                        analytics-user-view-btn
+                                    "
+                                    data-user-id="${escapeHTML(
+                                        userId
+                                    )}"
+                                >
+
+                                    <i
+                                        class="
+                                            fa-solid
+                                            fa-eye
+                                        "
+                                    ></i>
+
+                                    View Details
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+                    `;
+                }
+            )
+            .join("");
+
+
+    /* =====================================================
+       VIEW DETAILS BUTTONS
+       ===================================================== */
+
+    tbody
+        .querySelectorAll(
+            ".analytics-user-view-btn"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        openAnalyticsUserDetail(
+                            button.dataset.userId
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    if (count) {
+
+        count.textContent =
+            `${formatNumber(rows.length)} ${
+                rows.length === 1
+                    ? "user"
+                    : "users"
+            }`;
+    }
+}
+
+
+/* =========================================================
+   USER DETAIL MODAL
+   ========================================================= */
+
+function closeAnalyticsUserDetail() {
+
+    const modal =
+        $("analyticsUserDetailModal");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove(
+        "open"
+    );
+
+    modal.hidden = true;
+
+    document.body.classList.remove(
+        "analytics-modal-open"
+    );
+
+
+    if (
+        analyticsUserDetailTrendChart
+    ) {
+
+        analyticsUserDetailTrendChart.destroy();
+
+        analyticsUserDetailTrendChart =
+            null;
+    }
+}
+
+
+/* =========================================================
+   OPEN USER DETAIL
+   ========================================================= */
+
+async function openAnalyticsUserDetail(
+    userId
+) {
+
+    if (!userId) {
+        return;
+    }
+
+
+    const modal =
+        $("analyticsUserDetailModal");
+
+    const nameElement =
+        $("analyticsUserDetailName");
+
+    const emailElement =
+        $("analyticsUserDetailEmail");
+
+    const content =
+        $("analyticsUserDetailContent");
+
+
+    if (
+        !modal ||
+        !content
+    ) {
+        return;
+    }
+
+
+    const summaryUser =
+        analyticsUserPerformanceData
+            .find(
+                user =>
+                    String(
+                        user.user_id ??
+                        user.id ??
+                        ""
+                    ) ===
+                    String(userId)
+            );
+
+
+    const displayName =
+        getAnalyticsUserName(
+            summaryUser
+        );
+
+
+    if (nameElement) {
+
+        nameElement.textContent =
+            displayName;
+    }
+
+
+    if (emailElement) {
+
+        emailElement.textContent =
+            getAnalyticsUserEmail(
+                summaryUser
+            ) ||
+            "—";
+    }
+
+
+    content.innerHTML = `
+        <div
+            class="
+                analytics-empty-state
+            "
+        >
+
+            <i
+                class="
+                    fa-solid
+                    fa-spinner
+                    fa-spin
+                "
+            ></i>
+
+            Loading user performance...
+
+        </div>
+    `;
+
+
+    modal.hidden = false;
+
+    modal.classList.add(
+        "open"
+    );
+
+    document.body.classList.add(
+        "analytics-modal-open"
+    );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "get_admin_user_analytics_detail",
+                {
+                    p_user_id:
+                        userId
+                }
+            );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        const details =
+            typeof data === "string"
+                ? JSON.parse(data)
+                : data;
+
+
+        renderAnalyticsUserDetail(
+            details
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "USER DETAIL ANALYTICS ERROR:",
+            error
+        );
+
+
+        content.innerHTML = `
+            <div
+                class="
+                    analytics-empty-state
+                "
+            >
+
+                <i
+                    class="
+                        fa-solid
+                        fa-triangle-exclamation
+                    "
+                ></i>
+
+                <strong>
+                    Unable to load user analytics
+                </strong>
+
+                <span>
+                    ${escapeHTML(
+                        error?.message ||
+                        "The user performance data could not be loaded."
+                    )}
+                </span>
+
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================================
+   USER DETAIL RENDER
+   ========================================================= */
+
+function renderAnalyticsUserDetail(
+    data
+) {
+
+    const content =
+        $("analyticsUserDetailContent");
+
+
+    if (!content) {
+        return;
+    }
+
+
+    if (
+        analyticsUserDetailTrendChart
+    ) {
+
+        analyticsUserDetailTrendChart.destroy();
+
+        analyticsUserDetailTrendChart =
+            null;
+    }
+
+
+    const user =
+        data?.user ||
+        {};
+
+
+    const overview =
+        data?.overview ||
+        {};
+
+
+    const history =
+        Array.isArray(
+            data?.test_history
+        )
+            ? data.test_history
+            : [];
+
+
+    const examWise =
+        Array.isArray(
+            data?.exam_wise
+        )
+            ? data.exam_wise
+            : [];
+
+
+    const sectionWise =
+        Array.isArray(
+            data?.section_wise
+        )
+            ? data.section_wise
+            : [];
+
+
+    const questionWise =
+        Array.isArray(
+            data?.question_wise
+        )
+            ? data.question_wise
+            : [];
+
+
+    const userName =
+        getAnalyticsUserName(
+            user
+        );
+
+
+    const userEmail =
+        getAnalyticsUserEmail(
+            user
+        );
+
+
+    const totalTests =
+        numberValue(
+            overview.total_tests ??
+            history.length
+        );
+
+
+    const averagePercentage =
+        numberValue(
+            overview.average_percentage
+        );
+
+
+    const bestPercentage =
+        numberValue(
+            overview.best_percentage
+        );
+
+
+    const worstPercentage =
+        numberValue(
+            overview.worst_percentage
+        );
+
+
+    const passed =
+        numberValue(
+            overview.passed
+        );
+
+
+    const failed =
+        numberValue(
+            overview.failed
+        );
+
+
+    const passRate =
+        numberValue(
+            overview.pass_rate
+        );
+
+
+    const averageScore =
+        numberValue(
+            overview.average_score
+        );
+
+
+    const averageTime =
+        numberValue(
+            overview.average_time
+        );
+
+
+    content.innerHTML = `
+
+        <!-- =========================================
+             USER OVERVIEW
+             ========================================= -->
+
+        <section
+            class="
+                analytics-user-detail-section
+            "
+        >
+
+            <div
+                class="
+                    analytics-detail-kpi-grid
+                "
+            >
+
+                ${detailKPI(
+                    "fa-file-circle-check",
+                    "Tests Taken",
+                    formatNumber(
+                        totalTests
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-chart-line",
+                    "Average %",
+                    percentage(
+                        averagePercentage
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-trophy",
+                    "Best %",
+                    percentage(
+                        bestPercentage
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-chart-column",
+                    "Worst %",
+                    percentage(
+                        worstPercentage
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-circle-check",
+                    "Passed",
+                    formatNumber(
+                        passed
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-circle-xmark",
+                    "Failed",
+                    formatNumber(
+                        failed
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-percent",
+                    "Pass Rate",
+                    percentage(
+                        passRate
+                    )
+                )}
+
+                ${detailKPI(
+                    "fa-stopwatch",
+                    "Average Time",
+                    formatTime(
+                        averageTime
+                    )
+                )}
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             PERFORMANCE TREND
+             ========================================= -->
+
+        <section
+            class="
+                analytics-user-detail-section
+            "
+        >
+
+            <div
+                class="
+                    analytics-detail-section-heading
+                "
+            >
+
+                <span>
+                    PERFORMANCE TREND
+                </span>
+
+                <h3>
+                    Progress Across Tests
+                </h3>
+
+                <p>
+                    Performance percentage across the user's completed examinations.
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    analytics-user-detail-chart
+                "
+            >
+
+                ${
+                    history.length
+                        ? `
+                            <canvas
+                                id="analyticsUserDetailTrendChart"
+                            ></canvas>
+                          `
+                        : `
+                            <div
+                                class="
+                                    analytics-empty-state
+                                "
+                            >
+                                No completed tests available.
+                            </div>
+                          `
+                }
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             TEST HISTORY
+             ========================================= -->
+
+        <section
+            class="
+                analytics-user-detail-section
+            "
+        >
+
+            <div
+                class="
+                    analytics-detail-section-heading
+                "
+            >
+
+                <span>
+                    TEST HISTORY
+                </span>
+
+                <h3>
+                    Examination History
+                </h3>
+
+                <p>
+                    Complete history of the user's completed examinations.
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    analytics-table-scroll
+                "
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Exam</th>
+                            <th>Date</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Attempted</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Skipped</th>
+                            <th>Time</th>
+                            <th>Result</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${
+                            history.length
+                                ? history
+                                    .map(
+                                        row => `
+                                            <tr>
+
+                                                <td>
+                                                    <strong>
+                                                        ${escapeHTML(
+                                                            row.exam_name ||
+                                                            "Unnamed Exam"
+                                                        )}
+                                                    </strong>
+                                                </td>
+
+                                                <td>
+                                                    ${formatDate(
+                                                        row.date ??
+                                                        row.submitted_at
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.score,
+                                                        2
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    <strong>
+                                                        ${percentage(
+                                                            row.percentage
+                                                        )}
+                                                    </strong>
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.attempted
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.correct
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.wrong
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.skipped
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatTime(
+                                                        row.time_taken
+                                                    )}
+                                                </td>
+
+                                                <td>
+
+                                                    <span
+                                                        class="
+                                                            analytics-result-badge
+                                                            ${
+                                                                resultIsPassed(
+                                                                    row.result
+                                                                )
+                                                                    ? "passed"
+                                                                    : "failed"
+                                                            }
+                                                        "
+                                                    >
+                                                        ${escapeHTML(
+                                                            row.result ||
+                                                            "—"
+                                                        )}
+                                                    </span>
+
+                                                </td>
+
+                                            </tr>
+                                        `
+                                    )
+                                    .join("")
+                                : `
+                                    <tr>
+                                        <td
+                                            colspan="10"
+                                            class="analytics-empty-cell"
+                                        >
+                                            No test history available.
+                                        </td>
+                                    </tr>
+                                  `
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             EXAM-WISE PERFORMANCE
+             ========================================= -->
+
+        <section
+            class="
+                analytics-user-detail-section
+            "
+        >
+
+            <div
+                class="
+                    analytics-detail-section-heading
+                "
+            >
+
+                <span>
+                    EXAM-WISE PERFORMANCE
+                </span>
+
+                <h3>
+                    Performance by Examination
+                </h3>
+
+            </div>
+
+
+            <div
+                class="
+                    analytics-table-scroll
+                "
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Examination</th>
+                            <th>Tests</th>
+                            <th>Average %</th>
+                            <th>Best %</th>
+                            <th>Worst %</th>
+                            <th>Passed</th>
+                            <th>Failed</th>
+                            <th>Pass Rate</th>
+                            <th>Average Time</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${
+                            examWise.length
+                                ? examWise
+                                    .map(
+                                        row => `
+                                            <tr>
+
+                                                <td>
+                                                    <strong>
+                                                        ${escapeHTML(
+    getAnalyticsDetailExamName(row)
+)}
+                                                    </strong>
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+    numberValue(
+        row.total_tests
+    ) ||
+    (
+        numberValue(row.passed) +
+        numberValue(row.failed)
+    )
+)}
+                                                </td>
+
+                                                <td>
+                                                    ${percentage(
+                                                        row.average_percentage
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${percentage(
+                                                        row.best_percentage
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${percentage(
+                                                        row.worst_percentage
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.passed
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.failed
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${percentage(
+                                                        row.pass_rate
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatTime(
+                                                        row.average_time
+                                                    )}
+                                                </td>
+
+                                            </tr>
+                                        `
+                                    )
+                                    .join("")
+                                : `
+                                    <tr>
+                                        <td
+                                            colspan="9"
+                                            class="analytics-empty-cell"
+                                        >
+                                            No exam-wise data available.
+                                        </td>
+                                    </tr>
+                                  `
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             SECTION-WISE PERFORMANCE
+             ========================================= -->
+
+        <section
+            class="
+                analytics-user-detail-section
+            "
+        >
+
+            <div
+                class="
+                    analytics-detail-section-heading
+                "
+            >
+
+                <span>
+                    SECTION-WISE PERFORMANCE
+                </span>
+
+                <h3>
+                    Section Performance
+                </h3>
+
+            </div>
+
+
+            <div
+                class="
+                    analytics-table-scroll
+                "
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Examination</th>
+                            <th>Section</th>
+                            <th>Questions</th>
+                            <th>Attempted</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Skipped</th>
+                            <th>Accuracy</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${
+                            sectionWise.length
+                                ? sectionWise
+                                    .map(
+                                        row => `
+                                            <tr>
+
+                                                <td>
+                                                    ${escapeHTML(
+    getAnalyticsDetailExamName(row)
+)}
+                                                </td>
+
+                                                <td>
+                                                    <strong>
+                                                        ${escapeHTML(
+                                                            row.section_name ||
+                                                            "Unnamed Section"
+                                                        )}
+                                                    </strong>
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+    numberValue(
+        row.question_count
+    ) ||
+    (
+        numberValue(row.attempted) +
+        numberValue(row.skipped)
+    )
+)}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.attempted
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.correct
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.wrong
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.skipped
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    <strong>
+                                                        ${percentage(
+                                                            row.accuracy
+                                                        )}
+                                                    </strong>
+                                                </td>
+
+                                            </tr>
+                                        `
+                                    )
+                                    .join("")
+                                : `
+                                    <tr>
+                                        <td
+                                            colspan="8"
+                                            class="analytics-empty-cell"
+                                        >
+                                            No section-wise data available.
+                                        </td>
+                                    </tr>
+                                  `
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             QUESTION-WISE PERFORMANCE
+             ========================================= -->
+
+        <section
+            class="
+                analytics-user-detail-section
+            "
+        >
+
+            <div
+                class="
+                    analytics-detail-section-heading
+                "
+            >
+
+                <span>
+                    QUESTION-WISE PERFORMANCE
+                </span>
+
+                <h3>
+                    Recorded Question Performance
+                </h3>
+
+                <p>
+                    Question-level performance based on recorded answer data.
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    analytics-table-scroll
+                "
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Exam</th>
+                            <th>Q.No</th>
+                            <th>Subject</th>
+                            <th>Section</th>
+                            <th>Difficulty</th>
+                            <th>Attempted</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Skipped</th>
+                            <th>Accuracy</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${
+                            questionWise.length
+                                ? questionWise
+                                    .map(
+                                        row => `
+                                            <tr>
+
+                                                <td>
+                                                    ${escapeHTML(
+    getAnalyticsDetailExamName(row)
+)}
+                                                </td>
+
+                                                <td>
+                                                    <strong>
+                                                        ${escapeHTML(
+                                                            row.question_no ??
+                                                            "—"
+                                                        )}
+                                                    </strong>
+                                                </td>
+
+                                                <td>
+                                                    ${escapeHTML(
+                                                        row.subject ||
+                                                        "—"
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${escapeHTML(
+                                                        row.section_name ||
+                                                        "—"
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${escapeHTML(
+                                                        row.difficulty ||
+                                                        "Unknown"
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+    numberValue(
+        row.attempted ??
+        row.opportunities
+    ) ||
+    (
+        numberValue(row.correct) +
+        numberValue(row.wrong)
+    )
+)}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.correct
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.wrong
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    ${formatNumber(
+                                                        row.skipped
+                                                    )}
+                                                </td>
+
+                                                <td>
+                                                    <strong>
+                                                        ${percentage(
+                                                            row.accuracy
+                                                        )}
+                                                    </strong>
+                                                </td>
+
+                                            </tr>
+                                        `
+                                    )
+                                    .join("")
+                                : `
+                                    <tr>
+                                        <td
+                                            colspan="10"
+                                            class="analytics-empty-cell"
+                                        >
+                                            No recorded question-level data available.
+                                        </td>
+                                    </tr>
+                                  `
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    `;
+
+
+    /* =====================================================
+       USER NAME / EMAIL
+       ===================================================== */
+
+    const nameElement =
+        $("analyticsUserDetailName");
+
+    const emailElement =
+        $("analyticsUserDetailEmail");
+
+
+    if (nameElement) {
+
+        nameElement.textContent =
+            userName;
+    }
+
+
+    if (emailElement) {
+
+        emailElement.textContent =
+            userEmail ||
+            "—";
+    }
+
+
+    /* =====================================================
+       PERFORMANCE TREND CHART
+       ===================================================== */
+
+    const canvas =
+        $("analyticsUserDetailTrendChart");
+
+
+    if (
+        canvas &&
+        window.Chart &&
+        history.length
+    ) {
+
+        const trend =
+            history
+                .slice()
+                .sort(
+                    (a, b) =>
+                        new Date(
+                            a.date ??
+                            a.submitted_at ??
+                            0
+                        ) -
+                        new Date(
+                            b.date ??
+                            b.submitted_at ??
+                            0
+                        )
+                );
+
+
+        analyticsUserDetailTrendChart =
+            new Chart(
+                canvas.getContext("2d"),
+                {
+
+                    type: "line",
+
+                    data: {
+
+                        labels:
+                            trend.map(
+                                (row, index) =>
+                                    formatDate(
+                                        row.date ??
+                                        row.submitted_at
+                                    ) ||
+                                    `Test ${index + 1}`
+                            ),
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    "Percentage",
+
+                                data:
+                                    trend.map(
+                                        row =>
+                                            numberValue(
+                                                row.percentage
+                                            )
+                                    ),
+
+                                tension:
+                                    0.35,
+
+                                borderWidth:
+                                    3,
+
+                                pointRadius:
+                                    4,
+
+                                pointHoverRadius:
+                                    7,
+
+                                fill:
+                                    false
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive:
+                            true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero:
+                                    true,
+
+                                max:
+                                    100,
+
+                                title: {
+
+                                    display:
+                                        true,
+
+                                    text:
+                                        "Percentage"
+
+                                }
+
+                            }
+
+                        },
+
+                        plugins: {
+
+                            legend: {
+
+                                display:
+                                    true
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+    }
+}
+
+
+/* =========================================================
+   USER ANALYTICS EVENTS
+   ========================================================= */
+
+function setupIndividualUserAnalyticsEvents() {
+
+    $("analyticsUserSearch")
+        ?.addEventListener(
+            "input",
+            renderIndividualUserPerformance
+        );
+
+
+    $("analyticsUserSort")
+        ?.addEventListener(
+            "change",
+            renderIndividualUserPerformance
+        );
+
+
+    $("closeAnalyticsUserDetailBtn")
+        ?.addEventListener(
+            "click",
+            closeAnalyticsUserDetail
+        );
+
+
+    const modal =
+        $("analyticsUserDetailModal");
+
+
+    modal
+        ?.querySelector(
+            ".analytics-modal-backdrop"
+        )
+        ?.addEventListener(
+            "click",
+            closeAnalyticsUserDetail
+        );
+}
+
+
+/* =========================================================
+   EXTEND MAIN RENDER
+   ========================================================= */
+
+function renderIndividualUserAnalytics() {
+
+    renderIndividualUserPerformance();
+}
+
+
+/* =========================================================
+   KEYBOARD CLOSE
+   ========================================================= */
+
+function handleAnalyticsUserEscape(
+    event
+) {
+
+    if (
+        event.key === "Escape"
+    ) {
+
+        const modal =
+            $("analyticsUserDetailModal");
+
+
+        if (
+            modal &&
+            !modal.hidden
+        ) {
+
+            closeAnalyticsUserDetail();
+
+        }
+
+    }
+}
+
 
 /* =========================================================
    EVENTS
    ========================================================= */
 
 function setupAnalyticsEventListeners() {
+
+        setupIndividualUserAnalyticsEvents();
+
+    document.addEventListener(
+        "keydown",
+        handleAnalyticsUserEscape
+    );
 
     $("refreshAnalyticsBtn")
         ?.addEventListener(

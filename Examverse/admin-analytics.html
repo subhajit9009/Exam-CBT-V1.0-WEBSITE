@@ -874,6 +874,267 @@
 
         </section>
 
+        <!-- =================================================
+     INDIVIDUAL USER PERFORMANCE
+     ================================================= -->
+
+<section class="analytics-data-card analytics-user-performance-section">
+
+    <div class="analytics-card-heading">
+
+        <div>
+
+            <span class="analytics-card-kicker">
+                INDIVIDUAL USER PERFORMANCE
+            </span>
+
+            <h3>
+                User Performance Analytics
+            </h3>
+
+            <p>
+                Analyse the examination performance, progress and test history
+                of every registered user.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         USER CONTROLS
+         ================================================= -->
+
+    <div class="analytics-user-controls">
+
+        <div class="analytics-user-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="search"
+                id="analyticsUserSearch"
+                placeholder="Search user by name or email..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="analytics-user-sort">
+
+            <label for="analyticsUserSort">
+                Sort By
+            </label>
+
+            <select id="analyticsUserSort">
+
+                <option value="tests_desc">
+                    Tests Taken
+                </option>
+
+                <option value="average_desc">
+                    Average %
+                </option>
+
+                <option value="best_desc">
+                    Best %
+                </option>
+
+                <option value="worst_asc">
+                    Worst %
+                </option>
+
+                <option value="pass_desc">
+                    Pass Rate
+                </option>
+
+                <option value="time_asc">
+                    Average Time
+                </option>
+
+                <option value="name_asc">
+                    Name
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         USER TABLE
+         ================================================= -->
+
+    <div class="analytics-table-navigation">
+
+        <span>
+
+            <i class="fa-solid fa-arrows-left-right"></i>
+
+            Scroll table
+
+        </span>
+
+    </div>
+
+
+    <div class="analytics-table-scroll">
+
+        <table id="analyticsUserPerformanceTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        User
+                    </th>
+
+                    <th>
+                        Tests
+                    </th>
+
+                    <th>
+                        Avg. %
+                    </th>
+
+                    <th>
+                        Best %
+                    </th>
+
+                    <th>
+                        Worst %
+                    </th>
+
+                    <th>
+                        Passed
+                    </th>
+
+                    <th>
+                        Failed
+                    </th>
+
+                    <th>
+                        Pass Rate
+                    </th>
+
+                    <th>
+                        Avg. Time
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="analyticsUserPerformanceTableBody">
+
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="analytics-loading-cell"
+                    >
+
+                        Loading user analytics...
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =================================================
+         USER COUNT
+         ================================================= -->
+
+    <div class="analytics-user-table-footer">
+
+        <span id="analyticsUserPerformanceCount">
+            0 users
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- =================================================
+     INDIVIDUAL USER DETAIL MODAL
+     ================================================= -->
+
+<div
+    id="analyticsUserDetailModal"
+    class="analytics-modal"
+    hidden
+>
+
+    <div class="analytics-modal-backdrop"></div>
+
+
+    <div class="analytics-modal-dialog">
+
+        <div class="analytics-modal-header">
+
+            <div>
+
+                <span class="analytics-card-kicker">
+                    INDIVIDUAL USER ANALYSIS
+                </span>
+
+                <h2 id="analyticsUserDetailName">
+                    User Performance
+                </h2>
+
+                <p id="analyticsUserDetailEmail">
+                    —
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="closeAnalyticsUserDetailBtn"
+                class="analytics-modal-close"
+                aria-label="Close"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="analyticsUserDetailContent"
+            class="analytics-modal-content"
+        >
+
+            <div class="analytics-empty-state">
+                Loading user performance...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
         <!-- =================================================
              ANALYTICAL INSIGHTS
