@@ -583,3 +583,57 @@ width:95%;
     opacity: 0.55;
     cursor: not-allowed;
 }
+
+/* =========================================================
+   EXCEL TEMPLATE DOWNLOAD BUTTONS
+========================================================= */
+
+.excel-template-buttons button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.excel-template-buttons button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.excel-template-buttons button:active {
+    transform: translateY(0);
+}
+
+#downloadSectionalTemplateBtn {
+    background: #e5ee36;
+    color: #090909;
+}
+
+#downloadSectionalTemplateBtn:hover {
+    background: #b4d822;
+}
+
+#downloadNonSectionalTemplateBtn {
+    background: #15803d;
+    color: #ffffff;
+}
+
+#downloadNonSectionalTemplateBtn:hover {
+    background: #166534;
+}
+
+@media (max-width: 600px) {
+
+    .excel-template-buttons {
+        flex-direction: column;
+    }
+
+    .excel-template-buttons button {
+        width: 100%;
+    }
+
+}

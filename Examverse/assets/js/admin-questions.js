@@ -42,6 +42,69 @@ const validateExcelBtn =
 const importExcelBtn =
     document.getElementById("importExcelBtnModal");
 
+const downloadSectionalTemplateBtn =
+    document.getElementById(
+        "downloadSectionalTemplateBtn"
+    );
+
+const downloadNonSectionalTemplateBtn =
+    document.getElementById(
+        "downloadNonSectionalTemplateBtn"
+    );
+
+    function downloadQuestionTemplate(type) {
+
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canCreateQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.create"
+        ) === true;
+
+    if (!canCreateQuestions) {
+        alert(
+            "You do not have permission to download question templates."
+        );
+        return;
+    }
+
+    const templatePath =
+        type === "sectional"
+            ? "assets/templates/ExamVerse_Sectional_Questions_Template(2).xlsx"
+            : "assets/templates/ExamVerse_Non_Sectional_Questions_Template(2).xlsx";
+
+    const link =
+        document.createElement("a");
+
+    link.href = templatePath;
+    link.download =
+        type === "sectional"
+            ? "ExamVerse_Sectional_Questions_Template.xlsx"
+            : "ExamVerse_Non_Sectional_Questions_Template.xlsx";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+}
+
+if (downloadSectionalTemplateBtn) {
+
+    downloadSectionalTemplateBtn.onclick =
+        () => downloadQuestionTemplate("sectional");
+
+}
+
+if (downloadNonSectionalTemplateBtn) {
+
+    downloadNonSectionalTemplateBtn.onclick =
+        () => downloadQuestionTemplate("non-sectional");
+
+}
+
 const excelExamInfo =
     document.getElementById("excelExamInfo");
 
@@ -100,12 +163,27 @@ if (addQuestionBtn && questionModal) {
 
     addQuestionBtn.onclick = () => {
 
+        const isMainAdmin =
+            window.examVerseAdmin?.isMainAdmin === true;
+
+        const canCreateQuestions =
+            isMainAdmin ||
+            window.examVerseAdmin?.hasPermission(
+                "questions.create"
+            ) === true;
+
+        if (!canCreateQuestions) {
+            alert(
+                "You do not have permission to create questions."
+            );
+            return;
+        }
+
         window.currentQuestionId = null;
 
         resetQuestionForm();
 
         questionModal.style.display = "flex";
-
     };
 
 }
@@ -137,12 +215,27 @@ if (
 
     importExcelBtnOpen.onclick = async () => {
 
+        const isMainAdmin =
+            window.examVerseAdmin?.isMainAdmin === true;
+
+        const canCreateQuestions =
+            isMainAdmin ||
+            window.examVerseAdmin?.hasPermission(
+                "questions.create"
+            ) === true;
+
+        if (!canCreateQuestions) {
+            alert(
+                "You do not have permission to import questions."
+            );
+            return;
+        }
+
         excelImportModal.style.display = "flex";
 
         resetExcelImportState();
 
         await loadExcelExams();
-
     };
 
 }
@@ -369,6 +462,20 @@ async function loadQuestions() {
 
     }
 
+        questionTable.innerHTML = `
+        <tr>
+            <td
+                colspan="6"
+                style="
+                    text-align:center;
+                    padding:30px;
+                "
+            >
+                ⏳ Loading questions...
+            </td>
+        </tr>
+    `;
+
 
     try {
 
@@ -492,125 +599,134 @@ async function loadQuestions() {
         }
 
 
-        data.forEach(
-            (q) => {
+        const rowsHTML = data
+    .map((q) => {
 
-                const questionText =
-                    String(
-                        q.question || ""
-                    );
+        const questionText =
+            String(
+                q.question || ""
+            );
 
+        if (
+            searchValue &&
+            !questionText
+                .toLowerCase()
+                .includes(searchValue)
+        ) {
+            return "";
+        }
 
-                if (
-                    searchValue &&
-                    !questionText
-                        .toLowerCase()
-                        .includes(searchValue)
-                ) {
+        visibleCount++;
 
-                    return;
+        const examName =
+            q.exams &&
+            q.exams.exam_name
+                ? q.exams.exam_name
+                : "Unknown Exam";
 
-                }
+        const difficulty =
+            q.difficulty || "Easy";
 
+        const difficultyClass =
+            String(
+                difficulty
+            )
+            .toLowerCase()
+            .replace(
+                /\s+/g,
+                "-"
+            );
 
-                visibleCount++;
+        return `
+            <tr>
+                <td>
+                    ${visibleCount}
+                </td>
 
+                <td>
+                    ${escapeHTML(examName)}
+                </td>
 
-                const examName =
-                    q.exams &&
-                    q.exams.exam_name
-                        ? q.exams.exam_name
-                        : "Unknown Exam";
+                <td>
+                    ${escapeHTML(
+                        q.subject || ""
+                    )}
+                </td>
 
+                <td>
+                    <span
+                        class="${difficultyClass}"
+                    >
+                        ${escapeHTML(
+                            difficulty
+                        )}
+                    </span>
+                </td>
 
-                const difficulty =
-                    q.difficulty || "Easy";
+                <td>
+                    ${q.marks ?? 0}
+                </td>
 
+                <td>
 
-                const difficultyClass =
-                    String(
-                        difficulty
-                    )
-                    .toLowerCase()
-                    .replace(
-                        /\s+/g,
-                        "-"
-                    );
+    ${
+        (
+            window.examVerseAdmin?.isMainAdmin === true ||
+            window.examVerseAdmin?.hasPermission("questions.view") === true
+        )
+            ? `
+                <button
+                    type="button"
+                    onclick="previewQuestion('${q.id}')"
+                    title="Preview"
+                >
+                    👁
+                </button>
+            `
+            : ""
+    }
 
+    ${
+        (
+            window.examVerseAdmin?.isMainAdmin === true ||
+            window.examVerseAdmin?.hasPermission("questions.edit") === true
+        )
+            ? `
+                <button
+                    type="button"
+                    onclick="editQuestion('${q.id}')"
+                    title="Edit"
+                >
+                    ✏
+                </button>
+            `
+            : ""
+    }
 
-                questionTable.innerHTML += `
+    ${
+        (
+            window.examVerseAdmin?.isMainAdmin === true ||
+            window.examVerseAdmin?.hasPermission("questions.delete") === true
+        )
+            ? `
+                <button
+                    type="button"
+                    onclick="deleteQuestion('${q.id}')"
+                    title="Delete"
+                >
+                    🗑
+                </button>
+            `
+            : ""
+    }
 
-                    <tr>
+</td>
+            </tr>
+        `;
+    })
+    .join("");
 
-                        <td>
-                            ${visibleCount}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(examName)}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                                q.subject || ""
-                            )}
-                        </td>
-
-                        <td>
-
-                            <span
-                                class="${difficultyClass}"
-                            >
-
-                                ${escapeHTML(
-                                    difficulty
-                                )}
-
-                            </span>
-
-                        </td>
-
-                        <td>
-                            ${q.marks ?? 0}
-                        </td>
-
-                        <td>
-
-                            <button
-                                type="button"
-                                onclick="previewQuestion('${q.id}')"
-                                title="Preview"
-                            >
-                                👁
-                            </button>
-
-
-                            <button
-                                type="button"
-                                onclick="editQuestion('${q.id}')"
-                                title="Edit"
-                            >
-                                ✏
-                            </button>
-
-
-                            <button
-                                type="button"
-                                onclick="deleteQuestion('${q.id}')"
-                                title="Delete"
-                            >
-                                🗑
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        );
-
+questionTable.innerHTML = rowsHTML;
 
         if (visibleCount === 0) {
 
@@ -659,6 +775,32 @@ if (saveQuestionBtn) {
 
 
 async function saveQuestion() {
+
+        const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const questionId =
+        window.currentQuestionId;
+
+    const requiredPermission =
+        questionId
+            ? "questions.edit"
+            : "questions.create";
+
+    const canSaveQuestion =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            requiredPermission
+        ) === true;
+
+    if (!canSaveQuestion) {
+        alert(
+            questionId
+                ? "You do not have permission to edit questions."
+                : "You do not have permission to create questions."
+        );
+        return;
+    }
 
     try {
 
@@ -1005,6 +1147,22 @@ function resetQuestionForm() {
 
 async function editQuestion(id) {
 
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canEditQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.edit"
+        ) === true;
+
+    if (!canEditQuestions) {
+        alert(
+            "You do not have permission to edit questions."
+        );
+        return;
+    }
+
     try {
 
         const {
@@ -1146,6 +1304,22 @@ async function editQuestion(id) {
 
 async function previewQuestion(id) {
 
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canViewQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.view"
+        ) === true;
+
+    if (!canViewQuestions) {
+        alert(
+            "You do not have permission to view questions."
+        );
+        return;
+    }
+
     try {
 
         const {
@@ -1228,6 +1402,22 @@ ${data.explanation || "No explanation provided."}`
 ========================================================= */
 
 async function deleteQuestion(id) {
+
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canDeleteQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.delete"
+        ) === true;
+
+    if (!canDeleteQuestions) {
+        alert(
+            "You do not have permission to delete questions."
+        );
+        return;
+    }
 
     const confirmed =
         confirm(
@@ -2558,6 +2748,22 @@ if (importExcelBtn) {
 
 async function importExcelQuestions() {
 
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canCreateQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.create"
+        ) === true;
+
+    if (!canCreateQuestions) {
+        alert(
+            "You do not have permission to import questions."
+        );
+        return;
+    }
+
     const examId =
         excelExamSelect
             ? excelExamSelect.value
@@ -3152,32 +3358,52 @@ function escapeHTML(value) {
 
 }
 
+function applyQuestionPermissions() {
+    const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canCreateQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.create"
+        ) === true;
+
+    if (addQuestionBtn) {
+        addQuestionBtn.style.display =
+            canCreateQuestions ? "" : "none";
+    }
+
+    if (importExcelBtnOpen) {
+        importExcelBtnOpen.style.display =
+            canCreateQuestions ? "" : "none";
+    }
+}
+
 
 /* =========================================================
    INITIAL LOAD
 ========================================================= */
 
 async function initializeQuestionManagement() {
-
     try {
+        if (window.examVerseAdminReady) {
+            await window.examVerseAdminReady;
+        }
+
+        applyQuestionPermissions();
 
         await loadExams();
-
         await loadQuestions();
 
         console.log(
             "ExamVerse Question Management initialized successfully ✅"
         );
-
     } catch (error) {
-
         console.error(
             "Question Management initialization error:",
             error
         );
-
     }
-
 }
 
 

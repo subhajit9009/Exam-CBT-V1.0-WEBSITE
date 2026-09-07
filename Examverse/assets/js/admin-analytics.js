@@ -8138,15 +8138,11 @@ function renderAnalyticsUserDetail(
                         },
 
                         plugins: {
-
-                            legend: {
-
-                                display:
-                                    true
-
-                            }
-
-                        }
+    legend: {
+        display: true,
+        onClick: () => {}
+    }
+}
 
                     }
 
