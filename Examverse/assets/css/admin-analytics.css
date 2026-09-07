@@ -4885,3 +4885,35 @@ body.analytics-modal-open {
     width: 300px !important;
     height: 300px !important;
 }
+
+/* =========================================================
+   PASS / FAIL — ALIGN SUMMARY WITH CARD HEADING
+   ========================================================= */
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-layout {
+    align-items: flex-start !important;
+}
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-info {
+    align-self: flex-start !important;
+}
+
+/* =========================================================
+   PASS / FAIL — MOVE RESULT SUMMARY TO HEADING LEVEL
+   ========================================================= */
+
+.analytics-chart-card:has(#passFailChart) {
+    position: relative !important;
+}
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-layout {
+    margin-top: 0 !important;
+}
+
+.analytics-chart-card:has(#passFailChart)
+.analytics-passfail-info {
+    transform: translateY(-52px) !important;
+}

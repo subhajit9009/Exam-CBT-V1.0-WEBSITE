@@ -3267,20 +3267,13 @@ function renderExamTable() {
                         );
 
                     const calculatedPassRate =
-                        passed +
-                        failed >
-                        0
-                            ? (
-                                passed /
-                                (
-                                    passed +
-                                    failed
-                                )
-                            ) *
-                              100
-                            : numberValue(
-                                row.pass_rate
-                            );
+    numberValue(row.attempts) > 0
+        ? (
+            passed /
+            numberValue(row.attempts)
+        ) *
+          100
+        : 0;
 
 
                     return `
