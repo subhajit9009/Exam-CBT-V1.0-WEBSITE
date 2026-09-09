@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ExamVerse | Admin Settings</title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="assets/images/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/admin-settings.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/loader.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/popup.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="assets/css/dark-mode.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     LOADER
+========================================================= -->
+
+<div id="loader">
+
+    <img
+        src="assets/images/logo.png"
+        class="loader-logo"
+        alt="ExamVerse Logo"
+    >
+
+    <div class="spinner"></div>
+
+    <div class="loading-text">
+        Loading...
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<div class="sidebar">
+
+    <div class="logo-section">
+
+        <img
+            src="assets/images/logo.png"
+            class="sidebar-logo"
+            alt="ExamVerse Logo"
+        >
+
+        <h2>
+            ExamVerse
+        </h2>
+
+        <p>
+            Admin Panel
+        </p>
+
+    </div>
+
+
+    <ul>
+
+        <a href="admin-dashboard.html">
+            <li>
+                🏠 Dashboard
+            </li>
+        </a>
+
+
+        <a href="admin-users.html">
+            <li>
+                👥 Users
+            </li>
+        </a>
+
+
+        <a href="admin-exams.html">
+            <li>
+                📝 Exams
+            </li>
+        </a>
+
+
+        <a href="admin-questions.html">
+            <li>
+                📚 Questions
+            </li>
+        </a>
+
+
+        <a href="admin-results.html">
+            <li>
+                📊 Results
+            </li>
+        </a>
+
+
+        <a href="admin-analytics.html">
+            <li>
+                📈 Analytics
+            </li>
+        </a>
+
+
+        <a href="admin-settings.html">
+            <li class="active">
+                ⚙ Settings
+            </li>
+        </a>
+
+
+        <li id="logoutBtn">
+            🚪 Logout
+        </li>
+
+    </ul>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<div class="main">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="settings-header">
+
+        <div>
+
+            <h1>
+
+                <i class="fa-solid fa-gear"></i>
+
+                Admin Settings
+
+            </h1>
+
+            <p>
+                Manage your ExamVerse administrative preferences.
+            </p>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         APPEARANCE
+         AVAILABLE TO EVERY ADMIN
+    ====================================================== -->
+
+    <section class="settings-card appearance-card">
+
+        <div class="settings-card-header">
+
+            <div class="section-icon blue">
+
+                <i class="fa-solid fa-palette"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Appearance
+                </h2>
+
+                <p>
+                    Personalise how the Admin Panel appears.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- DARK MODE -->
+
+        <div class="setting-row">
+
+            <div class="setting-info">
+
+                <h3>
+                    Dark Mode
+                </h3>
+
+                <p>
+                    Switch the Admin Panel between light and dark appearance.
+                </p>
+
+                <span class="setting-note">
+                    Available to every administrator.
+                </span>
+
+            </div>
+
+
+            <label
+                class="switch"
+                for="darkModeToggle"
+            >
+
+                <input
+                    type="checkbox"
+                    id="darkModeToggle"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RESTRICTED ADMINISTRATIVE SETTINGS
+    ====================================================== -->
+
+    <section
+        id="restrictedSettings"
+        class="restricted-settings"
+    >
+
+
+        <!-- =================================================
+             ACCESS DENIED
+        ================================================== -->
+
+        <section
+            id="settingsAccessDenied"
+            class="settings-access-denied"
+            hidden
+        >
+
+            <div class="access-denied-icon">
+
+                <i class="fa-solid fa-lock"></i>
+
+            </div>
+
+            <h2>
+                Administrative Settings Locked
+            </h2>
+
+            <p>
+                You do not have permission to view administrative settings.
+            </p>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SYSTEM SETTINGS
+        ================================================== -->
+
+        <section
+            id="systemSettingsCard"
+            class="settings-card"
+        >
+
+            <div class="settings-card-header">
+
+                <div class="section-icon purple">
+
+                    <i class="fa-solid fa-sliders"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        System Settings
+                    </h2>
+
+                    <p>
+                        Administrative configuration for ExamVerse.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h3>
+                        Settings Access
+                    </h3>
+
+                    <p>
+                        Your administrative settings permissions are controlled by the Main Admin.
+                    </p>
+
+                </div>
+
+                <span
+                    id="settingsPermissionBadge"
+                    class="permission-badge"
+                >
+                    Checking...
+                </span>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h3>
+                        Administration Role
+                    </h3>
+
+                    <p>
+                        Current role assigned to your administrator account.
+                    </p>
+
+                </div>
+
+                <span
+                    id="adminRoleBadge"
+                    class="role-badge"
+                >
+                    Admin
+                </span>
+
+            </div>
+
+
+            <div
+                id="settingsEditNotice"
+                class="settings-edit-notice"
+                hidden
+            >
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <span>
+                    You can view these settings, but you do not have permission to modify them.
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             EXAM DEFAULTS
+        ================================================== -->
+
+        <section
+            id="examDefaultsCard"
+            class="settings-card"
+        >
+
+            <div class="settings-card-header">
+
+                <div class="section-icon green">
+
+                    <i class="fa-solid fa-file-circle-check"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        Examination Defaults
+                    </h2>
+
+                    <p>
+                        Default values used when configuring examinations.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h3>
+                        Default Examination Duration
+                    </h3>
+
+                    <p>
+                        Default duration for a normal CBT examination.
+                    </p>
+
+                </div>
+
+                <div class="setting-control">
+
+                    <input
+                        type="number"
+                        id="defaultExamDuration"
+                        min="1"
+                        max="1440"
+                        value="120"
+                    >
+
+                    <span>
+                        minutes
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h3>
+                        Default Passing Percentage
+                    </h3>
+
+                    <p>
+                        Default passing percentage for newly configured examinations.
+                    </p>
+
+                </div>
+
+                <div class="setting-control">
+
+                    <input
+                        type="number"
+                        id="defaultPassingPercentage"
+                        min="0"
+                        max="100"
+                        value="40"
+                    >
+
+                    <span>
+                        %
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h3>
+                        Negative Marking
+                    </h3>
+
+                    <p>
+                        Default negative marking value for newly configured examinations.
+                    </p>
+
+                </div>
+
+                <select
+                    id="defaultNegativeMarking"
+                >
+
+                    <option value="0">
+                        0
+                    </option>
+
+                    <option value="0.25">
+                        −0.25
+                    </option>
+
+                    <option value="0.50">
+                        −0.50
+                    </option>
+
+                    <option value="1">
+                        −1
+                    </option>
+
+                    <option value="2">
+                        −2
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SAVE
+        ================================================== -->
+
+        <div
+            id="settingsSaveArea"
+            class="settings-save-area"
+        >
+
+            <button
+                type="button"
+                id="saveSettingsBtn"
+                class="save-settings-btn"
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Save Settings
+
+            </button>
+
+            <span
+                id="settingsSaveMessage"
+                class="settings-save-message"
+            ></span>
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase.js"></script>
+
+<script src="assets/js/admin-auth.js"></script>
+
+<script src="assets/js/admin-settings.js"></script>
+
+<script src="assets/js/loader.js"></script>
+
+<script src="assets/js/admin-common.js"></script>
+
+
+</body>
+
+</html>

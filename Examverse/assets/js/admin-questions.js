@@ -462,6 +462,33 @@ async function loadQuestions() {
 
     }
 
+    const isMainAdmin =
+    window.examVerseAdmin?.isMainAdmin === true;
+
+const canViewQuestions =
+    isMainAdmin ||
+    window.examVerseAdmin?.hasPermission(
+        "questions.view"
+    ) === true;
+
+if (!canViewQuestions) {
+    questionTable.innerHTML = `
+        <tr>
+            <td
+                colspan="6"
+                style="
+                    text-align:center;
+                    padding:30px;
+                "
+            >
+                You do not have permission to view questions.
+            </td>
+        </tr>
+    `;
+
+    return;
+}
+
         questionTable.innerHTML = `
         <tr>
             <td
@@ -910,6 +937,114 @@ async function saveQuestion() {
             return;
 
         }
+
+        /* -------------------------
+   DUPLICATE QUESTION NUMBER
+------------------------- */
+
+if (!window.currentQuestionId) {
+
+    const {
+        data: duplicateQuestion,
+        error: duplicateError
+    } = await supabaseClient
+        .from("questions")
+        .select("id")
+        .eq("exam_id", examId)
+        .eq("question_no", Number(questionNo))
+        .maybeSingle();
+
+    if (duplicateError) {
+        console.error(
+            "Duplicate question check error:",
+            duplicateError
+        );
+
+        alert(
+            duplicateError.message
+        );
+
+        return;
+    }
+
+    if (duplicateQuestion) {
+        alert(
+            `Question number ${questionNo} already exists for this exam.`
+        );
+
+        return;
+    }
+}
+
+/* -------------------------
+   QUESTION COUNT LIMIT
+------------------------- */
+
+if (!window.currentQuestionId) {
+
+    const {
+        count: existingQuestionCount,
+        error: countError
+    } = await supabaseClient
+        .from("questions")
+        .select("id", {
+            count: "exact",
+            head: true
+        })
+        .eq("exam_id", examId);
+
+    if (countError) {
+        console.error(
+            "Question count check error:",
+            countError
+        );
+
+        alert(
+            countError.message
+        );
+
+        return;
+    }
+
+    const {
+        data: selectedExam,
+        error: examError
+    } = await supabaseClient
+        .from("exams")
+        .select("total_questions")
+        .eq("id", examId)
+        .single();
+
+    if (examError) {
+        console.error(
+            "Exam configuration check error:",
+            examError
+        );
+
+        alert(
+            examError.message
+        );
+
+        return;
+    }
+
+    const expectedQuestionCount =
+        Number(
+            selectedExam?.total_questions || 0
+        );
+
+    if (
+        expectedQuestionCount > 0 &&
+        (existingQuestionCount || 0) >=
+            expectedQuestionCount
+    ) {
+        alert(
+            `This exam already has ${existingQuestionCount} questions. The exam allows only ${expectedQuestionCount} questions.`
+        );
+
+        return;
+    }
+}
 
 
         /* -------------------------
@@ -2212,6 +2347,22 @@ if (validateExcelBtn) {
 
 async function validateExcel() {
 
+        const isMainAdmin =
+        window.examVerseAdmin?.isMainAdmin === true;
+
+    const canCreateQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.create"
+        ) === true;
+
+    if (!canCreateQuestions) {
+        alert(
+            "You do not have permission to validate question imports."
+        );
+        return;
+    }
+
     try {
 
         validateExcelBtn.disabled =
@@ -2384,6 +2535,74 @@ function validateQuestionRows(rows) {
 
     const firstRow =
         rows[0];
+
+        const normalizedQuestionNumbers =
+    rows.map((row, index) => {
+
+        const normalized = {};
+
+        Object.keys(row).forEach(
+            (key) => {
+
+                normalized[
+                    normalizeColumnName(key)
+                ] = row[key];
+
+            }
+        );
+
+        const questionNo =
+            Number(
+                normalized.question_no
+            );
+
+        if (
+            !Number.isInteger(questionNo) ||
+            questionNo <= 0
+        ) {
+            return null;
+        }
+
+        return {
+            questionNo,
+            excelRow: index + 2
+        };
+
+    });
+
+const questionNumberMap =
+    new Map();
+
+for (
+    const item of normalizedQuestionNumbers
+) {
+
+    if (!item) {
+        continue;
+    }
+
+    if (
+        questionNumberMap.has(
+            item.questionNo
+        )
+    ) {
+
+        const firstOccurrence =
+            questionNumberMap.get(
+                item.questionNo
+            );
+
+        throw new Error(
+            `Duplicate question number ${item.questionNo} found in Excel rows ${firstOccurrence} and ${item.excelRow}.`
+        );
+
+    }
+
+    questionNumberMap.set(
+        item.questionNo,
+        item.excelRow
+    );
+}
 
 
     const originalColumns =
@@ -3028,23 +3247,39 @@ async function importExcelQuestions() {
 
 
         /* =================================================
-           INSERT INTO SUPABASE
-        ================================================= */
+   REPLACE EXISTING QUESTIONS
+================================================= */
 
-        const {
-            error: insertError
-        } = await supabaseClient
+const {
+    error: deleteError
+} = await supabaseClient
+    .from("questions")
+    .delete()
+    .eq("exam_id", examId);
 
-            .from("questions")
+if (deleteError) {
+    throw deleteError;
+}
 
-            .insert(records);
 
+/* =================================================
+   REPLACE EXISTING QUESTIONS
+   ATOMIC DATABASE OPERATION
+================================================= */
 
-        if (insertError) {
+const {
+    error: replaceError
+} = await supabaseClient.rpc(
+    "replace_exam_questions",
+    {
+        p_exam_id: examId,
+        p_questions: records
+    }
+);
 
-            throw insertError;
-
-        }
+if (replaceError) {
+    throw replaceError;
+}
 
 
         /* =================================================
@@ -3377,6 +3612,49 @@ function applyQuestionPermissions() {
         importExcelBtnOpen.style.display =
             canCreateQuestions ? "" : "none";
     }
+
+    if (downloadSectionalTemplateBtn) {
+    downloadSectionalTemplateBtn.style.display =
+        canCreateQuestions ? "" : "none";
+}
+
+if (downloadNonSectionalTemplateBtn) {
+    downloadNonSectionalTemplateBtn.style.display =
+        canCreateQuestions ? "" : "none";
+}
+
+if (validateExcelBtn) {
+    validateExcelBtn.style.display =
+        canCreateQuestions ? "" : "none";
+}
+
+if (importExcelBtn) {
+    importExcelBtn.style.display =
+        canCreateQuestions ? "" : "none";
+}
+
+if (saveQuestionBtn) {
+    const canEditQuestions =
+        isMainAdmin ||
+        window.examVerseAdmin?.hasPermission(
+            "questions.edit"
+        ) === true;
+
+    saveQuestionBtn.style.display =
+        canCreateQuestions || canEditQuestions
+            ? ""
+            : "none";
+}
+
+if (validateExcelBtn) {
+    validateExcelBtn.style.display =
+        canCreateQuestions ? "" : "none";
+}
+
+if (importExcelBtn) {
+    importExcelBtn.style.display =
+        canCreateQuestions ? "" : "none";
+}
 }
 
 

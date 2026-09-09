@@ -618,12 +618,12 @@ width:95%;
 }
 
 #downloadNonSectionalTemplateBtn {
-    background: #15803d;
+    background: #e133ad;
     color: #ffffff;
 }
 
 #downloadNonSectionalTemplateBtn:hover {
-    background: #166534;
+    background: #961774;
 }
 
 @media (max-width: 600px) {

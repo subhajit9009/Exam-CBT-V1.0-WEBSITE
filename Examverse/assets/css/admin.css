@@ -905,3 +905,58 @@ table td{
 
     width: 100%;
 }
+
+/* =========================================================
+   EXAM MANAGEMENT
+   CREATE NEW EXAM BUTTON
+========================================================= */
+
+#createExamBtn {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.18);
+}
+
+#createExamBtn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+#createExamBtn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   EXAM TABLE
+   KEEP ROW LINES CONTINUOUS EVEN WHEN ACTIONS ARE HIDDEN
+========================================================= */
+
+#examBody td {
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+#examBody tr:last-child td {
+    border-bottom: none !important;
+}
+
+
+/* =========================================================
+   ACTION COLUMN
+   KEEP ITS SPACE EVEN WHEN EDIT / DELETE ARE REMOVED
+========================================================= */
+
+#examBody td:last-child {
+    width: 18%;
+    min-width: 150px;
+    border-bottom: 1px solid #e5e7eb !important;
+}
