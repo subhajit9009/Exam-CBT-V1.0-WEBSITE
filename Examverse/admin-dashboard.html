@@ -287,6 +287,391 @@ No Activity Yet
 
 </div>
 
+<!-- ==========================================
+     SUPABASE PROJECT HEALTH
+========================================== -->
+
+<div class="supabase-health">
+
+    <div class="supabase-health-header">
+
+        <div>
+            <h2>☁️ Supabase Project Health</h2>
+            <p>Live project usage and service status</p>
+        </div>
+
+        <div class="health-live-status">
+            <span class="health-live-dot"></span>
+            <span>LIVE</span>
+        </div>
+
+    </div>
+
+
+    <!-- Service Status -->
+
+    <div class="health-services">
+
+        <div class="health-service">
+
+            <div class="health-service-icon">
+                🗄️
+            </div>
+
+            <div class="health-service-info">
+
+                <strong>Database</strong>
+
+                <span id="healthDatabaseStatus">
+                    Checking...
+                </span>
+
+            </div>
+
+            <span
+                id="healthDatabaseDot"
+                class="health-status-dot checking">
+            </span>
+
+        </div>
+
+
+        <div class="health-service">
+
+            <div class="health-service-icon">
+                🔐
+            </div>
+
+            <div class="health-service-info">
+
+                <strong>Authentication</strong>
+
+                <span id="healthAuthStatus">
+                    Checking...
+                </span>
+
+            </div>
+
+            <span
+                id="healthAuthDot"
+                class="health-status-dot checking">
+            </span>
+
+        </div>
+
+
+        <div class="health-service">
+
+            <div class="health-service-icon">
+                📦
+            </div>
+
+            <div class="health-service-info">
+
+                <strong>Storage</strong>
+
+                <span id="healthStorageStatus">
+                    Checking...
+                </span>
+
+            </div>
+
+            <span
+                id="healthStorageDot"
+                class="health-status-dot checking">
+            </span>
+
+        </div>
+
+
+        <div class="health-service">
+
+            <div class="health-service-icon">
+                ⚡
+            </div>
+
+            <div class="health-service-info">
+
+                <strong>Realtime</strong>
+
+                <span id="healthRealtimeStatus">
+                    Checking...
+                </span>
+
+            </div>
+
+            <span
+                id="healthRealtimeDot"
+                class="health-status-dot checking">
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Usage -->
+
+    <div class="health-usage-grid">
+
+
+        <!-- Database -->
+
+        <div class="health-usage-card">
+
+            <div class="health-usage-top">
+
+                <div>
+
+                    <span class="health-usage-title">
+                        Database
+                    </span>
+
+                    <strong id="healthDatabaseUsage">
+                        Checking...
+                    </strong>
+
+                </div>
+
+                <span id="healthDatabasePercent">
+                    0%
+                </span>
+
+            </div>
+
+            <div class="health-progress">
+
+                <div
+                    id="healthDatabaseBar"
+                    class="health-progress-fill">
+                </div>
+
+            </div>
+
+            <small id="healthDatabaseLimit">
+                Loading quota...
+            </small>
+
+        </div>
+
+
+        <!-- Storage -->
+
+        <div class="health-usage-card">
+
+            <div class="health-usage-top">
+
+                <div>
+
+                    <span class="health-usage-title">
+                        File Storage
+                    </span>
+
+                    <strong id="healthStorageUsage">
+                        Checking...
+                    </strong>
+
+                </div>
+
+                <span id="healthStoragePercent">
+                    0%
+                </span>
+
+            </div>
+
+            <div class="health-progress">
+
+                <div
+                    id="healthStorageBar"
+                    class="health-progress-fill">
+                </div>
+
+            </div>
+
+            <small id="healthStorageLimit">
+                Loading quota...
+            </small>
+
+        </div>
+
+
+        <!-- Users -->
+
+        <div class="health-usage-card">
+
+            <div class="health-usage-top">
+
+                <div>
+
+                    <span class="health-usage-title">
+                        Supabase Users
+                    </span>
+
+                    <strong id="healthUsersUsage">
+                        Checking...
+                    </strong>
+
+                </div>
+
+                <span id="healthUsersPercent">
+                    0%
+                </span>
+
+            </div>
+
+            <div class="health-progress">
+
+                <div
+                    id="healthUsersBar"
+                    class="health-progress-fill">
+                </div>
+
+            </div>
+
+            <small id="healthUsersLimit">
+                Loading quota...
+            </small>
+
+        </div>
+
+
+        <!-- Egress -->
+
+<div class="health-usage-card">
+
+    <div class="health-usage-top">
+
+        <div>
+
+            <span class="health-usage-title">
+                Egress
+            </span>
+
+            <strong id="healthApiUsage">
+                Checking...
+            </strong>
+
+        </div>
+
+        <span id="healthApiPercent">
+            0%
+        </span>
+
+    </div>
+
+    <div class="health-progress">
+
+        <div
+            id="healthApiBar"
+            class="health-progress-fill">
+        </div>
+
+    </div>
+
+    <small id="healthApiLimit">
+        Loading usage...
+    </small>
+
+</div>
+
+
+        <!-- Logs Ingest -->
+
+<div class="health-usage-card">
+
+    <div class="health-usage-top">
+
+        <div>
+
+            <span class="health-usage-title">
+                Logs Ingest
+            </span>
+
+            <strong id="healthRealtimeUsage">
+                Checking...
+            </strong>
+
+        </div>
+
+        <span id="healthRealtimePercent">
+            0%
+        </span>
+
+    </div>
+
+    <div class="health-progress">
+
+        <div
+            id="healthRealtimeBar"
+            class="health-progress-fill">
+        </div>
+
+    </div>
+
+    <small id="healthRealtimeLimit">
+        Loading usage...
+    </small>
+
+</div>
+
+        <!-- Logs Query -->
+
+<div class="health-usage-card">
+
+    <div class="health-usage-top">
+
+        <div>
+
+            <span class="health-usage-title">
+                Logs Query
+            </span>
+
+            <strong id="healthFunctionsUsage">
+                Checking...
+            </strong>
+
+        </div>
+
+        <span id="healthFunctionsPercent">
+            0%
+        </span>
+
+    </div>
+
+    <div class="health-progress">
+
+        <div
+            id="healthFunctionsBar"
+            class="health-progress-fill">
+        </div>
+
+    </div>
+
+    <small id="healthFunctionsLimit">
+        Loading usage...
+    </small>
+
+</div>
+
+</div>
+
+
+    <!-- Footer -->
+
+    <div class="health-footer">
+
+        <span>
+            🟢 Supabase connection monitored automatically
+        </span>
+
+        <span id="healthLastUpdated">
+            Last updated: Checking...
+        </span>
+
+    </div>
+
+</div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

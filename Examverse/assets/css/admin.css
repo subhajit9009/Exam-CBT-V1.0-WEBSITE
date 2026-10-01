@@ -960,3 +960,698 @@ table td{
     min-width: 150px;
     border-bottom: 1px solid #e5e7eb !important;
 }
+
+/* ==========================================
+   Recent Activity
+========================================== */
+
+.activity-cell {
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+
+/* Completed */
+
+.activity-completed {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+
+/* Exam name */
+
+.activity-exam {
+    color: #1e3a8a;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+
+/* Score */
+
+.activity-score {
+    color: #7c3aed;
+    font-weight: 700;
+    margin-left: 3px;
+}
+
+/* ==========================================
+   Recent Activity - Text Styling
+========================================== */
+
+/* User names */
+#activityTable td:first-child {
+    color: #111827;
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+/* Date / Time */
+#activityTable td:last-child {
+    color: #111827;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+/* Activity column */
+#activityTable td:nth-child(2) {
+    font-style: normal;
+}
+
+
+/* Prevent inherited italic styling */
+#activityTable td,
+#activityTable td strong,
+#activityTable td span {
+    font-style: normal;
+}
+
+/* ==========================================
+   SUPABASE PROJECT HEALTH
+========================================== */
+
+.supabase-health {
+
+    margin-top: 35px;
+
+    background: #ffffff;
+
+    border-radius: 15px;
+
+    padding: 25px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+/* ===========================
+   Header
+=========================== */
+
+.supabase-health-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+.supabase-health-header h2 {
+
+    color: #1e3c72;
+
+    margin-bottom: 5px;
+
+}
+
+.supabase-health-header p {
+
+    color: #64748b;
+
+    font-size: 13px;
+
+}
+
+
+/* ===========================
+   LIVE Indicator
+=========================== */
+
+.health-live-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: #ecfdf5;
+
+    color: #15803d;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+}
+
+.health-live-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow: 0 0 0 0 rgba(34,197,94,.5);
+
+    animation: healthLivePulse 1.8s infinite;
+
+}
+
+@keyframes healthLivePulse {
+
+    0% {
+
+        box-shadow:
+            0 0 0 0 rgba(34,197,94,.5);
+
+    }
+
+    70% {
+
+        box-shadow:
+            0 0 0 8px rgba(34,197,94,0);
+
+    }
+
+    100% {
+
+        box-shadow:
+            0 0 0 0 rgba(34,197,94,0);
+
+    }
+
+}
+
+
+/* ===========================
+   Service Status
+=========================== */
+
+.health-services {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(200px,1fr));
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+
+}
+
+.health-service {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+}
+
+.health-service-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eef2ff;
+
+    font-size: 20px;
+
+    flex-shrink: 0;
+
+}
+
+.health-service-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    flex: 1;
+
+}
+
+.health-service-info strong {
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+}
+
+.health-service-info span {
+
+    color: #64748b;
+
+    font-size: 12px;
+
+}
+
+
+/* ===========================
+   Status Dot
+=========================== */
+
+.health-status-dot {
+
+    width: 11px;
+
+    height: 11px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+
+}
+
+.health-status-dot.checking {
+
+    background: #f59e0b;
+
+    animation: healthChecking 1s infinite alternate;
+
+}
+
+.health-status-dot.online {
+
+    background: #22c55e;
+
+    box-shadow: 0 0 8px rgba(34,197,94,.5);
+
+}
+
+.health-status-dot.warning {
+
+    background: #f59e0b;
+
+}
+
+.health-status-dot.offline {
+
+    background: #ef4444;
+
+}
+
+@keyframes healthChecking {
+
+    from {
+
+        opacity: .35;
+
+    }
+
+    to {
+
+        opacity: 1;
+
+    }
+
+}
+
+
+/* ===========================
+   Usage Grid
+=========================== */
+
+.health-usage-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(250px,1fr));
+
+    gap: 18px;
+
+}
+
+
+/* ===========================
+   Usage Card
+=========================== */
+
+.health-usage-card {
+
+    padding: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    transition: .25s ease;
+
+}
+
+.health-usage-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 16px rgba(0,0,0,.06);
+
+}
+
+.health-usage-top {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 14px;
+
+}
+
+.health-usage-title {
+
+    display: block;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+
+}
+
+.health-usage-top strong {
+
+    display: block;
+
+    color: #1e293b;
+
+    font-size: 18px;
+
+}
+
+.health-usage-top > span {
+
+    color: #1e3c72;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+}
+
+
+/* ===========================
+   Progress Bar
+=========================== */
+
+.health-progress {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #e5e7eb;
+
+}
+
+.health-progress-fill {
+
+    position: relative;
+
+    width: 0%;
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1e3c72,
+            #2d6cdf,
+            #60a5fa
+        );
+
+    transition:
+        width 1s ease;
+
+    overflow: hidden;
+
+}
+
+
+/* Animated flowing highlight */
+
+.health-progress-fill::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -80px;
+
+    width: 80px;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.55),
+            transparent
+        );
+
+    animation:
+        healthFlow 1.8s linear infinite;
+
+}
+
+@keyframes healthFlow {
+
+    from {
+
+        left: -80px;
+
+    }
+
+    to {
+
+        left: 100%;
+
+    }
+
+}
+
+
+/* ===========================
+   Usage Limit Text
+=========================== */
+
+.health-usage-card small {
+
+    display: block;
+
+    margin-top: 9px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+}
+
+
+/* ===========================
+   Footer
+=========================== */
+
+.health-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 22px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #e5e7eb;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+}
+
+
+/* ===========================
+   Mobile
+=========================== */
+
+@media(max-width:700px) {
+
+    .supabase-health {
+
+        padding: 18px;
+
+    }
+
+    .supabase-health-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+    .health-live-status {
+
+        align-self: flex-start;
+
+    }
+
+    .health-services {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .health-usage-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .health-footer {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+}
+
+/* ==========================================
+   PROFESSIONAL SUPABASE USAGE BARS
+========================================== */
+
+.health-progress {
+    height: 10px;
+    width: 100%;
+    margin-top: 14px;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.10);
+    overflow: hidden;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.health-progress-fill {
+    height: 100%;
+    min-width: 0;
+    border-radius: 999px;
+    transition:
+        width 0.7s ease,
+        background 0.3s ease;
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* Database */
+.health-usage-grid .health-usage-card:nth-child(1)
+.health-progress-fill {
+    background: #6366f1;
+}
+
+/* File Storage */
+.health-usage-grid .health-usage-card:nth-child(2)
+.health-progress-fill {
+    background: #10b981;
+}
+
+/* Supabase Users */
+.health-usage-grid .health-usage-card:nth-child(3)
+.health-progress-fill {
+    background: #3b82f6;
+}
+
+/* Egress */
+.health-usage-grid .health-usage-card:nth-child(4)
+.health-progress-fill {
+    background: #f59e0b;
+}
+
+/* Logs Ingest */
+.health-usage-grid .health-usage-card:nth-child(5)
+.health-progress-fill {
+    background: #ec4899;
+}
+
+/* Logs Query */
+.health-usage-grid .health-usage-card:nth-child(6)
+.health-progress-fill {
+    background: #14b8a6;
+}
+
+/* Make percentage more prominent */
+.health-usage-top > span {
+    font-size: 14px;
+    font-weight: 800;
+    color: #173b73;
+    white-space: nowrap;
+}
+
+/* Make usage number clearer */
+.health-usage-top strong {
+    font-size: 18px;
+    font-weight: 800;
+    color: #12233f;
+}
+
+/* Limit text */
+.health-usage-card small {
+    font-size: 12px;
+    font-weight: 500;
+    color: #718096;
+}
